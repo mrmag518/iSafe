@@ -1,0 +1,40 @@
+Only displaying Change Log from version 2.32 and newer at the moment.
+
+Version 2.34
+* Fixed the inability for taming mobs.
+* Rewrote the startup; now starting up on startup and not on postworld.
+* Fixed bug where iSafe didnt register world load.
+* Completly rewrote the configuration API to use the new config API.
+* Changed some config boolean defaults.
+* Added website in the plugin.yml
+* Fixed a NPE.
+* fixed entity combust.
+* Rewrote and created a CommandExecutor class, for the commands.
+* Added superbreak command/feature. (/superbreak) toggles it on|off
+* Added heal command/feature. (/healme) to heal youself, it will also re-fill your food level and stop you from burning if you was burning.
+
+Version 2.33:
+* Added VehicleListener
+* Added prevention for entering Vehicles.
+* Fixed primed explosions.
+* Fixed an access paramater.
+* Added prevention for destroying Vehicles.
+* Added "iSafe.pickup" to "iSafe.*".
+* Changed description for the main permission nodes.
+* Added a new main node: "iSafe.vehicle.*"
+* Added; Prevent chunks from unloading after they are loaded.
+* Added emergency chunk loader.
+* Fixed reload command showing false information.
+* Fixed isafe-info showing non-updated information in console.
+
+Verison 2.32:
+* Rewrote the fire spread event.
+* Rewrote the config node for fire spread.
+* Added prevention for air flow.
+* Fixed config nodes for interact events.
+* Removed “fire-damage” config node due to that I made it in fire spread instead.
+* Added a category system for the config nodes, much cleaner code now.
+* Added prevention for Psychics.
+* Added prevention for snow and ice melting.
+* Separated explosion events, now supports separately Ender Dragons, creepers, fireballs and TNT. (still a config to disable all explosions)
+* Added iSafe.pickup to pick up items if the config has disallowed pickups.
