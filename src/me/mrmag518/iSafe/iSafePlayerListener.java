@@ -1,13 +1,16 @@
 package me.mrmag518.iSafe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -26,7 +29,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 
@@ -54,7 +56,8 @@ public class iSafePlayerListener extends PlayerListener {
             if(player.hasPermission("iSafe.lavabucket.empty")) {
                 //access
             } else {
-                if (event.getBucket().equals(Material.LAVA_BUCKET)) {
+                if (event.getBucket().equals(Material.LAVA_BUCKET)) 
+                {
                     event.setCancelled(true);
                     event.getPlayer().getInventory().setItemInHand(new ItemStack(Material.BUCKET,1));
                     player.sendMessage(ChatColor.RED + "You do not have access to empty that");
@@ -66,7 +69,8 @@ public class iSafePlayerListener extends PlayerListener {
             if(player.hasPermission("iSafe.waterbucket.empty")) {
                 //access
             } else {
-                if (event.getBucket().equals(Material.WATER_BUCKET)) {
+                if (event.getBucket().equals(Material.WATER_BUCKET)) 
+                {
                     event.setCancelled(true);
                     event.getPlayer().getInventory().setItemInHand(new ItemStack(Material.BUCKET,1));
                     player.sendMessage(ChatColor.RED + "You do not have access to empty that");
@@ -86,7 +90,8 @@ public class iSafePlayerListener extends PlayerListener {
         Server server = player.getServer();
         World world = player.getWorld();
         
-        if(!plugin.config.getBoolean("Player.Allow-Sprinting", true))
+        //Spint
+        if(plugin.config.getBoolean("Player.Prevent-Sprinting", true))
         {
             if(player.hasPermission("iSafe.sprint")) {
                 //access
@@ -96,20 +101,9 @@ public class iSafePlayerListener extends PlayerListener {
                 }
             }
         }
-    }
-
-    @Override
-    public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
         
-        Player player = event.getPlayer();
-        Server server = player.getServer();
-        World world = player.getWorld();
-        
-        if(!plugin.config.getBoolean("Player.Allow-Sneaking", true))
+        //Sneak
+        if(plugin.config.getBoolean("Player.Prevent-Sneaking", true))
         {
             if(player.hasPermission("iSafe.sneak")) {
                 //access
@@ -120,7 +114,7 @@ public class iSafePlayerListener extends PlayerListener {
             }
         }
     }
-
+    
     @Override
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -130,7 +124,7 @@ public class iSafePlayerListener extends PlayerListener {
         
         if(plugin.config.getBoolean("Player.Broadcast-iSafe-message-on-join", true))
         {
-            player.sendMessage(ChatColor.BLUE + "Welcome " + ((player.getName() + (", This server is running " + ChatColor.YELLOW + (pdffile.getFullName() + ChatColor.BLUE + ".")))));
+            event.setJoinMessage(ChatColor.BLUE + "Welcome " + ((player.getName() + (", This server is running " + ChatColor.YELLOW + (pdffile.getFullName() + ChatColor.BLUE + ".")))));
         }
     }
 
@@ -157,117 +151,34 @@ public class iSafePlayerListener extends PlayerListener {
         }
         
         Player player = event.getPlayer();
-        Item item = event.getItemDrop();
         Server server = player.getServer();
         World world = player.getWorld();
+        int itemID = event.getItemDrop().getItemStack().getTypeId();
+        Location loc = player.getLocation();
         
-        if(!plugin.config.getBoolean("Drops.Allow-droping", true))
+        /**
+         * Need improvements!
+         */
+        //Blacklist
+        final List<Block> dropedblocks = new ArrayList<Block>();
+        if (plugin.config.getList("Drop.Blacklist", dropedblocks).contains(itemID))
         {
-            if(player.hasPermission("iSafe.drop")) {
+            if(player.hasPermission("iSafe.drop.blacklist.bypass")) {
                 //access
             } else {
                 event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You do now have access to drop.");
             }
-        }
-        
-        if(!plugin.config.getBoolean("Drops.Allow-TNT-drop", true))
-        {
-            if(player.hasPermission("iSafe.drop.tnt")) {
-                //access
-            } else {
-                if(event.getItemDrop().getItemStack().getTypeId() == 46) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to drop that.");
-                }
+            if (plugin.config.getBoolean("Drop.Alert/log.To-console", true))
+            {
+                plugin.log.info("[iSafe] "+ player.getName() + " tried to drop: "+ event.getItemDrop().getItemStack().getType().name().toLowerCase() + ", At the location: "+ " X: "+ loc.getBlockX() +" Y: "+ loc.getBlockY() +" Z: "+ loc.getBlockZ()+ ", In the world: "+ world.getName());
             }
-        }
-        if(!plugin.config.getBoolean("Drops.Allow-DiamonBlock-drop", true))
-        {
-            if(player.hasPermission("iSafe.drop.diamondblock")) {
-                //access
-            } else {
-                if(event.getItemDrop().getItemStack().getTypeId() == 57) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to drop that.");
-                }
+            if (plugin.config.getBoolean("Drop.Alert/log.To-player", true))
+            {
+                player.sendMessage(ChatColor.RED + "You cannot drop: "+ ChatColor.GRAY + event.getItemDrop().getItemStack().getType().name().toLowerCase());
             }
-        }
-        if(!plugin.config.getBoolean("Drops.Allow-IronBlock-drop", true))
-        {
-            if(player.hasPermission("iSafe.drop.ironblock")) {
-                //access
-            } else {
-                if(event.getItemDrop().getItemStack().getTypeId() == 42) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to drop that.");
-                }
-            }
-        }
-        if(!plugin.config.getBoolean("Drops.Allow-GoldBlock-drop", true))
-        {
-            if(player.hasPermission("iSafe.drop.goldblock")) {
-                //access
-            } else {
-                if(event.getItemDrop().getItemStack().getTypeId() == 41) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to drop that.");
-                }
-            }
-        }
-        if(!plugin.config.getBoolean("Drops.Allow-MobSpawner-drop", true))
-        {
-            if(player.hasPermission("iSafe.drop.mobspawner")) {
-                //access
-            } else {
-                if(event.getItemDrop().getItemStack().getTypeId() == 52) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to drop that.");
-                }
-            }
-        }
-        if(!plugin.config.getBoolean("Drops.Allow-Dimondore-drop", true))
-        {
-            if(player.hasPermission("iSafe.drop.diamondore")) {
-                //access
-            } else {
-                if(event.getItemDrop().getItemStack().getTypeId() == 52) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to drop that.");
-                }
-            }
-        }
-        if(!plugin.config.getBoolean("Drops.Allow-Bedrock-drop", true))
-        {
-            if(player.hasPermission("iSafe.drop.bedrock")) {
-                //access
-            } else {
-                if(event.getItemDrop().getItemStack().getTypeId() == 7) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to drop that.");
-                }
-            }
-        }
-        if(!plugin.config.getBoolean("Drops.Allow-un_natural_portal-drop", true))
-        {
-            if(player.hasPermission("iSafe.drop.un-natural-portal")) {
-                //access
-            } else {
-                if(event.getItemDrop().getItemStack().getTypeId() == 90) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to drop that.");
-                }
-            }
-        }
-        if(!plugin.config.getBoolean("Drops.Allow-Diamondingot-drop", true))
-        {
-            if(player.hasPermission("iSafe.drop.diamondingot")) {
-                //access
-            } else {
-                if(event.getItemDrop().getItemStack().getTypeId() == 264) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to drop that.");
-                }
+            if (plugin.config.getBoolean("Drop.Alert/log.To-server-chat", true))
+            {
+                server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to drop: "+ event.getItemDrop().getItemStack().getType().name().toLowerCase());
             }
         }
     }
@@ -509,6 +420,19 @@ public class iSafePlayerListener extends PlayerListener {
                 event.setKickMessage("Only OPs can join this server.");
             }
         }
+        
+        if(plugin.config.getBoolean("Player.Kick-player-if-anther-user-with-same-username-log's-on", true))
+        {
+            String name = player.getName();
+            
+            for (Player user : plugin.getServer().getOnlinePlayers())
+            {
+                if (user.getName().equalsIgnoreCase(name)) 
+                {
+                    user.kickPlayer("The username: "+ user.getName() + " logged on from another location.");
+                }
+            }
+        }
     }
 
     @Override
@@ -594,7 +518,7 @@ public class iSafePlayerListener extends PlayerListener {
         
         if(plugin.config.getBoolean("Player.Prevent-Gamemode-change", true))
         {
-            event.setCancelled(true);
+            event.setCancelled(true); 
         }
     }
 }

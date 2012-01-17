@@ -25,10 +25,10 @@ public class iSafeEntityListener extends EntityListener {
         
         if(plugin.config.getBoolean("Explosions.Prevent-primed-explosions", true))
         {    
-        event.getEntity().remove();
-        event.setCancelled(true);
+            event.getEntity().remove();
+            event.setCancelled(true);
+        }
     }
- }
     
     @Override
         public void onEntityExplode(EntityExplodeEvent event) {
@@ -242,13 +242,6 @@ public class iSafeEntityListener extends EntityListener {
                 event.getEntity().remove();
             }
         }
-        if(!plugin.config.getBoolean("Mobs.Spawn.Allow-Squid-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.SQUID) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
         if(!plugin.config.getBoolean("Mobs.Spawn.Allow-Villager-spawn", true))
         {
             if (event.getCreatureType() == CreatureType.VILLAGER) {
@@ -388,6 +381,7 @@ public class iSafeEntityListener extends EntityListener {
     @Override
     public void onEntityDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
+        int experiencedrop;
         
         if(plugin.config.getBoolean("World.Disable-ExpirienceOrbs-drop", true))
         {
@@ -482,12 +476,18 @@ public class iSafeEntityListener extends EntityListener {
             return;
         }
         
-        if(plugin.config.getBoolean("Misc.Prevent-crop-trampling", true))
+        if(plugin.config.getBoolean("Misc.Prevent-crop-trampling-by-creature", true))
         {
-            if (event.getBlock().getType() == Material.SOIL && event.getEntity() instanceof Creature)
+            if (event.getBlock().getType() == Material.SOIL && event.getEntity() instanceof Creature) {
                 event.setCancelled(true);
+            }
         }
-        
+        if(plugin.config.getBoolean("Misc.Prevent-crop-trampling-by-player", true))
+        {
+            if (event.getBlock().getType() == Material.SOIL && event.getEntity() instanceof Creature) {
+                event.setCancelled(true);
+            }
+        }
     }
 
     @Override

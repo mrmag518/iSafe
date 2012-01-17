@@ -20,6 +20,7 @@ public class iSafeCommandExecutor implements CommandExecutor {
         //Reload the config
         if(cmd.getName().equalsIgnoreCase("iSafe-reload")){
             if (args.length > 0) {
+                sender.sendMessage(ChatColor.RED + "To many arguments!");
                 return false;
             }
             PluginDescriptionFile pdffile = plugin.getDescription();
@@ -43,6 +44,7 @@ public class iSafeCommandExecutor implements CommandExecutor {
         //Info command
         if(cmd.getName().equalsIgnoreCase("iSafe-info")){
             if (args.length > 0) {
+                sender.sendMessage(ChatColor.RED + "To many arguments!");
                 return false;
             }
             PluginDescriptionFile pdffile = plugin.getDescription();
@@ -71,6 +73,7 @@ public class iSafeCommandExecutor implements CommandExecutor {
         //Commands commands
         if(cmd.getName().equalsIgnoreCase("iSafe-commands")){
             if (args.length > 0) {
+                sender.sendMessage(ChatColor.RED + "To many arguments!");
                 return false;
             }
             if (sender instanceof Player) {
@@ -98,6 +101,7 @@ public class iSafeCommandExecutor implements CommandExecutor {
         //Server-info command
         if(cmd.getName().equalsIgnoreCase("serverinfo")){
             if (args.length > 0) {
+                sender.sendMessage(ChatColor.RED + "To many arguments!");
                 return false;
             }
             if (sender instanceof Player) {
@@ -131,6 +135,7 @@ public class iSafeCommandExecutor implements CommandExecutor {
         //Superbreak command
         if(cmd.getName().equalsIgnoreCase("superbreak")){
             if (args.length > 0) {
+                sender.sendMessage(ChatColor.RED + "To many arguments!");
                 return false;
             }
             //No suitable boolean permission. Use the normal one.
@@ -151,6 +156,7 @@ public class iSafeCommandExecutor implements CommandExecutor {
         //healme command
         if(cmd.getName().equalsIgnoreCase("healme")){
             if (args.length > 0) {
+                sender.sendMessage(ChatColor.RED + "To many arguments!");
                 return false;
             }
             if (sender instanceof Player) {

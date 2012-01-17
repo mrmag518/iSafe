@@ -3,7 +3,7 @@ description: "Configurable features related to events happening on the server."
 main: me.mrmag518.iSafe.iSafe
 name: iSafe
 load: STARTUP 
-version: '2.34'
+version: '2.41'
 website: http://dev.bukkit.org/server-mods/blockthattnt/
 commands:
   iSafe-reload:
@@ -91,37 +91,24 @@ permissions:
       iSafe.vehicle.destory.boat: true
       iSafe.superbreak: true
       iSafe.heal: true
+      iSafe.place.blacklist.bypass: true
+      iSafe.break.blacklist.bypass: true
+      iSafe.drop.blacklist.bypass: true
   iSafe.place.*:
     description: Allow the user to get access to all the Place permissions.
     default: op
     children:
-      iSafe.place.tnt: true
-      iSafe.place.mobspawner: true
-      iSafe.place.bedrock: true
-      iSafe.place.fireblock: true
-      iSafe.place.obsidian: true
-      iSafe.place.waterblock: true
-      iSafe.place.lavablock: true
-      iSafe.place.piston: true
-      iSafe.place.sponge: true
-      iSafe.place.ice: true
-      iSafe.place.un-naturalportal: true
-      iSafe.place.soulsand: true
+      iSafe.break.blacklist.bypass: true
   iSafe.break.*:
     desccription: Allow the user to get all the access to Break permissions.
     default: op
     children:
-      iSafe.break.tnt: true
-      iSafe.break.mobspawner: true
-      iSafe.break.obsidian: true
-      iSafe.break.piston: true
-      iSafe.break.sponge: true
-      iSafe.break.ice: true
-      iSafe.break.soulsand: true
+      iSafe.break.blacklist.bypass: true
   iSafe.drop.*:
     description: Allow the user to get all access tothe Drop permissions.
     default: op
     children:
+      iSafe.drop.blacklist.bypass: true
       iSafe.drop: true
       iSafe.drop.tnt: true
       iSafe.drop.diamondblock: true
@@ -257,4 +244,10 @@ permissions:
   iSafe.superbreak:
     default: op
   iSafe.heal:
+    default: op
+  iSafe.place.blacklist.bypass:
+    default: op
+  iSafe.break.blacklist.bypass:
+    default: op
+  iSafe.drop.blacklist.bypass:
     default: op
