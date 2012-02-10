@@ -1,8 +1,131 @@
 Displaying the Change Log of iSafe.
 
-Version 2.41
-* Fixed sprinting/sneaking.
+Version 2.50
+* Added drops configurating.
+* Fixed a "quality" issue, related to the main config.
+* Added User Libraries.
+* Added update checker.
+* Fixed reload twice bug.
+* Fixed the PEX notifier not notifying in some cases.
+* Fixed Resource package displaying as the default package and not the resource.
+* Added multi strings support to command blacklists.
+* Added first stage of multi-world support for commands blacklist.
+* Fixed and remade the prevent sneaking and sprinting preventions, this should fix some issues some users have had.
+* Added PlayerTo-Spawnlocation configurations.
+* Fixed damage causes to only affect players.
+* Fixed damage preventions not working.
 * 
+
+Version 2.49
+* Fixed explosions always being prevented.
+* Fixed explosions not handling right entity.
+* Fixed fire damage, and this time it really is fixed..
+* Fixed outdated version.
+* Added No creeper death on explosion.
+* Added invidual preventions gamemode changing.
+
+Version 2.48
+* Added; Kick and kill player when placing a blacklisted object.
+* Fixed some alerts returning CraftWorld{name=world} instead of simply: world.
+* Added comments on /slayall command.
+* Added /cleardrops command.
+* Added a PEX notifier.
+* Added prevention for SheepDyeWool with invidual color support.
+* Fixed iSafe throwing out big errors when a an entity (except a Player) entered a vehicle.
+* Changed Prevent explosions to Disable explosions.
+* Removed un-used statements.
+* Added object_name support for blacklists.
+* Fixed command compitability with Essentials and WorldGuard, or in-case some smaller plugins to.
+* Fixed fire damage.
+* Added several damage prevention, such as poison, explosions ..
+* Fixed crop trampling handling Players.
+
+Version 2.47
+* Updated to bukkit 1.1-R3
+* Fixed old code overriding the new blacklists in relation to pickup events.
+* Cleaned up the main config a bit.
+* Added first part of Multi-world support.
+* Reformed the blacklists.
+
+Version 2.46
+* Reformed the buckets prevention, now giving back the bucket that you placed and not an empty bucket.
+* Fixed not being able to break in light|darkness.
+* Added pickup blacklist.
+* Smoothed out the blacklists player loggers.
+* Cleaned up the player config category.
+* Added prevention for bow usage.
+* Removed old permission nodes from the plugin.yml and cleaned it up.
+* Fixed main config having a "test" node.
+* Refactored the Listener package.
+* Added events and preventions for enchantment.
+* Added /slayall command.
+* Added rules.txt and /therules command.
+* Added a filter to check if the player has played before then writes a welcome back message instead of the normal welcome message.
+* Added /ping command.
+* Added /magixtxt command.
+* Updated to CB 1.1-R2.
+
+Version 2.45_1
+* Fixed entities not droping anything on death, also players.
+* Fixed version in description showing incorrect version number.
+
+Version 2.45
+* Fixed the info command showing from info when done from console.
+* Changed the info command from showing bukkit compitability to minecraft compitability.
+* Added a new package; Blacklists.
+* Reformed and addded the blacklists in seprate classes into the blacklists package.
+* Removed the commands command.
+* Added a package for comamnds and separated each command with its own class.
+* Fixed reload command not reloading the blacklist and mobsConfig
+* Added two new commands, (/isafe-reload-blacklist || /isafe-reload-mobsconfig)
+* Moved the listeners into their own package.
+* Added command blacklist, blacklist commands!
+* Made the command logger less "aggresive".
+* Added /stopserver command.
+
+Version 2.44
+* Added a new command, (/save-worlds) - save all the worlds.
+* Added complete prevention of placing | breaking and droping.
+* Fixed and added some permission nodes.
+* Added "arrow to the knee" prevention or/and punishment(s).
+* Added another mob spawn reason prevention.. Custom.
+* Reformed the config headers.
+* Fixed the join message going out to server chat and overriding the default join msg.
+* Added several preventions of teleportation causes. (also added a new config category - teleport)
+* Fixed a NPE forcing the plugin to disable.
+* Fixed blacklist alerters sending alerts when the player had access to the event.
+* Fixed iSafe.break and iSafe.drop not responding correctly.
+* Re added the full compitability for 1.1, and this time working with craftbukkit correctly.
+* Reformed the event registering, to the new event registering system. (if ur using 1.0.1 you will get tons of error, use 1.1)
+* Reformed the config nodes to respond to the new bukkit system.
+* Kinda cleaned up the whole plugin with this new event and config system.
+* Fixed an important boolean bug with the entity spawn prevention.
+* Updated to 1.1 recommended build.
+* Updated the isafe-info command information.
+* Reformed the class readers to partly initialize the classes on enable.
+* Fixed some minor bugs in the Listener classes
+* Removed un-used statements.
+* Fixed spam on playerJoin and command loggers.
+* Changed location for getting the server.
+
+Version 2.43
+* Cleaned the event register manager.
+* Added complete prevention of block spreading.
+* Added a new config - mobsConfig (MobControl)
+* Added a lot of new creature spawn controling. (adding more soon)
+
+Version 2.42
+* Fixed duped message alerts when a player is realoading the config.
+* Seperated the configs, blacklists now has their own config.
+* Changed the default string in the blacklists.
+* Changed and fixed the "only let ops join".
+* Removed support for 1.1 as the craftbukkit of 1.1 is really buggy. (it does not respond to ANY of the configs)
+* Fixed blacklist alerts alerting wrong.
+
+Version 2.41; 1.1 dev build
+* Compitable with 1.1 dev build: bukkit-1.1-R1-20120116.195027-31
+* Fixed sprinting/sneaking.
+* Reformed the blacklists a litte because the latest dev does not support the code I had.
 
 Verison 2.40
 * Changed config location.
