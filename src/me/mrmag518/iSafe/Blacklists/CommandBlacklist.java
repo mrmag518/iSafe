@@ -1,0 +1,93 @@
+package me.mrmag518.iSafe.Blacklists;
+
+import java.util.ArrayList;
+import java.util.List;
+import me.mrmag518.iSafe.iSafe;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+
+public class CommandBlacklist implements Listener {
+    public CommandBlacklist() {
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+    
+    public static iSafe plugin;
+    public CommandBlacklist(iSafe instance)
+    {
+        plugin = instance;
+    }
+    int message = 0;
+    
+    @EventHandler
+    public void CommandBlacklist(PlayerCommandPreprocessEvent event) {
+        if (event.isCancelled())
+        {
+            return;
+        }
+        
+        Player player = event.getPlayer();
+        Server server = player.getServer();
+        World world = player.getWorld();
+        Location loc = player.getLocation();
+        
+        String command_lowercase = event.getMessage().toLowerCase();
+        String command_upercase = event.getMessage().toUpperCase();
+        String command = event.getMessage().toString();
+        String command_raw = event.getMessage();
+        
+        String worldname = world.getName();
+        
+        final List<String> commands = new ArrayList<String>();
+        if (plugin.getBlacklist().getList("Command.Blacklist", commands).contains(command_lowercase)
+                || plugin.getBlacklist().getList("Command.Blacklist", commands).contains(command_upercase)
+                || plugin.getBlacklist().getList("Command.Blacklist", commands).contains(command)
+                || plugin.getBlacklist().getList("Command.Blacklist", commands).contains(command_raw))
+        {
+            if (!event.isCancelled())
+            {
+                final List<String> cmdworlds = plugin.getBlacklist().getStringList("Place.Worlds");
+                
+                if (plugin.getBlacklist().getList("Command.Worlds", cmdworlds).contains(worldname))
+                {
+                    event.setCancelled(true);
+                } else {
+                    event.setCancelled(false);
+                }
+            }    
+        }
+        
+        if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-console", true))
+        {
+            if (event.isCancelled()) {
+                plugin.log.info("[iSafe] "+ player.getName() + " tried to do the command: "+ command);
+            }
+        }
+        
+        if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-player", true))
+        {
+            if (event.isCancelled()) {
+                player.sendMessage(ChatColor.RED + "You cannot do the command: "+ command);
+            }
+        }
+        
+        if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-server-chat", true))
+        {
+            if (event.isCancelled()) {
+                server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to do the command: "+ command);
+            }
+        }
+        
+        if(plugin.getBlacklist().getBoolean("Command.Disallow-commands", true))
+        {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "All commands are disabled.");
+        }
+    }
+}

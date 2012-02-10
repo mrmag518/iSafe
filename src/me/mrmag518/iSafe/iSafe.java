@@ -1,44 +1,103 @@
 package me.mrmag518.iSafe;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.File;
+import java.net.URL;
 
-import org.bukkit.block.Block;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import me.mrmag518.iSafe.Blacklists.BreakBlacklist;
+import me.mrmag518.iSafe.Blacklists.CommandBlacklist;
+import me.mrmag518.iSafe.Blacklists.DropBlacklist;
+import me.mrmag518.iSafe.Blacklists.PickupBlacklist;
+import me.mrmag518.iSafe.Blacklists.PlaceBlacklist;
+import me.mrmag518.iSafe.Commands.*;
+import me.mrmag518.iSafe.Events.BlockListener;
+import me.mrmag518.iSafe.Events.DropListener;
+import me.mrmag518.iSafe.Events.EnchantmentListener;
+import me.mrmag518.iSafe.Events.EntityListener;
+import me.mrmag518.iSafe.Events.InventoryListener;
+import me.mrmag518.iSafe.Events.PlayerListener;
+import me.mrmag518.iSafe.Events.VehicleListener;
+import me.mrmag518.iSafe.Events.WeatherListener;
+import me.mrmag518.iSafe.Events.WorldListener;
+
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockListener;
-import org.bukkit.event.entity.EntityListener;
-import org.bukkit.event.inventory.InventoryListener;
-import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.vehicle.VehicleListener;
-import org.bukkit.event.weather.WeatherListener;
-import org.bukkit.event.world.WorldListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class iSafe extends JavaPlugin {
-    //Read the listener classes
-    private BlockListener blockListener = new iSafeBlockListener(this);
-    private EntityListener entityListener = new iSafeEntityListener(this);
-    private PlayerListener playerListener = new iSafePlayerListener(this);
-    private WeatherListener weatherListener = new iSafeWeatherListener(this);
-    private InventoryListener inventoryListener = new iSafeInventoryListener(this);
-    private VehicleListener vehicleListener = new iSafeVehicleListener(this);
-    private WorldListener worldListener = new iSafeWorldListener(this);
-    //Read the CommandExecutor class
-    private iSafeCommandExecutor CmdExecutor;
-    //this is a plugin right?
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+public class iSafe extends JavaPlugin implements Listener {
+    //Initialize the classes, but null them untill the plugin is enabled
+    private PlayerListener playerListener = null;
+    private BlockListener blockListener = null;
+    private EntityListener entityListener = null;
+    private WeatherListener weatherListener = null;
+    private InventoryListener inventoryListener = null;
+    private VehicleListener vehicleListener = null;
+    private WorldListener worldListener = null;
+    private EnchantmentListener enchantmentListener = null;
+    private DropListener dropListener = null;
+    //Misc
+    private UserLogging userLogging = null;
+    //Blacklist classes
+    private DropBlacklist dropBlacklist = null;
+    private PlaceBlacklist placeBlacklist = null;
+    private BreakBlacklist breakBlacklist = null;
+    private PickupBlacklist pickupBlacklist = null;
+    private CommandBlacklist commandBlacklist = null;
+    //Command classes
+    private Reload reloadcmd = null;
+    private iSafeInfo isafeInfocmd = null;
+    private Serverinfo serverinfocmd = null;
+    private Superbreak superbreakcmd = null;
+    private Healme healmecmd = null;
+    private Saveworlds saveWorldscmd = null;
+    private Stopserver stopServercmd = null;
+    private Slayall slayallcmd = null;
+    private Rules rulescmd = null;
+    private Ping pingcmd = null;
+    private Magictxt magixtxtcmd = null;
+    private ClearDrops cleardropscmd = null;
+    //Update checker
+    public String version = null;
+    public String newVersion = null;
+    
+    //iSafe as in plugin
     public static iSafe plugin;
     //The logger
     public final Logger log = Logger.getLogger("Minecraft");
-    //Configuration
+    //Configurations
+    public FileConfiguration rules = null;
+    public File rulesFile = null;
+    
+    public FileConfiguration mobsConfig = null;
+    public File mobsConfigFile = null;
+    
+    public FileConfiguration blacklist = null;
+    public File blacklistFile = null;
+    
     public FileConfiguration config;
+    public File configFile;
+    
     public Boolean configBoolean;
     public String configString;
     public Integer configInt;
@@ -48,14 +107,30 @@ public class iSafe extends JavaPlugin {
      * Blacklists
      */
     //Place
-    List<Block> placedblocks = new ArrayList<Block>();
-    String[] placedblockslist = { "Need help?, read the blacklist section at the iSafe wiki." };
+    List<String> placedblocks = new ArrayList<String>();
+    String[] placedblockslist = { "No defaults added." };
+    List<String> worlds = new ArrayList<String>();
+    String[] worldslist = { "world", "world_nether" };
     //Break
-    List<Block> brokenblocks = new ArrayList<Block>();
-    String[] brokenblockslist = { "Need help?, read the blacklist section at the iSafe wiki." };
+    List<String> brokenblocks = new ArrayList<String>();
+    String[] brokenblockslist = { "No defaults added." };
+    List<String> Breakworlds = new ArrayList<String>();
+    String[] Breakworldslist = { "world", "world_nether" };
     //Drop
-    List<Block> dropedblocks = new ArrayList<Block>();
-    String[] dropedblockslist = { "Need help?, read the blacklist section at the iSafe wiki." };
+    List<String> dropedblocks = new ArrayList<String>();
+    String[] dropedblockslist = { "No defaults added." };
+    List<String> Dropworlds = new ArrayList<String>();
+    String[] Dropworldslist = { "world", "world_nether" };
+    //Pickup
+    List<String> pickupedblocks = new ArrayList<String>();
+    String[] pickupedblockslist = { "No defaults added." };
+    List<String> Pickupworlds = new ArrayList<String>();
+    String[] Pickupworldslist = { "world", "world_nether" };
+    //Command
+    List<String> commands = new ArrayList<String>();
+    String[] commandslist = { "/nuke" };
+    List<String> cmdworlds = new ArrayList<String>();
+    String[] cmdworldlist = { "world", "world_nether" };
     
     //iSafe disable
     @Override
@@ -64,109 +139,266 @@ public class iSafe extends JavaPlugin {
         log.info("[iSafe] " + pdffile.getFullName() + " disabled succesfully.");
     }
     
-    //iSafe enable (not messy at all, right?)
+    //iSafe enable
     @Override
     public void onEnable() {
+        version = this.getDescription().getVersion();
+        
+        //Initialize the classes
+        //Listeners
+        playerListener = new PlayerListener(this);
+        blockListener = new BlockListener(this);
+        entityListener = new EntityListener(this);
+        worldListener = new WorldListener(this);
+        vehicleListener = new VehicleListener(this);
+        weatherListener = new WeatherListener(this);
+        inventoryListener = new InventoryListener(this);
+        enchantmentListener = new EnchantmentListener(this);
+        dropListener = new DropListener(this);
+        //Misc
+        userLogging = new UserLogging(this);
+        //Blacklist classes
+        dropBlacklist = new DropBlacklist(this);
+        placeBlacklist = new PlaceBlacklist(this);
+        breakBlacklist = new BreakBlacklist(this);
+        pickupBlacklist = new PickupBlacklist(this);
+        commandBlacklist = new CommandBlacklist(this);
+        //command classes
+        reloadcmd = new Reload(this);
+        isafeInfocmd = new iSafeInfo(this);
+        serverinfocmd = new Serverinfo(this);
+        superbreakcmd = new Superbreak(this);
+        healmecmd = new Healme(this);
+        saveWorldscmd = new Saveworlds(this);
+        stopServercmd = new Stopserver(this);
+        slayallcmd = new Slayall(this);
+        rulescmd = new Rules(this);
+        pingcmd = new Ping(this);
+        magixtxtcmd = new Magictxt(this);
+        cleardropscmd = new ClearDrops(this);
+        
         //plugin.yml
         PluginDescriptionFile pdffile = this.getDescription();
         
-        //Configuration
+        //Register Events
+        getServer().getPluginManager().registerEvents(this, this);
+        
+        getServer().getPluginManager().registerEvents(new UserLogging(), this);
+        
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new BlockListener(), this);
+        getServer().getPluginManager().registerEvents(new EntityListener(), this);
+        getServer().getPluginManager().registerEvents(new InventoryListener(), this);
+        getServer().getPluginManager().registerEvents(new VehicleListener(), this);
+        getServer().getPluginManager().registerEvents(new WeatherListener(), this);
+        getServer().getPluginManager().registerEvents(new WorldListener(), this);
+        getServer().getPluginManager().registerEvents(new EnchantmentListener(), this);
+        getServer().getPluginManager().registerEvents(new DropListener(), this);
+        
+        getServer().getPluginManager().registerEvents(new DropBlacklist(), this);
+        getServer().getPluginManager().registerEvents(new PlaceBlacklist(), this);
+        getServer().getPluginManager().registerEvents(new BreakBlacklist(), this);
+        getServer().getPluginManager().registerEvents(new PickupBlacklist(), this);
+        getServer().getPluginManager().registerEvents(new CommandBlacklist(), this);
+        
+        //Update checker - From MilkBowl.
+        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+            
+            @Override
+            public void run() {
+                
+                try {
+                    newVersion = updateCheck(version);
+                    String oldVersion = version;
+                    
+                    if (!newVersion.contains(oldVersion)) {
+                        log.info("A new version of iSafe is out! "+  newVersion + ", You are currently running v" + oldVersion);
+                        log.info("Please update iSafe at: http://dev.bukkit.org/server-mods/blockthattnt");
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+        }, 0, 36000);
+        
+        //Configuration - main
         config = this.getConfig();
         loadConfig();
+        reloadConfig();
+        //Configuration - blacklist
+        blacklist = this.getBlacklist();
+        loadBlacklist();
+        reloadBlacklist();
+        //Configuration - mobsConfig
+        mobsConfig = this.getMobsConfig();
+        loadMobsConfig();
+        reloadMobsConfig();
+        //Configuration - Rules
+        rules = this.getRules();
+        loadRules();
+        reloadRules();
         
-        //Register events    
-        PluginManager pm = getServer().getPluginManager();
-        //PlayerListener
-        pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_TOGGLE_SPRINT, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_TOGGLE_SNEAK, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_DROP_ITEM, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_TELEPORT, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_CHAT, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_BED_ENTER, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_KICK, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_FISH, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_LOGIN, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_PICKUP_ITEM, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_INTERACT_ENTITY, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_GAME_MODE_CHANGE, playerListener, Event.Priority.Normal, this);
-        //BlockListener
-        pm.registerEvent(Event.Type.BLOCK_DISPENSE, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_CANBUILD, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_DAMAGE, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_BURN, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_FORM, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_FROMTO, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_PISTON_EXTEND, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_PISTON_RETRACT, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.LEAVES_DECAY, blockListener, Event.Priority.Normal, this);
-        //EntityListener
-        pm.registerEvent(Event.Type.EXPLOSION_PRIME, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.CREATURE_SPAWN, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.ENDERMAN_PICKUP, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.ENDERMAN_PLACE, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.FOOD_LEVEL_CHANGE, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.ENTITY_DEATH, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.SLIME_SPLIT, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.ENTITY_TARGET, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.ENTITY_INTERACT, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PIG_ZAP, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.ENTITY_TAME, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.ITEM_SPAWN, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.CREEPER_POWER, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.ENTITY_PORTAL_ENTER, entityListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.ENTITY_COMBUST, entityListener, Event.Priority.Low, this);
-        pm.registerEvent(Event.Type.ENTITY_REGAIN_HEALTH, entityListener, Event.Priority.Low, this);
-        //WeatherListener
-        pm.registerEvent(Event.Type.WEATHER_CHANGE, weatherListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.THUNDER_CHANGE, weatherListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.LIGHTNING_STRIKE, weatherListener, Event.Priority.Normal, this);
-        //InventoryListener
-        pm.registerEvent(Event.Type.FURNACE_BURN, inventoryListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.FURNACE_SMELT, inventoryListener, Event.Priority.Normal, this);
-        //WorldListener
-        pm.registerEvent(Event.Type.WORLD_UNLOAD, worldListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.WORLD_LOAD, worldListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.WORLD_SAVE, worldListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.CHUNK_UNLOAD, worldListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.CHUNK_LOAD, worldListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.STRUCTURE_GROW, worldListener, Event.Priority.Normal, this);
-        //VehicleListener
-        pm.registerEvent(Event.Type.VEHICLE_ENTER, vehicleListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.VEHICLE_DESTROY, vehicleListener, Event.Priority.Normal, this);
+        //Commands
+        loadCommands();
         
-        //Read the commands in the command executor
-        CmdExecutor = new iSafeCommandExecutor(this);
-        //And now register them .
-        getCommand("iSafe-reload").setExecutor(CmdExecutor);
-        getCommand("iSafe-info").setExecutor(CmdExecutor);
-        getCommand("iSafe-commands").setExecutor(CmdExecutor);
-        getCommand("serverinfo").setExecutor(CmdExecutor);
-        getCommand("superbreak").setExecutor(CmdExecutor);
-        getCommand("healme").setExecutor(CmdExecutor);
+        //Notify about a PermissionsEx permission issue.
+        NotifyPEX();
         
-        //Log the rest.
-        log.info("[iSafe] Registered events.");
+        //Log the rest
         log.info("[iSafe] "+ pdffile.getFullName() + " enabled succesfully.");
+        
+    }
+    
+    //Update checker - From MilkBowl's Vault.
+    public String updateCheck(String currentVersion) throws Exception {
+        
+        String pluginUrlString = "http://dev.bukkit.org/server-mods/blockthattnt/files.rss";
+        
+        try {
+            URL url = new URL(pluginUrlString);
+             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url.openConnection().getInputStream());
+             doc.getDocumentElement().normalize();
+             NodeList nodes = doc.getElementsByTagName("item");
+             Node firstNode = nodes.item(0);
+             if (firstNode.getNodeType() == 1) {
+                 Element firstElement = (Element) firstNode;
+                 NodeList firstElementTagName = firstElement.getElementsByTagName("title");
+                 Element firstNameElement = (Element) firstElementTagName.item(0);
+                 NodeList firstNodes = firstNameElement.getChildNodes();
+                 return firstNodes.item(0).getNodeValue();
+             }
+        } catch (Exception ignored) {
+        }
+        return currentVersion;
+    }
+    
+    //From MilkBowl's Vault.
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        
+        Player player = event.getPlayer();
+        
+        if (player.hasPermission("iSafe.*") 
+                || player.isOp()) {
+            
+            try {
+                String oldVersion = getDescription().getVersion().substring(0, 5);
+                if (!newVersion.contains(oldVersion)) {
+                    player.sendMessage("A new version of iSafe is out! "+  newVersion + ", You are currently running v" + oldVersion);
+                    player.sendMessage("Please update iSafe at: http://dev.bukkit.org/server-mods/blockthattnt");
+                }
+            } catch (Exception e) {
+                //ignore
+            }
+        }
+    }
+    
+    public void loadCommands() {
+        getCommand("iSafe-reload").setExecutor(reloadcmd);
+        getCommand("iSafe-info").setExecutor(isafeInfocmd);
+        getCommand("serverinfo").setExecutor(serverinfocmd);
+        getCommand("superbreak").setExecutor(superbreakcmd);
+        getCommand("healme").setExecutor(healmecmd);
+        getCommand("save-worlds").setExecutor(saveWorldscmd);
+        getCommand("stopserver").setExecutor(stopServercmd);
+        getCommand("slayall").setExecutor(slayallcmd);
+        getCommand("therules").setExecutor(rulescmd);
+        getCommand("ping").setExecutor(pingcmd);
+        getCommand("magictxt").setExecutor(magixtxtcmd);
+        getCommand("cleardrops").setExecutor(cleardropscmd);
     }
     
     public void loadConfig() {
-        config.options().header("I would recommend taking a decent look trough the configuration file. Visit iSafe wiki at: http://dev.bukkit.org/server-mods/blockthattnt/pages/wiki/");
-        config = getConfig();     
+        config = getConfig();
+        
+        config.options().header("This is the main configuration file in association to iSafe; take a decent look through it to manage your own preferred settings.");
+        config = getConfig();
+        
+        //Enchantment
+        config.addDefault("Enchantment.Prevent-Enchantment", false);
+        //Teleport Player to the current Spawn Location of the World s|he's in.
+        config.addDefault("PlayerTo-SpawnLocation.On-Void-fall", true);
         //Buckets
-        config.addDefault("Buckets.Allow-LavaBucket-empty", false);
-        config.addDefault("Buckets.Allow-WaterBucket-empty", true);
+        config.addDefault("Buckets.Prevent-LavaBucket-empty", true);
+        config.addDefault("Buckets.Prevent-WaterBucket-empty", false);
+        //Flow
+        config.addDefault("Flow.Disable-water-flow", false);
+        config.addDefault("Flow.Disable-lava-flow", false);
+        //Piston
+        config.addDefault("Piston.Prevent-piston-Extend", false);
+        config.addDefault("Piston.Prevent-piston-Retract", false);
+        //Furnace
+        config.addDefault("Furnace.Disable-furnace-burning", false);
+        config.addDefault("Furnace.Disable-furnace-smelting", false);
+        //Physics
+        config.addDefault("Physics.Disable-sand-physics", false);
+        config.addDefault("Physics.Disable-gravel-physics", false);
+        //Fade
+        config.addDefault("Fade.Prevent-Ice-melting", false);
+        config.addDefault("Fade.Prevent-Snow-melting", false);
+        //Chunk
+        config.addDefault("Chunk.Prevent-chunks-unloading", false);
+        config.addDefault("Chunk.Enable-Chunk-emergency-loader", false);
+        //Environment-Damage
+        config.addDefault("Enviroment-Damage.Prevent-Fire-spread", false);
+        config.addDefault("Enviroment-Damage.Allow-Flint_and_steel-usage", false);
+        config.addDefault("Enviroment-Damage.Allow-Enviroment-ignition", false);
+        //Chat
+        config.addDefault("Chat.Enable-Chat-permissions", false);
+        config.addDefault("Chat.Prevent-arrow-to-the-knee-jokes", false);
+        config.addDefault("Chat.Punish-arrow-to-the-knee-jokes", true);
+        //Weather
+        config.addDefault("Weather.Disable-LightningStrike", false);
+        config.addDefault("Weather.Disable-Storm", false);
+        config.addDefault("Weather.Disable-Thunder", false);
+        //Vehicle
+        config.addDefault("Vehicle.Prevent.enter.Minecarts", false);
+        config.addDefault("Vehicle.Prevent.enter.Boats", false);
+        config.addDefault("Vehicle.Prevent.destroy.Minecarts", false);
+        config.addDefault("Vehicle.Prevent.destroy.Boats", false);
+        //Teleport
+        config.addDefault("Teleport.Disallow-Teleporting", false);
+        config.addDefault("Teleport.Prevent-TeleportCause.Command", false);
+        config.addDefault("Teleport.Prevent-TeleportCause.EnderPearl", false);
+        config.addDefault("Teleport.Prevent-TeleportCause.Plugin", false);
+        config.addDefault("Teleport.Prevent-TeleportCause.Unknown", false);
+        //Misc
+        config.addDefault("Misc.Enable-kick-messages", true);
+        config.addDefault("Misc.Disable-LeavesDecay", false);
+        config.addDefault("Misc.Prevent-crop-trampling-by-creature", false);
+        config.addDefault("Misc.Prevent-crop-trampling-by-player", false);
+        config.addDefault("Misc.Prevent-portal-creation", false);
+        //Explosions
+        config.addDefault("Explosions.Disable-primed-explosions", false);
+        config.addDefault("Explosions.Prevent-creeper-death-on-explosion", false);
+        config.addDefault("Explosions.Disable-explosions", false);
+        config.addDefault("Explosions.Disable-Creeper-explosions", false);
+        config.addDefault("Explosions.Disable-EnderDragon-blockdamage", false);
+        config.addDefault("Explosions.Disable-TNT-explosions", false);
+        config.addDefault("Explosions.Disable-Fireball-explosions", false);
+        config.addDefault("Explosions.Disable-Disable-Block_Explosion-damage", false);
+        config.addDefault("Explosions.Disable-Entity_Explosion-damage", false);
+        //World
+        config.addDefault("World.Register-world(s)-init", true);
+        config.addDefault("World.Register-world(s)-unload", true);
+        config.addDefault("World.Register-world(s)-save", true);
+        config.addDefault("World.Register-world(s)-load", true);
+        config.addDefault("World.Disable-ExpirienceOrbs-drop", false);
+        config.addDefault("World.Prevent-items/objects-to-spawn-into-the-world", false);
+        config.addDefault("World.Prevent-naturally-object-dispensing", false);
+        config.addDefault("World.Force-blocks-to-be-buildable", false);
+        config.addDefault("World.Prevent-blocks-spreading", false);
+        //Structure
+        config.addDefault("Structure.Prevent-structure-growth.BIG_TREE", false);
+        config.addDefault("Structure.Prevent-structure-growth.BIRCH", false);
+        config.addDefault("Structure.Prevent-structure-growth.BROWN_MUSHROOM", false);
+        config.addDefault("Structure.Prevent-structure-growth.REDWOOD", false);
+        config.addDefault("Structure.Prevent-structure-growth.RED_MUSHROOM", false);
+        config.addDefault("Structure.Prevent-structure-growth.TALL_REDWOOD", false);
+        config.addDefault("Structure.Prevent-structure-growth.TREE", false);
+        config.addDefault("Structure.Prevent-bonemeal-usage", false);
+        config.addDefault("Structure.Prevent-strcuture-growth", false);
         //Entity
+        config.addDefault("Entity-Damage.Disable-Fire-damage", false);
         config.addDefault("Entity-Damage.Disable-Void-damage", false);
         config.addDefault("Entity-Damage.Disable-Lightning-damage", false);
         config.addDefault("Entity-Damage.Disable-Fall-damage", false);
@@ -178,176 +410,394 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Entity-Damage.Disable-Starvation-damage", false);
         config.addDefault("Entity-Damage.Disable-Suicide-damage", false);
         config.addDefault("Entity-Damage.Disable-Entity_Attack-damage", false);
+        config.addDefault("Entity-Damage.Disable-Magic-damage", false);
+        config.addDefault("Entity-Damage.Disable-Poison-damage", false);
         config.addDefault("Entity-Damage.Disable-Custom-damage", false);
-        //Explosions
-        config.addDefault("Explosions.Prevent-primed-explosions", false);
-        config.addDefault("Explosions.Prevent-explosions", false);
-        config.addDefault("Explosions.Prevent-Creeper-explosions", false);
-        config.addDefault("Explosions.Prevent-EnderDragon-blockdamage", false);
-        config.addDefault("Explosions.Prevent-TNT-explosions", false);
-        config.addDefault("Explosions.Prevent-Fireball-explosions", false);
-        //Enviroment-Damage
-        config.addDefault("Enviroment-Damage.Prevent-Fire-spread", false);
-        config.addDefault("Enviroment-Damage.Allow-Flint_and_steel-usage", false);
-        config.addDefault("Enviroment-Damage.Allow-Enviroment-ignition", false);
-        //Chat
-        config.addDefault("Chat.Enable-Chat-permissions", false);
-        //Flow
-        config.addDefault("Flow.Disable-water-flow", false);
-        config.addDefault("Flow.Disable-lava-flow", false);
-        //Piston
-        config.addDefault("Piston.Prevent-piston-Extend", false);
-        config.addDefault("Piston.Prevent-piston-Retract", false);
-        //Weather
-        config.addDefault("Weather.Disable-LightningStrike", false);
-        config.addDefault("Weather.Disable-Storm", false);
-        config.addDefault("Weather.Disable-Thunder", false);
-        //Furnace
-        config.addDefault("Furnace.Disable-furnace-burning", false);
-        config.addDefault("Furnace.Disable-furnace-smelting", false);
-        //Misc
-        config.addDefault("Misc.Enable-kick-messages", true);
-        config.addDefault("Misc.Disable-LeavesDecay", false);
-        config.addDefault("Misc.Prevent-crop-trampling-by-creature", false);
-        config.addDefault("Misc.Prevent-crop-trampling-by-player", false);
-        config.addDefault("Misc.Prevent-portal-creation", false);
-        //Pickup (un-finished code)
-        config.addDefault("Pickup.Prevent-item-pickup", false);
-        //Mobs (needs a little more cleanup)
-        config.addDefault("Mobs.Spawn.Allow-Slime-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Ghast-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Zombie-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Creeper-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Skeleton-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Enderman-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Giant-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Silverfish-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-PigZombie-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Spider-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Squid-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Wolf-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Pig-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Cow-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-EnderDragon-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Sheep-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Blaze-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-MagmaCube-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Chicken-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Monster/human-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-MuchroomCow-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Snowman-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Squid-spawn", true);
-        config.addDefault("Mobs.Spawn.Allow-Villager-spawn", true);
-        config.addDefault("Mobs.EntityTarget.Disable-closest_player-target", false);
-        config.addDefault("Mobs.EntityTarget.Disable-custom-target", false);
-        config.addDefault("Mobs.EntityTarget.Disable-forgot_target-target", false);
-        config.addDefault("Mobs.EntityTarget.Disable-owner_attacked_target-target", false);
-        config.addDefault("Mobs.EntityTarget.Disable-pig_zombie_target-target", false);
-        config.addDefault("Mobs.EntityTarget.Disable-random_target-target", false);
-        config.addDefault("Mobs.EntityTarget.Disable-target_attacked_entity-target", false);
-        config.addDefault("Mobs.EntityTarget.Disable-target_attacked_owner-target", false);
-        config.addDefault("Mobs.EntityTarget.Disable-target_died-target", false);
-        config.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Lightning", false);
-        config.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Set-Off", false);
-        config.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Set-On", false);
-        config.addDefault("Mobs.Enderman-grief.Prevent-Enderman-Pickup", false);
-        config.addDefault("Mobs.Enderman-grief.Prevent-Enderman-Place", false);
-        config.addDefault("Mobs.Prevent-Object-drop-on-death", false);
-        config.addDefault("Mobs.Prevent-Entity-Combust", false);
-        config.addDefault("Mobs.Tame.Prevent-taming", false);
-        config.addDefault("Mobs.Allow-SlimeSplit", true);
-        config.addDefault("Mobs.Prevent-PigZap(Pig transformation to ZombiePig)", true);
         //Player
-        config.addDefault("Player.Interact.Allow-Buttons-Interact", true);
-        config.addDefault("Player.Interact.Allow-WoodenDoors-Interact", true);
-        config.addDefault("Player.Interact.Allow-IronDoors-Interact", true);
-        config.addDefault("Player.Interact.Allow-Levers-Interact", true);
-        config.addDefault("Player.Interact.Allow-StonePressurePlate-Interact", true);
-        config.addDefault("Player.Interact.Allow-WoodenPressurePlate-Interact", true);
-        config.addDefault("Player.Interact.Allow-TrapDoor-Interact", true);
-        config.addDefault("Player.Interact.Allow-WoodenFenceGate-Interact", true);
-        config.addDefault("Player.Interact.Allow-Chest-Interact", true);
-        config.addDefault("Player.Entity/Player.Completely-Prevent.Health-Regeneration", false);
-        config.addDefault("Player.Entity/Player.Prevent.Custom-Health-Regeneration", false);
-        config.addDefault("Player.Entity/Player.Prevent.Eating-Health-Regeneration", false);
-        config.addDefault("Player.Entity/Player.Prevent.Regen-Health-Regeneration", false);
-        config.addDefault("Player.Entity/Player.Prevent.Satiated-Health-Regeneration", false);
-        config.addDefault("PlayerInteractEntity.Prevent-snowball-hitting-player", false);
-        config.addDefault("PlayerInteractEntity.Prevent-arrow-hitting-player", false);
         config.addDefault("Player.Prevent-Sprinting", false);
         config.addDefault("Player.Prevent-Sneaking", false);
         config.addDefault("Player.Enable-fishing-permissions", false);
         config.addDefault("Player.Broadcast-iSafe-message-on-join", true);
         config.addDefault("Player.Allow-creative-gamemode-on-player-quit", true);
         config.addDefault("Player.Disable-Hunger", false);
-        config.addDefault("Player.Allow-Teleporting-without-iSafe-permissions", true);
         config.addDefault("Player.Enable-Bed-permissions", false);
         config.addDefault("Player.Enable-fishing-permissions", false);
         config.addDefault("Player.Only-let-OPs-join", false);
         config.addDefault("Player.Log-commands", true);
         config.addDefault("Player.Disable-all-commands", false);
         config.addDefault("Player.Prevent-Gamemode-change", false);
+        config.addDefault("Player.Prevent-Gamemode-to-CreativeMode-change", false);
+        config.addDefault("Player.Prevent-Gamemode-to-SurvivalMode-change", false);
         config.addDefault("Player.Infinite-itemtacks", false);
         config.addDefault("Player.Kick-player-if-anther-user-with-same-username-log's-on", true);
         config.addDefault("Player.Instantbreak", false);
-        //World
-        config.addDefault("World.Register-world(s)-init", true);
-        config.addDefault("World.Register-world(s)-unload", true);
-        config.addDefault("World.Register-world(s)-save", true);
-        config.addDefault("World.Register-world(s)-load", true);
-        config.addDefault("World.Disable-ExpirienceOrbs-drop", false);
-        config.addDefault("World.Prevent-items/objects-to-spawn-into-the-world", false);
-        config.addDefault("World.Prevent-naturally-object-dispensing", false);
-        config.addDefault("World.Force-blocks-to-be-buildable", false);
-        //Physics
-        config.addDefault("Physics.Disable-sand-physics", false);
-        config.addDefault("Physics.Disable-gravel-physics", false);
-        //Fade
-        config.addDefault("Fade.Prevent-Ice-melting", false);
-        config.addDefault("Fade.Prevent-Snow-melting", false);
-        //Vehicles
-        config.addDefault("Vehicle.Prevent.enter.Minecarts", false);
-        config.addDefault("Vehicle.Prevent.enter.Boats", false);
-        config.addDefault("Vehicle.Prevent.destroy.Minecarts", false);
-        config.addDefault("Vehicle.Prevent.destroy.Boats", false);
-        //Chunks
-        config.addDefault("Chunk.Prevent-chunks-unloading", false);
-        config.addDefault("Chunk.Enable-Chunk-emergency-loader", false);
-        //Structure
-        config.addDefault("Structure.Prevent-structure-growth.BIG_TREE", false);
-        config.addDefault("Structure.Prevent-structure-growth.BIRCH", false);
-        config.addDefault("Structure.Prevent-structure-growth.BROWN_MUSHROOM", false);
-        config.addDefault("Structure.Prevent-structure-growth.REDWOOD", false);
-        config.addDefault("Structure.Prevent-structure-growth.RED_MUSHROOM", false);
-        config.addDefault("Structure.Prevent-structure-growth.TALL_REDWOOD", false);
-        config.addDefault("Structure.Prevent-structure-growth.TREE", false);
-        config.addDefault("Structure.Prevent-bonemeal-usage", false);
-        config.addDefault("Structure.Prevent-strcuture-growth", false);
+        config.addDefault("Player.Prevent-Bow-usage", false);
         
-        /**
-         * Blacklists (needs improvement)
-         */
+        config.addDefault("Player-Interact.Allow-Buttons-Interact", true);
+        config.addDefault("Player-Interact.Allow-WoodenDoors-Interact", true);
+        config.addDefault("Player-Interact.Allow-IronDoors-Interact", true);
+        config.addDefault("Player-Interact.Allow-Levers-Interact", true);
+        config.addDefault("Player-Interact.Allow-StonePressurePlate-Interact", true);
+        config.addDefault("Player-Interact.Allow-WoodenPressurePlate-Interact", true);
+        config.addDefault("Player-Interact.Allow-TrapDoor-Interact", true);
+        config.addDefault("Player-Interact.Allow-WoodenFenceGate-Interact", true);
+        config.addDefault("Player-Interact.Allow-Chest-Interact", true);
         
-        //Place blacklist
-        config.addDefault("Place.Alert/log.To-console", true);
-        config.addDefault("Place.Alert/log.To-player", true);
-        config.addDefault("Place.Alert/log.To-server-chat", false);
-        config.addDefault("Place.Blacklist", Arrays.asList(placedblockslist));
-        placedblocks = config.getList("Place.Blacklist", placedblocks);
-        //Break blacklist
-        config.addDefault("Break.Alert/log.To-console", true);
-        config.addDefault("Break.Alert/log.To-player", true);
-        config.addDefault("Break.Alert/log.To-server-chat", false);
-        config.addDefault("Break.Blacklist", Arrays.asList(brokenblockslist));
-        brokenblocks = config.getList("Break.Blacklist", brokenblocks);
-        //Drop blacklist
-        config.addDefault("Drop.Alert/log.To-console", true);
-        config.addDefault("Drop.Alert/log.To-player", true);
-        config.addDefault("Drop.Alert/log.To-server-chat", false);
-        config.addDefault("Drop.Blacklist", Arrays.asList(dropedblockslist));
-        dropedblocks = config.getList("Drop.Blacklist", dropedblocks);
+        config.addDefault("Entity/Player.Completely-Prevent.Health-Regeneration", false);
+        config.addDefault("Entity/Player.Prevent.Custom-Health-Regeneration", false);
+        config.addDefault("Entity/Player.Prevent.Eating-Health-Regeneration", false);
+        config.addDefault("Entity/Player.Prevent.Regen-Health-Regeneration", false);
+        config.addDefault("Entity/Player.Prevent.Satiated-Health-Regeneration", false);
+        
+        config.addDefault("PlayerInteractEntity.Prevent-snowball-hitting-player", false);
+        config.addDefault("PlayerInteractEntity.Prevent-arrow-hitting-player", false);
+        
+        //Drops
+        config.addDefault("Drop-configure.Glass.Drop.Glass", false);
+        config.addDefault("Drop-configure.Mobspawner.Drop.Mobspawner", false);
+        config.addDefault("Drop-configure.Ice.Drop.Ice", false);
+        config.addDefault("Drop-configure.Ice.Drop.Ice-options.Prevent-water", false);
+        config.addDefault("Drop-configure.Bedrock.Drop.Bedrock", false);
+        config.addDefault("Drop-configure.Bookshelf.Drop.Bookshelf", false);
+        config.addDefault("Drop-configure.Grass_thingy.Drop.Grass_thingy", false);
+        
         this.getConfig().options().copyDefaults(true);
         saveConfig();
         log.info("[iSafe] Loaded configuration file.");
+    }
+    
+    public final void NotifyPEX() {
+        log.warning("[iSafe] If you got problems with the permissions of iSafe and ur using PEX, please try to write them in full Lower_Case letters.");
+    }
+    
+    /**
+     * Blacklist config.
+     */
+    public void loadBlacklist() {
+        blacklist.options().header("This is the blacklist config on behalf of iSafe, read the iSafe wiki for assistance.");
+        //Place blacklist
+        blacklist.addDefault("Place.Complete-Disallow-placing", false);
+        blacklist.addDefault("Place.Kick-Player", false);
+        blacklist.addDefault("Place.Kill-Player", false);
+        blacklist.addDefault("Place.Alert/log.To-console", true);
+        blacklist.addDefault("Place.Alert/log.To-player", true);
+        blacklist.addDefault("Place.Alert/log.To-server-chat", false);
+        
+        blacklist.addDefault("Place.Worlds", Arrays.asList(worldslist));
+        worlds = blacklist.getStringList("Place.Worlds");
+        
+        blacklist.addDefault("Place.Blacklist", Arrays.asList(placedblockslist));
+        placedblocks = blacklist.getStringList("Place.Blacklist");
+        
+        //Break blacklist
+        blacklist.addDefault("Break.Complete-Disallow-breaking", false);
+        blacklist.addDefault("Break.Kick-Player", false);
+        blacklist.addDefault("Break.Kill-Player", false);
+        blacklist.addDefault("Break.Alert/log.To-console", true);
+        blacklist.addDefault("Break.Alert/log.To-player", true);
+        blacklist.addDefault("Break.Alert/log.To-server-chat", false);
+        
+        blacklist.addDefault("Break.Worlds", Arrays.asList(worldslist));
+        worlds = blacklist.getStringList("Break.Worlds");
+        
+        blacklist.addDefault("Break.Blacklist", Arrays.asList(brokenblockslist));
+        brokenblocks = blacklist.getStringList("Break.Blacklist");
+        
+        //Drop blacklist
+        blacklist.addDefault("Drop.Complete-Disallow-droping", false);
+        blacklist.addDefault("Drop.Kick-Player", false);
+        blacklist.addDefault("Drop.Kill-Player", false);
+        blacklist.addDefault("Drop.Alert/log.To-console", true);
+        blacklist.addDefault("Drop.Alert/log.To-player", true);
+        blacklist.addDefault("Drop.Alert/log.To-server-chat", false);
+        
+        blacklist.addDefault("Drop.Worlds", Arrays.asList(worldslist));
+        worlds = blacklist.getStringList("Drop.Worlds");
+        
+        blacklist.addDefault("Drop.Blacklist", Arrays.asList(dropedblockslist));
+        dropedblocks = config.getStringList("Drop.Blacklist");
+        
+        //Pickup blacklist
+        blacklist.addDefault("Pickup.Complete-Disallow-pickuping", false);
+        blacklist.addDefault("Pickup.Kick-Player", false);
+        blacklist.addDefault("Pickup.Kill-Player", false);
+        blacklist.addDefault("Pickup.Alert/log.To-console", true);
+        blacklist.addDefault("Pickup.Alert/log.To-player", true);
+        blacklist.addDefault("Pickup.Alert/log.To-server-chat", false);
+        
+        blacklist.addDefault("Pickup.Worlds", Arrays.asList(Pickupworldslist));
+        Pickupworlds = blacklist.getStringList("Pickup.Worlds");
+        
+        blacklist.addDefault("Pickup.Blacklist", Arrays.asList(pickupedblockslist));
+        pickupedblocks = config.getStringList("Pickup.Blacklist");
+        
+        //Commands blacklist
+        blacklist.addDefault("Command.Disallow-commands", false);
+        blacklist.addDefault("Command.Alert/log.To-console", true);
+        blacklist.addDefault("Command.Alert/log.To-player", true);
+        blacklist.addDefault("Command.Alert/log.To-server-chat", false);
+        
+        blacklist.addDefault("Command.Worlds", Arrays.asList(cmdworldlist));
+        cmdworlds = blacklist.getStringList("Command.Worlds");
+        
+        blacklist.addDefault("Command.Blacklist", Arrays.asList(commandslist));
+        commands = config.getStringList("Command.Blacklist");
+        
+        this.getBlacklist().options().copyDefaults(true);
+        saveBlacklist();
+        log.info("[iSafe] Loaded blacklist file.");
+    }
+    
+    public void reloadRules() {
+        if (rulesFile == null) {
+            rulesFile = new File(getDataFolder(), "Rules.txt");
+        }
+        rules = YamlConfiguration.loadConfiguration(rulesFile);
+        
+        // Look for defaults in the jar
+        InputStream defConfigStream = getResource("Rules.txt");
+        if (defConfigStream != null) {
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            rules.setDefaults(defConfig);
+        }
+    }
+    
+    public FileConfiguration getRules() {
+        if (rules == null) {
+            reloadRules();
+        }
+        return rules;
+    }
+    
+    public void saveRules() {
+        if (rules == null || rulesFile == null) {
+            return;
+        }
+        try {
+            rules.save(rulesFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving rules to " + rulesFile, ex);
+        }
+    }
+    
+    public void loadRules() {
+        String[] listOfStrings = {"Respect eachother.", "Use intelligence.", "Respect the rules as they are and follow them."};
+        rules.addDefault("Rules", Arrays.asList(listOfStrings));
+        
+        this.getRules().options().copyDefaults(true);
+        saveRules();
+        log.info("[iSafe] Loaded rules file.");
+    }
+    
+    public void reloadBlacklist() {
+        if (blacklistFile == null) {
+            blacklistFile = new File(getDataFolder(), "blacklist.yml");
+        }
+        blacklist = YamlConfiguration.loadConfiguration(blacklistFile);
+        
+        // Look for defaults in the jar
+        InputStream defConfigStream = getResource("blacklist.yml");
+        if (defConfigStream != null) {
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            blacklist.setDefaults(defConfig);
+        }
+    }
+    
+    public FileConfiguration getBlacklist() {
+        if (blacklist == null) {
+            reloadBlacklist();
+        }
+        return blacklist;
+    }
+    
+    public void saveBlacklist() {
+        if (blacklist == null || blacklistFile == null) {
+            return;
+        }
+        try {
+            blacklist.save(blacklistFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving blacklist to " + blacklistFile, ex);
+        }
+    }
+    
+    /**
+     * MobsConfig
+     */
+    public void reloadMobsConfig() {
+        if (mobsConfigFile == null) {
+            mobsConfigFile = new File(getDataFolder(), "mobsConfig.yml");
+        }
+        mobsConfig = YamlConfiguration.loadConfiguration(mobsConfigFile);
+        
+        // Look for defaults in the jar
+        InputStream defConfigStream = getResource("mobsConfig.yml");
+        if (defConfigStream != null) {
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            mobsConfig.setDefaults(defConfig);
+        }
+    }
+    
+    public FileConfiguration getMobsConfig() {
+        if (mobsConfig == null) {
+            reloadMobsConfig();
+        }
+        return mobsConfig;
+    }
+    
+    public void saveMobsConfig() {
+        if (mobsConfig == null || mobsConfigFile == null) {
+            return;
+        }
+        try {
+            mobsConfig.save(mobsConfigFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving blacklist to " + mobsConfigFile, ex);
+        }
+    }
+    
+    public void loadMobsConfig() {
+        mobsConfig.options().header("This is the Mob Control config associated to regulatory characteristics aimed at mobs in Minecraft.");
+        //Misc
+        mobsConfig.addDefault("Mobs.EntityTarget.Disable-closest_player-target", false);
+        mobsConfig.addDefault("Mobs.EntityTarget.Disable-custom-target", false);
+        mobsConfig.addDefault("Mobs.EntityTarget.Disable-forgot_target-target", false);
+        mobsConfig.addDefault("Mobs.EntityTarget.Disable-owner_attacked_target-target", false);
+        mobsConfig.addDefault("Mobs.EntityTarget.Disable-pig_zombie_target-target", false);
+        mobsConfig.addDefault("Mobs.EntityTarget.Disable-random_target-target", false);
+        mobsConfig.addDefault("Mobs.EntityTarget.Disable-target_attacked_entity-target", false);
+        mobsConfig.addDefault("Mobs.EntityTarget.Disable-target_attacked_owner-target", false);
+        mobsConfig.addDefault("Mobs.EntityTarget.Disable-target_died-target", false);
+        mobsConfig.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Lightning", false);
+        mobsConfig.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Set-Off", false);
+        mobsConfig.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Set-On", false);
+        mobsConfig.addDefault("Mobs.Enderman-grief.Prevent-Enderman-Pickup", false);
+        mobsConfig.addDefault("Mobs.Enderman-grief.Prevent-Enderman-Place", false);
+        mobsConfig.addDefault("Mobs.Prevent-Object-drop-on-death", false);
+        mobsConfig.addDefault("Mobs.Prevent-Entity-Combust", false);
+        mobsConfig.addDefault("Mobs.Tame.Prevent-taming", false);
+        mobsConfig.addDefault("Mobs.Allow-SlimeSplit", true);
+        mobsConfig.addDefault("Mobs.Prevent-PigZap(Pig transformation to ZombiePig)", true);
+        //Spawn Reason = Natural:
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Blazes", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Cave_Spiders", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Chickens", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Cows", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Creepers", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Endermen", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.EnderDragons", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Ghasts", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Giants", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.MagmaCubes", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Monsters", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.MushroomCows", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Pigs", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.PigZombie", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Sheeps", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Silverfishes", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Skeletons", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Slimes", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Snowmen", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Spiders", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Squids", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Villagers", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Wolfs", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Zombies", false);
+        //Spawn Reason = Spawners
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Blazes", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.CaveSpiders", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Chickens", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Cows", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Creepers", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Endermen", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.EnderDragons", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Ghasts", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Giants", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.MagmaCubes", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Monsters", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.MushroomCows", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Pigs", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.PigZombies", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Sheeps", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Silverfishes", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Skeletons", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Slimes", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Snowmen", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Spiders", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Squids", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Villagers", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Wolfs", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Zombies", false);
+        //Spawn Reason = Custom
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Blazes", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.CaveSpiders", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Chickens", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Cows", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Creepers", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Endermen", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.EnderDragons", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Ghasts", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Giants", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.MagmaCubes", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Monsters", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.MushroomCows", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Pigs", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.PigZombies", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Sheeps", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.SilverFishes", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Skeletons", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Slimes", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Snowmen", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Spiders", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Squids", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Villagers", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Wolfs", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Zombies", false);
+        //Mobs-all
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Slime-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Ghast-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Zombie-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Creeper-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Skeleton-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Enderman-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Giant-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Silverfish-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-PigZombie-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Spider-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Squid-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Wolf-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Pig-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Cow-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-EnderDragon-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Sheep-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Blaze-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-MagmaCube-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Chicken-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Monster/human-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-MuchroomCow-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Snowman-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Squid-spawn", true);
+        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Villager-spawn", true);
+        
+        //SheepDyeWool
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Black", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Blue", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Brown", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Cyan", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Gray", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Green", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Light_Blue", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Lime", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Magenta", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Orange", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Pink", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Purple", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Red", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Silver", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.White", false);
+        mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Yellow", false);
+        this.getMobsConfig().options().copyDefaults(true);
+        saveMobsConfig();
+        log.info("[iSafe] Loaded mobsConfig file.");
     }
 }

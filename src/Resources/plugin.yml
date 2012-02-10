@@ -1,0 +1,228 @@
+author: mrmag518
+description: "Configurable features related to events happening on the server."
+main: me.mrmag518.iSafe.iSafe
+name: iSafe
+load: STARTUP 
+version: '2.50'
+website: http://dev.bukkit.org/server-mods/blockthattnt/
+commands:
+  iSafe-reload:
+    usage: "Usage: /<command>"
+    aliases: [reloadiSafe, iSafereload]
+  iSafe-reload-blacklist:
+    usage: "Usage: /<command>"
+  iSafe-reload-mobsconfig:
+    usage: "Usage: /<command>"
+  iSafe-info:
+    usage: "Usage: /<command>"
+    aliases: [infoisafe, isafeinfo]
+  serverinfo:
+    usage: "Usage: /<command>"
+    aliases: [isafe-serverinfo, server-info, myserver]
+  superbreak:
+    usage: "Usage: /<command>"
+  healme:
+    usage: "Usage: /<command>"
+  save-worlds:
+    usage: "Usage: /<command>"
+    aliases: [saveallworlds, saveworlds]
+  stopserver:
+    usage: "Usage: /<command>"
+    aliases: [serverstop, shutdown]
+  slayall:
+    usage: "Usage: /<command>"
+  therules:
+    usage: "Usage: /<command>"
+  ping:
+    usage: "Usage: /<command>"
+  magictxt:
+    usage: "Usage: /<command>"
+  cleardrops:
+    usage: "Usage: /<command>"
+permissions:
+  iSafe.*:
+    description: Allow the user to get access to all the iSafe permissions.
+    default: op
+    children:
+      iSafe.place.*: true
+      iSafe.break.*: true
+      iSafe.drop.*: true
+      iSafe.interact.*: true
+      iSafe.vehicle.*: true
+      iSafe.serverinfo: true
+      iSafe.drop: true
+      iSafe.lavabucket.empty: true
+      iSafe.superstick: true
+      iSafe.sprint: true
+      iSafe.sneak: true
+      iSafe.reload: true
+      iSafe.info: true
+      iSafe.teleport: true
+      iSafe.chat: true
+      iSafe.bed-enter: true
+      iSafe.place.soulsand: true
+      iSafe.break.soulsand: true
+      iSafe.fish: true
+      iSafe.interact.buttons: true
+      iSafe.interact.woodendoors: true
+      iSafe.interact.irondoors: true
+      iSafe.interact.stonepressureplate: true
+      iSafe.interact.woodenpressureplate: true
+      iSafe.interact.levers: true
+      iSafe.interact.trapdoor: true
+      iSafe.interact.woodenfencegate: true
+      iSafe.interact.chest: true
+      iSafe.pickup: true
+      iSafe.vehicle.enter.minecart: true
+      iSafe.vehicle.enter.boat: true
+      iSafe.vehicle.destory.minecart: true
+      iSafe.vehicle.destory.boat: true
+      iSafe.superbreak: true
+      iSafe.heal: true
+      iSafe.place.blacklist.bypass: true
+      iSafe.break.blacklist.bypass: true
+      iSafe.drop.blacklist.bypass: true
+      iSafe.pickup.blacklist.bypass: true
+      iSafe.place: true
+      iSafe.break: true
+      iSafe.drop: true
+      iSafe.teleport.command: true
+      iSafe.teleport.enderpearl: true
+      iSafe.teleport.plugin: true
+      iSafe.teleport.unknown: true
+      iSafe.stopserver: true
+      iSafe.pickup: true
+      iSafe.bow.use: true
+      iSafe.rules: true
+      iSafe.slayall: true
+      iSafe.ping: true
+      iSafe.magictxt: true
+      iSafe.cleardrops: true
+  iSafe.place.*:
+    description: Allow the user to get access to all the Place permissions.
+    default: op
+    children:
+      iSafe.break.blacklist.bypass: true
+      iSafe.place: true
+  iSafe.break.*:
+    desccription: Allow the user to get all the access to Break permissions.
+    default: op
+    children:
+      iSafe.break.blacklist.bypass: true
+      iSafe.break: true
+  iSafe.drop.*:
+    description: Allow the user to get all access tothe Drop permissions.
+    default: op
+    children:
+      iSafe.drop.blacklist.bypass: true
+      iSafe.drop: true
+  iSafe.interact.*:
+    description: Allow the user to get access to all the Interact permissions.
+    default: op
+    children:
+      iSafe.interact.buttons: true
+      iSafe.interact.woodendoors: true
+      iSafe.interact.irondoors: true
+      iSafe.interact.stonepressureplate: true
+      iSafe.interact.woodenpressureplate: true
+      iSafe.interact.levers: true
+      iSafe.interact.trapdoor: true
+      iSafe.interact.woodenfencegate: true
+      iSafe.interact.chest: true
+  iSafe.vehicle.*:
+    description: Allow the user to get access to all the Vehicle permissions.
+    default: op
+    childred:
+      iSafe.vehicle.enter.minecart: true
+      iSafe.vehicle.enter.boat: true
+      iSafe.vehicle.destory.minecart: true
+      iSafe.vehicle.destory.boat: true
+  iSafe.lavabucket.empty:
+    default: op
+  iSafe.sprint:
+    default: op
+  iSafe.break.piston:
+    default: op
+  iSafe.sneak:
+    default: op
+  iSafe.waterbucket.empty:
+    default: op
+  iSafe.reload:
+    default: op
+  iSafe.info:
+    default: op
+  iSafe.teleport:
+    default: op
+  iSafe.chat:
+    default: op
+  iSafe.bed-enter:
+    default: op
+  iSafe.fish:
+    default: op
+  iSafe.interact.buttons:
+    default: op
+  iSafe.interact.woodendoors:
+    default: op
+  iSafe.interact.irondoors:
+    default: op
+  iSafe.interact.stonepressureplate:
+    default: op
+  iSafe.interact.woodenpressureplate:
+    default: op
+  iSafe.interact.levers:
+    default: op
+  iSafe.interact.trapdoor:
+    default: op
+  iSafe.interact.woodenfencegate:
+    default: op
+  iSafe.interact.chest:
+    default: op
+  iSafe.drop:
+    default: op
+  iSafe.serverinfo:
+    default: op
+  iSafe.pickup:
+    default: op
+  iSafe.superbreak:
+    default: op
+  iSafe.heal:
+    default: op
+  iSafe.place.blacklist.bypass:
+    default: op
+  iSafe.break.blacklist.bypass:
+    default: op
+  iSafe.drop.blacklist.bypass:
+    default: op
+  iSafe.pickup.blacklist.bypass:
+    default: op
+  iSafe.place:
+    default: op
+  iSafe.break:
+    default: op
+  iSafe.drop:
+    default: op
+  iSafe.pickup:
+    default: op
+  iSafe.teleport.command:
+    default: op
+  iSafe.teleport.enderpearl:
+    default: op
+  iSafe.teleport.plugin:
+    default: op
+  iSafe.teleport.unknown:
+    default: op
+  iSafe.stopserver:
+    default: op
+  iSafe.bow.use:
+    default: op
+  iSafe.rules:
+    default: op
+  iSafe.slayall:
+    default: op
+  iSafe.ping:
+    default: op
+  iSafe.magictxt:
+    default: op
+  iSafe.cleardrops:
+    default: op
+    
