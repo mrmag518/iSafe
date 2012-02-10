@@ -7,14 +7,12 @@ Version 2.50
 * Added update checker.
 * Fixed reload twice bug.
 * Fixed the PEX notifier not notifying in some cases.
-* Fixed Resource package displaying as the default package and not the resource.
 * Added multi strings support to command blacklists.
 * Added first stage of multi-world support for commands blacklist.
 * Fixed and remade the prevent sneaking and sprinting preventions, this should fix some issues some users have had.
 * Added PlayerTo-Spawnlocation configurations.
 * Fixed damage causes to only affect players.
 * Fixed damage preventions not working.
-* 
 
 Version 2.49
 * Fixed explosions always being prevented.
