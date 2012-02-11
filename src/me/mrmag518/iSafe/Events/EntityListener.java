@@ -1211,6 +1211,18 @@ public class EntityListener implements Listener {
                     event.setDamage(0);
                 }
             }
+            else {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Fire-Creature-damage", true))
+                    {
+                        if(event.getCause().equals(DamageCause.FIRE) 
+                            || event.getCause().equals(DamageCause.FIRE_TICK)) {
+                        if (entity instanceof Creature) {
+                            event.setCancelled(true);
+                            event.setDamage(0);
+                        }
+                    }
+                }
+            }
         }
         
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Lightning-damage", true))
@@ -1219,6 +1231,15 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     event.setCancelled(true);
                     event.setDamage(0);
+                }
+            }
+            else {
+                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Lightning-Creature-damage", true))
+                {
+                    if (entity instanceof Creature) {
+                        event.setCancelled(true);
+                        event.setDamage(0);
+                    }
                 }
             }
         }
@@ -1230,11 +1251,24 @@ public class EntityListener implements Listener {
                     event.setCancelled(true);
                     event.setDamage(0);
                     
-                    if (plugin.getConfig().getBoolean("PlayerTo-SpawnLocation.On-Void-fall", true)) {
+                    if (plugin.getConfig().getBoolean("EntityTo-SpawnLocation.On-Void-fall(Player)", true)) {
                          entity.teleport(world.getSpawnLocation());
                     }
                 }
             }
+            else {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Void-Creature-damage", true))
+                    {
+                        if (entity instanceof Creature) {
+                            event.setCancelled(true);
+                            event.setDamage(0);
+                            
+                            if (plugin.getConfig().getBoolean("EntityTo-SpawnLocation.On-Void-fall(Creature)", true)) {
+                                 entity.teleport(world.getSpawnLocation());
+                            }
+                        }
+                    }
+                }
         }
         
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Fall-damage", true))
@@ -1243,6 +1277,15 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     event.setCancelled(true);
                     event.setDamage(0);
+                }
+            }
+            else {
+                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Fall-Creature-damage", true))
+                {
+                    if (entity instanceof Creature) {
+                        event.setCancelled(true);
+                        event.setDamage(0);
+                    }
                 }
             }
         }
@@ -1255,6 +1298,15 @@ public class EntityListener implements Listener {
                     event.setDamage(0);
                 }
             }
+            else {
+                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Suffocation-Creature-damage", true))
+                {
+                    if (entity instanceof Creature) {
+                        event.setCancelled(true);
+                        event.setDamage(0);
+                    }
+                }
+            }
         }
         
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Drowning-damage", true))
@@ -1263,6 +1315,15 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     event.setCancelled(true);
                     event.setDamage(0);
+                }
+            }
+            else {
+                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Drowning-Creature-damage", true))
+                {
+                    if (entity instanceof Creature) {
+                        event.setCancelled(true);
+                        event.setDamage(0);
+                    }
                 }
             }
         }
@@ -1275,6 +1336,15 @@ public class EntityListener implements Listener {
                     event.setDamage(0);
                 }
             }
+            else {
+                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Lava-Creature-damage", true))
+                {
+                    if (entity instanceof Creature) {
+                        event.setCancelled(true);
+                        event.setDamage(0);
+                    }
+                }
+            }
         }
         
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Contact-damage", true))
@@ -1283,6 +1353,15 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     event.setCancelled(true);
                     event.setDamage(0);
+                }
+            }
+            else {
+                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Contact-Creature-damage", true))
+                {
+                    if (entity instanceof Creature) {
+                        event.setCancelled(true);
+                        event.setDamage(0);
+                    }
                 }
             }
         }
@@ -1295,6 +1374,15 @@ public class EntityListener implements Listener {
                     event.setDamage(0);
                 }
             }
+            else {
+                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Projectile-Creature-damage", true))
+                {
+                    if (entity instanceof Creature) {
+                        event.setCancelled(true);
+                        event.setDamage(0);
+                    }
+                }
+            }
         }
         
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Starvation-damage", true))
@@ -1303,6 +1391,15 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     event.setCancelled(true);
                     event.setDamage(0);
+                }
+            }
+            else {
+                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Starvation-Creature-damage", true))
+                {
+                    if (entity instanceof Creature) {
+                        event.setCancelled(true);
+                        event.setDamage(0);
+                    }
                 }
             }
         }
@@ -1315,6 +1412,15 @@ public class EntityListener implements Listener {
                     event.setDamage(0);
                 }
             }
+            else {
+                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Suicide-Creature-damage", true))
+                {
+                    if (entity instanceof Creature) {
+                        event.setCancelled(true);
+                        event.setDamage(0);
+                    }
+                }
+            }
         }
         
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Entity_Attack-damage", true))
@@ -1325,6 +1431,15 @@ public class EntityListener implements Listener {
                     event.setDamage(0);
                 }
             }
+            else {
+                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Entity_Attack-Creature-damage", true))
+                {
+                    if (entity instanceof Creature) {
+                        event.setCancelled(true);
+                        event.setDamage(0);
+                    }
+                }
+            }
         }
         
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Custom-damage", true))
@@ -1333,6 +1448,15 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     event.setCancelled(true);
                     event.setDamage(0);
+                } 
+                else {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Custom-Creature-damage", true))
+                    {
+                        if (entity instanceof Creature) {
+                            event.setCancelled(true);
+                            event.setDamage(0);
+                        }
+                    }
                 }
             }
         }
@@ -1365,6 +1489,15 @@ public class EntityListener implements Listener {
                     event.setCancelled(true);
                     event.setDamage(0);
                 }
+                else {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Magic-Creature-damage", true))
+                    {
+                        if (entity instanceof Creature) {
+                            event.setCancelled(true);
+                            event.setDamage(0);
+                        }
+                    }
+                }
             }
         }
         
@@ -1374,6 +1507,15 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     event.setCancelled(true);
                     event.setDamage(0);
+                }
+            }
+            else {
+                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Poison-Creature-damage", true))
+                {
+                    if (entity instanceof Creature) {
+                        event.setCancelled(true);
+                        event.setDamage(0);
+                    }
                 }
             }
         }

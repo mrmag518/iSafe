@@ -13,6 +13,8 @@ Version 2.50
 * Added PlayerTo-Spawnlocation configurations.
 * Fixed damage causes to only affect players.
 * Fixed damage preventions not working.
+* Added configuable damage causes to seperatly support creatures and players.
+* 
 
 Version 2.49
 * Fixed explosions always being prevented.

@@ -316,7 +316,8 @@ public class iSafe extends JavaPlugin implements Listener {
         //Enchantment
         config.addDefault("Enchantment.Prevent-Enchantment", false);
         //Teleport Player to the current Spawn Location of the World s|he's in.
-        config.addDefault("PlayerTo-SpawnLocation.On-Void-fall", true);
+        config.addDefault("EntityTo-SpawnLocation.On-Void-fall(Player)", true);
+        config.addDefault("EntityTo-SpawnLocation.On-Void-fall(Creature)", true);
         //Buckets
         config.addDefault("Buckets.Prevent-LavaBucket-empty", true);
         config.addDefault("Buckets.Prevent-WaterBucket-empty", false);
@@ -399,20 +400,49 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Structure.Prevent-strcuture-growth", false);
         //Entity
         config.addDefault("Entity-Damage.Disable-Fire-damage", false);
+        config.addDefault("Entity-Damage.Disable-Fire-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Void-damage", false);
+        config.addDefault("Entity-Damage.Disable-Void-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Lightning-damage", false);
+        config.addDefault("Entity-Damage.Disable-Lightning-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Fall-damage", false);
+        config.addDefault("Entity-Damage.Disable-Fall-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Suffocation-damage", false);
+        config.addDefault("Entity-Damage.Disable-Suffocation-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Drowning-damage", false);
+        config.addDefault("Entity-Damage.Disable-Drowning-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Lava-damage", false);
+        config.addDefault("Entity-Damage.Disable-Lava-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Contact-damage", false);
+        config.addDefault("Entity-Damage.Disable-Contact-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Projectile-damage", false);
+        config.addDefault("Entity-Damage.Disable-Projectile-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Starvation-damage", false);
+        config.addDefault("Entity-Damage.Disable-Starvation-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Suicide-damage", false);
+        config.addDefault("Entity-Damage.Disable-Suicide-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Entity_Attack-damage", false);
+        config.addDefault("Entity-Damage.Disable-Entity_Attack-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Magic-damage", false);
+        config.addDefault("Entity-Damage.Disable-Magic-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Poison-damage", false);
+        config.addDefault("Entity-Damage.Disable-Poison-Creature-damage", false);
+        
         config.addDefault("Entity-Damage.Disable-Custom-damage", false);
+        config.addDefault("Entity-Damage.Disable-Custom-Creature-damage", false);
         //Player
         config.addDefault("Player.Prevent-Sprinting", false);
         config.addDefault("Player.Prevent-Sneaking", false);
