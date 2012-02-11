@@ -1,3 +1,4 @@
-dist
-build
-nbprojects
+/build
+/bin
+/dist
+/nbproject
