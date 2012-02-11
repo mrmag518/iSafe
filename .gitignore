@@ -1,4 +1,4 @@
-/build
-/bin
-/dist
-/nbproject
+\build
+\bin
+\dist
+\nbproject
