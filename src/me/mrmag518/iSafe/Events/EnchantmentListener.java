@@ -27,14 +27,12 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 
 
 public class EnchantmentListener implements Listener {
-    public EnchantmentListener() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
     
     public static iSafe plugin;
     public EnchantmentListener(iSafe instance)
     {
         plugin = instance;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
     @EventHandler

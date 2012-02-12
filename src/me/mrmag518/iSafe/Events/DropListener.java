@@ -28,14 +28,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class DropListener implements Listener {
-    public DropListener() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
     
     public static iSafe plugin;
     public DropListener(iSafe instance)
     {
         plugin = instance;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
     @EventHandler

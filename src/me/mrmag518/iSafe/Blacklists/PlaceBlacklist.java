@@ -34,14 +34,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 public class PlaceBlacklist implements Listener {
-    public PlaceBlacklist() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
     
     public static iSafe plugin;
     public PlaceBlacklist(iSafe instance)
     {
         plugin = instance;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     int message = 0;
     

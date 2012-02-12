@@ -51,17 +51,14 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.util.Vector;
 
 public class PlayerListener implements Listener  {
-    public PlayerListener() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
     
     public static iSafe plugin;
     public PlayerListener(iSafe instance)
     {
         plugin = instance;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     int message = 0;
     

@@ -14,6 +14,9 @@ Version 2.50
 * Fixed damage causes to only affect players.
 * Fixed damage preventions not working.
 * Added configuable damage causes to seperatly support creatures and players.
+* Fixed enderdragons being removed when only cancelling their explosions.
+* Made explosions display, but not damaging objects.
+* Fixed events being registered twice, and therfore sending out duplicated events.
 * 
 
 Version 2.49

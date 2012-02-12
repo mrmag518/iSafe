@@ -49,14 +49,12 @@ import org.bukkit.inventory.ItemStack;
 
 
 public class BlockListener implements Listener {
-    public BlockListener() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
     
     public static iSafe plugin;
     public BlockListener(iSafe instance)
     {
         plugin = instance;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
     @EventHandler(priority = EventPriority.NORMAL)

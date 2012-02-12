@@ -201,24 +201,6 @@ public class iSafe extends JavaPlugin implements Listener {
         //Register Events
         getServer().getPluginManager().registerEvents(this, this);
         
-        getServer().getPluginManager().registerEvents(new UserLogging(), this);
-        
-        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        getServer().getPluginManager().registerEvents(new BlockListener(), this);
-        getServer().getPluginManager().registerEvents(new EntityListener(), this);
-        getServer().getPluginManager().registerEvents(new InventoryListener(), this);
-        getServer().getPluginManager().registerEvents(new VehicleListener(), this);
-        getServer().getPluginManager().registerEvents(new WeatherListener(), this);
-        getServer().getPluginManager().registerEvents(new WorldListener(), this);
-        getServer().getPluginManager().registerEvents(new EnchantmentListener(), this);
-        getServer().getPluginManager().registerEvents(new DropListener(), this);
-        
-        getServer().getPluginManager().registerEvents(new DropBlacklist(), this);
-        getServer().getPluginManager().registerEvents(new PlaceBlacklist(), this);
-        getServer().getPluginManager().registerEvents(new BreakBlacklist(), this);
-        getServer().getPluginManager().registerEvents(new PickupBlacklist(), this);
-        getServer().getPluginManager().registerEvents(new CommandBlacklist(), this);
-        
         //Update checker - From MilkBowl.
         this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
             

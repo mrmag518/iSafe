@@ -33,14 +33,12 @@ import org.bukkit.event.entity.EntityTargetEvent.*;
 
 
 public class EntityListener implements Listener {
-    public EntityListener() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
     
     public static iSafe plugin;
     public EntityListener(iSafe instance)
     {
         plugin = instance;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
     @EventHandler
@@ -93,36 +91,37 @@ public class EntityListener implements Listener {
         //Prevent all explosions
         if(plugin.getConfig().getBoolean("Explosions.Disable-explosions", true))
         {    
-            event.setCancelled(true);
-            ent.remove();
+            event.blockList().clear();
+            return;
         }
         //Prevent Creeper explosions
         if(plugin.getConfig().getBoolean("Explosions.Disable-Creeper-explosions", true))
         {
             if (ent instanceof Creeper) {
-                event.setCancelled(true);
-                ent.remove();
+                event.blockList().clear();
+                return;
             }
         }
         //Prevent EnderDragon block damage
         if(plugin.getConfig().getBoolean("Explosions.Disable-EnderDragon-blockdamage", true))
         {
             if (ent instanceof EnderDragon) {
-                event.setCancelled(true);
+                event.blockList().clear();
+                return;
             }
         }
         if(plugin.getConfig().getBoolean("Explosions.Disable-TNT-explosions", true))
         {
             if (ent instanceof TNTPrimed) {
-                event.setCancelled(true);
-                ent.remove();
+                event.blockList().clear();
+                return;
             }
         }
         if(plugin.getConfig().getBoolean("Explosions.Disable-Fireball-explosions", true))
         {
             if (ent instanceof Fireball) {
-                event.setCancelled(true);
-                ent.remove();
+                event.blockList().clear();
+                return;
             }  
         }
     }

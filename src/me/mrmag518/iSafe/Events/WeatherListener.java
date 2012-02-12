@@ -19,6 +19,7 @@
 package me.mrmag518.iSafe.Events;
 
 import me.mrmag518.iSafe.*;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -27,14 +28,12 @@ import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 
 public class WeatherListener implements Listener {
-    public WeatherListener() {
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
     
     public static iSafe plugin;
     public WeatherListener(iSafe instance)
     {
         plugin = instance;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
         
     @EventHandler(priority = EventPriority.NORMAL)
