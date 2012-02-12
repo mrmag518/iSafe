@@ -17,6 +17,8 @@ Version 2.50
 * Fixed enderdragons being removed when only cancelling their explosions.
 * Made explosions display, but not damaging objects.
 * Fixed events being registered twice, and therfore sending out duplicated events.
+* Fixed duplication for getting the main config.
+* Seperated the config headers from the config strings.
 * 
 
 Version 2.49

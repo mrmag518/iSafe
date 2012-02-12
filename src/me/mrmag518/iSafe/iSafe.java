@@ -310,8 +310,7 @@ public class iSafe extends JavaPlugin implements Listener {
     public void loadConfig() {
         config = getConfig();
         
-        config.options().header("This is the main configuration file in association to iSafe; take a decent look through it to manage your own preferred settings.");
-        config = getConfig();
+        config.options().header("This is the main configuration file in association to iSafe; take a decent look through it to manage your own preferred settings./n");
         
         //Enchantment
         config.addDefault("Enchantment.Prevent-Enchantment", false);
@@ -401,46 +400,32 @@ public class iSafe extends JavaPlugin implements Listener {
         //Entity
         config.addDefault("Entity-Damage.Disable-Fire-damage", false);
         config.addDefault("Entity-Damage.Disable-Fire-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Void-damage", false);
         config.addDefault("Entity-Damage.Disable-Void-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Lightning-damage", false);
         config.addDefault("Entity-Damage.Disable-Lightning-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Fall-damage", false);
         config.addDefault("Entity-Damage.Disable-Fall-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Suffocation-damage", false);
         config.addDefault("Entity-Damage.Disable-Suffocation-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Drowning-damage", false);
         config.addDefault("Entity-Damage.Disable-Drowning-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Lava-damage", false);
         config.addDefault("Entity-Damage.Disable-Lava-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Contact-damage", false);
         config.addDefault("Entity-Damage.Disable-Contact-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Projectile-damage", false);
         config.addDefault("Entity-Damage.Disable-Projectile-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Starvation-damage", false);
         config.addDefault("Entity-Damage.Disable-Starvation-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Suicide-damage", false);
         config.addDefault("Entity-Damage.Disable-Suicide-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Entity_Attack-damage", false);
         config.addDefault("Entity-Damage.Disable-Entity_Attack-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Magic-damage", false);
         config.addDefault("Entity-Damage.Disable-Magic-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Poison-damage", false);
         config.addDefault("Entity-Damage.Disable-Poison-Creature-damage", false);
-        
         config.addDefault("Entity-Damage.Disable-Custom-damage", false);
         config.addDefault("Entity-Damage.Disable-Custom-Creature-damage", false);
         //Player
@@ -504,7 +489,7 @@ public class iSafe extends JavaPlugin implements Listener {
      * Blacklist config.
      */
     public void loadBlacklist() {
-        blacklist.options().header("This is the blacklist config on behalf of iSafe, read the iSafe wiki for assistance.");
+        blacklist.options().header("This is the blacklist config on behalf of iSafe, read the iSafe wiki for assistance.\n");
         //Place blacklist
         blacklist.addDefault("Place.Complete-Disallow-placing", false);
         blacklist.addDefault("Place.Kick-Player", false);
@@ -687,8 +672,11 @@ public class iSafe extends JavaPlugin implements Listener {
     }
     
     public void loadMobsConfig() {
-        mobsConfig.options().header("This is the Mob Control config associated to regulatory characteristics aimed at mobs in Minecraft.");
+        mobsConfig.options().header("This is the Mob Control config associated to regulatory characteristics aimed at mobs in Minecraft.\n");
         //Misc
+        /**
+         * Todo: Make categories.
+         */
         mobsConfig.addDefault("Mobs.EntityTarget.Disable-closest_player-target", false);
         mobsConfig.addDefault("Mobs.EntityTarget.Disable-custom-target", false);
         mobsConfig.addDefault("Mobs.EntityTarget.Disable-forgot_target-target", false);
@@ -698,15 +686,22 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Mobs.EntityTarget.Disable-target_attacked_entity-target", false);
         mobsConfig.addDefault("Mobs.EntityTarget.Disable-target_attacked_owner-target", false);
         mobsConfig.addDefault("Mobs.EntityTarget.Disable-target_died-target", false);
+        
         mobsConfig.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Lightning", false);
         mobsConfig.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Set-Off", false);
         mobsConfig.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Set-On", false);
+        
         mobsConfig.addDefault("Mobs.Enderman-grief.Prevent-Enderman-Pickup", false);
         mobsConfig.addDefault("Mobs.Enderman-grief.Prevent-Enderman-Place", false);
+        
         mobsConfig.addDefault("Mobs.Prevent-Object-drop-on-death", false);
+        
         mobsConfig.addDefault("Mobs.Prevent-Entity-Combust", false);
+        
         mobsConfig.addDefault("Mobs.Tame.Prevent-taming", false);
+        
         mobsConfig.addDefault("Mobs.Allow-SlimeSplit", true);
+        
         mobsConfig.addDefault("Mobs.Prevent-PigZap(Pig transformation to ZombiePig)", true);
         //Spawn Reason = Natural:
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Blazes", false);
