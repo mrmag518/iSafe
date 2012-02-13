@@ -104,9 +104,6 @@ public class iSafe extends JavaPlugin implements Listener {
     //The logger
     public final Logger log = Logger.getLogger("Minecraft");
     //Configurations
-    public FileConfiguration messages = null;
-    public File messagesFile = null;
-    
     public FileConfiguration rules = null;
     public File rulesFile = null;
     
@@ -118,10 +115,6 @@ public class iSafe extends JavaPlugin implements Listener {
     
     public FileConfiguration config;
     public File configFile;
-    
-    public Boolean configBoolean;
-    public String configString;
-    public Integer configInt;
     //InstantBreak HashMap
     public Set<Player> superbreak = new HashSet<Player>();
     /**

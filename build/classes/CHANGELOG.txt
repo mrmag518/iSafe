@@ -20,7 +20,7 @@ Version 2.50
 * Fixed duplication for getting the main config.
 * Seperated the config headers from the config strings.
 * Added multi-world support for buckets.
-* 
+* Removed un-used code, and the rest of the deprecated config.
 
 Version 2.49
 * Fixed explosions always being prevented.

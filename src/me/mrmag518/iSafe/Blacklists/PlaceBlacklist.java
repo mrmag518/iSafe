@@ -50,9 +50,6 @@ public class PlaceBlacklist implements Listener {
         {
             return;
         }
-        
-        File MulitWorldsFile = new File(plugin.getDataFolder() + File.separator + plugin.getServer().getWorlds() + File.separator + plugin.getServer().getWorlds().toString() + ".yml");
-        
         Player player = event.getPlayer();
         Block block = event.getBlock();
         Server server = player.getServer();

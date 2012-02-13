@@ -282,7 +282,6 @@ public class PlayerListener implements Listener  {
         String msg = event.getMessage();
         Player player = event.getPlayer();
         World world = player.getWorld();
-        Server server = player.getServer();
         
         if(plugin.getConfig().getBoolean("Chat.Enable-Chat-permissions", true))
         {
@@ -318,8 +317,6 @@ public class PlayerListener implements Listener  {
         }
         
         Player player = event.getPlayer();
-        World world = player.getWorld();
-        Server server = player.getServer();
         
         if(plugin.getConfig().getBoolean("Player.Enable-Bed-permissions", true))
         {
@@ -356,8 +353,6 @@ public class PlayerListener implements Listener  {
         }
         
         Player player = event.getPlayer();
-        Server server = player.getServer();
-        World world = player.getWorld();
         
         if(plugin.getConfig().getBoolean("Player.Enable-fishing-permissions", true))
         {
@@ -378,8 +373,6 @@ public class PlayerListener implements Listener  {
         }
         
         Player player = event.getPlayer();
-        Server server = player.getServer();
-        World world = player.getWorld();
         Block block = event.getClickedBlock();
         
         if(!plugin.getConfig().getBoolean("Player-Interact.Allow-Buttons-Interact", true))
@@ -492,9 +485,6 @@ public class PlayerListener implements Listener  {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
-        Server server = player.getServer();
-        World world = player.getWorld();
-        String username = player.getName();
         
         if(plugin.getConfig().getBoolean("Player.Only-let-OPs-join", true))
         {
@@ -525,8 +515,6 @@ public class PlayerListener implements Listener  {
         }
         
         Player player = event.getPlayer();
-        Server server = player.getServer();
-        World world = player.getWorld();
         
         if(plugin.getConfig().getBoolean("Player.Log-commands", true))
         {
@@ -545,8 +533,6 @@ public class PlayerListener implements Listener  {
         }
         
         Player player = event.getPlayer();
-        World world = player.getWorld();
-        Server server = player.getServer();
         Entity entity = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("PlayerInteractEntity.Prevent-arrow-hitting-player", true))
@@ -571,8 +557,6 @@ public class PlayerListener implements Listener  {
         }
         
         Player player = event.getPlayer();
-        World world = player.getWorld();
-        Server server = player.getServer();
         
         if(plugin.getConfig().getBoolean("Player.Prevent-Gamemode-change", true))
         {
