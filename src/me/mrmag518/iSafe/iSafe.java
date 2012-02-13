@@ -104,6 +104,9 @@ public class iSafe extends JavaPlugin implements Listener {
     //The logger
     public final Logger log = Logger.getLogger("Minecraft");
     //Configurations
+    public FileConfiguration messages = null;
+    public File messagesFile = null;
+    
     public FileConfiguration rules = null;
     public File rulesFile = null;
     
@@ -149,6 +152,14 @@ public class iSafe extends JavaPlugin implements Listener {
     String[] commandslist = { "/nuke" };
     List<String> cmdworlds = new ArrayList<String>();
     String[] cmdworldlist = { "world", "world_nether" };
+    
+    /**
+     * Buckets
+     */
+    List<String> lbworlds = new ArrayList<String>();
+    String[] lbworldslist = { "world", "world_nether" };
+    List<String> wbworlds = new ArrayList<String>();
+    String[] wbworldslist = { "world", "world_nether" };
     
     //iSafe disable
     @Override
@@ -319,7 +330,12 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("EntityTo-SpawnLocation.On-Void-fall(Creature)", true);
         //Buckets
         config.addDefault("Buckets.Prevent-LavaBucket-empty", true);
+        config.addDefault("Buckets.Lava.Worlds", Arrays.asList(lbworldslist));
+        lbworlds = config.getStringList("Buckets.Lava.Worlds");
+        
         config.addDefault("Buckets.Prevent-WaterBucket-empty", false);
+        config.addDefault("Buckets.Water.Worlds", Arrays.asList(wbworldslist));
+        wbworlds = config.getStringList("Buckets.Water.Worlds");
         //Flow
         config.addDefault("Flow.Disable-water-flow", false);
         config.addDefault("Flow.Disable-lava-flow", false);

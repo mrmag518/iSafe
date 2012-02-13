@@ -19,6 +19,7 @@
 package me.mrmag518.iSafe.Events;
 
 
+import java.util.List;
 import me.mrmag518.iSafe.*;
 
 import org.bukkit.ChatColor;
@@ -70,30 +71,45 @@ public class PlayerListener implements Listener  {
         }
         
         Player player = event.getPlayer();
+        World world = player.getWorld();
+        String worldname = world.getName();
         
         if(plugin.getConfig().getBoolean("Buckets.Prevent-LavaBucket-empty", true))
         {
-            if(player.hasPermission("iSafe.lavabucket.empty")) {
-                //access
-            } else {
-                if (event.getBucket().equals(Material.LAVA_BUCKET)) 
-                {
-                    event.setCancelled(true);
-                    event.getPlayer().getInventory().setItemInHand(new ItemStack(Material.LAVA_BUCKET,1));
-                    player.sendMessage(ChatColor.RED + "You do not have access to empty that");
+            final List<String> lbworlds = plugin.getConfig().getStringList("Buckets.Lava.Worlds");
+            if (plugin.getConfig().getList("Buckets.Lava.Worlds", lbworlds).contains(worldname))
+            {
+                if(player.hasPermission("iSafe.lavabucket.empty")) {
+                    //Access
+                } else {
+                    if (event.getBucket().equals(Material.LAVA_BUCKET))
+                    {
+                        event.setCancelled(true);
+                        event.getPlayer().getInventory().setItemInHand(new ItemStack(Material.LAVA_BUCKET,1));
+                        player.sendMessage(ChatColor.RED + "You cannot empty a LavaBucket in the world: "+ ChatColor.GRAY + worldname);
+                    } else {
+                        event.setCancelled(false);
+                    }
+                }
             }
         }
-    }
+        
         if(plugin.getConfig().getBoolean("Buckets.Prevent-WaterBucket-empty", true))
         {
-            if(player.hasPermission("iSafe.waterbucket.empty")) {
-                //access
-            } else {
-                if (event.getBucket().equals(Material.WATER_BUCKET)) 
-                {
-                    event.setCancelled(true);
-                    event.getPlayer().getInventory().setItemInHand(new ItemStack(Material.WATER_BUCKET,1));
-                    player.sendMessage(ChatColor.RED + "You do not have access to empty that");
+            final List<String> wbworlds = plugin.getConfig().getStringList("Buckets.Water.Worlds");
+            if (plugin.getConfig().getList("Buckets.Water.Worlds", wbworlds).contains(worldname))
+            {
+                if(player.hasPermission("iSafe.waterbucket.empty")) {
+                    //Access
+                } else {
+                    if (event.getBucket().equals(Material.WATER_BUCKET)) 
+                    {
+                        event.setCancelled(true);
+                        event.getPlayer().getInventory().setItemInHand(new ItemStack(Material.WATER_BUCKET,1));
+                        player.sendMessage(ChatColor.RED + "You do not have access to empty that");
+                    } else {
+                        event.setCancelled(false);
+                    }
                 }
             }
         }
@@ -178,7 +194,6 @@ public class PlayerListener implements Listener  {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         Server server = player.getServer();
-        World world = player.getWorld();
         
         if(!plugin.getConfig().getBoolean("Player.Allow-creative-gamemode-on-player-quit", true))
         {
@@ -197,8 +212,6 @@ public class PlayerListener implements Listener  {
         }
         
         Player player = event.getPlayer();
-        Server server = player.getServer();
-        World world = player.getWorld();
         
         if(plugin.getConfig().getBoolean("Teleport.Disallow-Teleporting", true))
         {

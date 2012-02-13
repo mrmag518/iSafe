@@ -19,6 +19,7 @@ Version 2.50
 * Fixed events being registered twice, and therfore sending out duplicated events.
 * Fixed duplication for getting the main config.
 * Seperated the config headers from the config strings.
+* Added multi-world support for buckets.
 * 
 
 Version 2.49

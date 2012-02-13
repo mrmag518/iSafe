@@ -18,6 +18,7 @@
 
 package me.mrmag518.iSafe.Blacklists;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +51,8 @@ public class PlaceBlacklist implements Listener {
             return;
         }
         
+        File MulitWorldsFile = new File(plugin.getDataFolder() + File.separator + plugin.getServer().getWorlds() + File.separator + plugin.getServer().getWorlds().toString() + ".yml");
+        
         Player player = event.getPlayer();
         Block block = event.getBlock();
         Server server = player.getServer();
@@ -78,7 +81,6 @@ public class PlaceBlacklist implements Listener {
                 if (!event.isCancelled()) 
                 {
                     final List<String> worlds = plugin.getBlacklist().getStringList("Place.Worlds");
-                
                     if (plugin.getBlacklist().getList("Place.Worlds", worlds).contains(worldname))
                     {
                         event.setCancelled(true);
