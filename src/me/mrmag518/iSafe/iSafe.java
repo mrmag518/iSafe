@@ -810,6 +810,7 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Mobs-All.Spawn.Allow-Villager-spawn", true);
         
         //SheepDyeWool
+        mobsConfig.addDefault("Completely-Prevent-SheepDyeWool", false);
         mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Black", false);
         mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Blue", false);
         mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Brown", false);
