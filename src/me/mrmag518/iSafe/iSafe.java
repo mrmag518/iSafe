@@ -723,7 +723,6 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Ghasts", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Giants", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.MagmaCubes", false);
-        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Monsters", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.MushroomCows", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Pigs", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.PigZombie", false);
@@ -748,7 +747,6 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Ghasts", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Giants", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.MagmaCubes", false);
-        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Monsters", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.MushroomCows", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.Pigs", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Spawner.Prevent.PigZombies", false);
@@ -773,7 +771,6 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Ghasts", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Giants", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.MagmaCubes", false);
-        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Monsters", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.MushroomCows", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Pigs", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.PigZombies", false);
@@ -807,7 +804,6 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Mobs-All.Spawn.Allow-Blaze-spawn", true);
         mobsConfig.addDefault("Mobs-All.Spawn.Allow-MagmaCube-spawn", true);
         mobsConfig.addDefault("Mobs-All.Spawn.Allow-Chicken-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Monster/human-spawn", true);
         mobsConfig.addDefault("Mobs-All.Spawn.Allow-MuchroomCow-spawn", true);
         mobsConfig.addDefault("Mobs-All.Spawn.Allow-Snowman-spawn", true);
         mobsConfig.addDefault("Mobs-All.Spawn.Allow-Squid-spawn", true);

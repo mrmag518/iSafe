@@ -273,13 +273,6 @@ public class EntityListener implements Listener {
                 event.getEntity().remove();
             }
         }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Monster/human-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.MONSTER) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
         if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-MuchroomCow-spawn", true))
         {
             if (event.getCreatureType() == CreatureType.MUSHROOM_COW) {
@@ -418,18 +411,6 @@ public class EntityListener implements Listener {
             if (event.getSpawnReason() == SpawnReason.NATURAL) 
             {
                 if (event.getCreatureType() == CreatureType.MAGMA_CUBE) 
-                {
-                    event.setCancelled(true);
-                    event.getEntity().remove();
-                }
-            }
-        }
-        
-        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Natural.Prevent.Monsters", true))
-        {
-            if (event.getSpawnReason() == SpawnReason.NATURAL) 
-            {
-                if (event.getCreatureType() == CreatureType.MONSTER) 
                 {
                     event.setCancelled(true);
                     event.getEntity().remove();
@@ -716,18 +697,6 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Spawner.Prevent.Monsters", true)) 
-        {
-            if (event.getSpawnReason() == SpawnReason.SPAWNER)
-            {
-                if (event.getCreatureType() == CreatureType.MONSTER) 
-                {
-                    event.setCancelled(true);
-                    event.getEntity().remove();
-                }
-            }
-        }
-        
         if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Spawner.Prevent.MushroomCows", true)) 
         {
             if (event.getSpawnReason() == SpawnReason.SPAWNER)
@@ -1001,18 +970,6 @@ public class EntityListener implements Listener {
             if (event.getSpawnReason() == SpawnReason.CUSTOM)
             {
                 if (event.getCreatureType() == CreatureType.MAGMA_CUBE) 
-                {
-                    event.setCancelled(true);
-                    event.getEntity().remove();
-                }
-            }
-        }
-        
-        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Custom.Prevent.Monsters", true)) 
-        {
-            if (event.getSpawnReason() == SpawnReason.CUSTOM)
-            {
-                if (event.getCreatureType() == CreatureType.MONSTER) 
                 {
                     event.setCancelled(true);
                     event.getEntity().remove();
