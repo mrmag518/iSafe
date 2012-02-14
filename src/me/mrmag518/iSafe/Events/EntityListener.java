@@ -25,6 +25,7 @@ import org.bukkit.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.CreeperPowerEvent.PowerCause;
 import org.bukkit.event.entity.EntityDamageEvent.*;
@@ -1149,7 +1150,7 @@ public class EntityListener implements Listener {
         
         Entity entity = event.getEntity();
         
-        if(plugin.getMobsConfig().getBoolean("Mobs.Endermaen.Prevent-Endermen-griefing", true))
+        if(plugin.getMobsConfig().getBoolean("Mobs.Endermen.Prevent-Endermen-griefing", true))
         {
             if (entity instanceof Enderman) {
                 event.setCancelled(true);
@@ -1507,7 +1508,7 @@ public class EntityListener implements Listener {
             event.setDroppedExp(0);
         }
         
-        if(plugin.getMobsConfig().getBoolean("Mobs.Prevent-Object-drop-on-death", true))
+        if(plugin.getMobsConfig().getBoolean("Misc.Prevent-Object-drop-on-death", true))
         {
             event.getDrops().clear();
         }
@@ -1520,7 +1521,7 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(!plugin.getMobsConfig().getBoolean("Mobs.Allow-SlimeSplit", true))
+        if(!plugin.getMobsConfig().getBoolean("Misc.Allow-SlimeSplit", true))
         {
             event.setCancelled(true);
         }
@@ -1533,55 +1534,55 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getMobsConfig().getBoolean("Mobs.EntityTarget.Disable-closest_player-target", true))
+        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-closest_player-target", true))
         {
             if(event.getReason() == TargetReason.CLOSEST_PLAYER) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Mobs.EntityTarget.Disable-custom-target", true))
+        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-custom-target", true))
         {
             if(event.getReason() == TargetReason.CUSTOM) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Mobs.EntityTarget.Disable-forgot_target-target", true))
+        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-forgot_target-target", true))
         {
             if(event.getReason() == TargetReason.FORGOT_TARGET) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Mobs.EntityTarget.Disable-owner_attacked_target-target", true))
+        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-owner_attacked_target-target", true))
         {
             if(event.getReason() == TargetReason.OWNER_ATTACKED_TARGET) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Mobs.EntityTarget.Disable-pig_zombie_target-target", true))
+        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-pig_zombie_target-target", true))
         {
             if(event.getReason() == TargetReason.PIG_ZOMBIE_TARGET) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Mobs.EntityTarget.Disable-random_target-target", true))
+        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-random_target-target", true))
         {
             if(event.getReason() == TargetReason.RANDOM_TARGET) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Mobs.EntityTarget.Disable-target_attacked_entity-target", true))
+        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-target_attacked_entity-target", true))
         {
             if(event.getReason() == TargetReason.TARGET_ATTACKED_ENTITY) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Mobs.EntityTarget.Disable-target_attacked_owner-target", true))
+        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-target_attacked_owner-target", true))
         {
             if(event.getReason() == TargetReason.TARGET_ATTACKED_OWNER) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Mobs.EntityTarget.Disable-target_died-target", true))
+        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-target_died-target", true))
         {
             if(event.getReason() == TargetReason.TARGET_DIED) {
                 event.setCancelled(true);
@@ -1617,7 +1618,7 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getMobsConfig().getBoolean("Mobs.Prevent-PigZap(Pig transformation to ZombiePig)", true))
+        if(plugin.getMobsConfig().getBoolean("Misc.Prevent-PigZap", true))
         {
             event.setCancelled(true);
         }
@@ -1630,7 +1631,7 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getMobsConfig().getBoolean("Mobs.Tame.Prevent-taming", true))
+        if(plugin.getMobsConfig().getBoolean("Misc.Tame.Prevent-taming", true))
         {
             event.setCancelled(true);
         }
@@ -1660,19 +1661,19 @@ public class EntityListener implements Listener {
         
         Entity entity = event.getEntity();
         
-        if(plugin.getMobsConfig().getBoolean("Mobs.Powered-Creepers.Prevent-PowerCause.Lightning", true))
+        if(plugin.getMobsConfig().getBoolean("Powered-Creepers.Prevent-PowerCause.Lightning", true))
         {
             if (event.getCause() == PowerCause.LIGHTNING) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Mobs.Powered-Creepers.Prevent-PowerCause.Set-Off", true))
+        if(plugin.getMobsConfig().getBoolean("Powered-Creepers.Prevent-PowerCause.Set-Off", true))
         {
             if (event.getCause() == PowerCause.SET_OFF) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Mobs.Powered-Creepers.Prevent-PowerCause.Set-On", true))
+        if(plugin.getMobsConfig().getBoolean("Powered-Creepers.Prevent-PowerCause.Set-On", true))
         {
             if (event.getCause() == PowerCause.SET_ON) {
                 event.setCancelled(true);
@@ -1689,7 +1690,7 @@ public class EntityListener implements Listener {
         
         Entity entity = event.getEntity();
         
-        if(plugin.getMobsConfig().getBoolean("Mobs.Prevent-Entity-Combust", true))
+        if(plugin.getMobsConfig().getBoolean("Misc.Prevent-Entity-Combust", true))
         {
             event.setDuration(0);
             event.setCancelled(true);
@@ -1875,13 +1876,30 @@ public class EntityListener implements Listener {
         }
     }
     
+    @EventHandler
+    public void EntityForm(EntityBlockFormEvent event) {
+        if (event.isCancelled())
+        {
+            return;
+        }
+        
+        Entity entity = event.getEntity();
+        
+        if (plugin.getMobsConfig().getBoolean("Prevent-Snowmen-forming-snow", true))
+        {
+            if (entity instanceof Snowman) {
+                event.setCancelled(true);
+            }
+        }
+    }
+    
     public void NoCreeperDeathOnExplosion(ExplosionPrimeEvent event) {
         if ( event.getEntity() instanceof Creeper == false ) 
             return;
         
         Creeper creeper = (Creeper) event.getEntity();
          
-        if ( creeper.getTarget() instanceof Player ) {
+        if (creeper.getTarget() instanceof Player ) {
             event.setCancelled(true);
             creeper.setTarget(null);
         }

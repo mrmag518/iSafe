@@ -6,6 +6,7 @@ Version 2.51
 * Made the Serverinfo command return strings.
 * Added murder command.
 * Fixed prevention for endermen griefing, due to deprecated code within bukkit.
+* Cleaned up the mobsConfig.
 * 
 
 Version 2.50

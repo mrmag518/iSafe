@@ -696,35 +696,32 @@ public class iSafe extends JavaPlugin implements Listener {
     
     public void loadMobsConfig() {
         mobsConfig.options().header("This is the Mob Control config associated to regulatory characteristics aimed at mobs in Minecraft.\n");
-        //Misc
-        /**
-         * Todo: Make categories.
-         */
-        mobsConfig.addDefault("Mobs.EntityTarget.Disable-closest_player-target", false);
-        mobsConfig.addDefault("Mobs.EntityTarget.Disable-custom-target", false);
-        mobsConfig.addDefault("Mobs.EntityTarget.Disable-forgot_target-target", false);
-        mobsConfig.addDefault("Mobs.EntityTarget.Disable-owner_attacked_target-target", false);
-        mobsConfig.addDefault("Mobs.EntityTarget.Disable-pig_zombie_target-target", false);
-        mobsConfig.addDefault("Mobs.EntityTarget.Disable-random_target-target", false);
-        mobsConfig.addDefault("Mobs.EntityTarget.Disable-target_attacked_entity-target", false);
-        mobsConfig.addDefault("Mobs.EntityTarget.Disable-target_attacked_owner-target", false);
-        mobsConfig.addDefault("Mobs.EntityTarget.Disable-target_died-target", false);
+        //EntityTarget
+        mobsConfig.addDefault("EntityTarget.Disable-closest_player-target", false);
+        mobsConfig.addDefault("EntityTarget.Disable-custom-target", false);
+        mobsConfig.addDefault("EntityTarget.Disable-forgot_target-target", false);
+        mobsConfig.addDefault("EntityTarget.Disable-owner_attacked_target-target", false);
+        mobsConfig.addDefault("EntityTarget.Disable-pig_zombie_target-target", false);
+        mobsConfig.addDefault("EntityTarget.Disable-random_target-target", false);
+        mobsConfig.addDefault("EntityTarget.Disable-target_attacked_entity-target", false);
+        mobsConfig.addDefault("EntityTarget.Disable-target_attacked_owner-target", false);
+        mobsConfig.addDefault("EntityTarget.Disable-target_died-target", false);
         
-        mobsConfig.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Lightning", false);
-        mobsConfig.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Set-Off", false);
-        mobsConfig.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Set-On", false);
+        mobsConfig.addDefault("Powered-Creepers.Prevent-PowerCause.Lightning", false);
+        mobsConfig.addDefault("Powered-Creepers.Prevent-PowerCause.Set-Off", false);
+        mobsConfig.addDefault("Powered-Creepers.Prevent-PowerCause.Set-On", false);
         
-        mobsConfig.addDefault("Mobs.Endermaen.Prevent-Endermen-griefing", false);
+        mobsConfig.addDefault("Misc.Endermen.Prevent-Endermen-griefing", false);
         
-        mobsConfig.addDefault("Mobs.Prevent-Object-drop-on-death", false);
+        mobsConfig.addDefault("Misc.Prevent-Object-drop-on-death", false);
         
-        mobsConfig.addDefault("Mobs.Prevent-Entity-Combust", false);
+        mobsConfig.addDefault("Misc.Prevent-Entity-Combust", false);
         
-        mobsConfig.addDefault("Mobs.Tame.Prevent-taming", false);
+        mobsConfig.addDefault("Misc.Tame.Prevent-taming", false);
         
-        mobsConfig.addDefault("Mobs.Allow-SlimeSplit", true);
+        mobsConfig.addDefault("Misc.Allow-SlimeSplit", true);
         
-        mobsConfig.addDefault("Mobs.Prevent-PigZap(Pig transformation to ZombiePig)", true);
+        mobsConfig.addDefault("Misc.Prevent-PigZap", true);
         //Spawn Reason = Natural:
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Blazes", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Cave_Spiders", false);
