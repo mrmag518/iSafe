@@ -40,6 +40,7 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockPistonEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -65,6 +66,7 @@ public class BlockListener implements Listener {
         }
         
         Player player = event.getPlayer();
+        Block block = event.getBlock();
         
         //Infinte itemstacks.
         if(plugin.getConfig().getBoolean("Player.Infinite-itemtacks", true))
@@ -73,7 +75,7 @@ public class BlockListener implements Listener {
             itst.setAmount(65);
         }
     }
-
+    
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockIgnite(BlockIgniteEvent event) {
         if (event.isCancelled())

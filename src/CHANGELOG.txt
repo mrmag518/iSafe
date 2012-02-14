@@ -10,7 +10,7 @@ Version 2.50
 * Added multi strings support to command blacklists.
 * Added first stage of multi-world support for commands blacklist.
 * Fixed and remade the prevent sneaking and sprinting preventions, this should fix some issues some users have had.
-* Added PlayerTo-Spawnlocation configurations.
+* Added EntityTo-Spawnlocation configurations.
 * Fixed damage causes to only affect players.
 * Fixed damage preventions not working.
 * Added configuable damage causes to seperatly support creatures and players.
@@ -21,6 +21,7 @@ Version 2.50
 * Seperated the config headers from the config strings.
 * Added multi-world support for buckets.
 * Removed un-used code, and the rest of the deprecated config.
+* Updated to bukkit R4.
 
 Version 2.49
 * Fixed explosions always being prevented.

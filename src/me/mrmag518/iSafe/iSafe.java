@@ -376,6 +376,7 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Misc.Prevent-crop-trampling-by-creature", false);
         config.addDefault("Misc.Prevent-crop-trampling-by-player", false);
         config.addDefault("Misc.Prevent-portal-creation", false);
+        config.addDefault("Misc.Prevent-RedStoneTorch-placed-against-tnt", false);
         //Explosions
         config.addDefault("Explosions.Disable-primed-explosions", false);
         config.addDefault("Explosions.Prevent-creeper-death-on-explosion", false);
