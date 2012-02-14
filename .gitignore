@@ -1,6 +1,1 @@
-# ignore various folders
 dist
-build
-
-# ignore netbeans stuff
-nbproject
