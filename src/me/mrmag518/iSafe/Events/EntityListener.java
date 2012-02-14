@@ -1141,28 +1141,19 @@ public class EntityListener implements Listener {
     }
     
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onEndermanPickup(EndermanPickupEvent event) {
+    public void onEndermanPickup(EntityChangeBlockEvent event) {
         if (event.isCancelled())
         {
             return;
         }
         
-        if(plugin.getMobsConfig().getBoolean("Mobs.Enderman-grief.Prevent-Enderman-Pickup", true))
-        {
-            event.setCancelled(true);
-        }
-    }
-    
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onEndermanPlace(EndermanPlaceEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
+        Entity entity = event.getEntity();
         
-        if(plugin.getMobsConfig().getBoolean("Mobs.Enderman-grief.Prevent-Enderman-Place", true))
+        if(plugin.getMobsConfig().getBoolean("Mobs.Endermaen.Prevent-Endermen-griefing", true))
         {
-            event.setCancelled(true);
+            if (entity instanceof Enderman) {
+                event.setCancelled(true);
+            }
         }
     }
 

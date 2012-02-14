@@ -5,6 +5,7 @@ Version 2.51
 * Added a permissions checker.
 * Made the Serverinfo command return strings.
 * Added murder command.
+* Fixed prevention for endermen griefing, due to deprecated code within bukkit.
 * 
 
 Version 2.50

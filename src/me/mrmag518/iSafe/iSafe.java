@@ -714,8 +714,7 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Set-Off", false);
         mobsConfig.addDefault("Mobs.Powered-Creepers.Prevent-PowerCause.Set-On", false);
         
-        mobsConfig.addDefault("Mobs.Enderman-grief.Prevent-Enderman-Pickup", false);
-        mobsConfig.addDefault("Mobs.Enderman-grief.Prevent-Enderman-Place", false);
+        mobsConfig.addDefault("Mobs.Endermaen.Prevent-Endermen-griefing", false);
         
         mobsConfig.addDefault("Mobs.Prevent-Object-drop-on-death", false);
         
