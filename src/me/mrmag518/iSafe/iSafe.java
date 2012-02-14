@@ -56,6 +56,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.w3c.dom.Document;
@@ -95,6 +96,7 @@ public class iSafe extends JavaPlugin implements Listener {
     private Ping pingcmd = null;
     private Magictxt magixtxtcmd = null;
     private ClearDrops cleardropscmd = null;
+    private Murder murdercmd = null;
     //Update checker
     public String version = null;
     public String newVersion = null;
@@ -198,6 +200,7 @@ public class iSafe extends JavaPlugin implements Listener {
         pingcmd = new Ping(this);
         magixtxtcmd = new Magictxt(this);
         cleardropscmd = new ClearDrops(this);
+        murdercmd = new Murder(this);
         
         //plugin.yml
         PluginDescriptionFile pdffile = this.getDescription();
@@ -243,6 +246,9 @@ public class iSafe extends JavaPlugin implements Listener {
         
         //Commands
         loadCommands();
+        
+        //Permissions
+        getPermissions();
         
         //Notify about a PermissionsEx permission issue.
         NotifyPEX();
@@ -309,6 +315,13 @@ public class iSafe extends JavaPlugin implements Listener {
         getCommand("ping").setExecutor(pingcmd);
         getCommand("magictxt").setExecutor(magixtxtcmd);
         getCommand("cleardrops").setExecutor(cleardropscmd);
+        getCommand("murder").setExecutor(murdercmd);
+    }
+    
+    public void getPermissions() {
+        PluginManager pm = this.getServer().getPluginManager();
+        
+        pm.getPermissions();
     }
     
     public void loadConfig() {

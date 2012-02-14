@@ -1,5 +1,12 @@
 Displaying the Change Log of iSafe.
 
+Version 2.51
+* Removed command aliases for more compitability, and I don't see any 'big' reason to have them.
+* Added a permissions checker.
+* Made the Serverinfo command return strings.
+* Added murder command.
+* 
+
 Version 2.50
 * Added drops configurating.
 * Fixed a "quality" issue, related to the main config.

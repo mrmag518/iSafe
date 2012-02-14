@@ -3,32 +3,27 @@ description: "Configurable features related to events happening on the server."
 main: me.mrmag518.iSafe.iSafe
 name: iSafe
 load: STARTUP 
-version: '2.50'
+version: '2.51'
 website: http://dev.bukkit.org/server-mods/blockthattnt/
 commands:
   iSafe-reload:
     usage: "Usage: /<command>"
-    aliases: [reloadiSafe, iSafereload]
   iSafe-reload-blacklist:
     usage: "Usage: /<command>"
   iSafe-reload-mobsconfig:
     usage: "Usage: /<command>"
   iSafe-info:
     usage: "Usage: /<command>"
-    aliases: [infoisafe, isafeinfo]
   serverinfo:
     usage: "Usage: /<command>"
-    aliases: [isafe-serverinfo, server-info, myserver]
   superbreak:
     usage: "Usage: /<command>"
   healme:
     usage: "Usage: /<command>"
   save-worlds:
     usage: "Usage: /<command>"
-    aliases: [saveallworlds, saveworlds]
   stopserver:
     usage: "Usage: /<command>"
-    aliases: [serverstop, shutdown]
   slayall:
     usage: "Usage: /<command>"
   therules:
@@ -39,11 +34,15 @@ commands:
     usage: "Usage: /<command>"
   cleardrops:
     usage: "Usage: /<command>"
+  murder:
+    usage: "Usage: /<command> [player]"
 permissions:
   iSafe.*:
     description: Allow the user to get access to all the iSafe permissions.
     default: op
     children:
+      isafe.murder.self: true
+      isafe.murder.others: true
       iSafe.place.*: true
       iSafe.break.*: true
       iSafe.drop.*: true
@@ -224,5 +223,9 @@ permissions:
   iSafe.magictxt:
     default: op
   iSafe.cleardrops:
+    default: op
+  isafe.murder.self:
+    default: op
+  isafe.murder.others:
     default: op
     

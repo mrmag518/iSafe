@@ -43,7 +43,7 @@ public class Ping implements CommandExecutor {
             if (sender instanceof Player) { 
                 Player player = (Player)sender;
                 if (hasPing(player)) { //player
-                    sender.sendMessage(ChatColor.AQUA + "PONG!");
+                    sender.sendMessage(ChatColor.YELLOW + "Pong!");
                 } else {
                     sender.sendMessage(ChatColor.RED + "You do not have access to that.");
                 }
