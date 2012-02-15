@@ -48,7 +48,7 @@ public class Ping implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + "You do not have access to that.");
                 }
             } else {
-                sender.sendMessage("PONG!");
+                sender.sendMessage("Pong!");
             }
             return true;
         }

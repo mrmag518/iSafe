@@ -134,168 +134,6 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Slime-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.SLIME) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Spawn.Allow-Ghast-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.GHAST) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Zombie-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.ZOMBIE) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Creeper-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.CREEPER) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Skeleton-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.SKELETON) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Enderman-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.ENDERMAN) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Silverfish-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.SILVERFISH) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-PigZombie-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.PIG_ZOMBIE) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Spider-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.SPIDER) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Squid-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.SQUID) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Wolf-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.WOLF) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Pig-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.PIG) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Cow-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.COW) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-EnderDragon-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.ENDER_DRAGON) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Sheep-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.SHEEP) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn..Allow-Blaze-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.BLAZE) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-MagmaCube-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.MAGMA_CUBE) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-CaveSpider-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.CAVE_SPIDER) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Chicken-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.CHICKEN) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Giant-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.GIANT) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-MuchroomCow-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.MUSHROOM_COW) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All-All.Spawn.Allow-Snowman-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.SNOWMAN) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        if(!plugin.getMobsConfig().getBoolean("Mobs-All.Spawn.Allow-Villager-spawn", true))
-        {
-            if (event.getCreatureType() == CreatureType.VILLAGER) {
-                event.setCancelled(true);
-                event.getEntity().remove();
-            }
-        }
-        
         /**
          * SpawnReason = Natural
          */
@@ -1135,10 +973,524 @@ public class EntityListener implements Listener {
         }
         
         /**
-         * Spawn Reason = 
+         * Spawn Reason = Egg
          */
         
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Blaze", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.BLAZE) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
         
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Cave_Spider", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.CAVE_SPIDER) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Chicken", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.CHICKEN) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Cow", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.COW) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Creeper", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.CREEPER) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Enderman", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.ENDERMAN) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Ender_Dragon", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.ENDER_DRAGON) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Ghast", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.GHAST) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Giant", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.GIANT) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Magma_Cube", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.MAGMA_CUBE) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Mushroom_Cow", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.MUSHROOM_COW) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Pig", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.PIG) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Pig_Zombie", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.PIG_ZOMBIE) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Sheep", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SHEEP) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Silverfish", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SILVERFISH) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Skeleton", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SKELETON) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Slime", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SLIME) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Smowman", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SNOWMAN) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Spider", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SPIDER) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Squid", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SQUID) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Villager", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.VILLAGER) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Wolf", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.BLAZE) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.Egg.Prevent.Zombie", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.EGG)
+            {
+                if (event.getCreatureType() == CreatureType.ZOMBIE) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        
+        /**
+         * SpawnReason = Spawner_Egg
+         */
+        
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Blaze", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.BLAZE) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Cave_Spider", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.CAVE_SPIDER) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Chicken", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.CHICKEN) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Cow", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.COW) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Creeper", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.CREEPER) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Enderman", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.ENDERMAN) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Ender_Dragon", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.ENDER_DRAGON) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Ghast", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.GHAST) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Giant", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.GIANT) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Magma_Cube", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.MAGMA_CUBE) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Mushroom_Cow", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.MUSHROOM_COW) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Pig", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.PIG) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Pig_Zombie", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.PIG_ZOMBIE) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Sheep", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SHEEP) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Silverfish", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SILVERFISH) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Skeleton", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SKELETON) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Slime", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SLIME) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Snowman", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SNOWMAN) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Spider", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SPIDER) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Squid", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.SQUID) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Villager", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.VILLAGER) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Wolf", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.WOLF) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Zombie", true)) 
+        {
+            if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+            {
+                if (event.getCreatureType() == CreatureType.ZOMBIE) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                }
+            }
+        }
     }
     
     @EventHandler(priority = EventPriority.NORMAL)

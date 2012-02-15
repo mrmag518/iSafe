@@ -223,6 +223,7 @@ public class iSafe extends JavaPlugin implements Listener {
                         log.info("Please update iSafe at: http://dev.bukkit.org/server-mods/blockthattnt");
                     }
                 } catch (Exception ignored) {
+                    //Ignored
                 }
             }
         }, 0, 36000);
@@ -277,6 +278,7 @@ public class iSafe extends JavaPlugin implements Listener {
                  return firstNodes.item(0).getNodeValue();
              }
         } catch (Exception ignored) {
+            //Ingored
         }
         return currentVersion;
     }
@@ -287,8 +289,7 @@ public class iSafe extends JavaPlugin implements Listener {
         
         Player player = event.getPlayer();
         
-        if (player.hasPermission("iSafe.*") 
-                || player.isOp()) {
+        if (player.hasPermission("iSafe.*") || player.isOp()) {
             
             try {
                 String oldVersion = getDescription().getVersion().substring(0, 5);
@@ -299,6 +300,8 @@ public class iSafe extends JavaPlugin implements Listener {
             } catch (Exception e) {
                 //ignore
             }
+        } else {
+            //nothing
         }
     }
     
@@ -794,30 +797,53 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Villagers", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Wolfs", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Custom.Prevent.Zombies", false);
-        //Mobs-all
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Slime-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Ghast-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Zombie-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Creeper-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Skeleton-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Enderman-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Giant-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Silverfish-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-PigZombie-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Spider-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Squid-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Wolf-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Pig-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Cow-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-EnderDragon-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Sheep-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Blaze-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-MagmaCube-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Chicken-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-MuchroomCow-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Snowman-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Squid-spawn", true);
-        mobsConfig.addDefault("Mobs-All.Spawn.Allow-Villager-spawn", true);
+        //Spawn Reason = Egg
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Blaze", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Cave_Spider", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Chicken", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Cow", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Creeper", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Enderman", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Ender_Dragon", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Ghast", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Giant", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Magma_Cube", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Mushroom_Cow", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Pig", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Pig_Zombie", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Sheep", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Silverfish", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Skeleton", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Slime", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Smowman", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Spider", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Squid", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Villager", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Wolf", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.Egg.Prevent.Zombie", false);
+        //Spawn Reason = Spawner_Egg
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Cave_Spider", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Chicken", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Cow", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Creeper", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Enderman", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Ender_Dragon", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Ghast", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Giant", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Magma_Cube", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Mushroom_Cow", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Pig", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Pig_Zombie", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Sheep", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Silverfish", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Skeleton", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Slime", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Snowman", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Spider", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Squid", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Villager", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Wolf", false);
+        mobsConfig.addDefault("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Zombie", false);
         
         //SheepDyeWool
         mobsConfig.addDefault("Completely-Prevent-SheepDyeWool", false);

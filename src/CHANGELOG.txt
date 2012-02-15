@@ -7,6 +7,9 @@ Version 2.51
 * Added murder command.
 * Fixed prevention for endermen griefing, due to deprecated code within bukkit.
 * Cleaned up the mobsConfig.
+* Added "else" (if not player has permission) to the update checker permission.
+* Removed old monster spawn prevention code.
+* Added two new SpawnReasons, Egg and Spawner_Egg.
 * 
 
 Version 2.50
