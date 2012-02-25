@@ -198,6 +198,11 @@ public class iSafe extends JavaPlugin implements Listener {
         
         this.getServer().getPluginManager().getPermissions();
         
+        //Possible PermissionsEx fix.
+        log.info("[iSafe] Doing a quick file reload.");
+        this.getPluginLoader().disablePlugin(this);
+        this.getPluginLoader().enablePlugin(this);
+        
         log.info("[" + pdffile.getFullName() + "] " + " Loaded succesfully.");
     }
     
