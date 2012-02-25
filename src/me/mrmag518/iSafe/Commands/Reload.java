@@ -48,7 +48,6 @@ public class Reload implements CommandExecutor {
                     plugin.reloadConfig();
                     plugin.reloadBlacklist();
                     plugin.reloadMobsConfig();
-                    plugin.reloadRules();
 		    sender.sendMessage(ChatColor.AQUA + pdffile.getFullName() + ChatColor.GRAY + " reloaded files succesfully");
                     System.out.println("[iSafe] "+ (sender.getName() + " reloaded" + (pdffile.getFullName())));
             } else { //no permission
@@ -58,7 +57,6 @@ public class Reload implements CommandExecutor {
                 plugin.reloadConfig();
                 plugin.reloadBlacklist();
                 plugin.reloadMobsConfig();
-                plugin.reloadRules();
 		plugin.log.info("[iSafe] " + pdffile.getName() + " was succesfully reloaded");
             }
     		return true;

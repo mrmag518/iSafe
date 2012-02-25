@@ -1,5 +1,13 @@
 Displaying the Change Log of iSafe.
 
+Version 2.60
+* Reworked the classes.
+* Removed un-used/needed commands.
+* Fixed a lot of bugs.
+* Removed some comments from the classes, mostly the main class.
+* Done some refactoring.
+* Secured compitability with R5.
+
 Version 2.51
 * Removed command aliases for more compitability, and I don't see any 'big' reason to have them.
 * Added a permissions checker.
@@ -7,10 +15,8 @@ Version 2.51
 * Added murder command.
 * Fixed prevention for endermen griefing, due to deprecated code within bukkit.
 * Cleaned up the mobsConfig.
-* Added "else" (if not player has permission) to the update checker permission.
 * Removed old monster spawn prevention code.
 * Added two new SpawnReasons, Egg and Spawner_Egg.
-* 
 
 Version 2.50
 * Added drops configurating.

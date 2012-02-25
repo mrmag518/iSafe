@@ -21,9 +21,7 @@ package me.mrmag518.iSafe.Events;
 import me.mrmag518.iSafe.*;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -40,7 +38,6 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.block.BlockPistonEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -85,7 +82,6 @@ public class BlockListener implements Listener {
         
         IgniteCause cause = event.getCause();
         Player player = event.getPlayer();
-        Block block = event.getBlock();
         
         boolean isFireSpread = cause == IgniteCause.SPREAD;
         
@@ -98,20 +94,23 @@ public class BlockListener implements Listener {
         }
         if(!plugin.getConfig().getBoolean("Enviroment-Damage.Allow-Flint_and_steel-usage", true))
         {
-            if(event.getCause() == IgniteCause.FLINT_AND_STEEL) {
+            if(event.getCause() == IgniteCause.FLINT_AND_STEEL) 
+            {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "You cannot use a lighter.");
             }
         }
         if(!plugin.getConfig().getBoolean("Enviroment-Damage.Allow-Enviroment-ignition", true))
         {
-            if(event.getCause() == IgniteCause.LAVA || event.getCause() == IgniteCause.LIGHTNING) {
+            if(event.getCause() == IgniteCause.LAVA || event.getCause() == IgniteCause.LIGHTNING) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getConfig().getBoolean("Misc.Prevent-portal-creation", true))
         {
-            if(event.getBlock().getTypeId() == 49 || event.getBlock().getRelative(BlockFace.DOWN).getTypeId() == 49) {
+            if(event.getBlock().getTypeId() == 49 || event.getBlock().getRelative(BlockFace.DOWN).getTypeId() == 49) 
+            {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "You do not have access to create a portal.");
             }
@@ -124,24 +123,26 @@ public class BlockListener implements Listener {
         {
             return;
         }
-        
         Block block = event.getBlock();
         
         if(plugin.getConfig().getBoolean("Flow.Disable-water-flow", true))
         {
-            if (block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) {
+            if (block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getConfig().getBoolean("Flow.Disable-lava-flow", true))
         {
             if (block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
+                
                 event.setCancelled(true);
             }
         }
         if(plugin.getConfig().getBoolean("Flow.Disable-air-flow", true))
         {
-            if (block.getType() == Material.AIR) {
+            if (block.getType() == Material.AIR) 
+            {
                 event.setCancelled(true);
             }
         }
@@ -153,8 +154,6 @@ public class BlockListener implements Listener {
         {
             return;
         }
-        
-        Block block = event.getBlock();
         
         if(plugin.getConfig().getBoolean("Piston.Prevent-piston-Extend", true))
         {
@@ -169,8 +168,6 @@ public class BlockListener implements Listener {
             return;
         }
         
-        Block block = event.getBlock();
-        
         if(plugin.getConfig().getBoolean("Piston.Prevent-piston-Retract", true))
         {
             event.setCancelled(true);
@@ -183,8 +180,6 @@ public class BlockListener implements Listener {
         {
             return;
         }
-        
-        Block block = event.getBlock();
         
         if(plugin.getConfig().getBoolean("Enviroment-Damage.Prevent-Fire-spread", true))
         {
@@ -199,11 +194,10 @@ public class BlockListener implements Listener {
             return;
         }
         
-        Block block = event.getBlock();
-        
         if(plugin.getConfig().getBoolean("Enviroment-Damage.Prevent-Fire-spread", true))
         {
-            if(event.getBlock().getType() == Material.FIRE) {
+            if(event.getBlock().getType() == Material.FIRE) 
+            {
                 event.setCancelled(true);
             }
         }
@@ -215,8 +209,6 @@ public class BlockListener implements Listener {
         {
             return;
         }
-        
-        Block block = event.getBlock();
         
         if(plugin.getConfig().getBoolean("Misc.Disable-LeavesDecay", true))
         {
@@ -230,9 +222,7 @@ public class BlockListener implements Listener {
         {
             return;
         }
-        
         Block block = event.getBlock();
-        
         int ID = block.getTypeId();
         
         if(plugin.getConfig().getBoolean("Physics.Disable-sand-physics", true))
@@ -255,19 +245,18 @@ public class BlockListener implements Listener {
         {
             return;
         }
-        
         Block block = event.getBlock();
         
         if(plugin.getConfig().getBoolean("Fade.Prevent-Ice-melting", true))
         {
             if (block.getTypeId() == 79) {
-            event.setCancelled(true);
+                event.setCancelled(true);
             }
         }
         if(plugin.getConfig().getBoolean("Fade.Prevent-Snow-melting", true))
         {
             if (block.getTypeId() == 80) {
-            event.setCancelled(true);
+                event.setCancelled(true);
             }
         }
     }
@@ -279,9 +268,8 @@ public class BlockListener implements Listener {
             return;
         }
         
-        Block block = event.getBlock();
-        
-        if (plugin.superbreak.contains(event.getPlayer())) {
+        if (plugin.superbreak.contains(event.getPlayer())) 
+        {
             event.setInstaBreak(true);
         }
         
@@ -298,9 +286,6 @@ public class BlockListener implements Listener {
             return;
         }
         
-        Block block = event.getBlock();
-        ItemStack item = event.getItem();
-        
         if(plugin.getConfig().getBoolean("World.Prevent-naturally-object-dispensing", true))
         {
             event.setCancelled(true);
@@ -310,12 +295,11 @@ public class BlockListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockCanBuild(BlockCanBuildEvent event) {
         Block block = event.getBlock();
-        World world = block.getWorld();
-        Location loc = block.getLocation();
         
         if(plugin.getConfig().getBoolean("World.Force-blocks-to-be-buildable", true))
         {
-            if (!event.isBuildable()) {
+            if (!event.isBuildable()) 
+            {
                 event.setBuildable(true);
             }
         }

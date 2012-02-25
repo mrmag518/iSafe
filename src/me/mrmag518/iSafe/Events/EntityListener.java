@@ -34,30 +34,11 @@ import org.bukkit.event.entity.EntityTargetEvent.*;
 
 
 public class EntityListener implements Listener {
-    
     public static iSafe plugin;
     public EntityListener(iSafe instance)
     {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-    }
-    
-    @EventHandler
-    public void PlayerBowUsage(EntityShootBowEvent event, Player player) {
-        if (event.isCancelled())
-        {
-            return;
-        }
-        
-        if(plugin.getConfig().getBoolean("Player.Prevent-Bow-usage", true))
-        {
-            if (player.hasPermission("iSafe.bow.use")) {
-                //access
-            } else {
-                event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You cannot use a bow.");
-            }
-        }
     }
     
     @EventHandler(priority = EventPriority.HIGH)
@@ -68,13 +49,14 @@ public class EntityListener implements Listener {
         }
         
         if(plugin.getConfig().getBoolean("Explosions.Disable-primed-explosions", true))
-        {    
+        {
             event.getEntity().remove();
             event.setCancelled(true);
         }
         
         if(plugin.getConfig().getBoolean("Explosions.Prevent-creeper-death-on-explosion", true)) {
-            if (event.isCancelled()) {
+            if (event.isCancelled()) 
+            {
                 NoCreeperDeathOnExplosion(event);
             }
         }
@@ -89,13 +71,12 @@ public class EntityListener implements Listener {
         
         Entity ent = event.getEntity();
         
-        //Prevent all explosions
         if(plugin.getConfig().getBoolean("Explosions.Disable-explosions", true))
         {    
             event.blockList().clear();
             return;
         }
-        //Prevent Creeper explosions
+        
         if(plugin.getConfig().getBoolean("Explosions.Disable-Creeper-explosions", true))
         {
             if (ent instanceof Creeper) {
@@ -103,7 +84,7 @@ public class EntityListener implements Listener {
                 return;
             }
         }
-        //Prevent EnderDragon block damage
+        
         if(plugin.getConfig().getBoolean("Explosions.Disable-EnderDragon-blockdamage", true))
         {
             if (ent instanceof EnderDragon) {
@@ -111,6 +92,7 @@ public class EntityListener implements Listener {
                 return;
             }
         }
+        
         if(plugin.getConfig().getBoolean("Explosions.Disable-TNT-explosions", true))
         {
             if (ent instanceof TNTPrimed) {
@@ -118,6 +100,7 @@ public class EntityListener implements Listener {
                 return;
             }
         }
+        
         if(plugin.getConfig().getBoolean("Explosions.Disable-Fireball-explosions", true))
         {
             if (ent instanceof Fireball) {
@@ -1238,6 +1221,11 @@ public class EntityListener implements Listener {
          * SpawnReason = Spawner_Egg
          */
         
+        /**
+         * Bug in bukkit ..
+         */
+        
+        /**
         if(plugin.getMobsConfig().getBoolean("Mob-Spawn.SpawnReason.SpawnerEgg.Prevent.Blaze", true)) 
         {
             if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
@@ -1490,7 +1478,7 @@ public class EntityListener implements Listener {
                     event.getEntity().remove();
                 }
             }
-        }
+        } */
     }
     
     @EventHandler(priority = EventPriority.NORMAL)

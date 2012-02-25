@@ -71,7 +71,7 @@ public class ClearDrops implements CommandExecutor {
             } else {
                 drops.remove();
                 cleareddrops++;
-                player.sendMessage(ChatColor.AQUA + "cleared all drops in the world.");
+                player.sendMessage(ChatColor.GRAY + "Cleard" + ChatColor.AQUA + dropsList.size() + " drops.");
             }
         }
     }

@@ -27,9 +27,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 
-public class iSafeInfo implements CommandExecutor {
+public class Info implements CommandExecutor {
 public static iSafe plugin;
-    public iSafeInfo(iSafe instance)
+    public Info(iSafe instance)
     {
         plugin = instance;
     }
