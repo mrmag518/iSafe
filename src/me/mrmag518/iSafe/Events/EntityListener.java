@@ -1999,8 +1999,6 @@ public class EntityListener implements Listener {
             return;
         }
         
-        Entity entity = event.getEntity();
-        
         if(plugin.getMobsConfig().getBoolean("Powered-Creepers.Prevent-PowerCause.Lightning", true))
         {
             if (event.getCause() == PowerCause.LIGHTNING) {
@@ -2027,8 +2025,6 @@ public class EntityListener implements Listener {
         {
             return;
         }
-        
-        Entity entity = event.getEntity();
         
         if(plugin.getMobsConfig().getBoolean("Misc.Prevent-Entity-Combust", true))
         {

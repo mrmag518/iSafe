@@ -63,9 +63,7 @@ public class BlockListener implements Listener {
         }
         
         Player player = event.getPlayer();
-        Block block = event.getBlock();
         
-        //Infinte itemstacks.
         if(plugin.getConfig().getBoolean("Player.Infinite-itemtacks", true))
         {
             ItemStack itst = player.getItemInHand();

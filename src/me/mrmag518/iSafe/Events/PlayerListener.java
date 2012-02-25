@@ -20,6 +20,7 @@ package me.mrmag518.iSafe.Events;
 
 
 import java.util.List;
+
 import me.mrmag518.iSafe.*;
 
 import org.bukkit.ChatColor;
@@ -113,16 +114,6 @@ public class PlayerListener implements Listener  {
                 }
             }
         }
-    }
-
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
-        
-        //TODO: make events soon, else remove this untill usage.
     }
     
     @EventHandler(priority = EventPriority.LOW)
@@ -514,8 +505,6 @@ public class PlayerListener implements Listener  {
             return;
         }
         
-        Player player = event.getPlayer();
-        
         if(plugin.getConfig().getBoolean("Player.Log-commands", true))
         {
             if (message == 0) {
@@ -532,7 +521,6 @@ public class PlayerListener implements Listener  {
             return;
         }
         
-        Player player = event.getPlayer();
         Entity entity = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("PlayerInteractEntity.Prevent-arrow-hitting-player", true))

@@ -19,8 +19,8 @@
 package me.mrmag518.iSafe.Events;
 
 import me.mrmag518.iSafe.*;
+
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -61,9 +61,12 @@ public class VehicleListener implements Listener {
                            if (entity instanceof Player) {
                                 event.setCancelled(true);
                                 player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
-                            }
-                        }
-                    }
+                            } else {
+                           }
+                        } else {
+                       }
+                    } else {
+                   }
                 }
             }
             if(plugin.getConfig().getBoolean("Vehicle.Prevent.enter.Boats", true))
@@ -76,8 +79,11 @@ public class VehicleListener implements Listener {
                             if (entity instanceof Player) {
                                 event.setCancelled(true);
                                 player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
+                            } else {
                             }
+                        } else {
                         }
+                    } else {
                     }
                 }
             }
@@ -92,7 +98,6 @@ public class VehicleListener implements Listener {
         
         Entity entity = event.getAttacker();
         Vehicle vec = event.getVehicle();
-        Location loc = vec.getLocation();
         Player player = (Player) entity;
         
         if(plugin.getConfig().getBoolean("Vehicle.Prevent.destroy.Minecarts", true))
@@ -105,8 +110,11 @@ public class VehicleListener implements Listener {
                         if (entity instanceof Player) {
                             event.setCancelled(true);
                             player.sendMessage(ChatColor.RED + "You do not have access to destory that vehicle");
+                        } else {
                         }
+                    } else {
                     }
+                } else {
                 }
             }
         }
@@ -121,8 +129,11 @@ public class VehicleListener implements Listener {
                         if (entity instanceof Player) {
                             event.setCancelled(true);
                             player.sendMessage(ChatColor.RED + "You do not have access to destory that vehicle");
+                        } else {
                         }
+                    } else {
                     }
+                } else {
                 }
             }
         }
