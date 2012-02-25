@@ -41,14 +41,14 @@ public class ClearDrops implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){  
         if(cmd.getName().equalsIgnoreCase("cleardrops")){
             if (args.length > 0) {
-                 sender.sendMessage(ChatColor.RED + "To many arguments!");
+                 sender.sendMessage(ChatColor.RED + "Too many arguments!");
                  return false;
             }
             if (sender instanceof Player) {
                 Player player = (Player)sender;
                 World world = player.getWorld();
                 List<org.bukkit.entity.Entity> entity = world.getEntities();
-                if (hasCleardrops(player)) { //player
+                if (hasCleardrops(player)) {
                     ClearAllDrops(player, world, entity);
                 } else {
                     sender.sendMessage(ChatColor.RED + "You do not have access to that.");

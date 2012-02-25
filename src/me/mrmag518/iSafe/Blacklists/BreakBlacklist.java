@@ -33,10 +33,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
-public class Break implements Listener {
+public class BreakBlacklist implements Listener {
     
     public static iSafe plugin;
-    public Break(iSafe instance)
+    public BreakBlacklist(iSafe instance)
     {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);

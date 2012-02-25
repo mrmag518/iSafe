@@ -38,23 +38,23 @@ public static iSafe plugin;
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
         if(cmd.getName().equalsIgnoreCase("iSafe-info")){
             if (args.length > 0) {
-                sender.sendMessage(ChatColor.RED + "To many arguments!");
+                sender.sendMessage(ChatColor.RED + "Too many arguments!");
                 return false;
             }
             PluginDescriptionFile pdffile = plugin.getDescription();
             if (sender instanceof Player) {
                 Player player = (Player)sender;
-                if (hasInfo(player)) { //player
+                if (hasInfo(player)) {
                     sender.sendMessage(ChatColor.GRAY + "Name: "+ ChatColor.AQUA + pdffile.getName());
                     sender.sendMessage(ChatColor.GRAY + "Version: "+ ChatColor.AQUA + pdffile.getVersion());
                     sender.sendMessage(ChatColor.GRAY + "FullName: "+ ChatColor.AQUA + pdffile.getFullName());
                     sender.sendMessage(ChatColor.GRAY + "Authors: "+ ChatColor.AQUA + "mrmag518");
                     sender.sendMessage(ChatColor.GRAY + "Minecraft compitability: "+ ChatColor.AQUA + "1.1");
                     System.out.println("[iSafe] "+ (sender.getName() + " did the information command."));
-                } else { //no permission
+                } else { 
                     sender.sendMessage(ChatColor.RED + "You do not have access to that." );
                 }
-            } else { //console
+            } else {
                 sender.sendMessage("Name: "+ pdffile.getName());
                 sender.sendMessage("Version: "+ pdffile.getVersion());
                 sender.sendMessage("FullName: "+ pdffile.getFullName());

@@ -33,10 +33,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
-public class Drop implements Listener {
+public class DropBlacklist implements Listener {
     
     public static iSafe plugin;
-    public Drop(iSafe instance)
+    public DropBlacklist(iSafe instance)
     {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);

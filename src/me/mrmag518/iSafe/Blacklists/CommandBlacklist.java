@@ -31,10 +31,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-public class Command implements Listener {
+public class CommandBlacklist implements Listener {
     
     public static iSafe plugin;
-    public Command(iSafe instance)
+    public CommandBlacklist(iSafe instance)
     {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);

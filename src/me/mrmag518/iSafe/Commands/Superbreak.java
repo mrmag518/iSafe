@@ -40,7 +40,6 @@ public class Superbreak implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "To many arguments!");
                 return false;
             }
-            //No suitable boolean permission. Use the normal one.
             if (sender.hasPermission("iSafe.superbreak")) {
                 if (plugin.superbreak.contains((Player) sender)) {
                     sender.sendMessage(ChatColor.GRAY + "SuperBreak: "+ ChatColor.AQUA + "OFF");

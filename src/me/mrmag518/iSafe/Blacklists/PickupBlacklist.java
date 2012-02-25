@@ -32,10 +32,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
-public class Pickup implements Listener {
+public class PickupBlacklist implements Listener {
     
     public static iSafe plugin;
-    public Pickup(iSafe instance)
+    public PickupBlacklist(iSafe instance)
     {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);

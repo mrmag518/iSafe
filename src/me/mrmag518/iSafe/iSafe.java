@@ -64,11 +64,11 @@ public class iSafe extends JavaPlugin implements Listener {
     
     private UserFileCreator UFC = null;
     
-    private Drop dropBlacklist = null;
-    private Place placeBlacklist = null;
-    private Break breakBlacklist = null;
-    private Pickup pickupBlacklist = null;
-    private Command commandBlacklist = null;
+    private DropBlacklist dropBlacklist = null;
+    private PlaceBlacklist placeBlacklist = null;
+    private BreakBlacklist breakBlacklist = null;
+    private PickupBlacklist pickupBlacklist = null;
+    private CommandBlacklist commandBlacklist = null;
     
     private Reload reloadcmd = null;
     private Info isafeInfocmd = null;
@@ -147,11 +147,11 @@ public class iSafe extends JavaPlugin implements Listener {
         
         UFC = new UserFileCreator(this);
         
-        dropBlacklist = new Drop(this);
-        placeBlacklist = new Place(this);
-        breakBlacklist = new Break(this);
-        pickupBlacklist = new Pickup(this);
-        commandBlacklist = new Command(this);
+        dropBlacklist = new DropBlacklist(this);
+        placeBlacklist = new PlaceBlacklist(this);
+        breakBlacklist = new BreakBlacklist(this);
+        pickupBlacklist = new PickupBlacklist(this);
+        commandBlacklist = new CommandBlacklist(this);
         
         reloadcmd = new Reload(this);
         isafeInfocmd = new Info(this);

@@ -38,22 +38,22 @@ public class Reload implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
         if(cmd.getName().equalsIgnoreCase("iSafe-reload")){
             if (args.length > 0) {
-                sender.sendMessage(ChatColor.RED + "To many arguments!");
+                sender.sendMessage(ChatColor.RED + "Too many arguments!");
                 return false;
             }
             PluginDescriptionFile pdffile = plugin.getDescription();
             if (sender instanceof Player) { 
                 Player player = (Player)sender;
-                if (hasReload(player)) { //player
+                if (hasReload(player)) { 
                     plugin.reloadConfig();
                     plugin.reloadBlacklist();
                     plugin.reloadMobsConfig();
 		    sender.sendMessage(ChatColor.AQUA + pdffile.getFullName() + ChatColor.GRAY + " reloaded files succesfully");
                     System.out.println("[iSafe] "+ (sender.getName() + " reloaded" + (pdffile.getFullName())));
-            } else { //no permission
+            } else { 
                     sender.sendMessage(ChatColor.RED + "You do not have access to that." );
                 }
-            } else { //console
+            } else { 
                 plugin.reloadConfig();
                 plugin.reloadBlacklist();
                 plugin.reloadMobsConfig();
@@ -73,10 +73,10 @@ public class Reload implements CommandExecutor {
                     plugin.reloadBlacklist();
 		    sender.sendMessage(ChatColor.AQUA + pdffile.getFullName() + ChatColor.GRAY + " succesfully reloaded the blacklist file.");
                     System.out.println("[iSafe] "+ sender.getName() + " reloaded the blacklist file.");
-            } else { //no permission
+            } else { 
                     sender.sendMessage(ChatColor.RED + "You do not have access to that." );
                 }
-            } else { //console
+            } else { 
                 plugin.reloadBlacklist();
 		plugin.log.info("[iSafe] " + pdffile.getName() + " succesfully reloaded the blacklist file.");
             }
@@ -90,14 +90,14 @@ public class Reload implements CommandExecutor {
             PluginDescriptionFile pdffile = plugin.getDescription();
             if (sender instanceof Player) { 
                 Player player = (Player)sender;
-                if (hasReload(player)) { //player
+                if (hasReload(player)) { 
                     plugin.reloadMobsConfig();
 		    sender.sendMessage(ChatColor.AQUA + pdffile.getFullName() + ChatColor.GRAY + " succesfully reloaded the mobsConfig file.");
                     System.out.println("[iSafe] "+ sender.getName() + " reloaded the mobsConfig file.");
-            } else { //no permission
+            } else { 
                     sender.sendMessage(ChatColor.RED + "You do not have access to that." );
                 }
-            } else { //console
+            } else { 
                 plugin.reloadMobsConfig();
 		plugin.log.info("[iSafe] " + pdffile.getName() + " succesfully reloaded the mobsConfig file.");
             }

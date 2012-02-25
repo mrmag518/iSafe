@@ -37,12 +37,12 @@ public class Serverinfo implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){       
         if(cmd.getName().equalsIgnoreCase("serverinfo")){
             if (args.length > 0) {
-                sender.sendMessage(ChatColor.RED + "To many arguments!");
+                sender.sendMessage(ChatColor.RED + "Too many arguments!");
                 return false;
             }
             if (sender instanceof Player) {
                 Player player = (Player)sender;
-                if (hasServerinfo(player)) { //player
+                if (hasServerinfo(player)) { 
                     sender.sendMessage(ChatColor.GRAY + "Bukkit version: "+ ChatColor.AQUA + plugin.getServer().getBukkitVersion().toString());
                     sender.sendMessage(ChatColor.GRAY + "Server IP: "+ ChatColor.AQUA + plugin.getServer().getIp().toString());
                     sender.sendMessage(ChatColor.GRAY + "Server name: "+ ChatColor.AQUA + plugin.getServer().getName().toString());

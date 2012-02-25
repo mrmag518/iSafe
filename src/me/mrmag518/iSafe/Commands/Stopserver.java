@@ -44,7 +44,7 @@ public class Stopserver implements CommandExecutor {
             
             if (sender instanceof Player) {
                 Player player = (Player)sender;
-                if (hasStopserver(player)) { //player
+                if (hasStopserver(player)) {
                     stopServer();
                 } else {
                     player.sendMessage(ChatColor.RED + "You do not have access to that.");

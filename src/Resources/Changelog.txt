@@ -1,5 +1,9 @@
 Displaying the Change Log of iSafe.
 
+Version 2.61
+* Refactored all the blacklist classes.
+* 
+
 Version 2.60
 * Reworked the classes.
 * Removed un-used/needed commands.
