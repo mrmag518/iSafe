@@ -163,7 +163,7 @@ public class iSafe extends JavaPlugin implements Listener {
         
         PluginDescriptionFile pdffile = this.getDescription();
         
-        getServer().getPluginManager().registerEvents(this, this);
+        this.getServer().getPluginManager().registerEvents(this, this);
         
         if(!(this.getDataFolder().exists())) {
             log.info("[iSafe]" + " DataFolder not found, creating a new one.");
@@ -186,7 +186,7 @@ public class iSafe extends JavaPlugin implements Listener {
                     //Ignored
                 }
             }
-        }, 0, 36000);
+        }, 0, 432000);
         
         config = this.getConfig();
         loadConfig();
