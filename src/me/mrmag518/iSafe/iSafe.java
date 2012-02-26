@@ -257,7 +257,7 @@ public class iSafe extends JavaPlugin implements Listener {
     
     public void loadConfig() {
         config = getConfig();
-        config.options().header("This is the main configuration file in association to iSafe; take a decent look through it to manage your own preferred settings./n");
+        config.options().header("This is the main configuration file in association to iSafe; take a decent look through it to manage your own preferred settings.\n");
         
         config.addDefault("Enchantment.Prevent-Enchantment", false);
         
