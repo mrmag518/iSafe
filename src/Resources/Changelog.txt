@@ -9,7 +9,6 @@ Version 2.61
 * Fixed the main config not having a line break.
 * Fixed a duplication in one of the config strings.
 * Updated the updateChecker to notify every 30 minuttes and not around every 5th.
-* 
 
 Version 2.60
 * Reworked the classes.
