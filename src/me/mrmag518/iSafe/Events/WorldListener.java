@@ -19,9 +19,8 @@
 package me.mrmag518.iSafe.Events;
 
 import me.mrmag518.iSafe.*;
+
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -79,7 +78,7 @@ public class WorldListener implements Listener {
         
         if(plugin.getConfig().getBoolean("World.Register-world(s)-init", true))
         {
-            System.out.println(("[iSafe] Init "+ (world.getName() + " succsesfully.")));
+            System.out.println(("[iSafe] Initialized "+ (world.getName() + " succsesfully.")));
         }
     }
 

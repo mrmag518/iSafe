@@ -23,9 +23,11 @@ import me.mrmag518.iSafe.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.CreeperPowerEvent.PowerCause;
@@ -2208,23 +2210,6 @@ public class EntityListener implements Listener {
         {
             if (event.getColor() == DyeColor.YELLOW) 
             {
-                event.setCancelled(true);
-            }
-        }
-    }
-    
-    @EventHandler
-    public void EntityForm(EntityBlockFormEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
-        
-        Entity entity = event.getEntity();
-        
-        if (plugin.getMobsConfig().getBoolean("Prevent-Snowmen-forming-snow", true))
-        {
-            if (entity instanceof Snowman) {
                 event.setCancelled(true);
             }
         }

@@ -1,5 +1,9 @@
 Displaying the Change Log of iSafe.
 
+Version 2.62
+* Rewrote "init" to "initalized" on a world init.
+* Removed snowman snow trampling prevention due to delegated method, and not other method could replace the prevention due to no method for getting the snowman.
+
 Version 2.61
 * Refactored all the blacklist classes.
 * Fixed some typos and removed some comments in the command classes.
