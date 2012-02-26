@@ -32,7 +32,6 @@ import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 public class VehicleListener implements Listener {
-    
     public static iSafe plugin;
     public VehicleListener(iSafe instance)
     {

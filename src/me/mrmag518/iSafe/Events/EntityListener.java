@@ -1769,7 +1769,7 @@ public class EntityListener implements Listener {
         }
         
         //new
-        if(plugin.getConfig().getBoolean("Explosions.Disable-Disable-Block_Explosion-damage", true))
+        if(plugin.getConfig().getBoolean("Explosions.Disable-Block_Explosion-damage", true))
         {
             if(event.getCause() == DamageCause.BLOCK_EXPLOSION) {
                 if (entity instanceof Player) {

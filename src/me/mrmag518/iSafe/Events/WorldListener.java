@@ -37,7 +37,6 @@ import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
 public class WorldListener implements Listener {
-    
     public static iSafe plugin;
     public WorldListener(iSafe instance)
     {
@@ -91,9 +90,6 @@ public class WorldListener implements Listener {
             return;
         }
         
-        World world = event.getWorld();
-        Chunk chunk = event.getChunk();
-        
         if(plugin.getConfig().getBoolean("Chunk.Prevent.unload-chunks(Use with caution)", true))
         {
             event.setCancelled(true);
@@ -116,8 +112,6 @@ public class WorldListener implements Listener {
         }
         
         Player player = event.getPlayer();
-        World world = event.getWorld();
-        Location loc = event.getLocation();
         
         if(plugin.getConfig().getBoolean("Structure.Prevent-strcuture-growth", true))
         {

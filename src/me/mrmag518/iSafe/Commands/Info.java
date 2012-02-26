@@ -50,7 +50,6 @@ public static iSafe plugin;
                     sender.sendMessage(ChatColor.GRAY + "FullName: "+ ChatColor.AQUA + pdffile.getFullName());
                     sender.sendMessage(ChatColor.GRAY + "Authors: "+ ChatColor.AQUA + "mrmag518");
                     sender.sendMessage(ChatColor.GRAY + "Minecraft compitability: "+ ChatColor.AQUA + "1.1");
-                    System.out.println("[iSafe] "+ (sender.getName() + " did the information command."));
                 } else { 
                     sender.sendMessage(ChatColor.RED + "You do not have access to that." );
                 }

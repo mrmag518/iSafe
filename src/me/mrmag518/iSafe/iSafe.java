@@ -36,6 +36,7 @@ import me.mrmag518.iSafe.Blacklists.*;
 import me.mrmag518.iSafe.Commands.*;
 import me.mrmag518.iSafe.Events.*;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -165,6 +166,7 @@ public class iSafe extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         
         if(!(this.getDataFolder().exists())) {
+            log.info("[iSafe]" + " DataFolder not found, creating a new one.");
             this.getDataFolder().mkdir();
         }
         
@@ -235,8 +237,8 @@ public class iSafe extends JavaPlugin implements Listener {
             try {
                 String oldVersion = getDescription().getVersion().substring(0, 5);
                 if (!newVersion.contains(oldVersion)) {
-                    player.sendMessage("A new version of iSafe is out! "+  newVersion + ", You are currently running v" + oldVersion);
-                    player.sendMessage("Please update iSafe at: http://dev.bukkit.org/server-mods/blockthattnt");
+                    player.sendMessage(ChatColor.GREEN + "A new version of iSafe is out! "+  newVersion + ", You are currently running v" + oldVersion);
+                    player.sendMessage(ChatColor.GREEN + "Please update iSafe at: http://dev.bukkit.org/server-mods/blockthattnt");
                 }
             } catch (Exception e) {
                 //ignore
@@ -327,7 +329,7 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Explosions.Disable-EnderDragon-blockdamage", false);
         config.addDefault("Explosions.Disable-TNT-explosions", false);
         config.addDefault("Explosions.Disable-Fireball-explosions", false);
-        config.addDefault("Explosions.Disable-Disable-Block_Explosion-damage", false);
+        config.addDefault("Explosions.Disable-Block_Explosion-damage", false);
         config.addDefault("Explosions.Disable-Entity_Explosion-damage", false);
         
         config.addDefault("World.Register-world(s)-init", true);

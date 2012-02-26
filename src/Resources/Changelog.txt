@@ -7,6 +7,8 @@ Version 2.61
 * Fixed wrong version display.
 * Fixed a directory problem some users may have experienced.
 * Fixed the main config not having a line break.
+* Fixed a duplication in one of the config strings.
+* 
 
 Version 2.60
 * Reworked the classes.

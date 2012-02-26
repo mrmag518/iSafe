@@ -37,7 +37,7 @@ public class Superbreak implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){       
         if(cmd.getName().equalsIgnoreCase("superbreak")){
             if (args.length > 0) {
-                sender.sendMessage(ChatColor.RED + "To many arguments!");
+                sender.sendMessage(ChatColor.RED + "Too many arguments!");
                 return false;
             }
             if (sender.hasPermission("iSafe.superbreak")) {

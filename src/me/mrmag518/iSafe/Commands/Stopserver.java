@@ -38,7 +38,7 @@ public class Stopserver implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){  
         if(cmd.getName().equalsIgnoreCase("stopserver")){
             if (args.length > 0) {
-                sender.sendMessage(ChatColor.RED + "To many arguments!");
+                sender.sendMessage(ChatColor.RED + "Too many arguments!");
                 return false;
             }
             
@@ -67,7 +67,7 @@ public class Stopserver implements CommandExecutor {
     }
     
     public void stopServer() {
-        Bukkit.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Server shutting down ..");
+        Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "Server shutting down ..");
         Bukkit.getServer().shutdown();
     }
 }

@@ -51,7 +51,6 @@ public class Serverinfo implements CommandExecutor {
                     sender.sendMessage(ChatColor.GRAY + "Default GameMode: "+ ChatColor.AQUA + plugin.getServer().getDefaultGameMode().toString());
                     sender.sendMessage(ChatColor.GRAY + "Server port: "+ ChatColor.AQUA + plugin.getServer().getPort());
                     sender.sendMessage(ChatColor.GRAY + "Spawn radius: "+ ChatColor.AQUA + plugin.getServer().getSpawnRadius());
-                    System.out.println("[iSafe] "+ (sender.getName() + " did the serverinfo command."));
                 } else {
                     sender.sendMessage(ChatColor.RED + "You do not have access to that.");
                 }
