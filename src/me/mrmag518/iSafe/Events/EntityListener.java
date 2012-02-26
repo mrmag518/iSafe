@@ -19,6 +19,7 @@
 package me.mrmag518.iSafe.Events;
 
 import me.mrmag518.iSafe.*;
+
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.*;

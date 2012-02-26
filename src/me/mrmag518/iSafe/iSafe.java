@@ -164,6 +164,10 @@ public class iSafe extends JavaPlugin implements Listener {
         
         getServer().getPluginManager().registerEvents(this, this);
         
+        if(!(this.getDataFolder().exists())) {
+            this.getDataFolder().mkdir();
+        }
+        
         //Update checker - From MilkBowl.
         this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
             @Override

@@ -5,7 +5,7 @@ Version 2.61
 * Fixed some typos and removed some comments in the command classes.
 * Removed all un-used statments.
 * Fixed wrong version display.
-* 
+* Fixed a directory problem some users may have experienced.
 
 Version 2.60
 * Reworked the classes.
