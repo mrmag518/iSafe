@@ -4,6 +4,7 @@ Version 2.61
 * Refactored all the blacklist classes.
 * Fixed some typos and removed some comments in the command classes.
 * Removed all un-used statments.
+* Fixed wrong version display.
 * 
 
 Version 2.60

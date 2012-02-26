@@ -198,6 +198,8 @@ public class iSafe extends JavaPlugin implements Listener {
         
         this.getServer().getPluginManager().getPermissions();
         
+        log.info("[" + pdffile.getFullName() + "] " + " Loaded succesfully.");
+        
         this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
@@ -206,8 +208,6 @@ public class iSafe extends JavaPlugin implements Listener {
                 plugin.getPluginLoader().enablePlugin(plugin);
             }
         }, 0, 36000);
-        
-        log.info("[" + pdffile.getFullName() + "] " + " Loaded succesfully.");
     }
     
     //Update checker - From MilkBowl's Vault.
