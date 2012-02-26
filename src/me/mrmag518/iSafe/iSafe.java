@@ -128,7 +128,7 @@ public class iSafe extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         PluginDescriptionFile pdffile = this.getDescription();
-        log.info("[" + pdffile.getFullName() + "] " + " Unloaded succesfully.");
+        log.info("[" + pdffile.getName() + " :: " + pdffile.getVersion() + "] " + " Unloaded succesfully.");
     }
     
     @Override
@@ -198,16 +198,7 @@ public class iSafe extends JavaPlugin implements Listener {
         
         this.getServer().getPluginManager().getPermissions();
         
-        log.info("[" + pdffile.getFullName() + "] " + " Loaded succesfully.");
-        
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
-            @Override
-            public void run() {
-                log.info("[iSafe] Doing a quick file reload.");
-                plugin.getPluginLoader().disablePlugin(plugin);
-                plugin.getPluginLoader().enablePlugin(plugin);
-            }
-        }, 0, 36000);
+        log.info("[" + pdffile.getName() + " :: " + pdffile.getVersion() + "] " + " Loaded succesfully.");
     }
     
     //Update checker - From MilkBowl's Vault.
