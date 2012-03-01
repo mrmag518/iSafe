@@ -28,7 +28,6 @@ import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 
 public class WeatherListener implements Listener {
-    
     public static iSafe plugin;
     public WeatherListener(iSafe instance)
     {

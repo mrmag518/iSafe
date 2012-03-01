@@ -121,6 +121,11 @@ public class iSafe extends JavaPlugin implements Listener {
     List<String> cmdworlds = new ArrayList<String>();
     String[] cmdworldlist = { "world", "world_nether" };
     
+    List<String> mobspawnnatural = new ArrayList<String>();
+    String[] mobspawnnaturallist = { "No defaults added." };
+    List<String> mobspawnnaturalworlds = new ArrayList<String>();
+    String[] mobspawnnaturalworldslist = { "world", "world_nether" };
+    
     List<String> lbworlds = new ArrayList<String>();
     String[] lbworldslist = { "world", "world_nether" };
     List<String> wbworlds = new ArrayList<String>();
@@ -165,9 +170,16 @@ public class iSafe extends JavaPlugin implements Listener {
         
         this.getServer().getPluginManager().registerEvents(this, this);
         
-        if(!(this.getDataFolder().exists())) {
-            log.info("[iSafe]" + " DataFolder not found, creating a new one.");
-            this.getDataFolder().mkdir();
+        try {
+            if(!(this.getDataFolder().exists())) {
+                log.info("[iSafe]" + " DataFolder not found, creating a new one.");
+                this.getDataFolder().mkdir();
+            }
+        } catch (Exception ex) {
+            log.warning("[iSafe]" + " An exception ocurred when trying to create the DataFolder.");
+            log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
+            ex.printStackTrace();
+            log.warning("[iSafe]" + " The exception was caused by "+ ex.getCause());
         }
         
         //Update checker - From MilkBowl.
@@ -465,7 +477,7 @@ public class iSafe extends JavaPlugin implements Listener {
         blacklist.addDefault("Drop.Worlds", Arrays.asList(worldslist));
         worlds = blacklist.getStringList("Drop.Worlds");
         blacklist.addDefault("Drop.Blacklist", Arrays.asList(dropedblockslist));
-        dropedblocks = config.getStringList("Drop.Blacklist");
+        dropedblocks = blacklist.getStringList("Drop.Blacklist");
         
         blacklist.addDefault("Pickup.Complete-Disallow-pickuping", false);
         blacklist.addDefault("Pickup.Kick-Player", false);
@@ -476,7 +488,7 @@ public class iSafe extends JavaPlugin implements Listener {
         blacklist.addDefault("Pickup.Worlds", Arrays.asList(Pickupworldslist));
         Pickupworlds = blacklist.getStringList("Pickup.Worlds");
         blacklist.addDefault("Pickup.Blacklist", Arrays.asList(pickupedblockslist));
-        pickupedblocks = config.getStringList("Pickup.Blacklist");
+        pickupedblocks = blacklist.getStringList("Pickup.Blacklist");
         
         blacklist.addDefault("Command.Disallow-commands", false);
         blacklist.addDefault("Command.Alert/log.To-console", true);
@@ -485,7 +497,7 @@ public class iSafe extends JavaPlugin implements Listener {
         blacklist.addDefault("Command.Worlds", Arrays.asList(cmdworldlist));
         cmdworlds = blacklist.getStringList("Command.Worlds");
         blacklist.addDefault("Command.Blacklist", Arrays.asList(commandslist));
-        commands = config.getStringList("Command.Blacklist");
+        commands = blacklist.getStringList("Command.Blacklist");
         
         this.getBlacklist().options().copyDefaults(true);
         saveBlacklist();
@@ -579,6 +591,11 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Misc.Tame.Prevent-taming", false);
         mobsConfig.addDefault("Misc.Allow-SlimeSplit", true);
         mobsConfig.addDefault("Misc.Prevent-PigZap", true);
+        
+        mobsConfig.addDefault("MobSpawn.Natural.Worlds", Arrays.asList(mobspawnnaturalworldslist));
+        mobspawnnaturalworlds = mobsConfig.getStringList("MobSpawn.Natural.Worlds");
+        mobsConfig.addDefault("MobSpawn.Natural.Blacklist", Arrays.asList(mobspawnnaturallist));
+        mobspawnnatural = mobsConfig.getStringList("MobSpawn.Natural.Blacklist");
         
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Blazes", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Cave_Spiders", false);

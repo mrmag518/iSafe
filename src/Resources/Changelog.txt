@@ -3,6 +3,9 @@ Displaying the Change Log of iSafe.
 Version 2.62
 * Rewrote "init" to "initalized" on a world init.
 * Removed snowman snow trampling prevention due to delegated method, and not other method could replace the prevention due to no method for getting the snowman.
+* Added a exception catcher if the DataFolder creation was unsuccessfull.
+* Added listing of mobs instead of the boolean system previously used, this blacklist does currently only supprot ids.
+* 
 
 Version 2.61
 * Refactored all the blacklist classes.

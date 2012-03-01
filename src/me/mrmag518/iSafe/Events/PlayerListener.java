@@ -45,7 +45,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -55,7 +54,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 public class PlayerListener implements Listener  {
-    
     public static iSafe plugin;
     public PlayerListener(iSafe instance)
     {
@@ -122,7 +120,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        
         Player player = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Player.Prevent-Sprinting", true))
@@ -145,7 +142,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        
         Player player = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Player.Prevent-Sneaking", true))
@@ -201,7 +197,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        
         Player player = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Teleport.Disallow-Teleporting", true))
@@ -269,7 +264,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        
         String msg = event.getMessage();
         Player player = event.getPlayer();
         World world = player.getWorld();
@@ -306,7 +300,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        
         Player player = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Player.Enable-Bed-permissions", true))
@@ -326,7 +319,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        
         Player player = event.getPlayer();
         Server server = player.getServer();
         
@@ -342,7 +334,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        
         Player player = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Player.Enable-fishing-permissions", true))
@@ -362,7 +353,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
         
@@ -504,7 +494,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        
         if(plugin.getConfig().getBoolean("Player.Log-commands", true))
         {
             if (message == 0) {
@@ -543,8 +532,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        
-        Player player = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Player.Prevent-Gamemode-change", true))
         {

@@ -19,6 +19,7 @@
 package me.mrmag518.iSafe.Events;
 
 import me.mrmag518.iSafe.*;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -26,7 +27,6 @@ import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 
 public class InventoryListener implements Listener {
-    
     public static iSafe plugin;
     public InventoryListener(iSafe instance)
     {
@@ -54,7 +54,6 @@ public class InventoryListener implements Listener {
         {
             return;
         }
-        
         
         if(plugin.getConfig().getBoolean("Furnace.Disable-furnace-smelting", true))
         {

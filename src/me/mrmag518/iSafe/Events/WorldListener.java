@@ -49,7 +49,7 @@ public class WorldListener implements Listener {
         
         if(plugin.getConfig().getBoolean("World.Register-world(s)-unload", true))
         {
-            System.out.println(("[iSafe] Unloaded "+ (world.getName() + " succsesfully.")));
+            System.out.println(("[iSafe] Unloaded '"+ (world.getName() + "' succsesfully.")));
         }
     }
     
@@ -58,7 +58,7 @@ public class WorldListener implements Listener {
         World world = event.getWorld();
         if(plugin.getConfig().getBoolean("World.Register-world(s)-save", true))
         {
-            System.out.println(("[iSafe] Saved "+ (world.getName() + " succsesfully.")));
+            System.out.println(("[iSafe] Saved '"+ (world.getName() + "' succsesfully.")));
         }     
     }
     
@@ -68,7 +68,7 @@ public class WorldListener implements Listener {
         
         if(plugin.getConfig().getBoolean("World.Register-world(s)-load", true))
         {
-            System.out.println(("[iSafe] Loaded "+ (world.getName() + " succsesfully.")));
+            System.out.println(("[iSafe] Loaded '"+ (world.getName() + "' succsesfully.")));
         }
     }
 
@@ -78,7 +78,7 @@ public class WorldListener implements Listener {
         
         if(plugin.getConfig().getBoolean("World.Register-world(s)-init", true))
         {
-            System.out.println(("[iSafe] Initialized "+ (world.getName() + " succsesfully.")));
+            System.out.println(("[iSafe] Initialized '"+ (world.getName() + "' succsesfully.")));
         }
     }
 
@@ -109,7 +109,6 @@ public class WorldListener implements Listener {
         {
             return;
         }
-        
         Player player = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Structure.Prevent-strcuture-growth", true))
