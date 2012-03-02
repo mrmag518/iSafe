@@ -126,6 +126,11 @@ public class iSafe extends JavaPlugin implements Listener {
     List<String> mobspawnnaturalworlds = new ArrayList<String>();
     String[] mobspawnnaturalworldslist = { "world", "world_nether" };
     
+    List<String> mobspawnspawner = new ArrayList<String>();
+    String[] mobspawnspawnerlist = { "No defaults added." };
+    List<String> mobspawnspawnerworlds = new ArrayList<String>();
+    String[] mobspawnspawnerworldslist = { "world", "world_nether" };
+    
     List<String> lbworlds = new ArrayList<String>();
     String[] lbworldslist = { "world", "world_nether" };
     List<String> wbworlds = new ArrayList<String>();
@@ -569,7 +574,9 @@ public class iSafe extends JavaPlugin implements Listener {
     }
     
     public void loadMobsConfig() {
-        mobsConfig.options().header("This is the Mob Control config associated to regulatory characteristics aimed at mobs in Minecraft.\n");
+        mobsConfig.options().header("This is the Mob Control config associated to regulatory characteristics aimed at mobs in Minecraft."
+        + "\nVisit the iSafe wiki for assistance."
+        + "\nA list of mob IDs can be found at the minercaft wiki, http://www.minecraftwiki.net/wiki/Data_values In the section 'Entity IDs'\n");
         
         mobsConfig.addDefault("EntityTarget.Disable-closest_player-target", false);
         mobsConfig.addDefault("EntityTarget.Disable-custom-target", false);
@@ -596,6 +603,11 @@ public class iSafe extends JavaPlugin implements Listener {
         mobspawnnaturalworlds = mobsConfig.getStringList("MobSpawn.Natural.Worlds");
         mobsConfig.addDefault("MobSpawn.Natural.Blacklist", Arrays.asList(mobspawnnaturallist));
         mobspawnnatural = mobsConfig.getStringList("MobSpawn.Natural.Blacklist");
+        
+        mobsConfig.addDefault("MobSpawn.Spawner.Worlds", Arrays.asList(mobspawnspawnerworldslist));
+        mobspawnspawnerworlds = mobsConfig.getStringList("MobSpawn.Spawner.Worlds");
+        mobsConfig.addDefault("MobSpawn.Spawner.Blacklist", Arrays.asList(mobspawnspawnerlist));
+        mobspawnspawner = mobsConfig.getStringList("MobSpawn.Spawner.Blacklist");
         
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Blazes", false);
         mobsConfig.addDefault("Mob-Spawn.SpawnReason.Natural.Prevent.Cave_Spiders", false);
