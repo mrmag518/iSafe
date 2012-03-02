@@ -61,48 +61,6 @@ public class Reload implements CommandExecutor {
             }
     		return true;
     	}
-        if(cmd.getName().equalsIgnoreCase("iSafe-reload-blacklist")){
-            if (args.length > 0) {
-                sender.sendMessage(ChatColor.RED + "To many arguments!");
-                return false;
-            }
-            PluginDescriptionFile pdffile = plugin.getDescription();
-            if (sender instanceof Player) { 
-                Player player = (Player)sender;
-                if (hasReload(player)) { //player
-                    plugin.reloadBlacklist();
-		    sender.sendMessage(ChatColor.AQUA + pdffile.getFullName() + ChatColor.GRAY + " succesfully reloaded the blacklist file.");
-                    System.out.println("[iSafe] "+ sender.getName() + " reloaded the blacklist file.");
-            } else { 
-                    sender.sendMessage(ChatColor.RED + "You do not have access to that." );
-                }
-            } else { 
-                plugin.reloadBlacklist();
-		plugin.log.info("[iSafe] " + pdffile.getName() + " succesfully reloaded the blacklist file.");
-            }
-    		return true;
-        }
-        if(cmd.getName().equalsIgnoreCase("iSafe-reload-mobsconfig")){
-            if (args.length > 0) {
-                sender.sendMessage(ChatColor.RED + "To many arguments!");
-                return false;
-            }
-            PluginDescriptionFile pdffile = plugin.getDescription();
-            if (sender instanceof Player) { 
-                Player player = (Player)sender;
-                if (hasReload(player)) { 
-                    plugin.reloadMobsConfig();
-		    sender.sendMessage(ChatColor.AQUA + pdffile.getFullName() + ChatColor.GRAY + " succesfully reloaded the mobsConfig file.");
-                    System.out.println("[iSafe] "+ sender.getName() + " reloaded the mobsConfig file.");
-            } else { 
-                    sender.sendMessage(ChatColor.RED + "You do not have access to that." );
-                }
-            } else { 
-                plugin.reloadMobsConfig();
-		plugin.log.info("[iSafe] " + pdffile.getName() + " succesfully reloaded the mobsConfig file.");
-            }
-    		return true;
-        }
         return false;
     }
     

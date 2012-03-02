@@ -50,43 +50,43 @@ public class VehicleListener implements Listener {
         Player player = (Player) entity;
         Vehicle vec = event.getVehicle();
         
-           if(plugin.getConfig().getBoolean("Vehicle.Prevent.enter.Minecarts", true))
-           {
-                if(player.hasPermission("iSafe.vehicle.enter.minecart")) {
-                    //access
+       if(plugin.getConfig().getBoolean("Vehicle.Prevent.enter.Minecarts", true))
+       {
+            if(player.hasPermission("iSafe.vehicle.enter.minecart")) {
+                //access
                 } else {
-                   if(vec.getEntityId() == 40) {
-                       if (entity instanceof LivingEntity) {
-                           if (entity instanceof Player) {
-                                event.setCancelled(true);
-                                player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
-                            } else {
-                           }
+                if(vec.getEntityId() == 40) {
+                   if (entity instanceof LivingEntity) {
+                       if (entity instanceof Player) {
+                            event.setCancelled(true);
+                            player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
                         } else {
                        }
                     } else {
                    }
-                }
-            }
-            if(plugin.getConfig().getBoolean("Vehicle.Prevent.enter.Boats", true))
-            {
-                if(player.hasPermission("iSafe.vehicle.enter.boat")) {
-                    //access
                 } else {
-                    if(vec.getEntityId() == 41) {
-                        if (entity instanceof LivingEntity) {
-                            if (entity instanceof Player) {
-                                event.setCancelled(true);
-                                player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
-                            } else {
-                            }
+               }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Vehicle.Prevent.enter.Boats", true))
+        {
+            if(player.hasPermission("iSafe.vehicle.enter.boat")) {
+                //access
+            } else {
+                if(vec.getEntityId() == 41) {
+                    if (entity instanceof LivingEntity) {
+                        if (entity instanceof Player) {
+                            event.setCancelled(true);
+                            player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
                         } else {
                         }
                     } else {
                     }
+                } else {
                 }
             }
         }
+    }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onVehicleDestroy(VehicleDestroyEvent event) {

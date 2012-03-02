@@ -7,7 +7,9 @@ Version 2.62
 * Added listing of mobs instead of the boolean system previously used.
 * Fixed 3,4 blacklists listening to the lists in the main config that did not exist, to listening to the lists in the blacklist file.
 * Supports R6 builds.
-* 
+* Added multi lines to the config headers.
+* Optimized the support for 1.2.* and R6.
+* Fixed NoSuchMethodError when an item spawns into the world in R6+
 
 Version 2.61
 * Refactored all the blacklist classes.

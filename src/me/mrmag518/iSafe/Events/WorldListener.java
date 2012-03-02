@@ -179,5 +179,15 @@ public class WorldListener implements Listener {
                 event.setCancelled(true);
             }
         }
+        
+        /*
+        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.JUNGLE_TREE", true))
+        {
+            if (event.getSpecies() == TreeType.JUNGLE_TREE)
+            {
+                event.setCancelled(true);
+            }
+        }
+        */
     }
 }
