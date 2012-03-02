@@ -5,7 +5,9 @@ import java.util.List;
 import me.mrmag518.iSafe.iSafe;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -28,6 +30,10 @@ public class MobSpawnBlacklist implements Listener {
         }
         Entity entity = event.getEntity();
         int entityID = entity.getEntityId();
+        String entityNameLowercase = entity.getType().getName().toLowerCase();
+        String entityNameUppercase = entity.getType().getName().toUpperCase();
+        String entityName = entity.getType().getName();
+        String entityNameString = entity.getType().getName().toString();        
         World world = entity.getWorld();
         Location loc = entity.getLocation();
         String worldname = world.getName();
@@ -36,7 +42,11 @@ public class MobSpawnBlacklist implements Listener {
          * Spawn reason: Natural.
          */
         final List<Entity> naturalSpawnedMobs = new ArrayList<Entity>();
-        if (plugin.getMobsConfig().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityID)) 
+        if (plugin.getMobsConfig().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityID)
+                || plugin.getMobsConfig().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityNameLowercase)
+                || plugin.getMobsConfig().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityNameUppercase)
+                || plugin.getMobsConfig().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityName)
+                || plugin.getMobsConfig().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityNameString))
         {
             if (!event.isCancelled())
             {

@@ -34,7 +34,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 public class PlaceBlacklist implements Listener {
-    
     public static iSafe plugin;
     public PlaceBlacklist(iSafe instance)
     {
