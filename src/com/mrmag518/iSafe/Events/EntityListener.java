@@ -26,7 +26,6 @@ import org.bukkit.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.CreeperPowerEvent.PowerCause;
 import org.bukkit.event.entity.EntityDamageEvent.*;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -63,7 +62,7 @@ public class EntityListener implements Listener {
     }
     
     @EventHandler(priority = EventPriority.NORMAL)
-        public void onEntityExplode(EntityExplodeEvent event) {
+    public void onEntityExplode(EntityExplodeEvent event) {
         if (event.isCancelled())
         {
             return;
@@ -104,6 +103,14 @@ public class EntityListener implements Listener {
         if(plugin.getConfig().getBoolean("Explosions.Disable-Fireball-explosions", true))
         {
             if (ent instanceof Fireball) {
+                event.blockList().clear();
+                return;
+            }  
+        }
+        
+        if(plugin.getConfig().getBoolean("Explosions.Disable-EnderCrystal-explosions", true))
+        {
+            if (ent instanceof EnderCrystal) {
                 event.blockList().clear();
                 return;
             }  
@@ -490,7 +497,7 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(!plugin.getMobsConfig().getBoolean("Misc.Allow-SlimeSplit", true))
+        if(plugin.getMobsConfig().getBoolean("Misc.Prevent-SlimeSplit", true))
         {
             event.setCancelled(true);
         }
@@ -505,55 +512,64 @@ public class EntityListener implements Listener {
         
         if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-closest_player-target", true))
         {
-            if(event.getReason() == TargetReason.CLOSEST_PLAYER) {
+            if(event.getReason() == TargetReason.CLOSEST_PLAYER) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-custom-target", true))
         {
-            if(event.getReason() == TargetReason.CUSTOM) {
+            if(event.getReason() == TargetReason.CUSTOM) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-forgot_target-target", true))
         {
-            if(event.getReason() == TargetReason.FORGOT_TARGET) {
+            if(event.getReason() == TargetReason.FORGOT_TARGET) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-owner_attacked_target-target", true))
         {
-            if(event.getReason() == TargetReason.OWNER_ATTACKED_TARGET) {
+            if(event.getReason() == TargetReason.OWNER_ATTACKED_TARGET) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-pig_zombie_target-target", true))
         {
-            if(event.getReason() == TargetReason.PIG_ZOMBIE_TARGET) {
+            if(event.getReason() == TargetReason.PIG_ZOMBIE_TARGET) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-random_target-target", true))
         {
-            if(event.getReason() == TargetReason.RANDOM_TARGET) {
+            if(event.getReason() == TargetReason.RANDOM_TARGET) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-target_attacked_entity-target", true))
         {
-            if(event.getReason() == TargetReason.TARGET_ATTACKED_ENTITY) {
+            if(event.getReason() == TargetReason.TARGET_ATTACKED_ENTITY) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-target_attacked_owner-target", true))
         {
-            if(event.getReason() == TargetReason.TARGET_ATTACKED_OWNER) {
+            if(event.getReason() == TargetReason.TARGET_ATTACKED_OWNER) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-target_died-target", true))
         {
-            if(event.getReason() == TargetReason.TARGET_DIED) {
+            if(event.getReason() == TargetReason.TARGET_DIED) 
+            {
                 event.setCancelled(true);
             }
         }
@@ -673,25 +689,43 @@ public class EntityListener implements Listener {
         }
         if(plugin.getConfig().getBoolean("Entity/Player.Prevent.Custom-Health-Regeneration", true))
         {
-            if (event.getRegainReason() == RegainReason.CUSTOM) {
+            if (event.getRegainReason() == RegainReason.CUSTOM) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getConfig().getBoolean("Entity/Player.Prevent.Eating-Health-Regeneration", true))
         {
-            if (event.getRegainReason() == RegainReason.EATING) {
+            if (event.getRegainReason() == RegainReason.EATING) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getConfig().getBoolean("Entity/Player.Prevent.Regen-Health-Regeneration", true))
         {
-            if (event.getRegainReason() == RegainReason.REGEN) {
+            if (event.getRegainReason() == RegainReason.REGEN) 
+            {
                 event.setCancelled(true);
             }
         }
         if(plugin.getConfig().getBoolean("Entity/Player.Prevent.Satiated-Health-Regeneration", true))
         {
-            if (event.getRegainReason() == RegainReason.SATIATED) {
+            if (event.getRegainReason() == RegainReason.SATIATED) 
+            {
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity/Player.Prevent.Magic-Health-Regeneration", true))
+        {
+            if (event.getRegainReason() == RegainReason.MAGIC) 
+            {
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity/Player.Prevent.MagicRegen-Health-Regeneration", true))
+        {
+            if (event.getRegainReason() == RegainReason.MAGIC_REGEN) 
+            {
                 event.setCancelled(true);
             }
         }

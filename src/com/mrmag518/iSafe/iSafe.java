@@ -362,6 +362,7 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Explosions.Disable-EnderDragon-blockdamage", false);
         config.addDefault("Explosions.Disable-TNT-explosions", false);
         config.addDefault("Explosions.Disable-Fireball-explosions", false);
+        config.addDefault("Explosions.Disable-EnderCrystal-explosions", false);
         config.addDefault("Explosions.Disable-Block_Explosion-damage", false);
         config.addDefault("Explosions.Disable-Entity_Explosion-damage", false);
         
@@ -448,6 +449,8 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Entity/Player.Prevent.Eating-Health-Regeneration", false);
         config.addDefault("Entity/Player.Prevent.Regen-Health-Regeneration", false);
         config.addDefault("Entity/Player.Prevent.Satiated-Health-Regeneration", false);
+        config.addDefault("Entity/Player.Prevent.Magic-Health-Regeneration", false);
+        config.addDefault("Entity/Player.Prevent.MagicRegen-Health-Regeneration", false);
         config.addDefault("PlayerInteractEntity.Prevent-snowball-hitting-player", false);
         config.addDefault("PlayerInteractEntity.Prevent-arrow-hitting-player", false);
         
@@ -613,7 +616,7 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Misc.Prevent-Object-drop-on-death", false);
         mobsConfig.addDefault("Misc.Prevent-Entity-Combust", false);
         mobsConfig.addDefault("Misc.Tame.Prevent-taming", false);
-        mobsConfig.addDefault("Misc.Allow-SlimeSplit", true);
+        mobsConfig.addDefault("Misc.Prevent-SlimeSplit", true);
         mobsConfig.addDefault("Misc.Prevent-PigZap", true);
         
         mobsConfig.addDefault("MobSpawn.Natural.Debug.To-console", false);
