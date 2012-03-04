@@ -1,8 +1,8 @@
-package me.mrmag518.iSafe.Blacklists;
+package com.mrmag518.iSafe.Blacklists;
 
 import java.util.ArrayList;
 import java.util.List;
-import me.mrmag518.iSafe.iSafe;
+import com.mrmag518.iSafe.iSafe;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;

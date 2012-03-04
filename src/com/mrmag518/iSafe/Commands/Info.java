@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.mrmag518.iSafe.Commands;
+package com.mrmag518.iSafe.Commands;
 
-import me.mrmag518.iSafe.iSafe;
+import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

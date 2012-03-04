@@ -1,4 +1,4 @@
-package me.mrmag518.iSafe;
+package com.mrmag518.iSafe;
 
 import java.io.File;
 

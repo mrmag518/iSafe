@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.mrmag518.iSafe.Blacklists;
+package com.mrmag518.iSafe.Blacklists;
 
-import me.mrmag518.iSafe.iSafe;
+import com.mrmag518.iSafe.iSafe;
 
 import java.util.ArrayList;
 import java.util.List;

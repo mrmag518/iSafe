@@ -16,9 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.mrmag518.iSafe.Events;
+package com.mrmag518.iSafe.Events;
 
-import me.mrmag518.iSafe.*;
+import com.mrmag518.iSafe.*;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

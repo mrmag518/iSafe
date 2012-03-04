@@ -16,48 +16,43 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.mrmag518.iSafe.Events;
+package com.mrmag518.iSafe.Events;
 
-import me.mrmag518.iSafe.*;
+import com.mrmag518.iSafe.iSafe;
 
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.FurnaceBurnEvent;
-import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.enchantment.EnchantItemEvent;
 
-public class InventoryListener implements Listener {
+
+public class EnchantmentListener implements Listener {
+    
     public static iSafe plugin;
-    public InventoryListener(iSafe instance)
+    public EnchantmentListener(iSafe instance)
     {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onFurnaceBurn(FurnaceBurnEvent event) {
+    @EventHandler
+    public void EnchantmentPreventer(EnchantItemEvent event) {
         if (event.isCancelled())
         {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Furnace.Disable-furnace-burning", true))
+        if(plugin.getConfig().getBoolean("Enchantment.Prevent-Enchantment", true))
         {
-            event.setBurnTime(0);
             event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onFurnaceSmelt(FurnaceSmeltEvent event) {
-        if (event.isCancelled())
-        {
-            return;
+            event.getEnchanter().sendMessage(ChatColor.RED + "You cannot enchant.");
         }
         
-        if(plugin.getConfig().getBoolean("Furnace.Disable-furnace-smelting", true))
-        {
-            event.setCancelled(true);
-        }
+        /**
+         * Todo
+         * - Add preventions for specefic level "payments"
+         * - Add permissions.
+         * - ?
+         */
     }
 }

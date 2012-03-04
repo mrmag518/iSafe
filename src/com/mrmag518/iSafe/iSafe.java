@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.mrmag518.iSafe;
+package com.mrmag518.iSafe;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,9 +32,9 @@ import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import me.mrmag518.iSafe.Blacklists.*;
-import me.mrmag518.iSafe.Commands.*;
-import me.mrmag518.iSafe.Events.*;
+import com.mrmag518.iSafe.Blacklists.*;
+import com.mrmag518.iSafe.Commands.*;
+import com.mrmag518.iSafe.Events.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -53,30 +53,30 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class iSafe extends JavaPlugin implements Listener {
-    private PlayerListener playerListener = null;
-    private BlockListener blockListener = null;
-    private EntityListener entityListener = null;
-    private WeatherListener weatherListener = null;
-    private InventoryListener inventoryListener = null;
-    private VehicleListener vehicleListener = null;
-    private WorldListener worldListener = null;
-    private EnchantmentListener enchantmentListener = null;
-    private DropListener dropListener = null;
+    public PlayerListener playerListener = null;
+    public BlockListener blockListener = null;
+    public EntityListener entityListener = null;
+    public WeatherListener weatherListener = null;
+    public InventoryListener inventoryListener = null;
+    public VehicleListener vehicleListener = null;
+    public WorldListener worldListener = null;
+    public EnchantmentListener enchantmentListener = null;
+    public DropListener dropListener = null;
     
-    private UserFileCreator UFC = null;
+    public UserFileCreator UFC = null;
     
-    private DropBlacklist dropBlacklist = null;
-    private PlaceBlacklist placeBlacklist = null;
-    private BreakBlacklist breakBlacklist = null;
-    private PickupBlacklist pickupBlacklist = null;
-    private CommandBlacklist commandBlacklist = null;
+    public DropBlacklist dropBlacklist = null;
+    public PlaceBlacklist placeBlacklist = null;
+    public BreakBlacklist breakBlacklist = null;
+    public PickupBlacklist pickupBlacklist = null;
+    public CommandBlacklist commandBlacklist = null;
     
-    private Reload reloadcmd = null;
-    private Info isafeInfocmd = null;
-    private Serverinfo serverinfocmd = null;
-    private Superbreak superbreakcmd = null;
-    private Stopserver stopServercmd = null;
-    private ClearDrops cleardropscmd = null;
+    public Reload reloadcmd = null;
+    public Info isafeInfocmd = null;
+    public Serverinfo serverinfocmd = null;
+    public Superbreak superbreakcmd = null;
+    public Stopserver stopServercmd = null;
+    public ClearDrops cleardropscmd = null;
     
     public String version = null;
     public String newVersion = null;

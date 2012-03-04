@@ -16,12 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.mrmag518.iSafe.Events;
+package com.mrmag518.iSafe.Events;
 
 
 import java.util.List;
 
-import me.mrmag518.iSafe.*;
+import com.mrmag518.iSafe.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
