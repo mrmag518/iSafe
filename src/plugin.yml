@@ -97,6 +97,8 @@ permissions:
       iSafe.ping: true
       iSafe.magictxt: true
       iSafe.cleardrops: true
+      iSafe.teleport.endportal: true
+      iSafe.teleport.netherportal: true
   iSafe.place.*:
     description: Allow the user to get access to all the Place permissions.
     default: op
@@ -227,5 +229,9 @@ permissions:
   isafe.murder.self:
     default: op
   isafe.murder.others:
+    default: op
+  iSafe.teleport.endportal:
+    default: op
+  iSafe.teleport.netherportal:
     default: op
     

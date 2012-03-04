@@ -256,6 +256,30 @@ public class PlayerListener implements Listener  {
                 }
             }
         }
+        
+        if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.Unknown", true))
+        {
+            if(player.hasPermission("iSafe.teleport.endportal")) {
+                //access
+            } else {
+                if (event.getCause() == TeleportCause.END_PORTAL) {
+                    event.setCancelled(true);
+                    player.sendMessage(ChatColor.RED + "You do not have access to teleport with an end portal cause.");
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.Unknown", true))
+        {
+            if(player.hasPermission("iSafe.teleport.netherportal")) {
+                //access
+            } else {
+                if (event.getCause() == TeleportCause.NETHER_PORTAL) {
+                    event.setCancelled(true);
+                    player.sendMessage(ChatColor.RED + "You do not have access to teleport with a nether portal cause.");
+                }
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -482,7 +506,7 @@ public class PlayerListener implements Listener  {
             {
                 if (user.getName().equalsIgnoreCase(name)) 
                 {
-                    user.kickPlayer("The username: "+ user.getName() + " logged on from another location.");
+                    user.kickPlayer("The username: "+ name + " logged on from another location.");
                 }
             }
         }
@@ -540,14 +564,16 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Player.Prevent-Gamemode-to-CreativeMode-change", true))
         {
-            if (event.getNewGameMode().equals(GameMode.CREATIVE)) {
+            if (event.getNewGameMode().equals(GameMode.CREATIVE)) 
+            {
                 event.setCancelled(true);
             }
         }
         
         if(plugin.getConfig().getBoolean("Player.Prevent-Gamemode-to-SurvivalMode-change", true))
         {
-            if (event.getNewGameMode().equals(GameMode.SURVIVAL)) {
+            if (event.getNewGameMode().equals(GameMode.SURVIVAL)) 
+            {
                 event.setCancelled(true);
             }
         }

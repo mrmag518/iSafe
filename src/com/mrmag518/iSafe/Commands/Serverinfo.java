@@ -51,6 +51,7 @@ public class Serverinfo implements CommandExecutor {
                     sender.sendMessage(ChatColor.GRAY + "Default GameMode: "+ ChatColor.AQUA + plugin.getServer().getDefaultGameMode().toString());
                     sender.sendMessage(ChatColor.GRAY + "Server port: "+ ChatColor.AQUA + plugin.getServer().getPort());
                     sender.sendMessage(ChatColor.GRAY + "Spawn radius: "+ ChatColor.AQUA + plugin.getServer().getSpawnRadius());
+                    sender.sendMessage(ChatColor.GRAY + "# of worlds: "+ ChatColor.AQUA + plugin.getServer().getWorlds().size());
                 } else {
                     sender.sendMessage(ChatColor.RED + "You do not have access to that.");
                 }
@@ -63,6 +64,7 @@ public class Serverinfo implements CommandExecutor {
                     sender.sendMessage("Default GameMode: "+ plugin.getServer().getDefaultGameMode().toString());
                     sender.sendMessage("Server port: "+ plugin.getServer().getPort());
                     sender.sendMessage("Spawn radius: "+ plugin.getServer().getSpawnRadius());
+                    sender.sendMessage("# of worlds: "+ plugin.getServer().getWorlds().size());
             }
             return true;
         }

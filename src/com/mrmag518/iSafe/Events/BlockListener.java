@@ -292,8 +292,6 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockCanBuild(BlockCanBuildEvent event) {
-        Block block = event.getBlock();
-        
         if(plugin.getConfig().getBoolean("World.Force-blocks-to-be-buildable", true))
         {
             if (!event.isBuildable()) 

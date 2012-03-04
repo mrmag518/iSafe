@@ -42,10 +42,10 @@ public class Superbreak implements CommandExecutor {
             }
             if (sender.hasPermission("iSafe.superbreak")) {
                 if (plugin.superbreak.contains((Player) sender)) {
-                    sender.sendMessage(ChatColor.GRAY + "SuperBreak: "+ ChatColor.AQUA + "OFF");
+                    sender.sendMessage(ChatColor.GRAY + "SuperBreak: "+ ChatColor.AQUA + "Off");
                     plugin.superbreak.remove((Player) sender);
                 } else {
-                    sender.sendMessage(ChatColor.GRAY + "SuperBreak: "+ ChatColor.AQUA + "ON");
+                    sender.sendMessage(ChatColor.GRAY + "SuperBreak: "+ ChatColor.AQUA + "On");
                     plugin.superbreak.add((Player) sender);
                 }
             } else {

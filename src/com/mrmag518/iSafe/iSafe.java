@@ -383,6 +383,8 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Structure.Prevent-structure-growth.RED_MUSHROOM", false);
         config.addDefault("Structure.Prevent-structure-growth.TALL_REDWOOD", false);
         config.addDefault("Structure.Prevent-structure-growth.TREE", false);
+        config.addDefault("Structure.Prevent-structure-growth.JUNGLE", false);
+        config.addDefault("Structure.Prevent-structure-growth.TALL_REDWOOD", false);
         config.addDefault("Structure.Prevent-bonemeal-usage", false);
         config.addDefault("Structure.Prevent-strcuture-growth", false);
         

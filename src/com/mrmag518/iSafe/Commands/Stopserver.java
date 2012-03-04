@@ -41,7 +41,6 @@ public class Stopserver implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "Too many arguments!");
                 return false;
             }
-            
             if (sender instanceof Player) {
                 Player player = (Player)sender;
                 if (hasStopserver(player)) {

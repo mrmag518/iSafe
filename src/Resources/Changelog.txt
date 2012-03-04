@@ -7,6 +7,9 @@ Version 2.63
 * Added two new health regeneration preventions.
 * Switched "Allow-SlimeSplit" to "Prevent-SlimeSplit".
 * Added prevention for "EnderCrystal" explosions.
+* Added two new teleport prevention causes.
+* Added two new structure growth preventions.
+* Added one more node to the serverinfo command.
 * 
 
 Version 2.62

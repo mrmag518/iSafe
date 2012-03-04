@@ -180,14 +180,20 @@ public class WorldListener implements Listener {
             }
         }
         
-        /*
-        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.JUNGLE_TREE", true))
+        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.JUNGLE", true))
         {
-            if (event.getSpecies() == TreeType.JUNGLE_TREE)
+            if (event.getSpecies() == TreeType.JUNGLE)
             {
                 event.setCancelled(true);
             }
         }
-        */
+        
+        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.TALL_REDWOOD", true))
+        {
+            if (event.getSpecies() == TreeType.TALL_REDWOOD)
+            {
+                event.setCancelled(true);
+            }
+        }
     }
 }
