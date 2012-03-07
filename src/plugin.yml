@@ -1,6 +1,6 @@
 author: mrmag518
 description: "Configurable features related to events happening on the server."
-main: me.mrmag518.iSafe.iSafe
+main: com.mrmag518.iSafe.iSafe
 name: iSafe
 load: STARTUP 
 version: '2.63'

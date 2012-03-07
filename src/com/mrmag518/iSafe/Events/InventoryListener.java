@@ -21,7 +21,6 @@ package com.mrmag518.iSafe.Events;
 import com.mrmag518.iSafe.*;
 
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.FurnaceBurnEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
@@ -34,7 +33,7 @@ public class InventoryListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onFurnaceBurn(FurnaceBurnEvent event) {
         if (event.isCancelled())
         {
@@ -48,7 +47,7 @@ public class InventoryListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onFurnaceSmelt(FurnaceSmeltEvent event) {
         if (event.isCancelled())
         {

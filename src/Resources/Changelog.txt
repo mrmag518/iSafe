@@ -10,7 +10,7 @@ Version 2.63
 * Added two new teleport prevention causes.
 * Added two new structure growth preventions.
 * Added one more node to the serverinfo command.
-* 
+* Added explosion debug mode.
 
 Version 2.62
 * Rewrote "init" to "initalized" on a world init.
