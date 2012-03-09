@@ -212,7 +212,7 @@ public class iSafe extends JavaPlugin implements Listener {
                     String oldVersion = version;
                     
                     if (!newVersion.contains(oldVersion)) {
-                        log.info("A new version of iSafe is out! "+  newVersion + ", You are currently running v" + oldVersion);
+                        log.info("A new version of iSafe is out! "+  newVersion +", You are currently running v" + oldVersion);
                         log.info("Please update iSafe at: http://dev.bukkit.org/server-mods/blockthattnt");
                     }
                 } catch (Exception ignored) {
@@ -297,8 +297,8 @@ public class iSafe extends JavaPlugin implements Listener {
         
         config.addDefault("Enchantment.Prevent-Enchantment", false);
         
-        config.addDefault("EntityTo-SpawnLocation.On-Void-fall(Player)", true);
-        config.addDefault("EntityTo-SpawnLocation.On-Void-fall(Creature)", true);
+        config.addDefault("EntityTo-SpawnLocation.On-Void-fall(Player)", false);
+        config.addDefault("EntityTo-SpawnLocation.On-Void-fall(Creature)", false);
         
         config.addDefault("Buckets.Prevent-LavaBucket-empty", true);
         config.addDefault("Buckets.Lava.Worlds", Arrays.asList(lbworldslist));
@@ -390,6 +390,8 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Structure.Prevent-bonemeal-usage", false);
         config.addDefault("Structure.Prevent-strcuture-growth", false);
         
+        config.addDefault("Entity-Damage.Disable-npc(Villagers)-death/damage", false);
+        config.addDefault("Entity-Damage.Disable-player-death/damage", false);
         config.addDefault("Entity-Damage.Disable-Fire-damage", false);
         config.addDefault("Entity-Damage.Disable-Fire-Creature-damage", false);
         config.addDefault("Entity-Damage.Disable-Void-damage", false);

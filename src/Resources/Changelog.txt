@@ -1,5 +1,10 @@
 Displaying the Change Log of iSafe.
 
+Version 2.64
+* Fixed iSafe broadcasting on join even if it's disabled.
+* Added prevention for Villager and Player damage/death.
+* 
+
 Version 2.63
 * Refactored all packages.
 * Supports 1.2.3-RO.1

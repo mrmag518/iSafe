@@ -196,9 +196,26 @@ public class EntityListener implements Listener {
         {
             return;
         }
-        
         Entity entity = event.getEntity();
         World world = entity.getWorld();
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-npc(Villagers)-death/damage", true))
+        {
+            if(entity instanceof Villager) 
+            {
+                event.setDamage(0);
+                event.setCancelled(true);
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-player-death/damage", true))
+        {
+            if(entity instanceof Player) 
+            {
+                event.setDamage(0);
+                event.setCancelled(true);
+            }
+        }
         
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Fire-damage", true))
         {

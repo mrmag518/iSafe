@@ -3,7 +3,7 @@ description: "Configurable features related to events happening on the server."
 main: com.mrmag518.iSafe.iSafe
 name: iSafe
 load: STARTUP 
-version: '2.63'
+version: '2.64'
 website: http://dev.bukkit.org/server-mods/blockthattnt/
 commands:
   iSafe-reload:
