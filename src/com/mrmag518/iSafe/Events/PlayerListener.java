@@ -158,26 +158,19 @@ public class PlayerListener implements Listener  {
         }
     }
     
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         PluginDescriptionFile pdffile = plugin.getDescription();
         
         if(plugin.getConfig().getBoolean("Player.Broadcast-iSafe-message-on-join", true))
         {
-            if (message == 0) {
-                player.sendMessage(ChatColor.BLUE + "Welcome " + ((player.getName() + (", This server is running " + ChatColor.YELLOW + (pdffile.getFullName() + ChatColor.BLUE + ".")))));
-                message = 1;
-            }
-        } else if (player.hasPlayedBefore()) {
-            if (message == 0) {
-                player.sendMessage(ChatColor.BLUE + "Welcome back" + ((player.getName() + (", This server is running " + ChatColor.YELLOW + (pdffile.getFullName() + ChatColor.BLUE + ".")))));
-                message = 1;
-            }
+                player.sendMessage(ChatColor.BLUE + "Welcome " + player.getName() + ", This server is running " 
+                        + ChatColor.YELLOW + pdffile.getFullName() + ChatColor.BLUE + ".");
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         Server server = player.getServer();
