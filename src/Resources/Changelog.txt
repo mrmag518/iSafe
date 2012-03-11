@@ -3,6 +3,9 @@ Displaying the Change Log of iSafe.
 Version 2.64
 * Fixed iSafe broadcasting on join even if it's disabled.
 * Added prevention for Villager and Player damage/death.
+* Supports 1.2.3-RO.2
+* Completely fixed, rewrote and added lots of stuff (included permissions) to the damage preventions.
+* Fixed "EntityTo-SpawnLocation" features.
 * 
 
 Version 2.63

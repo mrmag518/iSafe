@@ -99,6 +99,40 @@ permissions:
       iSafe.cleardrops: true
       iSafe.teleport.endportal: true
       iSafe.teleport.netherportal: true
+      iSafe.canceldamage.fire: true
+      iSafe.canceldamage.contact: true
+      iSafe.canceldamage.custom: true
+      iSafe.canceldamage.drowning: true
+      iSafe.canceldamage.entityattack: true
+      iSafe.canceldamage.fall: true
+      iSafe.canceldamage.lava: true
+      iSafe.canceldamage.lightning: true
+      iSafe.canceldamage.magic: true
+      iSafe.canceldamage.poison: true
+      iSafe.canceldamage.projectile: true
+      iSafe.canceldamage.starvation: true
+      iSafe.canceldamage.suffocation: true
+      iSafe.canceldamage.suicide: true
+      iSafe.canceldamage.void: true
+  iSafe.canceldamage.*:
+    description: Allow the user to get access to all the Canceldamage permissions.
+    default: op
+    children:
+      iSafe.canceldamage.fire: true
+      iSafe.canceldamage.contact: true
+      iSafe.canceldamage.custom: true
+      iSafe.canceldamage.drowning: true
+      iSafe.canceldamage.entityattack: true
+      iSafe.canceldamage.fall: true
+      iSafe.canceldamage.lava: true
+      iSafe.canceldamage.lightning: true
+      iSafe.canceldamage.magic: true
+      iSafe.canceldamage.poison: true
+      iSafe.canceldamage.projectile: true
+      iSafe.canceldamage.starvation: true
+      iSafe.canceldamage.suffocation: true
+      iSafe.canceldamage.suicide: true
+      iSafe.canceldamage.void: true
   iSafe.place.*:
     description: Allow the user to get access to all the Place permissions.
     default: op
@@ -233,5 +267,37 @@ permissions:
   iSafe.teleport.endportal:
     default: op
   iSafe.teleport.netherportal:
+    default: op
+  iSafe.canceldamage.fire:
+    default: op
+  iSafe.canceldamage.contact:
+    default: op
+  iSafe.canceldamage.custom:
+    default: op
+  iSafe.canceldamage.drowning:
+    default: op
+  iSafe.canceldamage.entityattack:
+    default: op
+  iSafe.canceldamage.fall:
+    default: op
+  iSafe.canceldamage.lava:
+    default: op
+  iSafe.canceldamage.lightning:
+    default: op
+  iSafe.canceldamage.magic:
+    default: op
+  iSafe.canceldamage.magic:
+    default: op
+  iSafe.canceldamage.poison:
+    default: op
+  iSafe.canceldamage.projectile:
+    default: op
+  iSafe.canceldamage.starvation:
+    default: op
+  iSafe.canceldamage.suffocation:
+    default: op
+  iSafe.canceldamage.suicide:
+    default: op
+  iSafe.canceldamage.void:
     default: op
     

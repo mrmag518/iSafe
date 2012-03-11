@@ -199,6 +199,15 @@ public class EntityListener implements Listener {
         Entity entity = event.getEntity();
         World world = entity.getWorld();
         
+        if (plugin.getConfig().getBoolean("EntityTo-SpawnLocation.On-Void-fall(Player)", true)) 
+        {
+            entity.teleport(world.getSpawnLocation());
+        }
+        if (plugin.getConfig().getBoolean("EntityTo-SpawnLocation.On-Void-fall(Creature)", true)) 
+        {
+            entity.teleport(world.getSpawnLocation());
+        }
+        
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-npc(Villagers)-death/damage", true))
         {
             if(entity instanceof Villager) 
@@ -207,7 +216,6 @@ public class EntityListener implements Listener {
                 event.setCancelled(true);
             }
         }
-        
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-player-death/damage", true))
         {
             if(entity instanceof Player) 
@@ -217,266 +225,6 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Fire-damage", true))
-        {
-            if(event.getCause().equals(DamageCause.FIRE) 
-                    || event.getCause().equals(DamageCause.FIRE_TICK)) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-            else {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Fire-Creature-damage", true))
-                    {
-                        if(event.getCause().equals(DamageCause.FIRE) 
-                            || event.getCause().equals(DamageCause.FIRE_TICK)) {
-                        if (entity instanceof Creature) {
-                            event.setCancelled(true);
-                            event.setDamage(0);
-                        }
-                    }
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Lightning-damage", true))
-        {
-            if(event.getCause() == DamageCause.LIGHTNING) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-            else {
-                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Lightning-Creature-damage", true))
-                {
-                    if (entity instanceof Creature) {
-                        event.setCancelled(true);
-                        event.setDamage(0);
-                    }
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Void-damage", true))
-        {
-            if(event.getCause() == DamageCause.VOID) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                    
-                    if (plugin.getConfig().getBoolean("EntityTo-SpawnLocation.On-Void-fall(Player)", true)) {
-                         entity.teleport(world.getSpawnLocation());
-                    }
-                }
-            }
-            else {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Void-Creature-damage", true))
-                    {
-                        if (entity instanceof Creature) {
-                            event.setCancelled(true);
-                            event.setDamage(0);
-                            
-                            if (plugin.getConfig().getBoolean("EntityTo-SpawnLocation.On-Void-fall(Creature)", true)) {
-                                 entity.teleport(world.getSpawnLocation());
-                            }
-                        }
-                    }
-                }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Fall-damage", true))
-        {
-            if(event.getCause() == DamageCause.FALL) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-            else {
-                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Fall-Creature-damage", true))
-                {
-                    if (entity instanceof Creature) {
-                        event.setCancelled(true);
-                        event.setDamage(0);
-                    }
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Suffocation-damage", true))
-        {
-            if(event.getCause() == DamageCause.SUFFOCATION) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-            else {
-                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Suffocation-Creature-damage", true))
-                {
-                    if (entity instanceof Creature) {
-                        event.setCancelled(true);
-                        event.setDamage(0);
-                    }
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Drowning-damage", true))
-        {
-            if(event.getCause() == DamageCause.DROWNING) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-            else {
-                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Drowning-Creature-damage", true))
-                {
-                    if (entity instanceof Creature) {
-                        event.setCancelled(true);
-                        event.setDamage(0);
-                    }
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Lava-damage", true))
-        {
-            if(event.getCause() == DamageCause.LAVA) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-            else {
-                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Lava-Creature-damage", true))
-                {
-                    if (entity instanceof Creature) {
-                        event.setCancelled(true);
-                        event.setDamage(0);
-                    }
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Contact-damage", true))
-        {
-            if(event.getCause() == DamageCause.CONTACT) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-            else {
-                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Contact-Creature-damage", true))
-                {
-                    if (entity instanceof Creature) {
-                        event.setCancelled(true);
-                        event.setDamage(0);
-                    }
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Projectile-damage", true))
-        {
-            if(event.getCause() == DamageCause.PROJECTILE) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-            else {
-                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Projectile-Creature-damage", true))
-                {
-                    if (entity instanceof Creature) {
-                        event.setCancelled(true);
-                        event.setDamage(0);
-                    }
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Starvation-damage", true))
-        {
-            if(event.getCause() == DamageCause.STARVATION) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-            else {
-                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Starvation-Creature-damage", true))
-                {
-                    if (entity instanceof Creature) {
-                        event.setCancelled(true);
-                        event.setDamage(0);
-                    }
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Suicide-damage", true))
-        {
-            if(event.getCause() == DamageCause.SUICIDE) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-            else {
-                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Suicide-Creature-damage", true))
-                {
-                    if (entity instanceof Creature) {
-                        event.setCancelled(true);
-                        event.setDamage(0);
-                    }
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Entity_Attack-damage", true))
-        {
-            if(event.getCause() == DamageCause.ENTITY_ATTACK) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-            else {
-                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Entity_Attack-Creature-damage", true))
-                {
-                    if (entity instanceof Creature) {
-                        event.setCancelled(true);
-                        event.setDamage(0);
-                    }
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Custom-damage", true))
-        {
-            if(event.getCause() == DamageCause.CUSTOM) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                } 
-                else {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Custom-Creature-damage", true))
-                    {
-                        if (entity instanceof Creature) {
-                            event.setCancelled(true);
-                            event.setDamage(0);
-                        }
-                    }
-                }
-            }
-        }
-        
-        //new
         if(plugin.getConfig().getBoolean("Explosions.Disable-Block_Explosion-damage", true))
         {
             if(event.getCause() == DamageCause.BLOCK_EXPLOSION) {
@@ -486,7 +234,6 @@ public class EntityListener implements Listener {
                 }
             }
         }
-        
         if(plugin.getConfig().getBoolean("Explosions.Disable-Entity_Explosion-damage", true))
         {
             if(event.getCause() == DamageCause.ENTITY_EXPLOSION) {
@@ -497,40 +244,407 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Magic-damage", true))
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Fire-damage", true))
         {
-            if(event.getCause() == DamageCause.MAGIC) {
+            if(event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK)) {
                 if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-                else {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Magic-Creature-damage", true))
-                    {
-                        if (entity instanceof Creature) {
-                            event.setCancelled(true);
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.fire")) {
                             event.setDamage(0);
+                            event.setCancelled(true);
                         }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
                     }
                 }
             }
         }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Poison-damage", true))
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Fire-damage", true))
         {
-            if(event.getCause() == DamageCause.POISON) {
-                if (entity instanceof Player) {
+            if(event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
                     event.setCancelled(true);
                     event.setDamage(0);
                 }
             }
-            else {
-                if(plugin.getConfig().getBoolean("Entity-Damage.Disable-Poison-Creature-damage", true))
-                {
-                    if (entity instanceof Creature) {
-                        event.setCancelled(true);
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Contact-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.CONTACT)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.contact")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
                         event.setDamage(0);
+                        event.setCancelled(true);
                     }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Contact-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.CONTACT)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Custom-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.CUSTOM)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.custom")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Custom-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.CUSTOM)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Drowning-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.DROWNING)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.drowning")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Drowning-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.DROWNING)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-EntityAttack-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.entityattack")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-EntityAttack-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Fall-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.FALL)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.fall")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Fall-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.FALL)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Lava-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.LAVA)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.lava")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Lava-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.LAVA)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Lightning-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.LIGHTNING)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.lightning")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Lightning-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.LIGHTNING)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Magic-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.MAGIC)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.magic")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Magic-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.MAGIC)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Poison-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.POISON)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.poison")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Poison-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.POISON)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Projectile-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.PROJECTILE)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.projectile")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Projectile-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.PROJECTILE)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Starvation-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.STARVATION)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.starvation")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Starvation-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.STARVATION)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Suffocation-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.SUFFOCATION)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.suffocation")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Suffocation-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.SUFFOCATION)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Suicide-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.SUICIDE)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.suicide")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Suicide-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.SUICIDE)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
+                }
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Void-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.VOID)) {
+                if (entity instanceof Player) {
+                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                        Player player = (Player)entity;
+                        if(player.hasPermission("iSafe.canceldamage.void")) {
+                            event.setDamage(0);
+                            event.setCancelled(true);
+                        }
+                    } else {
+                        event.setDamage(0);
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Void-damage", true))
+        {
+            if(event.getCause().equals(DamageCause.VOID)) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setDamage(0);
+                    event.setCancelled(true);
                 }
             }
         }

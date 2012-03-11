@@ -392,36 +392,38 @@ public class iSafe extends JavaPlugin implements Listener {
         
         config.addDefault("Entity-Damage.Disable-npc(Villagers)-death/damage", false);
         config.addDefault("Entity-Damage.Disable-player-death/damage", false);
-        config.addDefault("Entity-Damage.Disable-Fire-damage", false);
-        config.addDefault("Entity-Damage.Disable-Fire-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Void-damage", false);
-        config.addDefault("Entity-Damage.Disable-Void-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Lightning-damage", false);
-        config.addDefault("Entity-Damage.Disable-Lightning-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Fall-damage", false);
-        config.addDefault("Entity-Damage.Disable-Fall-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Suffocation-damage", false);
-        config.addDefault("Entity-Damage.Disable-Suffocation-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Drowning-damage", false);
-        config.addDefault("Entity-Damage.Disable-Drowning-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Lava-damage", false);
-        config.addDefault("Entity-Damage.Disable-Lava-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Contact-damage", false);
-        config.addDefault("Entity-Damage.Disable-Contact-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Projectile-damage", false);
-        config.addDefault("Entity-Damage.Disable-Projectile-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Starvation-damage", false);
-        config.addDefault("Entity-Damage.Disable-Starvation-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Suicide-damage", false);
-        config.addDefault("Entity-Damage.Disable-Suicide-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Entity_Attack-damage", false);
-        config.addDefault("Entity-Damage.Disable-Entity_Attack-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Magic-damage", false);
-        config.addDefault("Entity-Damage.Disable-Magic-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Poison-damage", false);
-        config.addDefault("Entity-Damage.Disable-Poison-Creature-damage", false);
-        config.addDefault("Entity-Damage.Disable-Custom-damage", false);
-        config.addDefault("Entity-Damage.Disable-Custom-Creature-damage", false);
+        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        config.addDefault("Entity-Damage.Players.Disable-Fire-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Contact-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Custom-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Drowning-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-EntityAttack-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Fall-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Lava-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Lightning-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Magic-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Poison-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Projectile-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Starvation-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Suffocation-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Suicide-damage", false);
+        config.addDefault("Entity-Damage.Players.Disable-Void-damage", false);
+        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        config.addDefault("Entity-Damage.Creatures.Disable-Fire-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Contact-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Custom-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Drowning-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-EntityAttack-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Fall-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Lava-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Lightning-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Magic-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Poison-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Projectile-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Starvation-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Suffocation-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Suicide-damage", false);
+        config.addDefault("Entity-Damage.Creatures.Disable-Void-damage", false);
         
         config.addDefault("Player.Prevent-Sprinting", false);
         config.addDefault("Player.Prevent-Sneaking", false);
@@ -441,6 +443,7 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Player.Kick-player-if-anther-user-with-same-username-log's-on", true);
         config.addDefault("Player.Instantbreak", false);
         config.addDefault("Player.Prevent-Bow-usage", false);
+        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         config.addDefault("Player-Interact.Allow-Buttons-Interact", true);
         config.addDefault("Player-Interact.Allow-WoodenDoors-Interact", true);
         config.addDefault("Player-Interact.Allow-IronDoors-Interact", true);
@@ -450,6 +453,7 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Player-Interact.Allow-TrapDoor-Interact", true);
         config.addDefault("Player-Interact.Allow-WoodenFenceGate-Interact", true);
         config.addDefault("Player-Interact.Allow-Chest-Interact", true);
+        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         config.addDefault("Entity/Player.Completely-Prevent.Health-Regeneration", false);
         config.addDefault("Entity/Player.Prevent.Custom-Health-Regeneration", false);
         config.addDefault("Entity/Player.Prevent.Eating-Health-Regeneration", false);
@@ -457,6 +461,7 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Entity/Player.Prevent.Satiated-Health-Regeneration", false);
         config.addDefault("Entity/Player.Prevent.Magic-Health-Regeneration", false);
         config.addDefault("Entity/Player.Prevent.MagicRegen-Health-Regeneration", false);
+        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         config.addDefault("PlayerInteractEntity.Prevent-snowball-hitting-player", false);
         config.addDefault("PlayerInteractEntity.Prevent-arrow-hitting-player", false);
         
