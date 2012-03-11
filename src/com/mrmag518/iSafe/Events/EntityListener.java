@@ -40,7 +40,7 @@ public class EntityListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler
     public void onExplosionPrime(ExplosionPrimeEvent event) {
         if (event.isCancelled())
         {
@@ -61,7 +61,7 @@ public class EntityListener implements Listener {
         }
     }
     
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onEntityExplode(EntityExplodeEvent event) {
         if (event.isCancelled())
         {
@@ -173,7 +173,7 @@ public class EntityListener implements Listener {
         }
     }
     
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onEndermanPickup(EntityChangeBlockEvent event) {
         if (event.isCancelled())
         {
@@ -190,7 +190,7 @@ public class EntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.isCancelled())
         {
@@ -650,7 +650,7 @@ public class EntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if (event.isCancelled())
         {
@@ -664,7 +664,7 @@ public class EntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         if(plugin.getConfig().getBoolean("World.Disable-ExpirienceOrbs-drop", true))
         {
@@ -677,7 +677,7 @@ public class EntityListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onSlimeSplit(SlimeSplitEvent event) {
         if (event.isCancelled())
         {

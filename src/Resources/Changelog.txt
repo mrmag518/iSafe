@@ -6,6 +6,7 @@ Version 2.64
 * Supports 1.2.3-RO.2
 * Completely fixed, rewrote and added lots of stuff (included permissions) to the damage preventions.
 * Fixed "EntityTo-SpawnLocation" features.
+* Did a temp fix for the NullPointerExceptions that sometimes occurs if a zombie enters a Minecart/Boat.
 * 
 
 Version 2.63

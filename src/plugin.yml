@@ -48,6 +48,7 @@ permissions:
       iSafe.drop.*: true
       iSafe.interact.*: true
       iSafe.vehicle.*: true
+      iSafe.canceldamage.*: true
       iSafe.serverinfo: true
       iSafe.drop: true
       iSafe.lavabucket.empty: true
@@ -92,7 +93,6 @@ permissions:
       iSafe.stopserver: true
       iSafe.pickup: true
       iSafe.bow.use: true
-      iSafe.rules: true
       iSafe.slayall: true
       iSafe.ping: true
       iSafe.magictxt: true
@@ -137,7 +137,7 @@ permissions:
     description: Allow the user to get access to all the Place permissions.
     default: op
     children:
-      iSafe.break.blacklist.bypass: true
+      iSafe.place.blacklist.bypass: true
       iSafe.place: true
   iSafe.break.*:
     desccription: Allow the user to get all the access to Break permissions.

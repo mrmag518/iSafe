@@ -55,17 +55,20 @@ public class VehicleListener implements Listener {
             if(player.hasPermission("iSafe.vehicle.enter.minecart")) {
                 //access
                 } else {
-                if(vec.getEntityId() == 40) {
-                   if (entity instanceof LivingEntity) {
-                       if (entity instanceof Player) {
-                            event.setCancelled(true);
-                            player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
-                        } else {
-                       }
-                    } else {
-                   }
-                } else {
-               }
+                try {
+                    if(vec.getEntityId() == 40) {
+                        if (entity instanceof LivingEntity) {
+                            if (entity instanceof Player) {
+                                event.setCancelled(true);
+                                player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
+                            }
+                        }
+                    }
+                } catch (NullPointerException npe) {
+                    plugin.log.warning("[iSafe] A NullPointerException(NPE) occured during the VehicleEnterEvent. (Minecart)");
+                    plugin.log.warning("[iSafe] Please create a ticket at BukkitDev with this issue.");
+                    plugin.log.warning("[iSafe] The cause of this NPE: "+ npe.getCause());
+                }
             }
         }
         if(plugin.getConfig().getBoolean("Vehicle.Prevent.enter.Boats", true))
@@ -73,16 +76,19 @@ public class VehicleListener implements Listener {
             if(player.hasPermission("iSafe.vehicle.enter.boat")) {
                 //access
             } else {
-                if(vec.getEntityId() == 41) {
-                    if (entity instanceof LivingEntity) {
-                        if (entity instanceof Player) {
-                            event.setCancelled(true);
-                            player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
-                        } else {
-                        }
-                    } else {
-                    }
-                } else {
+                try {
+                    if(vec.getEntityId() == 41) {
+                        if (entity instanceof LivingEntity) {
+                            if (entity instanceof Player) {
+                                event.setCancelled(true);
+                                player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
+                            }
+                        } 
+                    } 
+                } catch (NullPointerException npe) {
+                    plugin.log.warning("[iSafe] A NullPointerException(NPE) occured during the VehicleEnterEvent. (Boat)");
+                    plugin.log.warning("[iSafe] Please create a ticket at BukkitDev with this issue.");
+                    plugin.log.warning("[iSafe] The cause of this NPE: "+ npe.getCause());
                 }
             }
         }
@@ -104,16 +110,19 @@ public class VehicleListener implements Listener {
             if(player.hasPermission("iSafe.vehicle.destory.minecart")) {
                 //access
             } else {
-                if(vec.getEntityId() == 40) {
-                    if (entity instanceof LivingEntity) {
-                        if (entity instanceof Player) {
-                            event.setCancelled(true);
-                            player.sendMessage(ChatColor.RED + "You do not have access to destory that vehicle");
-                        } else {
+                try {
+                    if(vec.getEntityId() == 40) {
+                        if (entity instanceof LivingEntity) {
+                            if (entity instanceof Player) {
+                                event.setCancelled(true);
+                                player.sendMessage(ChatColor.RED + "You do not have access to destory that vehicle");
+                            }
                         }
-                    } else {
-                    }
-                } else {
+                    } 
+                } catch (NullPointerException npe) {
+                    plugin.log.warning("[iSafe] A NullPointerException(NPE) occured during the VehicleDestroyEvent. (Minecart)");
+                    plugin.log.warning("[iSafe] Please create a ticket at BukkitDev with this issue.");
+                    plugin.log.warning("[iSafe] The cause of this NPE: "+ npe.getCause());
                 }
             }
         }
@@ -123,16 +132,19 @@ public class VehicleListener implements Listener {
             if(player.hasPermission("iSafe.vehicle.destory.boat")) {
                 //access
             } else {
-                if(vec.getEntityId() == 41) {
-                    if (entity instanceof LivingEntity) {
-                        if (entity instanceof Player) {
-                            event.setCancelled(true);
-                            player.sendMessage(ChatColor.RED + "You do not have access to destory that vehicle");
-                        } else {
+                try {
+                    if(vec.getEntityId() == 41) {
+                        if (entity instanceof LivingEntity) {
+                            if (entity instanceof Player) {
+                                event.setCancelled(true);
+                                player.sendMessage(ChatColor.RED + "You do not have access to destory that vehicle");
+                            } 
                         }
-                    } else {
-                    }
-                } else {
+                    } 
+                } catch (NullPointerException npe) {
+                    plugin.log.warning("[iSafe] A NullPointerException(NPE) occured during the VehicleDestroyEvent. (Boat)");
+                    plugin.log.warning("[iSafe] Please create a ticket at BukkitDev with this issue.");
+                    plugin.log.warning("[iSafe] The cause of this NPE: "+ npe.getCause());
                 }
             }
         }

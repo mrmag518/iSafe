@@ -392,6 +392,7 @@ public class iSafe extends JavaPlugin implements Listener {
         
         config.addDefault("Entity-Damage.Disable-npc(Villagers)-death/damage", false);
         config.addDefault("Entity-Damage.Disable-player-death/damage", false);
+        config.addDefault("Entity-Damage.Enable-permissions", false);
         //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         config.addDefault("Entity-Damage.Players.Disable-Fire-damage", false);
         config.addDefault("Entity-Damage.Players.Disable-Contact-damage", false);
