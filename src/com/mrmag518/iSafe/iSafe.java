@@ -211,8 +211,12 @@ public class iSafe extends JavaPlugin implements Listener {
                     String oldVersion = version;
                     
                     if (!newVersion.contains(oldVersion)) {
-                        log.info("A new version of iSafe is out! "+  newVersion +", You are currently running v" + oldVersion);
-                        log.info("Please update iSafe at: http://dev.bukkit.org/server-mods/blockthattnt");
+                        log.info("-----  iSafe UpdateChecker -----");
+                        log.info("You are not running the recommended version of iSafe; "+ newVersion);
+                        log.info("You are currently running v" + oldVersion);
+                        log.info("Please use the latest recommended version of iSafe. ("+newVersion+")");
+                        log.info("You can find this version at: http://dev.bukkit.org/server-mods/blockthattnt/files/");
+                        log.info("-----  ------------------- -----");
                     }
                 } catch (Exception ignored) {
                     //Ignored
