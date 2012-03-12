@@ -355,18 +355,6 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Misc.Prevent-portal-creation", false);
         config.addDefault("Misc.Prevent-RedStoneTorch-placed-against-tnt", false);
         
-        config.addDefault("Explosions.Debug-explosions", false);
-        config.addDefault("Explosions.Disable-primed-explosions", false);
-        config.addDefault("Explosions.Prevent-creeper-death-on-explosion", false);
-        config.addDefault("Explosions.Disable-explosions", false);
-        config.addDefault("Explosions.Disable-Creeper-explosions", false);
-        config.addDefault("Explosions.Disable-EnderDragon-blockdamage", false);
-        config.addDefault("Explosions.Disable-TNT-explosions", false);
-        config.addDefault("Explosions.Disable-Fireball-explosions", false);
-        config.addDefault("Explosions.Disable-EnderCrystal-explosions", false);
-        config.addDefault("Explosions.Disable-Block_Explosion-damage", false);
-        config.addDefault("Explosions.Disable-Entity_Explosion-damage", false);
-        
         config.addDefault("World.Register-world(s)-init", true);
         config.addDefault("World.Register-world(s)-unload", true);
         config.addDefault("World.Register-world(s)-save", true);
@@ -376,6 +364,20 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("World.Prevent-naturally-object-dispensing", false);
         config.addDefault("World.Force-blocks-to-be-buildable", false);
         config.addDefault("World.Prevent-blocks-spreading", false);
+        
+        config.addDefault("Explosions.Debug-explosions", false);
+        config.addDefault("Explosions.Disable-primed-explosions", false);
+        config.addDefault("Explosions.Prevent-creeper-death-on-explosion", false);
+        config.addDefault("Explosions.Disable-explosions", false);
+        config.addDefault("Explosions.Disable-Creeper-explosions", false);
+        config.addDefault("Explosions.Disable-EnderDragon-blockdamage", false);
+        config.addDefault("Explosions.Disable-TNT-explosions", false);
+        config.addDefault("Explosions.Disable-Fireball-explosions", false);
+        config.addDefault("Explosions.Disable-EnderCrystal-explosions", false);
+        config.addDefault("Explosions.Disable-(Block)Explosion-damage.To-Players", false);
+        config.addDefault("Explosions.Disable-(Block)Explosion-damage.To-Creatures", false);
+        config.addDefault("Explosions.Disable-(Entity)Explosion-damage.To-Players", false);
+        config.addDefault("Explosions.Disable-(Entity)Explosion-damage.To-Creatures", false);
         
         config.addDefault("Structure.Prevent-structure-growth.BIG_TREE", false);
         config.addDefault("Structure.Prevent-structure-growth.BIRCH", false);

@@ -237,7 +237,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.Disable-Block_Explosion-damage", true))
+        if(plugin.getConfig().getBoolean("Explosions.Disable-(Block)Explosion-damage.To-Players", true))
         {
             if(event.getCause() == DamageCause.BLOCK_EXPLOSION) {
                 if (entity instanceof Player) {
@@ -246,10 +246,28 @@ public class EntityListener implements Listener {
                 }
             }
         }
-        if(plugin.getConfig().getBoolean("Explosions.Disable-Entity_Explosion-damage", true))
+        if(plugin.getConfig().getBoolean("Explosions.Disable-(Block)Explosion-damage.To-Creatures", true))
+        {
+            if(event.getCause() == DamageCause.BLOCK_EXPLOSION) {
+                if (entity instanceof Creature || entity instanceof Animals) {
+                    event.setCancelled(true);
+                    event.setDamage(0);
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Explosions.Disable-(Entity)Explosion-damage.To-Players", true))
         {
             if(event.getCause() == DamageCause.ENTITY_EXPLOSION) {
                 if (entity instanceof Player) {
+                    event.setCancelled(true);
+                    event.setDamage(0);
+                }
+            }
+        }
+        if(plugin.getConfig().getBoolean("Explosions.Disable-(Entity)Explosion-damage.To-Creatures", true))
+        {
+            if(event.getCause() == DamageCause.ENTITY_EXPLOSION) {
+                if (entity instanceof Creature || entity instanceof Animals) {
                     event.setCancelled(true);
                     event.setDamage(0);
                 }
