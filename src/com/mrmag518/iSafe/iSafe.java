@@ -36,7 +36,6 @@ import com.mrmag518.iSafe.Blacklists.*;
 import com.mrmag518.iSafe.Commands.*;
 import com.mrmag518.iSafe.Events.*;
 
-import java.util.Calendar;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -681,19 +680,5 @@ public class iSafe extends JavaPlugin implements Listener {
         this.getMobsConfig().options().copyDefaults(true);
         saveMobsConfig();
         log.info("[iSafe] Loaded mobsConfig file.");
-    }
-    
-    public String getDate() {
-        String date;
-        Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH) + 1;
-        date = Integer.toString(month);
-        date += "/";
-        date += calendar.get(Calendar.DAY_OF_MONTH) + "/";
-        date += calendar.get(Calendar.YEAR) + " ";
-        date += calendar.get(Calendar.HOUR_OF_DAY) + ":";
-        date += calendar.get(Calendar.MINUTE) + ".";
-        date += calendar.get(Calendar.SECOND) + "";
-        return date;
     }
 }

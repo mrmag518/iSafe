@@ -199,13 +199,25 @@ public class EntityListener implements Listener {
         Entity entity = event.getEntity();
         World world = entity.getWorld();
         
-        if (plugin.getConfig().getBoolean("EntityTo-SpawnLocation.On-Void-fall(Player)", true)) 
+        if(plugin.getConfig().getBoolean("EntityTo-SpawnLocation.On-Void-fall(Player)", true)) 
         {
-            entity.teleport(world.getSpawnLocation());
+            if(entity instanceof Player) 
+            {
+                if(event.getCause() == DamageCause.VOID) 
+                {
+                    entity.teleport(world.getSpawnLocation());
+                }
+            }
         }
-        if (plugin.getConfig().getBoolean("EntityTo-SpawnLocation.On-Void-fall(Creature)", true)) 
+        if(plugin.getConfig().getBoolean("EntityTo-SpawnLocation.On-Void-fall(Creature)", true)) 
         {
-            entity.teleport(world.getSpawnLocation());
+            if(entity instanceof Creature || entity instanceof Animals) 
+            {
+                if(event.getCause() == DamageCause.VOID) 
+                {
+                    entity.teleport(world.getSpawnLocation());
+                }
+            }
         }
         
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-npc(Villagers)-death/damage", true))

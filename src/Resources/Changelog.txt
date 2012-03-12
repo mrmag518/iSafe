@@ -1,5 +1,9 @@
 Displaying the Change Log of iSafe.
 
+Version 2.65
+* Fixed creatures/players being teleported to SpawnLocation when damaged.
+* 
+
 Version 2.64
 * Fixed iSafe broadcasting on join even if it's disabled.
 * Added prevention for Villager and Player damage/death.
@@ -7,7 +11,6 @@ Version 2.64
 * Completely fixed, rewrote and added lots of stuff (included permissions) to the damage preventions.
 * Fixed "EntityTo-SpawnLocation" features.
 * Did a temp fix for the NullPointerExceptions that sometimes occurs if a zombie enters a Minecart/Boat.
-* 
 
 Version 2.63
 * Refactored all packages.
