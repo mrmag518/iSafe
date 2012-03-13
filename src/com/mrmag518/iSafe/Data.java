@@ -19,7 +19,6 @@
 package com.mrmag518.iSafe;
 
 import java.util.Calendar;
-import org.bukkit.entity.Player;
 
 public class Data {
     public static iSafe plugin;
@@ -40,5 +39,10 @@ public class Data {
         date += calendar.get(Calendar.MINUTE) + ".";
         date += calendar.get(Calendar.SECOND) + "";
         return date;
+    }
+    
+    public static String getSig() {
+        String signature = "%%%%%%%%%%%%%%%%%¤¤¤¤¤%#&%%&¤%&%/¤#%%%%%%%%%%%%%%";
+        return signature;
     }
 }

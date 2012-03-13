@@ -53,6 +53,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class iSafe extends JavaPlugin implements Listener {
+    
+    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    //Remember to change this on every version!
+    
+    public String fileversion = "iSafe v2.65";
+    
+    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
     public PlayerListener playerListener = null;
     public BlockListener blockListener = null;
     public EntityListener entityListener = null;
@@ -239,6 +247,26 @@ public class iSafe extends JavaPlugin implements Listener {
         executeCommands();
         
         this.getServer().getPluginManager().getPermissions();
+        
+        //Just want to have some order.
+        if(!("%%%%%%%%%%%%%%%%%¤¤¤¤¤%#&%%&¤%&%/¤#%%%%%%%%%%%%%%".equals(Data.getSig()))) {
+            log.info("----- iSafe sigConflict -----");
+            log.warning("[iSafe] The sig located at the Data class was not correctly loaded.");
+            log.info("----- ----------------- -----");
+        } else {
+            log.info("[iSafe] Loaded sig correctly.");
+        }
+        
+        if(!(pdffile.getFullName().equals(fileversion))) {
+            log.info("-----  iSafe vMatchConflict  -----");
+            log.warning("[iSafe] The version in the pdffile is not the same as the file.");
+            log.info("[iSafe] pdffile version: "+ pdffile.getFullName());
+            log.info("[iSafe] File version: "+ fileversion);
+            log.warning("[iSafe] Please deliver this infomation to "+ pdffile.getAuthors() +" at BukkitDev.");
+            log.info("-----  --------------------  -----");
+        } else {
+            log.info("[iSafe] The file and pdffile versions matched eachother correctly.");
+        }
         
         log.info("[" + pdffile.getName() + " :: " + pdffile.getVersion() + "] " + " Loaded succesfully.");
     }

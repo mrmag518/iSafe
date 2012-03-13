@@ -5,6 +5,7 @@ Version 2.65
 * Rewrote the explosion damage area, and added a option to disable it with creatures too.
 * Rewrote the UpdateChecker notify.
 * Added individually options for Entity-Combust events.
+* Added a version checker, it checks if the verison in the file and the pdffile is matching.
 * 
 
 Version 2.64
