@@ -4,6 +4,7 @@ Version 2.65
 * Fixed creatures/players being teleported to SpawnLocation when damaged.
 * Rewrote the explosion damage area, and added a option to disable it with creatures too.
 * Rewrote the UpdateChecker notify.
+* Added individually options for Entity-Combust events.
 * 
 
 Version 2.64

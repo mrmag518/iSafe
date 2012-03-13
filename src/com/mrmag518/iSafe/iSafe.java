@@ -211,12 +211,12 @@ public class iSafe extends JavaPlugin implements Listener {
                     String oldVersion = version;
                     
                     if (!newVersion.contains(oldVersion)) {
-                        log.info("-----  iSafe UpdateChecker -----");
-                        log.info("You are not running the recommended version of iSafe; "+ newVersion);
+                        log.info("-----  iSafe UpdateChecker  -----");
+                        log.info("You are not running the recommended build of iSafe; "+ newVersion);
                         log.info("You are currently running v" + oldVersion);
-                        log.info("Please use the latest recommended version of iSafe. ("+newVersion+")");
+                        log.info("Please use the latest recommended build of iSafe.("+newVersion+")");
                         log.info("You can find this version at: http://dev.bukkit.org/server-mods/blockthattnt/files/");
-                        log.info("-----  ------------------- -----");
+                        log.info("-----  -------------------  -----");
                     }
                 } catch (Exception ignored) {
                     //Ignored
@@ -631,7 +631,6 @@ public class iSafe extends JavaPlugin implements Listener {
         
         mobsConfig.addDefault("Misc.Endermen.Prevent-Endermen-griefing", false);
         mobsConfig.addDefault("Misc.Prevent-Object-drop-on-death", false);
-        mobsConfig.addDefault("Misc.Prevent-Entity-Combust", false);
         mobsConfig.addDefault("Misc.Tame.Prevent-taming", false);
         mobsConfig.addDefault("Misc.Prevent-SlimeSplit", true);
         mobsConfig.addDefault("Misc.Prevent-PigZap", true);
@@ -683,6 +682,34 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Silver", false);
         mobsConfig.addDefault("Prevent-SheepDyeWool-Color.White", false);
         mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Yellow", false);
+        
+        mobsConfig.addDefault("Entity-Combust.Disable-Entity-Combust", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Blaze", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.CaveSpider", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Chicken", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Cow", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Creeper", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.EnderDragon", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Enderman", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Ghast", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Giant", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Golem", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.IronGolem", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.MagmaCube", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.MushroomCow", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Ocelot", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Pig", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.PigZombie", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Sheep", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Silverfish", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Skeleton", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Slime", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Snowman", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Spider", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Squid", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Villager", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Wolf", false);
+        mobsConfig.addDefault("Entity-Combust.Disable-for.Zombie", false);
         this.getMobsConfig().options().copyDefaults(true);
         saveMobsConfig();
         log.info("[iSafe] Loaded mobsConfig file.");

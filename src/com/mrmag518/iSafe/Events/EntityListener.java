@@ -885,11 +885,201 @@ public class EntityListener implements Listener {
         {
             return;
         }
+        Entity entity = event.getEntity();
         
-        if(plugin.getMobsConfig().getBoolean("Misc.Prevent-Entity-Combust", true))
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-Entity-Combust", true))
         {
             event.setDuration(0);
             event.setCancelled(true);
+        }
+        
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Blaze", true)) 
+        {
+            if(entity instanceof Blaze) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.CaveSpider", true)) 
+        {
+            if(entity instanceof CaveSpider) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Chicken", true)) 
+        {
+            if(entity instanceof Chicken) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Cow", true)) 
+        {
+            if(entity instanceof Cow) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Creeper", true)) 
+        {
+            if(entity instanceof Creeper) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.EnderDragon", true)) 
+        {
+            if(entity instanceof EnderDragon) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Enderman", true)) 
+        {
+            if(entity instanceof Enderman) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Ghast", true)) 
+        {
+            if(entity instanceof Ghast) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Giant", true)) 
+        {
+            if(entity instanceof Giant) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Golem", true)) 
+        {
+            if(entity instanceof Golem) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.IronGolem", true)) 
+        {
+            if(entity instanceof IronGolem) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.MagmaCube", true)) 
+        {
+            if(entity instanceof MagmaCube) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.MushroomCow", true)) 
+        {
+            if(entity instanceof MushroomCow) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Ocelot", true)) 
+        {
+            if(entity instanceof Ocelot) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Pig", true)) 
+        {
+            if(entity instanceof Pig) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.PigZombie", true)) 
+        {
+            if(entity instanceof PigZombie) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Sheep", true)) 
+        {
+            if(entity instanceof Sheep) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Silverfish", true)) 
+        {
+            if(entity instanceof Silverfish) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Skeleton", true)) 
+        {
+            if(entity instanceof Skeleton) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Slime", true)) 
+        {
+            if(entity instanceof Slime) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Snowman", true)) 
+        {
+            if(entity instanceof Snowman) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Spider", true)) 
+        {
+            if(entity instanceof Spider) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Squid", true)) 
+        {
+            if(entity instanceof Squid) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Villager", true)) 
+        {
+            if(entity instanceof Villager) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Wolf", true)) 
+        {
+            if(entity instanceof Wolf) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Zombie", true)) 
+        {
+            if(entity instanceof Zombie) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
+        }
+        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Blaze", true)) 
+        {
+            if(entity instanceof Blaze) {
+                event.setDuration(0);
+                event.setCancelled(true);
+            }
         }
     }
 
