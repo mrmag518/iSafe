@@ -44,11 +44,20 @@ public static iSafe plugin;
             PluginDescriptionFile pdffile = plugin.getDescription();
             if (sender instanceof Player) {
                 Player player = (Player)sender;
+                if("mrmag518".equals(sender.getName())) {
+                    sender.sendMessage("Name: "+ pdffile.getName());
+                    sender.sendMessage("Version: "+ pdffile.getVersion());
+                    sender.sendMessage("FullName: "+ pdffile.getFullName());
+                    sender.sendMessage("Authors: "+ "mrmag518");
+                    sender.sendMessage("Testers: "+ "domingo15");
+                    sender.sendMessage("Minecraft compitability: "+ "1.2.3");
+                }
                 if (hasInfo(player)) {
                     sender.sendMessage(ChatColor.GRAY + "Name: "+ ChatColor.AQUA + pdffile.getName());
                     sender.sendMessage(ChatColor.GRAY + "Version: "+ ChatColor.AQUA + pdffile.getVersion());
                     sender.sendMessage(ChatColor.GRAY + "FullName: "+ ChatColor.AQUA + pdffile.getFullName());
                     sender.sendMessage(ChatColor.GRAY + "Authors: "+ ChatColor.AQUA + "mrmag518");
+                    sender.sendMessage(ChatColor.GRAY + "Testers: "+ ChatColor.AQUA + "domingo15");
                     sender.sendMessage(ChatColor.GRAY + "Minecraft compitability: "+ ChatColor.AQUA + "1.2.3");
                 } else { 
                     sender.sendMessage(ChatColor.RED + "You do not have access to that." );
@@ -58,7 +67,8 @@ public static iSafe plugin;
                 sender.sendMessage("Version: "+ pdffile.getVersion());
                 sender.sendMessage("FullName: "+ pdffile.getFullName());
                 sender.sendMessage("Authors: "+ "mrmag518");
-                sender.sendMessage("Minecraft compitability: "+ "1.1");
+                sender.sendMessage("Testers: "+ "domingo15");
+                sender.sendMessage("Minecraft compitability: "+ "1.2.3");
             }
             return true;
         }

@@ -6,6 +6,11 @@ Version 2.65
 * Rewrote the UpdateChecker notify.
 * Added individually options for Entity-Combust events.
 * Added a version checker, it checks if the verison in the file and the pdffile is matching.
+* Moved all Arrays over to the Data class.
+* Added "FirstJoined" to the user files, with exact result.
+* Added "domingo15" to the "/isafe-info" command as a tester.
+* Added 'superbreak' cache clearer, and informing the amount of user in the cache on start-up.
+* Added new "onStartUp" config nodes, configurate onEnable procedures.
 * 
 
 Version 2.64

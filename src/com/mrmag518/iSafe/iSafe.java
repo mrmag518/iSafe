@@ -20,10 +20,8 @@ package com.mrmag518.iSafe;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -95,74 +93,16 @@ public class iSafe extends JavaPlugin implements Listener {
     
     public FileConfiguration mobsConfig = null;
     public File mobsConfigFile = null;
-    
     public FileConfiguration blacklist = null;
     public File blacklistFile = null;
-    
     public FileConfiguration config;
-    public File configFile;
     
     public Set<Player> superbreak = new HashSet<Player>();
-    
-    List<String> placedblocks = new ArrayList<String>();
-    String[] placedblockslist = { "No defaults added." };
-    List<String> worlds = new ArrayList<String>();
-    String[] worldslist = { "world", "world_nether" };
-    
-    List<String> brokenblocks = new ArrayList<String>();
-    String[] brokenblockslist = { "No defaults added." };
-    List<String> Breakworlds = new ArrayList<String>();
-    String[] Breakworldslist = { "world", "world_nether" };
-    
-    List<String> dropedblocks = new ArrayList<String>();
-    String[] dropedblockslist = { "No defaults added." };
-    List<String> Dropworlds = new ArrayList<String>();
-    String[] Dropworldslist = { "world", "world_nether" };
-    
-    List<String> pickupedblocks = new ArrayList<String>();
-    String[] pickupedblockslist = { "No defaults added." };
-    List<String> Pickupworlds = new ArrayList<String>();
-    String[] Pickupworldslist = { "world", "world_nether" };
-    
-    List<String> commands = new ArrayList<String>();
-    String[] commandslist = { "/nuke" };
-    List<String> cmdworlds = new ArrayList<String>();
-    String[] cmdworldlist = { "world", "world_nether" };
-    
-    List<String> mobspawnnatural = new ArrayList<String>();
-    String[] mobspawnnaturallist = { "No defaults added." };
-    List<String> worlds1 = new ArrayList<String>();
-    String[] worlds1list = { "world", "world_nether" };
-    
-    List<String> mobspawnspawner = new ArrayList<String>();
-    String[] mobspawnspawnerlist = { "No defaults added." };
-    List<String> worlds2 = new ArrayList<String>();
-    String[] worlds2list = { "world", "world_nether" };
-    
-    List<String> mobspawncustom = new ArrayList<String>();
-    String[] mobspawncustomlist = { "No defaults added." };
-    List<String> worlds3 = new ArrayList<String>();
-    String[] worlds3list = { "world", "world_nether" };
-    
-    List<String> mobspawnegg = new ArrayList<String>();
-    String[] mobspawnegglist = { "No defaults added." };
-    List<String> worlds4 = new ArrayList<String>();
-    String[] worlds4list = { "world", "world_nether" };
-    
-    List<String> mobspawnspawneregg = new ArrayList<String>();
-    String[] mobspawnspawneregglist = { "No defaults added." };
-    List<String> worlds5 = new ArrayList<String>();
-    String[] worlds5list = { "world", "world_nether" };
-    
-    List<String> lbworlds = new ArrayList<String>();
-    String[] lbworldslist = { "world", "world_nether" };
-    List<String> wbworlds = new ArrayList<String>();
-    String[] wbworldslist = { "world", "world_nether" };
     
     @Override
     public void onDisable() {
         PluginDescriptionFile pdffile = this.getDescription();
-        log.info("[" + pdffile.getName() + " :: " + pdffile.getVersion() + "] " + " Unloaded succesfully.");
+        log.info("[" + pdffile.getName() + " :: " + pdffile.getVersion() + "] " + " Disabled succesfully.");
     }
     
     @Override
@@ -196,18 +136,32 @@ public class iSafe extends JavaPlugin implements Listener {
         
         PluginDescriptionFile pdffile = this.getDescription();
         
+        config = this.getConfig();
+        loadConfig();
+        reloadConfig();
+        
+        blacklist = this.getBlacklist();
+        loadBlacklist();
+        reloadBlacklist();
+        
+        mobsConfig = this.getMobsConfig();
+        loadMobsConfig();
+        reloadMobsConfig();
+        
         this.getServer().getPluginManager().registerEvents(this, this);
         
-        try {
-            if(!(this.getDataFolder().exists())) {
-                log.info("[iSafe]" + " DataFolder not found, creating a new one.");
-                this.getDataFolder().mkdir();
+        if(this.getConfig().getBoolean("onStartUp.Safely-load-DataFolder")) {
+            try {
+                if(!(this.getDataFolder().exists())) {
+                    log.info("[iSafe]" + " DataFolder not found, creating a new one.");
+                    this.getDataFolder().mkdir();
+                }
+            } catch (Exception ex) {
+                log.warning("[iSafe]" + " An exception ocurred when trying to create the DataFolder.");
+                log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
+                ex.printStackTrace();
+                log.warning("[iSafe]" + " The exception was caused by "+ ex.getCause());
             }
-        } catch (Exception ex) {
-            log.warning("[iSafe]" + " An exception ocurred when trying to create the DataFolder.");
-            log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
-            ex.printStackTrace();
-            log.warning("[iSafe]" + " The exception was caused by "+ ex.getCause());
         }
         
         //Update checker - From MilkBowl.
@@ -232,43 +186,50 @@ public class iSafe extends JavaPlugin implements Listener {
             }
         }, 0, 432000);
         
-        config = this.getConfig();
-        loadConfig();
-        reloadConfig();
-        
-        blacklist = this.getBlacklist();
-        loadBlacklist();
-        reloadBlacklist();
-        
-        mobsConfig = this.getMobsConfig();
-        loadMobsConfig();
-        reloadMobsConfig();
-        
         executeCommands();
         
-        this.getServer().getPluginManager().getPermissions();
+        if(this.getConfig().getBoolean("onStartUp.getPermissions-through-the-server")) {
+            this.getServer().getPluginManager().getPermissions();
+        }
+        
+        if(this.getConfig().getBoolean("onStartUp.Clear-superbreak-cache", true)) {
+            int userAmount = superbreak.size();
+            log.info("[iSafe] "+ userAmount + " users stood in the superbreak cache; every one of them where cleared.");
+            superbreak.clear();
+        } else {
+            int userAmount = superbreak.size();
+            log.info("[iSafe] There's " + userAmount + " users in the superbreak cache.");
+        }
         
         //Just want to have some order.
-        if(!("%%%%%%%%%%%%%%%%%¤¤¤¤¤%#&%%&¤%&%/¤#%%%%%%%%%%%%%%".equals(Data.getSig()))) {
-            log.info("----- iSafe sigConflict -----");
-            log.warning("[iSafe] The sig located at the Data class was not correctly loaded.");
-            log.info("----- ----------------- -----");
+        if(this.getConfig().getBoolean("onStartUp.Check-Unique-iSafe-signature")) {
+            if(!("%%%%%%%%%%%%%%%%%¤¤¤¤¤%#&%%&¤%&%/¤#%%%%%%%%%%%%%%".equals(Data.getSig()))) {
+                log.info("----- iSafe sigConflict -----");
+                log.warning("[iSafe] The sig located at the Data class was not correctly loaded.");
+                log.info("----- ----------------- -----");
+            } else {
+                log.info("[iSafe] Loaded sig correctly.");
+            }
         } else {
-            log.info("[iSafe] Loaded sig correctly.");
+            //Ignored
         }
         
-        if(!(pdffile.getFullName().equals(fileversion))) {
-            log.info("-----  iSafe vMatchConflict  -----");
-            log.warning("[iSafe] The version in the pdffile is not the same as the file.");
-            log.info("[iSafe] pdffile version: "+ pdffile.getFullName());
-            log.info("[iSafe] File version: "+ fileversion);
-            log.warning("[iSafe] Please deliver this infomation to "+ pdffile.getAuthors() +" at BukkitDev.");
-            log.info("-----  --------------------  -----");
+        if(this.getConfig().getBoolean("onStartUp.Check-version-matching")) {
+            if(!(pdffile.getFullName().equals(fileversion))) {
+                log.info("-----  iSafe vMatchConflict  -----");
+                log.warning("[iSafe] The version in the pdffile is not the same as the file.");
+                log.info("[iSafe] pdffile version: "+ pdffile.getFullName());
+                log.info("[iSafe] File version: "+ fileversion);
+                log.warning("[iSafe] Please deliver this infomation to "+ pdffile.getAuthors() +" at BukkitDev.");
+                log.info("-----  --------------------  -----");
+            } else {
+                log.info("[iSafe] The file and pdffile versions matched eachother correctly.");
+            }
         } else {
-            log.info("[iSafe] The file and pdffile versions matched eachother correctly.");
+            //Ignored
         }
         
-        log.info("[" + pdffile.getName() + " :: " + pdffile.getVersion() + "] " + " Loaded succesfully.");
+        log.info("[" + pdffile.getName() + " :: " + pdffile.getVersion() + "] " + " Enabled succesfully.");
     }
     
     //Update checker - From MilkBowl's Vault.
@@ -323,8 +284,7 @@ public class iSafe extends JavaPlugin implements Listener {
     
     public void loadConfig() {
         config = getConfig();
-        config.options().header("This is the main configuration file in association to iSafe; take a decent look through it to manage your own preferred settings." 
-                + "\nIf you need assistance you can search up it in the iSafe wiki or contact mrmag518.\n");
+        config.options().header(Data.setConfigHeader());
         
         config.addDefault("Enchantment.Prevent-Enchantment", false);
         
@@ -332,12 +292,12 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("EntityTo-SpawnLocation.On-Void-fall(Creature)", false);
         
         config.addDefault("Buckets.Prevent-LavaBucket-empty", true);
-        config.addDefault("Buckets.Lava.Worlds", Arrays.asList(lbworldslist));
-        lbworlds = config.getStringList("Buckets.Lava.Worlds");
+        config.addDefault("Buckets.Lava.Worlds", Arrays.asList(Data.lbworldslist));
+        Data.lbworlds = config.getStringList("Buckets.Lava.Worlds");
         
         config.addDefault("Buckets.Prevent-WaterBucket-empty", false);
-        config.addDefault("Buckets.Water.Worlds", Arrays.asList(wbworldslist));
-        wbworlds = config.getStringList("Buckets.Water.Worlds");
+        config.addDefault("Buckets.Water.Worlds", Arrays.asList(Data.wbworldslist));
+        Data.wbworlds = config.getStringList("Buckets.Water.Worlds");
         
         config.addDefault("Flow.Disable-water-flow", false);
         config.addDefault("Flow.Disable-lava-flow", false);
@@ -380,12 +340,18 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Teleport.Prevent-TeleportCause.Plugin", false);
         config.addDefault("Teleport.Prevent-TeleportCause.Unknown", false);
         
-        config.addDefault("Misc.Enable-kick-messages", true);
+        config.addDefault("Misc.Enable-kick-messages", false);
         config.addDefault("Misc.Disable-LeavesDecay", false);
         config.addDefault("Misc.Prevent-crop-trampling-by-creature", false);
         config.addDefault("Misc.Prevent-crop-trampling-by-player", false);
         config.addDefault("Misc.Prevent-portal-creation", false);
         config.addDefault("Misc.Prevent-RedStoneTorch-placed-against-tnt", false);
+        
+        config.addDefault("onStartUp.Clear-superbreak-cache", true);
+        config.addDefault("onStartUp.Check-Unique-iSafe-signature", true);
+        config.addDefault("onStartUp.Check-version-matching", true);
+        config.addDefault("onStartUp.Safely-load-DataFolder", true);
+        config.addDefault("onStartUp.getPermissions-through-the-server", true);
         
         config.addDefault("World.Register-world(s)-init", true);
         config.addDefault("World.Register-world(s)-unload", true);
@@ -513,8 +479,7 @@ public class iSafe extends JavaPlugin implements Listener {
     }
     
     public void loadBlacklist() {
-        blacklist.options().header("This is the blacklist config on behalf of iSafe, read the iSafe wiki for assistance." 
-                + "\nRemeber that the world listing is case sensetive.\n");
+        blacklist.options().header(Data.setBlacklistHeader());
         
         blacklist.addDefault("Place.Complete-Disallow-placing", false);
         blacklist.addDefault("Place.Kick-Player", false);
@@ -522,10 +487,10 @@ public class iSafe extends JavaPlugin implements Listener {
         blacklist.addDefault("Place.Alert/log.To-console", true);
         blacklist.addDefault("Place.Alert/log.To-player", true);
         blacklist.addDefault("Place.Alert/log.To-server-chat", false);
-        blacklist.addDefault("Place.Worlds", Arrays.asList(worldslist));
-        worlds = blacklist.getStringList("Place.Worlds");
-        blacklist.addDefault("Place.Blacklist", Arrays.asList(placedblockslist));
-        placedblocks = blacklist.getStringList("Place.Blacklist");
+        blacklist.addDefault("Place.Worlds", Arrays.asList(Data.worldslist));
+        Data.worlds = blacklist.getStringList("Place.Worlds");
+        blacklist.addDefault("Place.Blacklist", Arrays.asList(Data.placedblockslist));
+        Data.placedblocks = blacklist.getStringList("Place.Blacklist");
         
         blacklist.addDefault("Break.Complete-Disallow-breaking", false);
         blacklist.addDefault("Break.Kick-Player", false);
@@ -533,10 +498,10 @@ public class iSafe extends JavaPlugin implements Listener {
         blacklist.addDefault("Break.Alert/log.To-console", true);
         blacklist.addDefault("Break.Alert/log.To-player", true);
         blacklist.addDefault("Break.Alert/log.To-server-chat", false);
-        blacklist.addDefault("Break.Worlds", Arrays.asList(worldslist));
-        worlds = blacklist.getStringList("Break.Worlds");
-        blacklist.addDefault("Break.Blacklist", Arrays.asList(brokenblockslist));
-        brokenblocks = blacklist.getStringList("Break.Blacklist");
+        blacklist.addDefault("Break.Worlds", Arrays.asList(Data.worldslist));
+        Data.worlds = blacklist.getStringList("Break.Worlds");
+        blacklist.addDefault("Break.Blacklist", Arrays.asList(Data.brokenblockslist));
+        Data.brokenblocks = blacklist.getStringList("Break.Blacklist");
         
         blacklist.addDefault("Drop.Complete-Disallow-droping", false);
         blacklist.addDefault("Drop.Kick-Player", false);
@@ -544,10 +509,10 @@ public class iSafe extends JavaPlugin implements Listener {
         blacklist.addDefault("Drop.Alert/log.To-console", true);
         blacklist.addDefault("Drop.Alert/log.To-player", true);
         blacklist.addDefault("Drop.Alert/log.To-server-chat", false);
-        blacklist.addDefault("Drop.Worlds", Arrays.asList(worldslist));
-        worlds = blacklist.getStringList("Drop.Worlds");
-        blacklist.addDefault("Drop.Blacklist", Arrays.asList(dropedblockslist));
-        dropedblocks = blacklist.getStringList("Drop.Blacklist");
+        blacklist.addDefault("Drop.Worlds", Arrays.asList(Data.worldslist));
+        Data.worlds = blacklist.getStringList("Drop.Worlds");
+        blacklist.addDefault("Drop.Blacklist", Arrays.asList(Data.dropedblockslist));
+        Data.dropedblocks = blacklist.getStringList("Drop.Blacklist");
         
         blacklist.addDefault("Pickup.Complete-Disallow-pickuping", false);
         blacklist.addDefault("Pickup.Kick-Player", false);
@@ -555,19 +520,19 @@ public class iSafe extends JavaPlugin implements Listener {
         blacklist.addDefault("Pickup.Alert/log.To-console", true);
         blacklist.addDefault("Pickup.Alert/log.To-player", true);
         blacklist.addDefault("Pickup.Alert/log.To-server-chat", false);
-        blacklist.addDefault("Pickup.Worlds", Arrays.asList(Pickupworldslist));
-        Pickupworlds = blacklist.getStringList("Pickup.Worlds");
-        blacklist.addDefault("Pickup.Blacklist", Arrays.asList(pickupedblockslist));
-        pickupedblocks = blacklist.getStringList("Pickup.Blacklist");
+        blacklist.addDefault("Pickup.Worlds", Arrays.asList(Data.Pickupworldslist));
+        Data.Pickupworlds = blacklist.getStringList("Pickup.Worlds");
+        blacklist.addDefault("Pickup.Blacklist", Arrays.asList(Data.pickupedblockslist));
+        Data.pickupedblocks = blacklist.getStringList("Pickup.Blacklist");
         
         blacklist.addDefault("Command.Disallow-commands", false);
         blacklist.addDefault("Command.Alert/log.To-console", true);
         blacklist.addDefault("Command.Alert/log.To-player", true);
         blacklist.addDefault("Command.Alert/log.To-server-chat", false);
-        blacklist.addDefault("Command.Worlds", Arrays.asList(cmdworldlist));
-        cmdworlds = blacklist.getStringList("Command.Worlds");
-        blacklist.addDefault("Command.Blacklist", Arrays.asList(commandslist));
-        commands = blacklist.getStringList("Command.Blacklist");
+        blacklist.addDefault("Command.Worlds", Arrays.asList(Data.cmdworldlist));
+        Data.cmdworlds = blacklist.getStringList("Command.Worlds");
+        blacklist.addDefault("Command.Blacklist", Arrays.asList(Data.commandslist));
+        Data.commands = blacklist.getStringList("Command.Blacklist");
         
         this.getBlacklist().options().copyDefaults(true);
         saveBlacklist();
@@ -639,9 +604,7 @@ public class iSafe extends JavaPlugin implements Listener {
     }
     
     public void loadMobsConfig() {
-        mobsConfig.options().header("This is the Mob Control config associated to regulatory characteristics aimed at mobs in Minecraft."
-        + "\nVisit the iSafe wiki for assistance."
-        + "\nA list of mob IDs can be found at the minercaft wiki, http://www.minecraftwiki.net/wiki/Data_values In the section 'Entity IDs'\n");
+        mobsConfig.options().header(Data.setmobsConfigHeader());
         
         mobsConfig.addDefault("EntityTarget.Disable-closest_player-target", false);
         mobsConfig.addDefault("EntityTarget.Disable-custom-target", false);
@@ -664,34 +627,34 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Misc.Prevent-PigZap", true);
         
         mobsConfig.addDefault("MobSpawn.Natural.Debug.To-console", false);
-        mobsConfig.addDefault("MobSpawn.Natural.Worlds", Arrays.asList(worlds1list));
-        worlds1 = mobsConfig.getStringList("MobSpawn.Natural.Worlds");
-        mobsConfig.addDefault("MobSpawn.Natural.Blacklist", Arrays.asList(mobspawnnaturallist));
-        mobspawnnatural = mobsConfig.getStringList("MobSpawn.Natural.Blacklist");
+        mobsConfig.addDefault("MobSpawn.Natural.Worlds", Arrays.asList(Data.worlds1list));
+        Data.worlds1 = mobsConfig.getStringList("MobSpawn.Natural.Worlds");
+        mobsConfig.addDefault("MobSpawn.Natural.Blacklist", Arrays.asList(Data.mobspawnnaturallist));
+        Data.mobspawnnatural = mobsConfig.getStringList("MobSpawn.Natural.Blacklist");
         
         mobsConfig.addDefault("MobSpawn.Spawner.Debug.To-console", false);
-        mobsConfig.addDefault("MobSpawn.Spawner.Worlds", Arrays.asList(worlds2list));
-        worlds2 = mobsConfig.getStringList("MobSpawn.Spawner.Worlds");
-        mobsConfig.addDefault("MobSpawn.Spawner.Blacklist", Arrays.asList(mobspawnspawnerlist));
-        mobspawnspawner = mobsConfig.getStringList("MobSpawn.Spawner.Blacklist");
+        mobsConfig.addDefault("MobSpawn.Spawner.Worlds", Arrays.asList(Data.worlds2list));
+        Data.worlds2 = mobsConfig.getStringList("MobSpawn.Spawner.Worlds");
+        mobsConfig.addDefault("MobSpawn.Spawner.Blacklist", Arrays.asList(Data.mobspawnspawnerlist));
+        Data.mobspawnspawner = mobsConfig.getStringList("MobSpawn.Spawner.Blacklist");
         
         mobsConfig.addDefault("MobSpawn.Custom.Debug.To-console", false);
-        mobsConfig.addDefault("MobSpawn.Custom.Worlds", Arrays.asList(worlds3list));
-        worlds3 = mobsConfig.getStringList("MobSpawn.Custom.Worlds");
-        mobsConfig.addDefault("MobSpawn.Custom.Blacklist", Arrays.asList(mobspawncustomlist));
-        mobspawncustom = mobsConfig.getStringList("MobSpawn.Custom.Blacklist");
+        mobsConfig.addDefault("MobSpawn.Custom.Worlds", Arrays.asList(Data.worlds3list));
+        Data.worlds3 = mobsConfig.getStringList("MobSpawn.Custom.Worlds");
+        mobsConfig.addDefault("MobSpawn.Custom.Blacklist", Arrays.asList(Data.mobspawncustomlist));
+        Data.mobspawncustom = mobsConfig.getStringList("MobSpawn.Custom.Blacklist");
         
         mobsConfig.addDefault("MobSpawn.Egg.Debug.To-console", false);
-        mobsConfig.addDefault("MobSpawn.Egg.Worlds", Arrays.asList(worlds4list));
-        worlds4 = mobsConfig.getStringList("MobSpawn.Egg.Worlds");
-        mobsConfig.addDefault("MobSpawn.Egg.Blacklist", Arrays.asList(mobspawnegglist));
-        mobspawnegg = mobsConfig.getStringList("MobSpawn.Egg.Blacklist");
+        mobsConfig.addDefault("MobSpawn.Egg.Worlds", Arrays.asList(Data.worlds4list));
+        Data.worlds4 = mobsConfig.getStringList("MobSpawn.Egg.Worlds");
+        mobsConfig.addDefault("MobSpawn.Egg.Blacklist", Arrays.asList(Data.mobspawnegglist));
+        Data.mobspawnegg = mobsConfig.getStringList("MobSpawn.Egg.Blacklist");
         
         mobsConfig.addDefault("MobSpawn.SpawnerEgg.Debug.To-console", false);
-        mobsConfig.addDefault("MobSpawn.SpawnerEgg.Worlds", Arrays.asList(worlds5list));
-        worlds5 = mobsConfig.getStringList("MobSpawn.SpawnerEgg.Worlds");
-        mobsConfig.addDefault("MobSpawn.SpawnerEgg.Blacklist", Arrays.asList(mobspawnspawneregglist));
-        mobspawnspawneregg = mobsConfig.getStringList("MobSpawn.SpawnerEgg.Blacklist");
+        mobsConfig.addDefault("MobSpawn.SpawnerEgg.Worlds", Arrays.asList(Data.worlds5list));
+        Data.worlds5 = mobsConfig.getStringList("MobSpawn.SpawnerEgg.Worlds");
+        mobsConfig.addDefault("MobSpawn.SpawnerEgg.Blacklist", Arrays.asList(Data.mobspawnspawneregglist));
+        Data.mobspawnspawneregg = mobsConfig.getStringList("MobSpawn.SpawnerEgg.Blacklist");
         
         mobsConfig.addDefault("Completely-Prevent-SheepDyeWool", false);
         mobsConfig.addDefault("Prevent-SheepDyeWool-Color.Black", false);
