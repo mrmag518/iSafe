@@ -8,41 +8,21 @@ website: http://dev.bukkit.org/server-mods/blockthattnt/
 commands:
   iSafe-reload:
     usage: "Usage: /<command>"
-  iSafe-reload-blacklist:
-    usage: "Usage: /<command>"
-  iSafe-reload-mobsconfig:
-    usage: "Usage: /<command>"
   iSafe-info:
     usage: "Usage: /<command>"
   serverinfo:
     usage: "Usage: /<command>"
   superbreak:
     usage: "Usage: /<command>"
-  healme:
-    usage: "Usage: /<command>"
-  save-worlds:
-    usage: "Usage: /<command>"
   stopserver:
-    usage: "Usage: /<command>"
-  slayall:
-    usage: "Usage: /<command>"
-  therules:
-    usage: "Usage: /<command>"
-  ping:
-    usage: "Usage: /<command>"
-  magictxt:
     usage: "Usage: /<command>"
   cleardrops:
     usage: "Usage: /<command>"
-  murder:
-    usage: "Usage: /<command> [player]"
 permissions:
   iSafe.*:
     description: Allow the user to get access to all the iSafe permissions.
     default: op
     children:
-      isafe.murder.self: true
-      isafe.murder.others: true
       iSafe.place.*: true
       iSafe.break.*: true
       iSafe.drop.*: true
@@ -52,7 +32,6 @@ permissions:
       iSafe.serverinfo: true
       iSafe.drop: true
       iSafe.lavabucket.empty: true
-      iSafe.superstick: true
       iSafe.sprint: true
       iSafe.sneak: true
       iSafe.reload: true
@@ -78,7 +57,6 @@ permissions:
       iSafe.vehicle.destory.minecart: true
       iSafe.vehicle.destory.boat: true
       iSafe.superbreak: true
-      iSafe.heal: true
       iSafe.place.blacklist.bypass: true
       iSafe.break.blacklist.bypass: true
       iSafe.drop.blacklist.bypass: true
@@ -93,9 +71,6 @@ permissions:
       iSafe.stopserver: true
       iSafe.pickup: true
       iSafe.bow.use: true
-      iSafe.slayall: true
-      iSafe.ping: true
-      iSafe.magictxt: true
       iSafe.cleardrops: true
       iSafe.teleport.endportal: true
       iSafe.teleport.netherportal: true
@@ -176,8 +151,6 @@ permissions:
     default: op
   iSafe.sprint:
     default: op
-  iSafe.break.piston:
-    default: op
   iSafe.sneak:
     default: op
   iSafe.waterbucket.empty:
@@ -220,8 +193,6 @@ permissions:
     default: op
   iSafe.superbreak:
     default: op
-  iSafe.heal:
-    default: op
   iSafe.place.blacklist.bypass:
     default: op
   iSafe.break.blacklist.bypass:
@@ -250,19 +221,7 @@ permissions:
     default: op
   iSafe.bow.use:
     default: op
-  iSafe.rules:
-    default: op
-  iSafe.slayall:
-    default: op
-  iSafe.ping:
-    default: op
-  iSafe.magictxt:
-    default: op
   iSafe.cleardrops:
-    default: op
-  isafe.murder.self:
-    default: op
-  isafe.murder.others:
     default: op
   iSafe.teleport.endportal:
     default: op
