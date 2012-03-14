@@ -32,7 +32,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import com.mrmag518.iSafe.Blacklists.*;
 import com.mrmag518.iSafe.Commands.*;
-import com.mrmag518.iSafe.Events.*;
+import com.mrmag518.iSafe.Events.Block.*;
+import com.mrmag518.iSafe.Events.Entity.*;
+import com.mrmag518.iSafe.Events.Various.*;
+import com.mrmag518.iSafe.Events.World.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -150,18 +153,16 @@ public class iSafe extends JavaPlugin implements Listener {
         
         this.getServer().getPluginManager().registerEvents(this, this);
         
-        if(this.getConfig().getBoolean("onStartUp.Safely-load-DataFolder")) {
-            try {
-                if(!(this.getDataFolder().exists())) {
-                    log.info("[iSafe]" + " DataFolder not found, creating a new one.");
-                    this.getDataFolder().mkdir();
-                }
-            } catch (Exception ex) {
-                log.warning("[iSafe]" + " An exception ocurred when trying to create the DataFolder.");
-                log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
-                ex.printStackTrace();
-                log.warning("[iSafe]" + " The exception was caused by "+ ex.getCause());
+        try {
+            if(!(this.getDataFolder().exists())) {
+                log.info("[iSafe]" + " DataFolder not found, creating a new one.");
+                this.getDataFolder().mkdir();
             }
+        } catch (Exception ex) {
+            log.warning("[iSafe]" + " An exception ocurred when trying to create the DataFolder.");
+            log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
+            ex.printStackTrace();
+            log.warning("[iSafe]" + " The exception was caused by "+ ex.getCause());
         }
         
         //Update checker - From MilkBowl.
@@ -188,11 +189,9 @@ public class iSafe extends JavaPlugin implements Listener {
         
         executeCommands();
         
-        if(this.getConfig().getBoolean("onStartUp.getPermissions-through-the-server")) {
-            this.getServer().getPluginManager().getPermissions();
-        }
+        this.getServer().getPluginManager().getPermissions();
         
-        if(this.getConfig().getBoolean("onStartUp.Clear-superbreak-cache", true)) {
+        if(this.getConfig().getBoolean("Misc.Clear-superbreak-cache-onEnable", true)) {
             int userAmount = superbreak.size();
             log.info("[iSafe] "+ userAmount + " users stood in the superbreak cache; every one of them where cleared.");
             superbreak.clear();
@@ -201,32 +200,23 @@ public class iSafe extends JavaPlugin implements Listener {
             log.info("[iSafe] There's " + userAmount + " users in the superbreak cache.");
         }
         
-        //Just want to have some order.
-        if(this.getConfig().getBoolean("onStartUp.Check-Unique-iSafe-signature")) {
-            if(!("%%%%%%%%%%%%%%%%%¤¤¤¤¤%#&%%&¤%&%/¤#%%%%%%%%%%%%%%".equals(Data.getSig()))) {
-                log.info("----- iSafe sigConflict -----");
-                log.warning("[iSafe] The sig located at the Data class was not correctly loaded.");
-                log.info("----- ----------------- -----");
-            } else {
-                log.info("[iSafe] Loaded sig correctly.");
-            }
+        if(!("%%%%%%%%%%%%%%%%%¤¤¤¤¤%#&%%&¤%&%/¤#%%%%%%%%%%%%%%".equals(Data.getSig()))) {
+            log.info("----- iSafe sigConflict -----");
+            log.warning("[iSafe] The sig located at the Data class was not correctly loaded.");
+            log.info("----- ----------------- -----");
         } else {
-            //Ignored
+            log.info("[iSafe] Loaded sig correctly.");
         }
         
-        if(this.getConfig().getBoolean("onStartUp.Check-version-matching")) {
-            if(!(pdffile.getFullName().equals(fileversion))) {
-                log.info("-----  iSafe vMatchConflict  -----");
-                log.warning("[iSafe] The version in the pdffile is not the same as the file.");
-                log.info("[iSafe] pdffile version: "+ pdffile.getFullName());
-                log.info("[iSafe] File version: "+ fileversion);
-                log.warning("[iSafe] Please deliver this infomation to "+ pdffile.getAuthors() +" at BukkitDev.");
-                log.info("-----  --------------------  -----");
-            } else {
-                log.info("[iSafe] The file and pdffile versions matched eachother correctly.");
-            }
+        if(!(pdffile.getFullName().equals(fileversion))) {
+            log.info("-----  iSafe vMatchConflict  -----");
+            log.warning("[iSafe] The version in the pdffile is not the same as the file.");
+            log.info("[iSafe] pdffile version: "+ pdffile.getFullName());
+            log.info("[iSafe] File version: "+ fileversion);
+            log.warning("[iSafe] Please deliver this infomation to "+ pdffile.getAuthors() +" at BukkitDev.");
+            log.info("-----  --------------------  -----");
         } else {
-            //Ignored
+            log.info("[iSafe] The file and pdffile versions matched eachother correctly.");
         }
         
         log.info("[" + pdffile.getName() + " :: " + pdffile.getVersion() + "] " + " Enabled succesfully.");
@@ -340,18 +330,13 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Teleport.Prevent-TeleportCause.Plugin", false);
         config.addDefault("Teleport.Prevent-TeleportCause.Unknown", false);
         
+        config.addDefault("Misc.Clear-superbreak-cache-onEnable", false);
         config.addDefault("Misc.Enable-kick-messages", false);
         config.addDefault("Misc.Disable-LeavesDecay", false);
         config.addDefault("Misc.Prevent-crop-trampling-by-creature", false);
         config.addDefault("Misc.Prevent-crop-trampling-by-player", false);
         config.addDefault("Misc.Prevent-portal-creation", false);
         config.addDefault("Misc.Prevent-RedStoneTorch-placed-against-tnt", false);
-        
-        config.addDefault("onStartUp.Clear-superbreak-cache", true);
-        config.addDefault("onStartUp.Check-Unique-iSafe-signature", true);
-        config.addDefault("onStartUp.Check-version-matching", true);
-        config.addDefault("onStartUp.Safely-load-DataFolder", true);
-        config.addDefault("onStartUp.getPermissions-through-the-server", true);
         
         config.addDefault("World.Register-world(s)-init", true);
         config.addDefault("World.Register-world(s)-unload", true);

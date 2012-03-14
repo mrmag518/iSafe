@@ -108,8 +108,7 @@ public class Data {
     
     public static String setConfigHeader() {
         String header = "This is the main configuration file in association to iSafe; take a decent look through it to manage your own preferred settings." 
-        + "\nIf you need assistance you can search up it in the iSafe wiki or contact mrmag518.\n"
-        + "\nBe careful with editing something in the 'onStartUp' section.\n";
+        + "\nIf you need assistance you can search up it in the iSafe wiki or contact mrmag518.\n";
         return header;
     }
     
@@ -133,37 +132,37 @@ public class Data {
         if ((color.equalsIgnoreCase("BLACK")) || (color.equalsIgnoreCase("&0")))
             return ChatColor.BLACK;
         if ((color.equalsIgnoreCase("DARK_BLUE")) || (color.equalsIgnoreCase("&1")))
-          return ChatColor.DARK_BLUE;
+            return ChatColor.DARK_BLUE;
         if ((color.equalsIgnoreCase("DARK_GREEN")) || (color.equalsIgnoreCase("&2")))
-          return ChatColor.DARK_GREEN;
+            return ChatColor.DARK_GREEN;
         if ((color.equalsIgnoreCase("DARK_AQUA")) || (color.equalsIgnoreCase("&3")))
-          return ChatColor.DARK_AQUA;
+            return ChatColor.DARK_AQUA;
         if ((color.equalsIgnoreCase("DARK_RED")) || (color.equalsIgnoreCase("&4")))
-          return ChatColor.DARK_RED;
+            return ChatColor.DARK_RED;
         if ((color.equalsIgnoreCase("DARK_PURPLE")) || (color.equalsIgnoreCase("&5")))
-          return ChatColor.DARK_PURPLE;
+            return ChatColor.DARK_PURPLE;
         if ((color.equalsIgnoreCase("GOLD")) || (color.equalsIgnoreCase("&6")) || (color.equalsIgnoreCase("DARK_YELLOW")))
-          return ChatColor.GOLD;
+            return ChatColor.GOLD;
         if ((color.equalsIgnoreCase("GRAY")) || (color.equalsIgnoreCase("&7")))
-          return ChatColor.GRAY;
+            return ChatColor.GRAY;
         if ((color.equalsIgnoreCase("DARK_GRAY")) || (color.equalsIgnoreCase("&8")))
-          return ChatColor.DARK_GRAY;
+            return ChatColor.DARK_GRAY;
         if ((color.equalsIgnoreCase("BLUE")) || (color.equalsIgnoreCase("&9")))
-          return ChatColor.BLUE;
+            return ChatColor.BLUE;
         if ((color.equalsIgnoreCase("GREEN")) || (color.equalsIgnoreCase("&a")))
-          return ChatColor.GREEN;
+            return ChatColor.GREEN;
         if ((color.equalsIgnoreCase("AQUA")) || (color.equalsIgnoreCase("&b")))
-          return ChatColor.AQUA;
+            return ChatColor.AQUA;
         if ((color.equalsIgnoreCase("RED")) || (color.equalsIgnoreCase("&c")))
-          return ChatColor.RED;
+            return ChatColor.RED;
         if ((color.equalsIgnoreCase("LIGHT_PURPLE")) || (color.equalsIgnoreCase("&d")) || (color.equalsIgnoreCase("PINK")))
-          return ChatColor.LIGHT_PURPLE;
+            return ChatColor.LIGHT_PURPLE;
         if ((color.equalsIgnoreCase("YELLOW")) || (color.equalsIgnoreCase("&e")))
-          return ChatColor.YELLOW;
+            return ChatColor.YELLOW;
         if ((color.equalsIgnoreCase("WHITE")) || (color.equalsIgnoreCase("&f")))
-          return ChatColor.WHITE;
+            return ChatColor.WHITE;
         if ((color.equalsIgnoreCase("RAND")) || (color.equalsIgnoreCase("&f")))
-          return getRNDChatColor();
+            return getRNDChatColor();
         return getRNDChatColor();
     }
     

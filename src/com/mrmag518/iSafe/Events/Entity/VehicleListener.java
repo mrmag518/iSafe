@@ -16,8 +16,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mrmag518.iSafe.Events;
+package com.mrmag518.iSafe.Events.Entity;
 
+import com.mrmag518.iSafe.Events.*;
 import com.mrmag518.iSafe.*;
 
 import org.bukkit.ChatColor;

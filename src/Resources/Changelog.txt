@@ -10,8 +10,7 @@ Version 2.65
 * Added "FirstJoined" to the user files, with exact result.
 * Added "domingo15" to the "/isafe-info" command as a tester.
 * Added 'superbreak' cache clearer, and informing the amount of user in the cache on start-up.
-* Added new "onStartUp" config nodes, configurate onEnable procedures.
-* Removed old permission nodes and commands in the pdffile.
+* Removed unused permission nodes and commands in the pdffile.
 * 
 
 Version 2.64
