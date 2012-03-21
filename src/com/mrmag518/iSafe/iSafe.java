@@ -80,12 +80,12 @@ public class iSafe extends JavaPlugin implements Listener {
     public PickupBlacklist pickupBlacklist = null;
     public CommandBlacklist commandBlacklist = null;
     
-    public Reload reloadcmd = null;
-    public Info isafeInfocmd = null;
-    public Serverinfo serverinfocmd = null;
-    public Superbreak superbreakcmd = null;
-    public Stopserver stopServercmd = null;
-    public ClearDrops cleardropscmd = null;
+    private Reload reloadcmd = null;
+    private Info isafeInfocmd = null;
+    private Serverinfo serverinfocmd = null;
+    private Superbreak superbreakcmd = null;
+    private Stopserver stopServercmd = null;
+    private ClearDrops cleardropscmd = null;
     
     public String version = null;
     public String newVersion = null;
@@ -187,18 +187,9 @@ public class iSafe extends JavaPlugin implements Listener {
             }
         }, 0, 432000);
         
-        executeCommands();
+        this.executeCommands();
         
         this.getServer().getPluginManager().getPermissions();
-        
-        if(this.getConfig().getBoolean("Misc.Clear-superbreak-cache-onEnable", true)) {
-            int userAmount = superbreak.size();
-            log.info("[iSafe] "+ userAmount + " users stood in the superbreak cache; every one of them where cleared.");
-            superbreak.clear();
-        } else {
-            int userAmount = superbreak.size();
-            log.info("[iSafe] There's " + userAmount + " users in the superbreak cache.");
-        }
         
         if(!("%%%%%%%%%%%%%%%%%¤¤¤¤¤%#&%%&¤%&%/¤#%%%%%%%%%%%%%%".equals(Data.getSig()))) {
             log.info("----- iSafe sigConflict -----");
@@ -330,13 +321,11 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Teleport.Prevent-TeleportCause.Plugin", false);
         config.addDefault("Teleport.Prevent-TeleportCause.Unknown", false);
         
-        config.addDefault("Misc.Clear-superbreak-cache-onEnable", false);
         config.addDefault("Misc.Enable-kick-messages", false);
         config.addDefault("Misc.Disable-LeavesDecay", false);
         config.addDefault("Misc.Prevent-crop-trampling-by-creature", false);
         config.addDefault("Misc.Prevent-crop-trampling-by-player", false);
         config.addDefault("Misc.Prevent-portal-creation", false);
-        config.addDefault("Misc.Prevent-RedStoneTorch-placed-against-tnt", false);
         
         config.addDefault("World.Register-world(s)-init", true);
         config.addDefault("World.Register-world(s)-unload", true);
@@ -686,6 +675,7 @@ public class iSafe extends JavaPlugin implements Listener {
         mobsConfig.addDefault("Entity-Combust.Disable-for.Villager", false);
         mobsConfig.addDefault("Entity-Combust.Disable-for.Wolf", false);
         mobsConfig.addDefault("Entity-Combust.Disable-for.Zombie", false);
+        
         this.getMobsConfig().options().copyDefaults(true);
         saveMobsConfig();
         log.info("[iSafe] Loaded mobsConfig file.");

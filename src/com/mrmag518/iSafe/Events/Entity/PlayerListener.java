@@ -19,7 +19,6 @@
 package com.mrmag518.iSafe.Events.Entity;
 
 
-import com.mrmag518.iSafe.Events.*;
 import java.util.List;
 
 import com.mrmag518.iSafe.*;
@@ -31,6 +30,7 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -46,6 +46,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -69,7 +70,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        
         Player player = event.getPlayer();
         World world = player.getWorld();
         String worldname = world.getName();
@@ -115,8 +115,8 @@ public class PlayerListener implements Listener  {
         }
     }
     
-    @EventHandler(priority = EventPriority.LOW)
-    public void PreventSprinting(PlayerToggleSprintEvent event) {
+    @EventHandler
+    public void PreventSprinting(PlayerMoveEvent event) {
         if (event.isCancelled())
         {
             return;
@@ -126,34 +126,20 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Player.Prevent-Sprinting", true))
         {
             if(player.hasPermission("iSafe.sprint")) {
-                //access
+                event.setCancelled(false);
             } else {
-                if (event.isSprinting()) {
+                if(player.isSprinting()) {
                     event.setCancelled(true);
-                } else {
-                    event.setCancelled(false);
                 }
             }
         }
-    }
-    
-    @EventHandler(priority = EventPriority.LOW)
-    public void PreventSneaking(PlayerToggleSneakEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
-        Player player = event.getPlayer();
-        
         if(plugin.getConfig().getBoolean("Player.Prevent-Sneaking", true))
         {
             if(player.hasPermission("iSafe.sneak")) {
-                //access
+                event.setCancelled(false);
             } else {
-                if (event.isSneaking()) {
+                if(player.isSneaking()) {
                     event.setCancelled(true);
-                } else {
-                    event.setCancelled(false);
                 }
             }
         }
@@ -298,16 +284,18 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Chat.Prevent-arrow-to-the-knee-jokes", true))
         {
-            if (msg.contains("arrow") && msg.contains("knee")) {
+            if (msg.contains("arrow") && msg.contains("knee") || msg.contains("ARROW") && msg.contains("KNEE") 
+                    || msg.contains("Arrow") && msg.contains("Knee") || msg.contains("arow") && msg.contains("kne")) {
                 event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You made arrow to the knee jokes, untill you took an arrow to the knee.");
+                player.sendMessage(ChatColor.YELLOW + "ATTK jokes.. No!");
             }
         }
         if(plugin.getConfig().getBoolean("Chat.Punish-arrow-to-the-knee-jokes", true))
         {
-            if (msg.contains("arrow") && msg.contains("knee")) {
-                player.sendMessage(ChatColor.GREEN + "You made arrow to the knee jokes, untill you took an arrow to the knee.");
-                world.createExplosion(player.getLocation(), 1);
+            if (msg.contains("arrow") && msg.contains("knee") || msg.contains("ARROW") && msg.contains("KNEE") 
+                    || msg.contains("Arrow") && msg.contains("Knee") || msg.contains("arow") && msg.contains("kne")) {
+                player.sendMessage(ChatColor.YELLOW + "ATTK jokes.. No!");
+                world.spawnCreature(player.getLocation(), EntityType.PRIMED_TNT);
             }
         }
     }
@@ -342,7 +330,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Misc.Enable-kick-messages", true))
         {
-            server.broadcastMessage(ChatColor.DARK_GRAY + ((player.getName() + " got kicked.")));
+            server.broadcastMessage(ChatColor.YELLOW + ((player.getName() + " got kicked.")));
         }
     }
 
@@ -373,6 +361,15 @@ public class PlayerListener implements Listener  {
         }
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
+        
+        // try {
+        //    int blockID = block.getTypeId();
+        //    /**
+        //    * TODO: Rewritte the whole Interact code and code it with try|catch methods.
+        //     */
+        // } catch (NullPointerException npe) {
+        //    //ignored
+        // }
         
         if(!plugin.getConfig().getBoolean("Player-Interact.Allow-Buttons-Interact", true))
         {
@@ -488,7 +485,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Player.Only-let-OPs-join", true))
         {
             if(!player.isOp()) {
-                player.kickPlayer("You cannot join this server, as you are not an OP.");
+                player.kickPlayer(ChatColor.RED + "You cannot join this server, 'cause you are not an OP.");
             }
         }
         
@@ -500,7 +497,7 @@ public class PlayerListener implements Listener  {
             {
                 if (user.getName().equalsIgnoreCase(name)) 
                 {
-                    user.kickPlayer("The username: "+ name + " logged on from another location.");
+                    user.kickPlayer(ChatColor.RED + "The username: "+ ChatColor.WHITE + name + ChatColor.RED + " logged on from another location.");
                 }
             }
         }
@@ -512,12 +509,12 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
+        String player = event.getPlayer().getName();
+        String command = event.getMessage();
+        
         if(plugin.getConfig().getBoolean("Player.Log-commands", true))
         {
-            if (message == 0) {
-                plugin.getServer().getLogger().info("[iSafe] [Command] "+ event.getPlayer().getName() + ": " + event.getMessage());
-                message = 1;
-            }
+            plugin.getServer().getLogger().info(player + " did/tried the command :: " + command);
         }
     }
 
@@ -527,7 +524,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        
         Entity entity = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("PlayerInteractEntity.Prevent-arrow-hitting-player", true))
@@ -550,6 +546,8 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
+        boolean survival = event.getNewGameMode().equals(GameMode.SURVIVAL);
+        boolean creative = event.getNewGameMode().equals(GameMode.CREATIVE);
         
         if(plugin.getConfig().getBoolean("Player.Prevent-Gamemode-change", true))
         {
@@ -558,7 +556,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Player.Prevent-Gamemode-to-CreativeMode-change", true))
         {
-            if (event.getNewGameMode().equals(GameMode.CREATIVE)) 
+            if (survival) 
             {
                 event.setCancelled(true);
             }
@@ -566,7 +564,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Player.Prevent-Gamemode-to-SurvivalMode-change", true))
         {
-            if (event.getNewGameMode().equals(GameMode.SURVIVAL)) 
+            if (creative) 
             {
                 event.setCancelled(true);
             }
