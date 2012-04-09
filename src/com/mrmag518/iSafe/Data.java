@@ -101,11 +101,6 @@ public class Data {
         return date;
     }
     
-    public static String getSig() {
-        String signature = "%%%%%%%%%%%%%%%%%¤¤¤¤¤%#&%%&¤%&%/¤#%%%%%%%%%%%%%%";
-        return signature;
-    }
-    
     public static String setConfigHeader() {
         String header = "This is the main configuration file in association to iSafe; take a decent look through it to manage your own preferred settings." 
         + "\nIf you need assistance you can search up it in the iSafe wiki or contact mrmag518.\n";

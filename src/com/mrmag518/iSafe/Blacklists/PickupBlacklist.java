@@ -33,7 +33,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 
 public class PickupBlacklist implements Listener {
-    
     public static iSafe plugin;
     public PickupBlacklist(iSafe instance)
     {
@@ -71,7 +70,7 @@ public class PickupBlacklist implements Listener {
                 || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME_Name))
         {
             if(player.hasPermission("iSafe.pickup.blacklist.bypass")) {
-                //access
+                event.setCancelled(false);
             } else {
                 if (!event.isCancelled()) 
                 {

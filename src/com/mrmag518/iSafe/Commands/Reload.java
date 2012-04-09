@@ -20,12 +20,13 @@ package com.mrmag518.iSafe.Commands;
 
 import com.mrmag518.iSafe.iSafe;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.Plugin;
 
 public class Reload implements CommandExecutor {
     public static iSafe plugin;
@@ -41,25 +42,24 @@ public class Reload implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "Too many arguments!");
                 return false;
             }
-            PluginDescriptionFile pdffile = plugin.getDescription();
+            String v = plugin.getDescription().getVersion();
             if (sender instanceof Player) { 
                 Player player = (Player)sender;
                 if (hasReload(player)) { 
-                    plugin.reloadConfig();
-                    plugin.reloadBlacklist();
-                    plugin.reloadMobsConfig();
-		    sender.sendMessage(ChatColor.AQUA + pdffile.getFullName() + ChatColor.GRAY + " reloaded files succesfully");
-                    System.out.println("[iSafe] "+ (sender.getName() + " reloaded" + (pdffile.getFullName())));
+                    Plugin iSafe = Bukkit.getServer().getPluginManager().getPlugin("iSafe");
+                    Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().enablePlugin(iSafe);
+                    Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().enablePlugin(iSafe);
+                    sender.sendMessage(ChatColor.GOLD + "Reloaded iSafe.jar" + ChatColor.DARK_PURPLE + " (v." + v + ")");
             } else { 
                     sender.sendMessage(ChatColor.RED + "You do not have access to that." );
                 }
             } else { 
-                plugin.reloadConfig();
-                plugin.reloadBlacklist();
-                plugin.reloadMobsConfig();
-		plugin.log.info("[iSafe] " + pdffile.getName() + " was succesfully reloaded");
+                Plugin iSafe = Bukkit.getServer().getPluginManager().getPlugin("iSafe");
+                Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().enablePlugin(iSafe);
+                Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().enablePlugin(iSafe);
+                sender.sendMessage("Reloaded iSafe.jar" + " (v." + v + ")");
             }
-    		return true;
+            return true;
     	}
         return false;
     }

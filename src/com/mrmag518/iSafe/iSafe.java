@@ -58,7 +58,7 @@ public class iSafe extends JavaPlugin implements Listener {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //Remember to change this on every version!
     
-    public String fileversion = "iSafe v2.65";
+    public String fileversion = "iSafe v2.66";
     
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
@@ -73,6 +73,7 @@ public class iSafe extends JavaPlugin implements Listener {
     public DropListener dropListener = null;
     
     public UserFileCreator UFC = null;
+    public SendUpdate sendUpdate = null;
     
     public DropBlacklist dropBlacklist = null;
     public PlaceBlacklist placeBlacklist = null;
@@ -105,11 +106,15 @@ public class iSafe extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         PluginDescriptionFile pdffile = this.getDescription();
-        log.info("[" + pdffile.getName() + " :: " + pdffile.getVersion() + "] " + " Disabled succesfully.");
+        log.info("[" + pdffile.getName() + " :: " + version + "] " + " Disabled succesfully.");
     }
     
     @Override
     public void onEnable() {
+        File mainConfig = new File(this.getDataFolder() + File.separator + "config.yml");
+        File mainblacklist = new File(this.getDataFolder() + File.separator + "blacklist.yml");
+        File mainmobsConfig = new File(this.getDataFolder() + File.separator + "mobsConfig.yml");
+        
         version = this.getDescription().getVersion();
         
         playerListener = new PlayerListener(this);
@@ -123,6 +128,7 @@ public class iSafe extends JavaPlugin implements Listener {
         dropListener = new DropListener(this);
         
         UFC = new UserFileCreator(this);
+        sendUpdate = new SendUpdate(this);
         
         dropBlacklist = new DropBlacklist(this);
         placeBlacklist = new PlaceBlacklist(this);
@@ -139,6 +145,58 @@ public class iSafe extends JavaPlugin implements Listener {
         
         PluginDescriptionFile pdffile = this.getDescription();
         
+        try {
+            if(!(this.getDataFolder().exists())) {
+                log.info("[iSafe]" + " DataFolder not found, creating a new one.");
+                this.getDataFolder().mkdir();
+            }
+        } catch (Exception ex) {
+            log.warning("[iSafe]" + " An Exception ocurred when trying to create the DataFolder.");
+            log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
+            ex.printStackTrace();
+            log.warning("[iSafe]" + " The Exception was caused by "+ ex.getCause());
+        }
+        
+        if(!(mainConfig.exists())) {
+            try {
+                log.info("[iSafe] Configuration file not found, creating a new one.");
+                mainConfig.createNewFile();
+            } catch (IOException ex) {
+                log.warning("[iSafe]" + " An IOException ocurred when trying to create the Configuration file.");
+                log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
+                ex.printStackTrace();
+                log.warning("[iSafe]" + " The IOException was caused by "+ ex.getCause());
+            }
+        } else {
+            log.info("[iSafe] Loaded Configuration file successfully.");
+        }
+        if(!(mainblacklist.exists())) {
+            try {
+                log.info("[iSafe] Blacklist file not found, creating a new one.");
+                mainConfig.createNewFile();
+            } catch (IOException ex) {
+                log.warning("[iSafe]" + " An IOException ocurred when trying to create the Blacklist file.");
+                log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
+                ex.printStackTrace();
+                log.warning("[iSafe]" + " The IOException was caused by "+ ex.getCause());
+            }
+        } else {
+            log.info("[iSafe] Loaded Blacklist file successfully.");
+        }
+        if(!(mainmobsConfig.exists())) {
+            try {
+                log.info("[iSafe] mobsConfig file not found, creating a new one.");
+                mainConfig.createNewFile();
+            } catch (IOException ex) {
+                log.warning("[iSafe]" + " An IOException ocurred when trying to create the mobsConfig file.");
+                log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
+                ex.printStackTrace();
+                log.warning("[iSafe]" + " The IOException was caused by "+ ex.getCause());
+            }
+        } else {
+            log.info("[iSafe] Loaded mobsConfig file successfully.");
+        }
+        
         config = this.getConfig();
         loadConfig();
         reloadConfig();
@@ -152,18 +210,6 @@ public class iSafe extends JavaPlugin implements Listener {
         reloadMobsConfig();
         
         this.getServer().getPluginManager().registerEvents(this, this);
-        
-        try {
-            if(!(this.getDataFolder().exists())) {
-                log.info("[iSafe]" + " DataFolder not found, creating a new one.");
-                this.getDataFolder().mkdir();
-            }
-        } catch (Exception ex) {
-            log.warning("[iSafe]" + " An exception ocurred when trying to create the DataFolder.");
-            log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
-            ex.printStackTrace();
-            log.warning("[iSafe]" + " The exception was caused by "+ ex.getCause());
-        }
         
         //Update checker - From MilkBowl.
         this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
@@ -191,14 +237,6 @@ public class iSafe extends JavaPlugin implements Listener {
         
         this.getServer().getPluginManager().getPermissions();
         
-        if(!("%%%%%%%%%%%%%%%%%¤¤¤¤¤%#&%%&¤%&%/¤#%%%%%%%%%%%%%%".equals(Data.getSig()))) {
-            log.info("----- iSafe sigConflict -----");
-            log.warning("[iSafe] The sig located at the Data class was not correctly loaded.");
-            log.info("----- ----------------- -----");
-        } else {
-            log.info("[iSafe] Loaded sig correctly.");
-        }
-        
         if(!(pdffile.getFullName().equals(fileversion))) {
             log.info("-----  iSafe vMatchConflict  -----");
             log.warning("[iSafe] The version in the pdffile is not the same as the file.");
@@ -210,7 +248,7 @@ public class iSafe extends JavaPlugin implements Listener {
             log.info("[iSafe] The file and pdffile versions matched eachother correctly.");
         }
         
-        log.info("[" + pdffile.getName() + " :: " + pdffile.getVersion() + "] " + " Enabled succesfully.");
+        log.info("[" + pdffile.getName() + " :: " + version + "] " + " Enabled succesfully.");
     }
     
     //Update checker - From MilkBowl's Vault.
@@ -233,25 +271,6 @@ public class iSafe extends JavaPlugin implements Listener {
             //Ingored
         }
         return currentVersion;
-    }
-    
-    //From MilkBowl's Vault.
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        if (player.hasPermission("iSafe.*")) {
-            try {
-                String oldVersion = getDescription().getVersion().substring(0, 5);
-                if (!newVersion.contains(oldVersion)) {
-                    player.sendMessage(ChatColor.GREEN + "A new version of iSafe is out! "+  newVersion + ", You are currently running v" + oldVersion);
-                    player.sendMessage(ChatColor.GREEN + "Please update iSafe at: http://dev.bukkit.org/server-mods/blockthattnt");
-                }
-            } catch (Exception e) {
-                //ignore
-            }
-        } else {
-            //nothing
-        }
     }
     
     public void executeCommands() {
@@ -449,7 +468,6 @@ public class iSafe extends JavaPlugin implements Listener {
         
         this.getConfig().options().copyDefaults(true);
         saveConfig();
-        log.info("[iSafe] Loaded configuration file.");
     }
     
     public void loadBlacklist() {
@@ -510,7 +528,6 @@ public class iSafe extends JavaPlugin implements Listener {
         
         this.getBlacklist().options().copyDefaults(true);
         saveBlacklist();
-        log.info("[iSafe] Loaded blacklist file.");
     }
     
     public void reloadBlacklist() {
@@ -678,6 +695,5 @@ public class iSafe extends JavaPlugin implements Listener {
         
         this.getMobsConfig().options().copyDefaults(true);
         saveMobsConfig();
-        log.info("[iSafe] Loaded mobsConfig file.");
     }
 }

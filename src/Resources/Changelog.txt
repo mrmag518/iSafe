@@ -1,5 +1,13 @@
 Displaying the Change Log of iSafe.
 
+Version 2.66
+* Fixed files not being created in rare situtations.
+* Fixed some log plugins not logging the placed block of a player.
+* Supports 1.2.5
+* Removed signature checks.
+* Fixed not sending the update check when an administrator logs on.
+* Rewrote and fixed the reload command. (Now reloads the .jar instead of only the configs)
+
 Version 2.65
 * Fixed creatures/players being teleported to SpawnLocation when damaged.
 * Rewrote the explosion damage area, and added a option to disable it with creatures too.

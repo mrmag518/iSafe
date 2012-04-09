@@ -34,7 +34,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class BreakBlacklist implements Listener {
-    
     public static iSafe plugin;
     public BreakBlacklist(iSafe instance)
     {
@@ -72,7 +71,7 @@ public class BreakBlacklist implements Listener {
                 || plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(BlockNAME_Name))
         {
             if(player.hasPermission("iSafe.break.blacklist.bypass")) {
-                //access
+                event.setCancelled(false);
             } else {
                 if (!event.isCancelled()) 
                 {

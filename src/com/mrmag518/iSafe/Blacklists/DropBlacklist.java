@@ -71,7 +71,7 @@ public class DropBlacklist implements Listener {
                 || plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(BlockNAME_Name))
         {
             if(player.hasPermission("iSafe.drop.blacklist.bypass")) {
-                //access
+                event.setCancelled(false);
             } else {
                 if (!event.isCancelled()) 
                 {

@@ -181,7 +181,7 @@ public class EntityListener implements Listener {
         }
         
         Entity entity = event.getEntity();
-        
+
         if(plugin.getMobsConfig().getBoolean("Mobs.Endermen.Prevent-Endermen-griefing", true))
         {
             if (entity instanceof Enderman) {

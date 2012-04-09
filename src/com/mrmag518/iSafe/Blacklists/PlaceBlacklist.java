@@ -71,7 +71,7 @@ public class PlaceBlacklist implements Listener {
                 || plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(BlockNAME))
         {
             if(player.hasPermission("iSafe.place.blacklist.bypass")) {
-                //access
+                event.setCancelled(false);
             } else {
                 if (!event.isCancelled()) 
                 {
