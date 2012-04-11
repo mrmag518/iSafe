@@ -37,14 +37,10 @@ import com.mrmag518.iSafe.Events.Entity.*;
 import com.mrmag518.iSafe.Events.Various.*;
 import com.mrmag518.iSafe.Events.World.*;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -58,7 +54,7 @@ public class iSafe extends JavaPlugin implements Listener {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //Remember to change this on every version!
     
-    public String fileversion = "iSafe v2.66";
+    public String fileversion = "iSafe v2.67";
     
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
@@ -80,6 +76,7 @@ public class iSafe extends JavaPlugin implements Listener {
     public BreakBlacklist breakBlacklist = null;
     public PickupBlacklist pickupBlacklist = null;
     public CommandBlacklist commandBlacklist = null;
+    public MobSpawnBlacklist mobSpawnBlacklist = null;
     
     private Reload reloadcmd = null;
     private Info isafeInfocmd = null;
@@ -111,10 +108,6 @@ public class iSafe extends JavaPlugin implements Listener {
     
     @Override
     public void onEnable() {
-        File mainConfig = new File(this.getDataFolder() + File.separator + "config.yml");
-        File mainblacklist = new File(this.getDataFolder() + File.separator + "blacklist.yml");
-        File mainmobsConfig = new File(this.getDataFolder() + File.separator + "mobsConfig.yml");
-        
         version = this.getDescription().getVersion();
         
         playerListener = new PlayerListener(this);
@@ -135,6 +128,7 @@ public class iSafe extends JavaPlugin implements Listener {
         breakBlacklist = new BreakBlacklist(this);
         pickupBlacklist = new PickupBlacklist(this);
         commandBlacklist = new CommandBlacklist(this);
+        mobSpawnBlacklist = new MobSpawnBlacklist(this);
         
         reloadcmd = new Reload(this);
         isafeInfocmd = new Info(this);
@@ -155,46 +149,6 @@ public class iSafe extends JavaPlugin implements Listener {
             log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
             ex.printStackTrace();
             log.warning("[iSafe]" + " The Exception was caused by "+ ex.getCause());
-        }
-        
-        if(!(mainConfig.exists())) {
-            try {
-                log.info("[iSafe] Configuration file not found, creating a new one.");
-                mainConfig.createNewFile();
-            } catch (IOException ex) {
-                log.warning("[iSafe]" + " An IOException ocurred when trying to create the Configuration file.");
-                log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
-                ex.printStackTrace();
-                log.warning("[iSafe]" + " The IOException was caused by "+ ex.getCause());
-            }
-        } else {
-            log.info("[iSafe] Loaded Configuration file successfully.");
-        }
-        if(!(mainblacklist.exists())) {
-            try {
-                log.info("[iSafe] Blacklist file not found, creating a new one.");
-                mainConfig.createNewFile();
-            } catch (IOException ex) {
-                log.warning("[iSafe]" + " An IOException ocurred when trying to create the Blacklist file.");
-                log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
-                ex.printStackTrace();
-                log.warning("[iSafe]" + " The IOException was caused by "+ ex.getCause());
-            }
-        } else {
-            log.info("[iSafe] Loaded Blacklist file successfully.");
-        }
-        if(!(mainmobsConfig.exists())) {
-            try {
-                log.info("[iSafe] mobsConfig file not found, creating a new one.");
-                mainConfig.createNewFile();
-            } catch (IOException ex) {
-                log.warning("[iSafe]" + " An IOException ocurred when trying to create the mobsConfig file.");
-                log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
-                ex.printStackTrace();
-                log.warning("[iSafe]" + " The IOException was caused by "+ ex.getCause());
-            }
-        } else {
-            log.info("[iSafe] Loaded mobsConfig file successfully.");
         }
         
         config = this.getConfig();
@@ -247,6 +201,8 @@ public class iSafe extends JavaPlugin implements Listener {
         } else {
             log.info("[iSafe] The file and pdffile versions matched eachother correctly.");
         }
+        
+        test();
         
         log.info("[" + pdffile.getName() + " :: " + version + "] " + " Enabled succesfully.");
     }
@@ -437,15 +393,19 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("Player.Instantbreak", false);
         config.addDefault("Player.Prevent-Bow-usage", false);
         //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        config.addDefault("Player-Interact.Allow-Buttons-Interact", true);
-        config.addDefault("Player-Interact.Allow-WoodenDoors-Interact", true);
-        config.addDefault("Player-Interact.Allow-IronDoors-Interact", true);
-        config.addDefault("Player-Interact.Allow-Levers-Interact", true);
-        config.addDefault("Player-Interact.Allow-StonePressurePlate-Interact", true);
-        config.addDefault("Player-Interact.Allow-WoodenPressurePlate-Interact", true);
-        config.addDefault("Player-Interact.Allow-TrapDoor-Interact", true);
-        config.addDefault("Player-Interact.Allow-WoodenFenceGate-Interact", true);
-        config.addDefault("Player-Interact.Allow-Chest-Interact", true);
+        //--
+        config.addDefault("Player-Interact.Erase the old values if you haven't already(this node is not a setting)", "#");
+        //--
+        config.addDefault("Player-Interact.Disable.Buttons", false);
+        config.addDefault("Player-Interact.Disable.Chests", false);
+        config.addDefault("Player-Interact.Disable.Dispensers", false);
+        config.addDefault("Player-Interact.Disable.Woodendoors", false);
+        config.addDefault("Player-Interact.Disable.Irondoors", false);
+        config.addDefault("Player-Interact.Disable.Levers", false);
+        config.addDefault("Player-Interact.Disable.StonePressurePlates", false);
+        config.addDefault("Player-Interact.Disable.WoodenPressurePlates", false);
+        config.addDefault("Player-Interact.Disable.Trapdoors", false);
+        config.addDefault("Player-Interact.Disable.WoodenFenceGates", false);
         //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         config.addDefault("Entity/Player.Completely-Prevent.Health-Regeneration", false);
         config.addDefault("Entity/Player.Prevent.Custom-Health-Regeneration", false);
@@ -695,5 +655,13 @@ public class iSafe extends JavaPlugin implements Listener {
         
         this.getMobsConfig().options().copyDefaults(true);
         saveMobsConfig();
+    }
+    
+    private void test() {
+        if (this.getConfig().getBoolean("Misc.Tame.Prevent-taming", true)) {
+            log.info("[iSafe] Preventing taming.");
+        } else {
+            log.info("[iSafe] Not preventing taming.");
+        }
     }
 }

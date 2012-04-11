@@ -1,5 +1,13 @@
 Displaying the Change Log of iSafe.
 
+Version 2.67
+* Completely fixed all NullPointerExceptions within interaction events.
+* Re-wrote interaction preventions and re-did the config nodes.
+* Fixed crop trampling.
+* Fixed MobSpawnBlacklist not working at all.
+* Removed un-needed file creations.
+* 
+
 Version 2.66
 * Fixed files not being created in rare situtations.
 * Fixed some log plugins not logging the placed block of a player.

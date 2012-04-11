@@ -20,20 +20,19 @@ public class MobSpawnBlacklist implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if (event.isCancelled())
         {
             return;
         }
-        Entity entity = event.getEntity();
-        int entityID = entity.getEntityId();
-        String entityNameLowercase = entity.getType().getName().toLowerCase();
-        String entityNameUppercase = entity.getType().getName().toUpperCase();
-        String entityName = entity.getType().getName();
-        String entityNameString = entity.getType().getName().toString();        
-        World world = entity.getWorld();
-        Location loc = entity.getLocation();
+        int entityID = event.getEntity().getEntityId();
+        String entityNameLowercase = event.getEntity().getType().getName().toLowerCase();
+        String entityNameUppercase = event.getEntity().getType().getName().toUpperCase();
+        String entityName = event.getEntity().getType().getName();
+        String entityNameString = event.getEntity().getType().getName().toString();        
+        World world = event.getEntity().getWorld();
+        Location loc = event.getEntity().getLocation();
         String worldname = world.getName();
         
         /**
@@ -54,7 +53,7 @@ public class MobSpawnBlacklist implements Listener {
                     if (event.getSpawnReason() == SpawnReason.NATURAL)
                     {
                         event.setCancelled(true);
-                        entity.remove();
+                        event.getEntity().remove();
                     } else {
                         event.setCancelled(false);
                     }
@@ -93,7 +92,7 @@ public class MobSpawnBlacklist implements Listener {
                     if (event.getSpawnReason() == SpawnReason.SPAWNER)
                     {
                         event.setCancelled(true);
-                        entity.remove();
+                        event.getEntity().remove();
                     } else {
                         event.setCancelled(false);
                     }
@@ -132,7 +131,7 @@ public class MobSpawnBlacklist implements Listener {
                     if (event.getSpawnReason() == SpawnReason.CUSTOM)
                     {
                         event.setCancelled(true);
-                        entity.remove();
+                        event.getEntity().remove();
                     } else {
                         event.setCancelled(false);
                     }
@@ -171,7 +170,7 @@ public class MobSpawnBlacklist implements Listener {
                     if (event.getSpawnReason() == SpawnReason.EGG)
                     {
                         event.setCancelled(true);
-                        entity.remove();
+                        event.getEntity().remove();
                     } else {
                         event.setCancelled(false);
                     }
@@ -210,7 +209,7 @@ public class MobSpawnBlacklist implements Listener {
                     if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
                     {
                         event.setCancelled(true);
-                        entity.remove();
+                        event.getEntity().remove();
                     } else {
                         event.setCancelled(false);
                     }

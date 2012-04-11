@@ -50,8 +50,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 
@@ -359,118 +357,101 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        Player player = event.getPlayer();
-        Block block = event.getClickedBlock();
         
-        // try {
-        //    int blockID = block.getTypeId();
-        //    /**
-        //    * TODO: Rewritte the whole Interact code and code it with try|catch methods.
-        //     */
-        // } catch (NullPointerException npe) {
-        //    //ignored
-        // }
+        try {
+            Player p = event.getPlayer();
+            Block block = event.getClickedBlock();
+            int ID = block.getTypeId();
+            
+            /**
+             * Add all interaction blocks and change the permission nodes.
+             */
+            if(plugin.getConfig().getBoolean("Player-Interact.Disable.Buttons", true)) {
+                if(p.hasPermission("iSafe.interact.buttons")) {
+                    //access
+                } else if (ID == 77) {
+                    event.setCancelled(true);
+                    p.sendMessage(ChatColor.RED + "You do not have access to this.");
+                }
+            }
+            if(plugin.getConfig().getBoolean("Player-Interact.Disable.Chests", true)) {
+                if(p.hasPermission("iSafe.interact.chest")) {
+                    //access
+                } else if (ID == 54) {
+                    event.setCancelled(true);
+                    p.sendMessage(ChatColor.RED + "You do not have access to this.");
+                }
+            }
+            if(plugin.getConfig().getBoolean("Player-Interact.Disable.Dispensers", true)) {
+                if(p.hasPermission("iSafe.interact.dispensers")) {
+                    //access
+                } else if (ID == 23) {
+                    event.setCancelled(true);
+                    p.sendMessage(ChatColor.RED + "You do not have access to this.");
+                }
+            }
+            if(plugin.getConfig().getBoolean("Player-Interact.Disable.Woodendoors", true)) {
+                if(p.hasPermission("iSafe.interact.woodendoors")) {
+                    //access
+                } else if (ID == 324) {
+                    event.setCancelled(true);
+                    p.sendMessage(ChatColor.RED + "You do not have access to this.");
+                }
+            }
+            if(plugin.getConfig().getBoolean("Player-Interact.Disable.Irondoors", true)) {
+                if(p.hasPermission("iSafe.interact.irondoors")) {
+                    //access
+                } else if (ID == 330) {
+                    event.setCancelled(true);
+                    p.sendMessage(ChatColor.RED + "You do not have access to this.");
+                }
+            }
+            if(plugin.getConfig().getBoolean("Player-Interact.Disable.Levers", true)) {
+                if(p.hasPermission("iSafe.interact.levers")) {
+                    //access
+                } else if (ID == 69) {
+                    event.setCancelled(true);
+                    p.sendMessage(ChatColor.RED + "You do not have access to this.");
+                }
+            }
+            if(plugin.getConfig().getBoolean("Player-Interact.Disable.StonePressurePlates", true)) {
+                if(p.hasPermission("iSafe.interact.stonepressureplate")) {
+                    //access
+                } else if (ID == 70) {
+                    event.setCancelled(true);
+                    p.sendMessage(ChatColor.RED + "You do not have access to this.");
+                }
+            }
+            if(plugin.getConfig().getBoolean("Player-Interact.Disable.WoodenPressurePlates", true)) {
+                if(p.hasPermission("iSafe.interact.woodenpressureplate")) {
+                    //access
+                } else if (ID == 72) {
+                    event.setCancelled(true);
+                    p.sendMessage(ChatColor.RED + "You do not have access to this.");
+                }
+            }
+            if(plugin.getConfig().getBoolean("Player-Interact.Disable.Trapdoors", true)) {
+                if(p.hasPermission("iSafe.interact.trapdoor")) {
+                    //access
+                } else if (ID == 96) {
+                    event.setCancelled(true);
+                    p.sendMessage(ChatColor.RED + "You do not have access to this.");
+                }
+            }
+            if(plugin.getConfig().getBoolean("Player-Interact.Disable.WoodenFenceGates", true)) {
+                if(p.hasPermission("iSafe.interact.woodenfencegate")) {
+                    //access
+                } else if (ID == 107) {
+                    event.setCancelled(true);
+                    p.sendMessage(ChatColor.RED + "You do not have access to this.");
+                }
+            }
+            
+        } catch (NullPointerException npe) {
+            //ignored
+        }
         
-        if(!plugin.getConfig().getBoolean("Player-Interact.Allow-Buttons-Interact", true))
-        {
-            if(player.hasPermission("iSafe.interact.buttons")) {
-                //access
-            } else {
-                if(block.getTypeId() == 77) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to interact with that.");
-                }
-            }
-        }
-        if(!plugin.getConfig().getBoolean("Player-Interact.Allow-WoodenDoors-Interact", true))
-        {
-            if(player.hasPermission("iSafe.interact.woodendoors")) {
-                //access
-            } else {
-                if(block.getTypeId() == 324) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to interact with that.");
-                }
-            }
-        }
-        if(!plugin.getConfig().getBoolean("Player-Interact.Allow-IronDoors-Interact", true))
-        {
-            if(player.hasPermission("iSafe.interact.irondoors")) {
-                //access
-            } else {
-                if(block.getTypeId() == 330) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to interact with that.");
-                }
-            }
-        }
-        if(!plugin.getConfig().getBoolean("Player-Interact.Allow-Levers-Interact", true))
-        {
-            if(player.hasPermission("iSafe.interact.levers")) {
-                //access
-            } else {
-                if(block.getTypeId() == 69) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to interact with that.");
-                }
-            }
-        }
-        if(!plugin.getConfig().getBoolean("Player-Interact.Allow-StonePressurePlate-Interact", true))
-        {
-            if(player.hasPermission("iSafe.interact.stonepressureplate")) {
-                //access
-            } else {
-                if(block.getTypeId() == 70) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to interact with that.");
-                }
-            }
-        }
-        if(!plugin.getConfig().getBoolean("Player-Interact.Allow-WoodenPressurePlate-Interact", true))
-        {
-            if(player.hasPermission("iSafe.interact.woodenpressureplate")) {
-                //access
-            } else {
-                if(block.getTypeId() == 72) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to interact with that.");
-                }
-            }
-        }
-        if(!plugin.getConfig().getBoolean("Player-Interact.Allow-TrapDoor-Interact", true))
-        {
-            if(player.hasPermission("iSafe.interact.trapdoor")) {
-                //access
-            } else {
-                if(block.getTypeId() == 96) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to interact with that.");
-                }
-            }
-        }
-        if(!plugin.getConfig().getBoolean("Player-Interact.Allow-WoodenFenceGate-Interact", true))
-        {
-            if(player.hasPermission("iSafe.interact.woodenfencegate")) {
-                //access
-            } else {
-                if(block.getTypeId() == 107) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to interact with that.");
-                }
-            }
-        }
-        if(!plugin.getConfig().getBoolean("Player-Interact.Allow-Chest-Interact", true))
-        {
-            if(player.hasPermission("iSafe.interact.chest")) {
-                //access
-            } else {
-                if(block.getTypeId() == 54) {
-                    event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "You do not have access to interact with that.");
-                }
-            }
-        }
-        if(!plugin.getConfig().getBoolean("Misc.Prevent-crop-trampling", true))
+        if(plugin.getConfig().getBoolean("Misc.Prevent-crop-trampling", true))
         {
             if (event.getMaterial() == Material.SOIL && event.getPlayer() instanceof Player) {
                 event.setCancelled(true);

@@ -50,7 +50,7 @@ permissions:
       iSafe.interact.levers: true
       iSafe.interact.trapdoor: true
       iSafe.interact.woodenfencegate: true
-      iSafe.interact.chest: true
+      iSafe.interact.chests: true
       iSafe.pickup: true
       iSafe.vehicle.enter.minecart: true
       iSafe.vehicle.enter.boat: true
