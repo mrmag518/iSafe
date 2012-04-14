@@ -71,7 +71,7 @@ public class DropBlacklist implements Listener {
                 || plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(BlockNAME_Name))
         {
             if(player.hasPermission("iSafe.drop.blacklist.bypass")) {
-                event.setCancelled(false);
+                //access
             } else {
                 if (!event.isCancelled()) 
                 {
@@ -139,19 +139,19 @@ public class DropBlacklist implements Listener {
         }
     }
     
-    public void KillAlertPlayer(Player player, PlayerDropItemEvent event, String worldname) {
+    private void KillAlertPlayer(Player player, PlayerDropItemEvent event, String worldname) {
         player.sendMessage(ChatColor.RED + "You got killed for attempting to break: "+ ChatColor.GRAY + event.getItemDrop().getItemStack().getType().name().toLowerCase());
     }
     
-    public void AlertPlayer(Player player, PlayerDropItemEvent event, String worldname) {
+    private void AlertPlayer(Player player, PlayerDropItemEvent event, String worldname) {
         player.sendMessage(ChatColor.RED + "You cannot drop: "+ ChatColor.GRAY + event.getItemDrop().getItemStack().getType().name().toLowerCase() + ChatColor.RED + " In the world: "+ ChatColor.GRAY + worldname);
     }
     
-    public void AlertServer(Server server, PlayerDropItemEvent event, String worldname, Player player) {
+    private void AlertServer(Server server, PlayerDropItemEvent event, String worldname, Player player) {
         server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to drop: "+ ChatColor.RED + event.getItemDrop().getItemStack().getType().name().toLowerCase() + ChatColor.DARK_GRAY + " In the world: "+ ChatColor.RED + worldname);
     }
     
-    public void AlertConsole(Player player, PlayerDropItemEvent event, Location loc, String worldname) {
+    private void AlertConsole(Player player, PlayerDropItemEvent event, Location loc, String worldname) {
         plugin.log.info("[iSafe] "+ player.getName() + " tried to drop: "+ event.getItemDrop().getItemStack().getType().name().toLowerCase() + ", At the location: "+ " X: "+ loc.getBlockX() +" Y: "+ loc.getBlockY() +" Z: "+ loc.getBlockZ()+ ", In the world: "+ worldname);
     }
 }

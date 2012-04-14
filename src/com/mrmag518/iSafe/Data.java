@@ -22,14 +22,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.bukkit.ChatColor;
-
 public class Data {
     public static iSafe plugin;
     public Data(iSafe instance)
     {
         plugin = instance;
     }
+    
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     public static List<String> placedblocks = new ArrayList<String>();
     public static String[] placedblockslist = { "No defaults added." };
@@ -118,63 +117,5 @@ public class Data {
         + "\nVisit the iSafe wiki for assistance."
         + "\nA list of mob IDs can be found at the minercaft wiki, http://www.minecraftwiki.net/wiki/Data_values In the section 'Entity IDs'\n";
         return header;
-    }
-    
-    public static ChatColor getChatColor() {
-        String color = null;
-        if (color == null)
-            return ChatColor.WHITE;
-        if ((color.equalsIgnoreCase("BLACK")) || (color.equalsIgnoreCase("&0")))
-            return ChatColor.BLACK;
-        if ((color.equalsIgnoreCase("DARK_BLUE")) || (color.equalsIgnoreCase("&1")))
-            return ChatColor.DARK_BLUE;
-        if ((color.equalsIgnoreCase("DARK_GREEN")) || (color.equalsIgnoreCase("&2")))
-            return ChatColor.DARK_GREEN;
-        if ((color.equalsIgnoreCase("DARK_AQUA")) || (color.equalsIgnoreCase("&3")))
-            return ChatColor.DARK_AQUA;
-        if ((color.equalsIgnoreCase("DARK_RED")) || (color.equalsIgnoreCase("&4")))
-            return ChatColor.DARK_RED;
-        if ((color.equalsIgnoreCase("DARK_PURPLE")) || (color.equalsIgnoreCase("&5")))
-            return ChatColor.DARK_PURPLE;
-        if ((color.equalsIgnoreCase("GOLD")) || (color.equalsIgnoreCase("&6")) || (color.equalsIgnoreCase("DARK_YELLOW")))
-            return ChatColor.GOLD;
-        if ((color.equalsIgnoreCase("GRAY")) || (color.equalsIgnoreCase("&7")))
-            return ChatColor.GRAY;
-        if ((color.equalsIgnoreCase("DARK_GRAY")) || (color.equalsIgnoreCase("&8")))
-            return ChatColor.DARK_GRAY;
-        if ((color.equalsIgnoreCase("BLUE")) || (color.equalsIgnoreCase("&9")))
-            return ChatColor.BLUE;
-        if ((color.equalsIgnoreCase("GREEN")) || (color.equalsIgnoreCase("&a")))
-            return ChatColor.GREEN;
-        if ((color.equalsIgnoreCase("AQUA")) || (color.equalsIgnoreCase("&b")))
-            return ChatColor.AQUA;
-        if ((color.equalsIgnoreCase("RED")) || (color.equalsIgnoreCase("&c")))
-            return ChatColor.RED;
-        if ((color.equalsIgnoreCase("LIGHT_PURPLE")) || (color.equalsIgnoreCase("&d")) || (color.equalsIgnoreCase("PINK")))
-            return ChatColor.LIGHT_PURPLE;
-        if ((color.equalsIgnoreCase("YELLOW")) || (color.equalsIgnoreCase("&e")))
-            return ChatColor.YELLOW;
-        if ((color.equalsIgnoreCase("WHITE")) || (color.equalsIgnoreCase("&f")))
-            return ChatColor.WHITE;
-        if ((color.equalsIgnoreCase("RAND")) || (color.equalsIgnoreCase("&f")))
-            return getRNDChatColor();
-        return getRNDChatColor();
-    }
-    
-    public static ChatColor getRNDChatColor() {
-        switch ( (int) (Math.random() * 11.0)) {
-            case 0 : return ChatColor.DARK_GREEN;
-            case 1 : return ChatColor.DARK_AQUA;
-            case 2 : return ChatColor.DARK_RED;
-            case 3 : return ChatColor.DARK_PURPLE;
-            case 4 : return ChatColor.GOLD;
-            case 5 : return ChatColor.BLUE;
-            case 6 : return ChatColor.GREEN;
-            case 7 : return ChatColor.AQUA;
-            case 8 : return ChatColor.RED;
-            case 9 : return ChatColor.LIGHT_PURPLE;
-            case 10 : return ChatColor.YELLOW;
-        }
-        return ChatColor.WHITE;
     }
 }

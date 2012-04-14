@@ -71,7 +71,7 @@ public class PlaceBlacklist implements Listener {
                 || plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(BlockNAME))
         {
             if(player.hasPermission("iSafe.place.blacklist.bypass")) {
-                event.setCancelled(false);
+                //access
             } else {
                 if (!event.isCancelled()) 
                 {
@@ -98,7 +98,7 @@ public class PlaceBlacklist implements Listener {
                 if (event.isCancelled())
                 {
                     player.setHealth(0);
-                    KillAlertPlayer(player, block, worldname);
+                    KillAlertPlayer(player, block);
                 }    
             }
             
@@ -138,19 +138,19 @@ public class PlaceBlacklist implements Listener {
         }
     }
     
-    public void KillAlertPlayer(Player player, Block block, String worldname) {
+    private void KillAlertPlayer(Player player, Block block) {
         player.sendMessage(ChatColor.RED + "You got killed for attempting to place: "+ ChatColor.GRAY + block.getType().name().toLowerCase());
     }
     
-    public void AlertPlayer(Player player, Block block, String worldname) {
+    private void AlertPlayer(Player player, Block block, String worldname) {
         player.sendMessage(ChatColor.RED + "You cannot place: "+ ChatColor.GRAY + block.getType().name().toLowerCase() + ChatColor.RED + " In world: "+ ChatColor.GRAY + worldname);
     }
     
-    public void AlertServer(Server server, Block block, String worldname, Player player) {
+    private void AlertServer(Server server, Block block, String worldname, Player player) {
         server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to place: "+ ChatColor.RED + block.getType().name().toLowerCase() + ChatColor.DARK_GRAY + " In the world: "+ ChatColor.RED + worldname);
     }
     
-    public void AlertConsole(Player player, Block block, Location loc, String worldname) {
+    private void AlertConsole(Player player, Block block, Location loc, String worldname) {
         plugin.log.info("[iSafe] "+ player.getName() + " tried to place: "+ block.getType().name().toLowerCase() + ", At the location: "+ " X: "+ loc.getBlockX() +" Y: "+ loc.getBlockY() +" Z: "+ loc.getBlockZ()+ ", In the world: "+ worldname);
     }
 }

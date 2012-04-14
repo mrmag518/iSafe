@@ -40,7 +40,6 @@ import com.mrmag518.iSafe.Events.World.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -49,7 +48,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class iSafe extends JavaPlugin implements Listener {
+public class iSafe extends JavaPlugin {
     
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //Remember to change this on every version!
@@ -139,16 +138,9 @@ public class iSafe extends JavaPlugin implements Listener {
         
         PluginDescriptionFile pdffile = this.getDescription();
         
-        try {
-            if(!(this.getDataFolder().exists())) {
-                log.info("[iSafe]" + " DataFolder not found, creating a new one.");
-                this.getDataFolder().mkdir();
-            }
-        } catch (Exception ex) {
-            log.warning("[iSafe]" + " An Exception ocurred when trying to create the DataFolder.");
-            log.warning("[iSafe]" + " Please create a ticket at BukkitDev and copy/paste the following error.");
-            ex.printStackTrace();
-            log.warning("[iSafe]" + " The Exception was caused by "+ ex.getCause());
+        if(!(this.getDataFolder().exists())) {
+            log.info("[iSafe]" + " DataFolder not found, creating a new one.");
+            this.getDataFolder().mkdir();
         }
         
         config = this.getConfig();
@@ -163,8 +155,6 @@ public class iSafe extends JavaPlugin implements Listener {
         loadMobsConfig();
         reloadMobsConfig();
         
-        this.getServer().getPluginManager().registerEvents(this, this);
-        
         //Update checker - From MilkBowl.
         this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
             @Override
@@ -175,8 +165,8 @@ public class iSafe extends JavaPlugin implements Listener {
                     
                     if (!newVersion.contains(oldVersion)) {
                         log.info("-----  iSafe UpdateChecker  -----");
-                        log.info("You are not running the recommended build of iSafe; "+ newVersion);
-                        log.info("You are currently running v" + oldVersion);
+                        log.info("You are not using the recommended build of iSafe; "+ newVersion);
+                        log.info("You are currently using v" + oldVersion);
                         log.info("Please use the latest recommended build of iSafe.("+newVersion+")");
                         log.info("You can find this version at: http://dev.bukkit.org/server-mods/blockthattnt/files/");
                         log.info("-----  -------------------  -----");
@@ -202,7 +192,7 @@ public class iSafe extends JavaPlugin implements Listener {
             log.info("[iSafe] The file and pdffile versions matched eachother correctly.");
         }
         
-        test();
+        blacklistDebug();
         
         log.info("[" + pdffile.getName() + " :: " + version + "] " + " Enabled succesfully.");
     }
@@ -306,8 +296,9 @@ public class iSafe extends JavaPlugin implements Listener {
         config.addDefault("World.Register-world(s)-unload", true);
         config.addDefault("World.Register-world(s)-save", true);
         config.addDefault("World.Register-world(s)-load", true);
-        config.addDefault("World.Disable-ExpirienceOrbs-drop", false);
+        config.addDefault("World.Disable-ExperienceOrbs-drop", false);
         config.addDefault("World.Prevent-items/objects-to-spawn-into-the-world", false);
+        config.addDefault("World.Prevent-items/objects-spawning-inside-vehicles", false);
         config.addDefault("World.Prevent-naturally-object-dispensing", false);
         config.addDefault("World.Force-blocks-to-be-buildable", false);
         config.addDefault("World.Prevent-blocks-spreading", false);
@@ -417,7 +408,7 @@ public class iSafe extends JavaPlugin implements Listener {
         //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         config.addDefault("PlayerInteractEntity.Prevent-snowball-hitting-player", false);
         config.addDefault("PlayerInteractEntity.Prevent-arrow-hitting-player", false);
-        
+        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         config.addDefault("Drop-configure.Glass.Drop.Glass", false);
         config.addDefault("Drop-configure.Mobspawner.Drop.Mobspawner", false);
         config.addDefault("Drop-configure.Ice.Drop.Ice", false);
@@ -657,11 +648,85 @@ public class iSafe extends JavaPlugin implements Listener {
         saveMobsConfig();
     }
     
-    private void test() {
-        if (this.getConfig().getBoolean("Misc.Tame.Prevent-taming", true)) {
-            log.info("[iSafe] Preventing taming.");
+    private void blacklistDebug() {
+        log.info("[iSafe] Blacklist debug mode is on.");
+        
+        log.info("[iSafe] -----  Place Blacklist  -----");
+        if(Data.worlds != null) {
+            log.info("[iSafe] Blacklisiting in the world(s): " + Data.worlds);
+            log.info("[iSafe] World(s) blacklisting in: " + Data.placedblocks.size());
         } else {
-            log.info("[iSafe] Not preventing taming.");
+            if(Data.placedblocks != null) {
+                log.warning("[iSafe] You have objects in the blacklist list, but no worlds to blacklist in!");
+            } else {
+                log.info("[iSafe] Blacklisting in the world(s): " + Data.worlds);
+            }
         }
+        if(Data.placedblocks != null) {
+            log.info("[iSafe] Blacklisted blocks: " + Data.placedblocks);
+            log.info("[iSafe] Total blacklisted blocks: " + Data.placedblocks.size());
+        } else {
+            log.info("[iSafe] Blacklisted blocks: " + "None");
+            log.info("[iSafe] Total blacklisted blocks: " + "0");
+        }
+        log.info("[iSafe] Kick player: " + this.getBlacklist().getBoolean("Place.Kick-Player"));
+        log.info("[iSafe] Kill player: " + this.getBlacklist().getBoolean("Place.Kill-Player"));
+        log.info("[iSafe] Logging to: ");
+        log.info("[iSafe] - Console: " + this.getBlacklist().getBoolean("Place.Alert/log.To-console"));
+        log.info("[iSafe] - Player: "+ this.getBlacklist().getBoolean("Place.Alert/log.To-player"));
+        log.info("[iSafe] - ServerChat: "+ this.getBlacklist().getBoolean("Place.Alert/log.To-server-chat"));
+        log.info("[iSafe] -----------------------------");
+        
+        log.info("[iSafe] -----  Break Blacklist  -----");
+        if(Data.worlds != null) {
+            log.info("[iSafe] Blacklisiting in the world(s): " + Data.Breakworlds);
+            log.info("[iSafe] World(s) blacklisting in: " + Data.Breakworlds.size());
+        } else {
+            if(Data.placedblocks != null) {
+                log.warning("[iSafe] You have objects in the blacklist list, but no worlds to blacklist in!");
+            } else {
+                log.info("[iSafe] Blacklisting in the world(s): " + Data.Breakworlds);
+            }
+        }
+        if(Data.placedblocks != null) {
+            log.info("[iSafe] Blacklisted blocks: " + Data.brokenblocks);
+            log.info("[iSafe] Total blacklisted blocks: " + Data.brokenblocks.size());
+        } else {
+            log.info("[iSafe] Blacklisted blocks: " + "None");
+            log.info("[iSafe] Total blacklisted blocks: " + "0");
+        }
+        log.info("[iSafe] Kick player: " + this.getBlacklist().getBoolean("Break.Kick-Player"));
+        log.info("[iSafe] Kill player: " + this.getBlacklist().getBoolean("Break.Kill-Player"));
+        log.info("[iSafe] Logging to: ");
+        log.info("[iSafe] - Console: " + this.getBlacklist().getBoolean("Break.Alert/log.To-console"));
+        log.info("[iSafe] - Player: "+ this.getBlacklist().getBoolean("Break.Alert/log.To-player"));
+        log.info("[iSafe] - ServerChat: "+ this.getBlacklist().getBoolean("Break.Alert/log.To-server-chat"));
+        log.info("[iSafe] -----------------------------");
+        
+        log.info("[iSafe] -----  Drop Blacklist  -----");
+        if(Data.worlds != null) {
+            log.info("[iSafe] Blacklisiting in the world(s): " + Data.Dropworlds);
+            log.info("[iSafe] World(s) blacklisting in: " + Data.Dropworlds.size());
+        } else {
+            if(Data.placedblocks != null) {
+                log.warning("[iSafe] You have objects in the blacklist list, but no worlds to blacklist in!");
+            } else {
+                log.info("[iSafe] Blacklisting in the world(s): " + Data.Dropworlds);
+            }
+        }
+        if(Data.placedblocks != null) {
+            log.info("[iSafe] Blacklisted blocks: " + Data.dropedblocks);
+            log.info("[iSafe] Total blacklisted blocks: " + Data.dropedblocks.size());
+        } else {
+            log.info("[iSafe] Blacklisted blocks: " + "None");
+            log.info("[iSafe] Total blacklisted blocks: " + "0");
+        }
+        log.info("[iSafe] Kick player: " + this.getBlacklist().getBoolean("Drop.Kick-Player"));
+        log.info("[iSafe] Kill player: " + this.getBlacklist().getBoolean("Drop.Kill-Player"));
+        log.info("[iSafe] Logging to: ");
+        log.info("[iSafe] - Console: " + this.getBlacklist().getBoolean("Drop.Alert/log.To-console"));
+        log.info("[iSafe] - Player: "+ this.getBlacklist().getBoolean("Drop.Alert/log.To-player"));
+        log.info("[iSafe] - ServerChat: "+ this.getBlacklist().getBoolean("Drop.Alert/log.To-server-chat"));
+        log.info("[iSafe] ----------------------------");
     }
 }

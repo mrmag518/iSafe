@@ -6,6 +6,18 @@ Version 2.67
 * Fixed crop trampling.
 * Fixed MobSpawnBlacklist not working at all.
 * Removed un-needed file creations.
+* Added advanced blacklist debuging.
+* Cleaned the Update notify on join.
+* Removed user entity ID in the user files.
+* Removed getChatColor in the Data class.
+* Fixed compatibility issues with blacklists.
+* Fixed NullPointerExceptions and the vehicle preventions.
+* Removed manually catching exception during DataFolder creation.
+* Removed event registering of the Main class, when no need for it.
+* Changed "running" to "using" in the update check.
+* Made infinite-itemstacks look infinite.
+* Fixed some typos.
+* Added prevention for items spawning inside vehicles.
 * 
 
 Version 2.66

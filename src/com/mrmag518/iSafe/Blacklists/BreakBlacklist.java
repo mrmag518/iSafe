@@ -71,7 +71,7 @@ public class BreakBlacklist implements Listener {
                 || plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(BlockNAME_Name))
         {
             if(player.hasPermission("iSafe.break.blacklist.bypass")) {
-                event.setCancelled(false);
+                //access
             } else {
                 if (!event.isCancelled()) 
                 {
@@ -139,19 +139,19 @@ public class BreakBlacklist implements Listener {
         }
     }
     
-    public void KillAlertPlayer(Player player, Block block, String worldname) {
+    private void KillAlertPlayer(Player player, Block block, String worldname) {
         player.sendMessage(ChatColor.RED + "You got killed for attempting to break: "+ ChatColor.GRAY + block.getType().name().toLowerCase());
     }
     
-    public void AlertPlayer(Player player, Block block) {
+    private void AlertPlayer(Player player, Block block) {
         player.sendMessage(ChatColor.RED + "You cannot break: "+ ChatColor.GRAY + (block.getType().name().toLowerCase()));
     }
     
-    public void AlertServer(Server server, Block block, String worldname, Player player) {
+    private void AlertServer(Server server, Block block, String worldname, Player player) {
         server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to break: "+ ChatColor.RED + block.getType().name().toLowerCase() + ChatColor.DARK_GRAY + " In the world: "+ ChatColor.RED + worldname);
     }
     
-    public void AlertConsole(Player player, Block block, Location loc, String worldname) {
+    private void AlertConsole(Player player, Block block, Location loc, String worldname) {
         plugin.log.info("[iSafe] "+ player.getName() + " tried to break: "+ block.getType().name().toLowerCase() + ", At the location: "+ " X: "+ loc.getBlockX() +" Y: "+ loc.getBlockY() +" Z: "+ loc.getBlockZ()+ ", In the world: "+ worldname);
     }
 }

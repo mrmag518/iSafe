@@ -31,7 +31,6 @@ public class UserFileCreator implements Listener {
                 uFile.set("UserName", user.getName());
                 uFile.set("DisplayName", user.getDisplayName());
                 uFile.set("User_IP", event.getPlayer().getAddress().getAddress().toString().replace("/", ""));
-                uFile.set("User_Entity_ID", user.getEntityId());
                 uFile.save(userFile);
                 plugin.log.info("[iSafe] Generated user file for " + user.getName() + ".");
             } catch (Exception e) {

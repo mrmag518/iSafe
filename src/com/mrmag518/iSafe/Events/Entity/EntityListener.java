@@ -174,7 +174,7 @@ public class EntityListener implements Listener {
     }
     
     @EventHandler
-    public void onEndermanPickup(EntityChangeBlockEvent event) {
+    public void EndermenGriefing(EntityChangeBlockEvent event) {
         if (event.isCancelled())
         {
             return;
@@ -696,7 +696,7 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
-        if(plugin.getConfig().getBoolean("World.Disable-ExpirienceOrbs-drop", true))
+        if(plugin.getConfig().getBoolean("World.Disable-ExperienceOrbs-drop", true))
         {
             event.setDroppedExp(0);
         }
@@ -849,6 +849,14 @@ public class EntityListener implements Listener {
         if(plugin.getConfig().getBoolean("World.Prevent-items/objects-to-spawn-into-the-world", true))
         {
             event.setCancelled(true);
+            event.getEntity().remove();
+        }
+        
+        if(plugin.getConfig().getBoolean("World.Prevent-items/objects-spawning-inside-vehicles", true))
+        {
+            if(event.getEntity().isInsideVehicle()) {
+                event.getEntity().leaveVehicle();
+            }
         }
     }
 

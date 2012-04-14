@@ -18,7 +18,6 @@
 
 package com.mrmag518.iSafe.Events.Entity;
 
-import com.mrmag518.iSafe.Events.*;
 import com.mrmag518.iSafe.*;
 
 import org.bukkit.ChatColor;
@@ -58,7 +57,7 @@ public class VehicleListener implements Listener {
                 } else {
                 try {
                     if(vec.getEntityId() == 40) {
-                        if (entity instanceof LivingEntity) {
+                        if (event.getEntered() instanceof LivingEntity) {
                             if (entity instanceof Player) {
                                 event.setCancelled(true);
                                 player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
@@ -66,9 +65,7 @@ public class VehicleListener implements Listener {
                         }
                     }
                 } catch (NullPointerException npe) {
-                    plugin.log.warning("[iSafe] A NullPointerException(NPE) occured during the VehicleEnterEvent. (Minecart)");
-                    plugin.log.warning("[iSafe] Please create a ticket at BukkitDev with this issue.");
-                    plugin.log.warning("[iSafe] The cause of this NPE: "+ npe.getCause());
+                    //ignored
                 }
             }
         }
@@ -79,7 +76,7 @@ public class VehicleListener implements Listener {
             } else {
                 try {
                     if(vec.getEntityId() == 41) {
-                        if (entity instanceof LivingEntity) {
+                        if (event.getEntered() instanceof LivingEntity) {
                             if (entity instanceof Player) {
                                 event.setCancelled(true);
                                 player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
@@ -87,9 +84,7 @@ public class VehicleListener implements Listener {
                         } 
                     } 
                 } catch (NullPointerException npe) {
-                    plugin.log.warning("[iSafe] A NullPointerException(NPE) occured during the VehicleEnterEvent. (Boat)");
-                    plugin.log.warning("[iSafe] Please create a ticket at BukkitDev with this issue.");
-                    plugin.log.warning("[iSafe] The cause of this NPE: "+ npe.getCause());
+                    //ignored
                 }
             }
         }
@@ -113,7 +108,7 @@ public class VehicleListener implements Listener {
             } else {
                 try {
                     if(vec.getEntityId() == 40) {
-                        if (entity instanceof LivingEntity) {
+                        if (event.getAttacker() instanceof LivingEntity) {
                             if (entity instanceof Player) {
                                 event.setCancelled(true);
                                 player.sendMessage(ChatColor.RED + "You do not have access to destory that vehicle");
@@ -121,9 +116,7 @@ public class VehicleListener implements Listener {
                         }
                     } 
                 } catch (NullPointerException npe) {
-                    plugin.log.warning("[iSafe] A NullPointerException(NPE) occured during the VehicleDestroyEvent. (Minecart)");
-                    plugin.log.warning("[iSafe] Please create a ticket at BukkitDev with this issue.");
-                    plugin.log.warning("[iSafe] The cause of this NPE: "+ npe.getCause());
+                    //ignored
                 }
             }
         }
@@ -136,16 +129,14 @@ public class VehicleListener implements Listener {
                 try {
                     if(vec.getEntityId() == 41) {
                         if (entity instanceof LivingEntity) {
-                            if (entity instanceof Player) {
+                            if (event.getAttacker() instanceof Player) {
                                 event.setCancelled(true);
                                 player.sendMessage(ChatColor.RED + "You do not have access to destory that vehicle");
-                            } 
+                            }
                         }
                     } 
                 } catch (NullPointerException npe) {
-                    plugin.log.warning("[iSafe] A NullPointerException(NPE) occured during the VehicleDestroyEvent. (Boat)");
-                    plugin.log.warning("[iSafe] Please create a ticket at BukkitDev with this issue.");
-                    plugin.log.warning("[iSafe] The cause of this NPE: "+ npe.getCause());
+                    //ignored
                 }
             }
         }

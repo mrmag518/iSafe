@@ -66,7 +66,7 @@ public class BlockListener implements Listener {
         if(plugin.getConfig().getBoolean("Player.Infinite-itemtacks", true))
         {
             ItemStack itst = player.getItemInHand();
-            itst.setAmount(65);
+            itst.setAmount(-1);
         }
     }
     

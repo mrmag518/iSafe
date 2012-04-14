@@ -70,7 +70,7 @@ public class PickupBlacklist implements Listener {
                 || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME_Name))
         {
             if(player.hasPermission("iSafe.pickup.blacklist.bypass")) {
-                event.setCancelled(false);
+                //access
             } else {
                 if (!event.isCancelled()) 
                 {
@@ -141,18 +141,18 @@ public class PickupBlacklist implements Listener {
         }
     }
     
-    public void KillAlertPlayer(Player player, PlayerPickupItemEvent event, String worldname) {
+    private void KillAlertPlayer(Player player, PlayerPickupItemEvent event, String worldname) {
         player.sendMessage(ChatColor.RED + "You got killed for attempting to pickup: "+ ChatColor.GRAY + event.getItem().getItemStack().getType().name().toLowerCase());
     }
     
-    public void AlertPlayer(Player player, PlayerPickupItemEvent event) {
+    private void AlertPlayer(Player player, PlayerPickupItemEvent event) {
         if (message == 0) {
             player.sendMessage(ChatColor.RED + "You cannot pickup: "+ ChatColor.GRAY + event.getItem().getItemStack().getType().name().toLowerCase());
             message = 1;
         }
     }
     
-    public void AlertConsole(Player player, PlayerPickupItemEvent event, String worldname, Location loc) {
+    private void AlertConsole(Player player, PlayerPickupItemEvent event, String worldname, Location loc) {
         if (message == 0) {
             plugin.log.info("[iSafe] "+ player.getName() + " tried to pickup: "+ event.getItem().getItemStack().getType().name().toLowerCase() + ", At the location: "+ " X: "+ loc.getBlockX() +" Y: "+ loc.getBlockY() +" Z: "+ loc.getBlockZ()+ ", In the world: "+ worldname);
             message = 1;
