@@ -35,7 +35,6 @@ public class ClearDrops implements CommandExecutor {
     {
         plugin = instance;
     }
-    public boolean message = true;
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){  

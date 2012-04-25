@@ -178,7 +178,6 @@ public class iSafe extends JavaPlugin {
         }, 0, 432000);
         
         this.executeCommands();
-        
         this.getServer().getPluginManager().getPermissions();
         
         if(!(pdffile.getFullName().equals(fileversion))) {
@@ -192,7 +191,7 @@ public class iSafe extends JavaPlugin {
             log.info("[iSafe] The file and pdffile versions matched eachother correctly.");
         }
         
-        blacklistDebug();
+        //blacklistDebug();
         
         log.info("[" + pdffile.getName() + " :: " + version + "] " + " Enabled succesfully.");
     }
@@ -368,7 +367,7 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Player.Prevent-Sprinting", false);
         config.addDefault("Player.Prevent-Sneaking", false);
         config.addDefault("Player.Enable-fishing-permissions", false);
-        config.addDefault("Player.Broadcast-iSafe-message-on-join", true);
+        config.addDefault("Player.Broadcast-iSafe-message-on-join", false);
         config.addDefault("Player.Allow-creative-gamemode-on-player-quit", true);
         config.addDefault("Player.Disable-Hunger", false);
         config.addDefault("Player.Enable-Bed-permissions", false);
@@ -382,7 +381,6 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Player.Infinite-itemtacks", false);
         config.addDefault("Player.Kick-player-if-anther-user-with-same-username-log's-on", true);
         config.addDefault("Player.Instantbreak", false);
-        config.addDefault("Player.Prevent-Bow-usage", false);
         //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         //--
         config.addDefault("Player-Interact.Erase the old values if you haven't already(this node is not a setting)", "#");
@@ -648,6 +646,7 @@ public class iSafe extends JavaPlugin {
         saveMobsConfig();
     }
     
+    /**
     private void blacklistDebug() {
         log.info("[iSafe] Blacklist debug mode is on.");
         
@@ -728,5 +727,5 @@ public class iSafe extends JavaPlugin {
         log.info("[iSafe] - Player: "+ this.getBlacklist().getBoolean("Drop.Alert/log.To-player"));
         log.info("[iSafe] - ServerChat: "+ this.getBlacklist().getBoolean("Drop.Alert/log.To-server-chat"));
         log.info("[iSafe] ----------------------------");
-    }
+    }*/
 }

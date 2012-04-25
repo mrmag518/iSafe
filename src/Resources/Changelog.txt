@@ -6,7 +6,6 @@ Version 2.67
 * Fixed crop trampling.
 * Fixed MobSpawnBlacklist not working at all.
 * Removed un-needed file creations.
-* Added advanced blacklist debuging.
 * Cleaned the Update notify on join.
 * Removed user entity ID in the user files.
 * Removed getChatColor in the Data class.
@@ -15,10 +14,13 @@ Version 2.67
 * Removed manually catching exception during DataFolder creation.
 * Removed event registering of the Main class, when no need for it.
 * Changed "running" to "using" in the update check.
-* Made infinite-itemstacks look infinite.
+* Made infinite-itemstacks look more like infinite.
 * Fixed some typos.
 * Added prevention for items spawning inside vehicles.
-* 
+* Changed isafe motd default boolean from true to false.
+* Added some null checks for the blacklists.
+* Fixed a typo making the reload command not working.
+* Supports 1.2.5-R1.2.
 
 Version 2.66
 * Fixed files not being created in rare situtations.

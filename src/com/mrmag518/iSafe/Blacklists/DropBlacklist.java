@@ -79,7 +79,9 @@ public class DropBlacklist implements Listener {
                 
                     if (plugin.getBlacklist().getList("Drop.Worlds", Dropworlds).contains(worldname))
                     {
-                        event.setCancelled(true);
+                        if(!(player == null)) {
+                            event.setCancelled(true);
+                        }
                     } else {
                         event.setCancelled(false);
                     }

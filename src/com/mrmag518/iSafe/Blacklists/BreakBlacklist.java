@@ -79,7 +79,9 @@ public class BreakBlacklist implements Listener {
                 
                     if (plugin.getBlacklist().getList("Break.Worlds", Breakworlds).contains(worldname))
                     {
-                        event.setCancelled(true);
+                        if(!(block == null)) {
+                            event.setCancelled(true);
+                        }
                     } else {
                         event.setCancelled(false);
                     }

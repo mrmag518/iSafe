@@ -47,7 +47,7 @@ public class Reload implements CommandExecutor {
                 Player player = (Player)sender;
                 if (hasReload(player)) { 
                     Plugin iSafe = Bukkit.getServer().getPluginManager().getPlugin("iSafe");
-                    Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().enablePlugin(iSafe);
+                    Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().disablePlugin(iSafe);
                     Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().enablePlugin(iSafe);
                     sender.sendMessage(ChatColor.GOLD + "Reloaded iSafe.jar" + ChatColor.DARK_PURPLE + " (v." + v + ")");
             } else { 
@@ -55,7 +55,7 @@ public class Reload implements CommandExecutor {
                 }
             } else { 
                 Plugin iSafe = Bukkit.getServer().getPluginManager().getPlugin("iSafe");
-                Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().enablePlugin(iSafe);
+                Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().disablePlugin(iSafe);
                 Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().enablePlugin(iSafe);
                 sender.sendMessage("Reloaded iSafe.jar" + " (v." + v + ")");
             }

@@ -76,7 +76,6 @@ public class BlockListener implements Listener {
         {
             return;
         }
-        
         IgniteCause cause = event.getCause();
         Player player = event.getPlayer();
         

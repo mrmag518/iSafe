@@ -72,7 +72,9 @@ public class CommandBlacklist implements Listener {
                 
                 if (plugin.getBlacklist().getList("Command.Worlds", cmdworlds).contains(worldname))
                 {
-                    event.setCancelled(true);
+                    if(!(command == null)) {
+                        event.setCancelled(true);
+                    }
                 } else {
                     event.setCancelled(false);
                 }

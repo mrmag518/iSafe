@@ -78,7 +78,9 @@ public class PlaceBlacklist implements Listener {
                     final List<String> worlds = plugin.getBlacklist().getStringList("Place.Worlds");
                     if (plugin.getBlacklist().getList("Place.Worlds", worlds).contains(worldname))
                     {
-                        event.setCancelled(true);
+                        if(!(block == null)) {
+                            event.setCancelled(true);
+                        }
                     } else {
                         event.setCancelled(false);
                     }

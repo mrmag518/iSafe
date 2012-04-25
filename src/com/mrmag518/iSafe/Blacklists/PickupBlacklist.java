@@ -78,7 +78,9 @@ public class PickupBlacklist implements Listener {
                 
                     if (plugin.getBlacklist().getList("Pickup.Worlds", Pickupworlds).contains(worldname))
                     {
-                        event.setCancelled(true);
+                        if(!(player == null)) {
+                            event.setCancelled(true);
+                        }
                     } else {
                         event.setCancelled(false);
                     }
