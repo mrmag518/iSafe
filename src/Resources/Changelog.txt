@@ -1,5 +1,9 @@
 Displaying the Change Log of iSafe.
 
+Version 2.68
+* Fixed some typos related to the mob spawn blacklists.
+* 
+
 Version 2.67
 * Completely fixed all NullPointerExceptions within interaction events.
 * Re-wrote interaction preventions and re-did the config nodes.

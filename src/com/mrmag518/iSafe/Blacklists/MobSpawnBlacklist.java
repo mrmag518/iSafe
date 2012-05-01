@@ -7,7 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
@@ -69,7 +68,7 @@ public class MobSpawnBlacklist implements Listener {
                 int z = (int) loc.getZ();
                 if (event.isCancelled()) 
                 {
-                    plugin.log.info("[iSafe]" + entityNameLowercase + " was cancelled its spawn, for the spawn reason: Natural; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    plugin.log.info("[iSafe]" + " A(n) " + entityNameLowercase + "was cancelled its spawn, for the spawn reason: Natural; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }
@@ -108,7 +107,7 @@ public class MobSpawnBlacklist implements Listener {
                 int z = (int) loc.getZ();
                 if (event.isCancelled()) 
                 {
-                    plugin.log.info("[iSafe]" + entityNameLowercase + " was cancelled its spawn, for the spawn reason: Spawner; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    plugin.log.info("[iSafe]" + " A(n) " + entityNameLowercase + " was cancelled its spawn, for the spawn reason: Spawner; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }
@@ -147,7 +146,7 @@ public class MobSpawnBlacklist implements Listener {
                 int z = (int) loc.getZ();
                 if (event.isCancelled()) 
                 {
-                    plugin.log.info("[iSafe]" + entityNameLowercase + " was cancelled its spawn, for the spawn reason: Custom; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    plugin.log.info("[iSafe]" + " A(n) " + entityNameLowercase + " was cancelled its spawn, for the spawn reason: Custom; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }
@@ -186,7 +185,7 @@ public class MobSpawnBlacklist implements Listener {
                 int z = (int) loc.getZ();
                 if (event.isCancelled()) 
                 {
-                    plugin.log.info("[iSafe]" + entityNameLowercase + " was cancelled its spawn, for the spawn reason: Egg; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    plugin.log.info("[iSafe]" + " A(n) " + entityNameLowercase + " was cancelled its spawn, for the spawn reason: Egg; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }
@@ -225,7 +224,7 @@ public class MobSpawnBlacklist implements Listener {
                 int z = (int) loc.getZ();
                 if (event.isCancelled()) 
                 {
-                    plugin.log.info("[iSafe]" + entityNameLowercase + " was cancelled its spawn, for the spawn reason: SpawnerEgg; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    plugin.log.info("[iSafe]" + " A(n) " + entityNameLowercase + " was cancelled its spawn, for the spawn reason: SpawnerEgg; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }

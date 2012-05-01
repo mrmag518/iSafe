@@ -18,7 +18,6 @@
 
 package com.mrmag518.iSafe.Events.World;
 
-import com.mrmag518.iSafe.Events.*;
 import com.mrmag518.iSafe.*;
 
 import org.bukkit.ChatColor;
