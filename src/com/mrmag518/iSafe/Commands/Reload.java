@@ -46,18 +46,18 @@ public class Reload implements CommandExecutor {
             if (sender instanceof Player) { 
                 Player player = (Player)sender;
                 if (hasReload(player)) { 
-                    Plugin iSafe = Bukkit.getServer().getPluginManager().getPlugin("iSafe");
-                    Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().disablePlugin(iSafe);
-                    Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().enablePlugin(iSafe);
-                    sender.sendMessage(ChatColor.GOLD + "Reloaded iSafe.jar" + ChatColor.DARK_PURPLE + " (v." + v + ")");
+                    plugin.reloadBlacklist();
+                    plugin.reloadConfig();
+                    plugin.reloadMobsConfig();
+                    sender.sendMessage(ChatColor.GOLD + "Reloaded iSafe" + ChatColor.DARK_PURPLE + " (v" + v + ")");
             } else { 
                     sender.sendMessage(ChatColor.RED + "You do not have access to that." );
-                }
+               }
             } else { 
-                Plugin iSafe = Bukkit.getServer().getPluginManager().getPlugin("iSafe");
-                Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().disablePlugin(iSafe);
-                Bukkit.getPluginManager().getPlugin("iSafe").getPluginLoader().enablePlugin(iSafe);
-                sender.sendMessage("Reloaded iSafe.jar" + " (v." + v + ")");
+                plugin.reloadBlacklist();
+                plugin.reloadConfig();
+                plugin.reloadMobsConfig();
+                sender.sendMessage("Reloaded iSafe" +" (v" + v + ")");
             }
             return true;
     	}

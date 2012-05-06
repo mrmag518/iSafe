@@ -20,10 +20,10 @@ package com.mrmag518.iSafe.Blacklists;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -32,7 +32,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class CommandBlacklist implements Listener {
-    
     public static iSafe plugin;
     public CommandBlacklist(iSafe instance)
     {
@@ -51,7 +50,6 @@ public class CommandBlacklist implements Listener {
         Player player = event.getPlayer();
         Server server = player.getServer();
         World world = player.getWorld();
-        Location loc = player.getLocation();
         
         String command_lowercase = event.getMessage().toLowerCase();
         String command_upercase = event.getMessage().toUpperCase();
@@ -72,11 +70,7 @@ public class CommandBlacklist implements Listener {
                 
                 if (plugin.getBlacklist().getList("Command.Worlds", cmdworlds).contains(worldname))
                 {
-                    if(!(command == null)) {
-                        event.setCancelled(true);
-                    }
-                } else {
-                    event.setCancelled(false);
+                    event.setCancelled(true);
                 }
             }    
         }

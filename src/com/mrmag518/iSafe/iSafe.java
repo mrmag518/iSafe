@@ -76,6 +76,7 @@ public class iSafe extends JavaPlugin {
     public PickupBlacklist pickupBlacklist = null;
     public CommandBlacklist commandBlacklist = null;
     public MobSpawnBlacklist mobSpawnBlacklist = null;
+    public Censor censor = null;
     
     private Reload reloadcmd = null;
     private Info isafeInfocmd = null;
@@ -128,6 +129,7 @@ public class iSafe extends JavaPlugin {
         pickupBlacklist = new PickupBlacklist(this);
         commandBlacklist = new CommandBlacklist(this);
         mobSpawnBlacklist = new MobSpawnBlacklist(this);
+        censor = new Censor(this);
         
         reloadcmd = new Reload(this);
         isafeInfocmd = new Info(this);
@@ -291,6 +293,12 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Misc.Prevent-crop-trampling-by-player", false);
         config.addDefault("Misc.Prevent-portal-creation", false);
         
+        config.addDefault("Gamemode.Prevent-Gamemode-change", false);
+        config.addDefault("Gamemode.Prevent-Gamemode-to-CreativeMode-change", false);
+        config.addDefault("Gamemode.Prevent-Gamemode-to-SurvivalMode-change", false);
+        config.addDefault("Gamemode.Change-to-SurvivalMode-onQuit", false);
+        config.addDefault("Gamemode.Change-to-CreativeMode-onQuit", false);
+        
         config.addDefault("World.Register-world(s)-init", true);
         config.addDefault("World.Register-world(s)-unload", true);
         config.addDefault("World.Register-world(s)-save", true);
@@ -375,9 +383,6 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Player.Only-let-OPs-join", false);
         config.addDefault("Player.Log-commands", true);
         config.addDefault("Player.Disable-all-commands", false);
-        config.addDefault("Player.Prevent-Gamemode-change", false);
-        config.addDefault("Player.Prevent-Gamemode-to-CreativeMode-change", false);
-        config.addDefault("Player.Prevent-Gamemode-to-SurvivalMode-change", false);
         config.addDefault("Player.Infinite-itemtacks", false);
         config.addDefault("Player.Kick-player-if-anther-user-with-same-username-log's-on", true);
         config.addDefault("Player.Instantbreak", false);
@@ -474,6 +479,11 @@ public class iSafe extends JavaPlugin {
         Data.cmdworlds = blacklist.getStringList("Command.Worlds");
         blacklist.addDefault("Command.Blacklist", Arrays.asList(Data.commandslist));
         Data.commands = blacklist.getStringList("Command.Blacklist");
+        
+        blacklist.addDefault("Censor.Alert/log.To-console", false);
+        blacklist.addDefault("Censor.Alert/log.To-player", true);
+        blacklist.addDefault("Censor.Words/Blacklist", Arrays.asList(Data.censoredWordsList));
+        Data.censoredWords = blacklist.getStringList("Censor.Words/Blacklist");
         
         this.getBlacklist().options().copyDefaults(true);
         saveBlacklist();

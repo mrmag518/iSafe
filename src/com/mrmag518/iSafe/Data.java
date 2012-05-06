@@ -85,6 +85,9 @@ public class Data {
     public static List<String> wbworlds = new ArrayList<String>();
     public static String[] wbworldslist = { "world", "world_nether" };
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    public static List<String> censoredWords = new ArrayList<String>();
+    public static String[] censoredWordsList = { "No defaults added." };
+    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     public static String getDate() {
         String date;
@@ -108,7 +111,8 @@ public class Data {
     
     public static String setBlacklistHeader() {
         String header = "This is the blacklist config on behalf of iSafe, read the iSafe wiki for assistance." 
-        + "\nRemeber that the world listing is case sensetive.\n";
+        + "\nRemeber that the world listing is case sensetive."
+                + "\nBlacklists related to mobs and creatures are found in the mobsConfig.yml\n";
         return header;
     }
     

@@ -50,7 +50,7 @@ public class Info implements CommandExecutor {
                     sender.sendMessage(ChatColor.GRAY + "FullName: "+ ChatColor.AQUA + pdffile.getFullName());
                     sender.sendMessage(ChatColor.GRAY + "Authors: "+ ChatColor.AQUA + "mrmag518");
                     sender.sendMessage(ChatColor.GRAY + "Testers: "+ ChatColor.AQUA + "domingo15");
-                    sender.sendMessage(ChatColor.GRAY + "Minecraft compitability: "+ ChatColor.AQUA + "1.2.4");
+                    sender.sendMessage(ChatColor.GRAY + "Minecraft compitability: "+ ChatColor.AQUA + "1.2.5");
                 } else { 
                     sender.sendMessage(ChatColor.RED + "You do not have access to that." );
                 }
@@ -60,7 +60,7 @@ public class Info implements CommandExecutor {
                 sender.sendMessage("FullName: "+ pdffile.getFullName());
                 sender.sendMessage("Authors: "+ "mrmag518");
                 sender.sendMessage("Testers: "+ "domingo15");
-                sender.sendMessage("Minecraft compitability: "+ "1.2.4");
+                sender.sendMessage("Minecraft compitability: "+ "1.2.5");
             }
             return true;
         }

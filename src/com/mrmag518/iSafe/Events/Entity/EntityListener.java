@@ -1287,6 +1287,18 @@ public class EntityListener implements Listener {
         }
     }
     
+    @EventHandler
+    public void EntityBreakDoor(EntityBreakDoorEvent event) {
+        if(event.isCancelled()) 
+        {
+            return;
+        }
+        
+        if(plugin.getMobsConfig().getBoolean("Misc.Prevent-mobs-breaking-doors", true)) {
+            event.setCancelled(true);
+        }
+    }
+    
     public void NoCreeperDeathOnExplosion(ExplosionPrimeEvent event) {
         if ( event.getEntity() instanceof Creeper == false ) 
             return;

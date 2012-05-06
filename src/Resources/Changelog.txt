@@ -2,6 +2,12 @@ Displaying the Change Log of iSafe.
 
 Version 2.68
 * Fixed some typos related to the mob spawn blacklists.
+* Updated the info command.
+* Fixed the reload command.
+* Added word blacklisting. (Word censoring)
+* Added separated gamemode settings in the main config and made a section called 'Gamemode'.
+* Re-coded the gamemode changing on player quit and added survival to creative mode.
+* Added prevention for entities breaking doors.
 * 
 
 Version 2.67

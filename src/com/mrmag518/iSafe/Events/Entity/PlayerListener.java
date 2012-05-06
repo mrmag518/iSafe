@@ -157,14 +157,17 @@ public class PlayerListener implements Listener  {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        Server server = player.getServer();
+        Player p = event.getPlayer();
         
-        if(!plugin.getConfig().getBoolean("Player.Allow-creative-gamemode-on-player-quit", true))
-        {
-            if(player.getGameMode() == GameMode.CREATIVE) {
-                player.setGameMode(GameMode.SURVIVAL);
-                server.broadcastMessage(ChatColor.DARK_GREEN + "[iSafe] " + ChatColor.GRAY + "Defaulting " + ((player.getName() + "'s gamemode to survival.")));
+        if(plugin.getConfig().getBoolean("Gamemode.Change-to-SurvivalMode-onQuit", true)) {
+            if(p.getGameMode().equals(GameMode.CREATIVE)) {
+                p.setGameMode(GameMode.SURVIVAL);
+            }
+        }
+        
+        if(plugin.getConfig().getBoolean("Gamemode.Change-to-CreativeMode-onQuit", true)) {
+            if(p.getGameMode().equals(GameMode.SURVIVAL)) {
+                p.setGameMode(GameMode.CREATIVE);
             }
         }
     }
@@ -323,12 +326,12 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        Player player = event.getPlayer();
-        Server server = player.getServer();
+        Player p = event.getPlayer();
+        Server s = p.getServer();
         
         if(plugin.getConfig().getBoolean("Misc.Enable-kick-messages", true))
         {
-            server.broadcastMessage(ChatColor.YELLOW + ((player.getName() + " got kicked.")));
+            s.broadcastMessage(ChatColor.YELLOW + p.getName() + " was kicked.");
         }
     }
 
@@ -530,12 +533,12 @@ public class PlayerListener implements Listener  {
         boolean survival = event.getNewGameMode().equals(GameMode.SURVIVAL);
         boolean creative = event.getNewGameMode().equals(GameMode.CREATIVE);
         
-        if(plugin.getConfig().getBoolean("Player.Prevent-Gamemode-change", true))
+        if(plugin.getConfig().getBoolean("Gamemode.Prevent-Gamemode-change", true))
         {
             event.setCancelled(true); 
         }
         
-        if(plugin.getConfig().getBoolean("Player.Prevent-Gamemode-to-CreativeMode-change", true))
+        if(plugin.getConfig().getBoolean("Gamemode.Prevent-Gamemode-to-CreativeMode-change", true))
         {
             if (survival) 
             {
@@ -543,7 +546,7 @@ public class PlayerListener implements Listener  {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Player.Prevent-Gamemode-to-SurvivalMode-change", true))
+        if(plugin.getConfig().getBoolean("Gamemode.Prevent-Gamemode-to-SurvivalMode-change", true))
         {
             if (creative) 
             {
