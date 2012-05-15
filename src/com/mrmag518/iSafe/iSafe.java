@@ -571,10 +571,11 @@ public class iSafe extends JavaPlugin {
         mobsConfig.addDefault("Powered-Creepers.Prevent-PowerCause.Set-On", false);
         
         mobsConfig.addDefault("Misc.Endermen.Prevent-Endermen-griefing", false);
-        mobsConfig.addDefault("Misc.Prevent-Object-drop-on-death", false);
+        mobsConfig.addDefault("Misc.DeathDrop.Disable-drops-onDeath", false);
         mobsConfig.addDefault("Misc.Tame.Prevent-taming", false);
-        mobsConfig.addDefault("Misc.Prevent-SlimeSplit", true);
-        mobsConfig.addDefault("Misc.Prevent-PigZap", true);
+        mobsConfig.addDefault("Misc.Prevent-SlimeSplit", false);
+        mobsConfig.addDefault("Misc.Prevent-PigZap", false);
+        mobsConfig.addDefault("Misc.Prevent-mobs-breaking-doors", false);
         
         mobsConfig.addDefault("MobSpawn.Natural.Debug.To-console", false);
         mobsConfig.addDefault("MobSpawn.Natural.Worlds", Arrays.asList(Data.worlds1list));

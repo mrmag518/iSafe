@@ -20,13 +20,11 @@ package com.mrmag518.iSafe.Commands;
 
 import com.mrmag518.iSafe.iSafe;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 public class Reload implements CommandExecutor {
     public static iSafe plugin;

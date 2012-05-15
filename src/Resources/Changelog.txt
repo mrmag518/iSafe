@@ -8,6 +8,9 @@ Version 2.68
 * Added separated gamemode settings in the main config and made a section called 'Gamemode'.
 * Re-coded the gamemode changing on player quit and added survival to creative mode.
 * Added prevention for entities breaking doors.
+* Changed some config node defaults.
+* Renamed Misc.Prevent-Object-drop-on-death to Misc.DeathDrop.Disable-drops-onDeath.
+* Fixed players could break blocks which had a custom drop in a protected region.
 * 
 
 Version 2.67

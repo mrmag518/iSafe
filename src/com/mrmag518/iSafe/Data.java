@@ -111,7 +111,7 @@ public class Data {
     
     public static String setBlacklistHeader() {
         String header = "This is the blacklist config on behalf of iSafe, read the iSafe wiki for assistance." 
-        + "\nRemeber that the world listing is case sensetive."
+        + "\nRemember that the world listing is case sensetive."
                 + "\nBlacklists related to mobs and creatures are found in the mobsConfig.yml\n";
         return header;
     }

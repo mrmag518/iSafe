@@ -694,14 +694,14 @@ public class EntityListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDeath(EntityDeathEvent event) {
         if(plugin.getConfig().getBoolean("World.Disable-ExperienceOrbs-drop", true))
         {
             event.setDroppedExp(0);
         }
         
-        if(plugin.getMobsConfig().getBoolean("Misc.Prevent-Object-drop-on-death", true))
+        if(plugin.getMobsConfig().getBoolean("Misc.DeathDrop.Disable-drops-onDeath", true))
         {
             event.getDrops().clear();
         }
