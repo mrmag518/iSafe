@@ -1,5 +1,8 @@
 Displaying the Change Log of iSafe.
 
+Version 2.68_1
+* Fixed vMatchConflict on plugin enable.
+
 Version 2.68
 * Fixed some typos related to the mob spawn blacklists.
 * Updated the info command.
@@ -11,7 +14,7 @@ Version 2.68
 * Changed some config node defaults.
 * Renamed Misc.Prevent-Object-drop-on-death to Misc.DeathDrop.Disable-drops-onDeath.
 * Fixed players could break blocks which had a custom drop in a protected region.
-* 
+* Supports 1.2.5-R1.3.
 
 Version 2.67
 * Completely fixed all NullPointerExceptions within interaction events.

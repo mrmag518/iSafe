@@ -53,7 +53,7 @@ public class iSafe extends JavaPlugin {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //Remember to change this on every version!
     
-    public String fileversion = "iSafe v2.68";
+    public String fileversion = "iSafe v2.68_1";
     
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
