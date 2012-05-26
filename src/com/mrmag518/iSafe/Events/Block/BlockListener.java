@@ -28,6 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockCanBuildEvent;
 import org.bukkit.event.block.BlockDamageEvent;
@@ -53,6 +54,24 @@ public class BlockListener implements Listener {
     {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+    
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (event.isCancelled())
+        {
+            return;
+        }
+        Block b = event.getBlock();
+        Player p = event.getPlayer();
+        byte level = p.getLocation().getBlock().getLightLevel();
+        
+        if(plugin.getConfig().getBoolean("Player.Prevent-fullbright-hacking", true)) {
+            if(level < 1) {
+                event.setCancelled(true);
+                p.sendMessage(ChatColor.YELLOW + "Place a torch!");
+            }
+        }
     }
     
     @EventHandler(priority = EventPriority.NORMAL)

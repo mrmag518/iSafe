@@ -1,5 +1,10 @@
 Displaying the Change Log of iSafe.
 
+Version 2.70
+* Fixed kick messages displaying the default leave message and the kick message at the same time.
+* Added a fullbright check/prevention option.
+* 
+
 Version 2.68_1
 * Fixed vMatchConflict on plugin enable.
 

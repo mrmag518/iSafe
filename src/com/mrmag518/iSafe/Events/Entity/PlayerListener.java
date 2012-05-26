@@ -332,6 +332,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Misc.Enable-kick-messages", true))
         {
             s.broadcastMessage(ChatColor.YELLOW + p.getName() + " was kicked.");
+            event.setLeaveMessage(null);
         }
     }
 

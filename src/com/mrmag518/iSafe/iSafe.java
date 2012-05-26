@@ -53,7 +53,7 @@ public class iSafe extends JavaPlugin {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //Remember to change this on every version!
     
-    public String fileversion = "iSafe v2.68_1";
+    public String fileversion = "iSafe v2.70";
     
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
@@ -144,6 +144,12 @@ public class iSafe extends JavaPlugin {
             log.info("[iSafe]" + " DataFolder not found, creating a new one.");
             this.getDataFolder().mkdir();
         }
+        
+        File blacklistsFolder = new File(this.getDataFolder() + File.separator + "blacklists");
+        if(!(blacklistsFolder.exists())) {
+            blacklistsFolder.mkdir();
+        }
+        
         
         config = this.getConfig();
         loadConfig();
@@ -372,6 +378,7 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Entity-Damage.Creatures.Disable-Suicide-damage", false);
         config.addDefault("Entity-Damage.Creatures.Disable-Void-damage", false);
         
+        config.addDefault("Player.Prevent-fullbright-hacking", false);
         config.addDefault("Player.Prevent-Sprinting", false);
         config.addDefault("Player.Prevent-Sneaking", false);
         config.addDefault("Player.Enable-fishing-permissions", false);
