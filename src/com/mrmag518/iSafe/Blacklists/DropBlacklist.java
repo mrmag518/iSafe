@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -79,8 +80,14 @@ public class DropBlacklist implements Listener {
                 
                     if (plugin.getBlacklist().getList("Drop.Worlds", Dropworlds).contains(worldname))
                     {
-                        if(!(player == null)) {
-                            event.setCancelled(true);
+                        if (plugin.getBlacklist().getBoolean("Drop.Gamemode.PreventFor.Survival", true)) {
+                            if(player.getGameMode().equals(GameMode.SURVIVAL)) {
+                                event.setCancelled(true);
+                            }
+                        } else if (plugin.getBlacklist().getBoolean("Drop.Gamemode.PreventFor.Creative", true)) {
+                            if(player.getGameMode().equals(GameMode.CREATIVE)) {
+                                event.setCancelled(true);
+                            }
                         }
                     } else {
                         event.setCancelled(false);

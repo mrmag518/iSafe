@@ -44,6 +44,11 @@ public class Reload implements CommandExecutor {
             if (sender instanceof Player) { 
                 Player player = (Player)sender;
                 if (hasReload(player)) { 
+                    if(!(plugin.getDataFolder().exists())) {
+                        plugin.getDataFolder().mkdirs();
+                        sender.sendMessage(ChatColor.GRAY + "iSafe folder not found, created a new one.");
+                    }
+                    
                     plugin.reloadBlacklist();
                     plugin.reloadConfig();
                     plugin.reloadMobsConfig();
@@ -51,7 +56,12 @@ public class Reload implements CommandExecutor {
             } else { 
                     sender.sendMessage(ChatColor.RED + "You do not have access to that." );
                }
-            } else { 
+            } else {
+                if(!(plugin.getDataFolder().exists())) {
+                    plugin.getDataFolder().mkdirs();
+                    sender.sendMessage("iSafe folder not found, created a new one.");
+                }
+                
                 plugin.reloadBlacklist();
                 plugin.reloadConfig();
                 plugin.reloadMobsConfig();

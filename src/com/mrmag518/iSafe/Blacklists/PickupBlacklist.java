@@ -23,6 +23,7 @@ import java.util.List;
 import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -57,6 +58,7 @@ public class PickupBlacklist implements Listener {
         String BlockNAME_Uppercase = event.getItem().getItemStack().getType().name().toUpperCase();
         String BlockNAME_Name = event.getItem().getItemStack().getType().name();
         String BlockNAME = event.getItem().toString();
+        String BlackNameTrim = event.getItem().getItemStack().getType().name().trim();
         
         Location loc = player.getLocation();
         String worldname = world.getName();
@@ -67,7 +69,8 @@ public class PickupBlacklist implements Listener {
                 || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME_Lowercase)
                 || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME_Uppercase)
                 || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME)
-                || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME_Name))
+                || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME_Name)
+                || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlackNameTrim))
         {
             if(player.hasPermission("iSafe.pickup.blacklist.bypass")) {
                 //access
@@ -75,11 +78,16 @@ public class PickupBlacklist implements Listener {
                 if (!event.isCancelled()) 
                 {
                     final List<String> Pickupworlds = plugin.getBlacklist().getStringList("Pickup.Worlds");
-                
                     if (plugin.getBlacklist().getList("Pickup.Worlds", Pickupworlds).contains(worldname))
                     {
-                        if(!(player == null)) {
-                            event.setCancelled(true);
+                        if (plugin.getBlacklist().getBoolean("Pickup.Gamemode.PreventFor.Survival", true)) {
+                            if(player.getGameMode().equals(GameMode.SURVIVAL)) {
+                                event.setCancelled(true);
+                            }
+                        } else if (plugin.getBlacklist().getBoolean("Pickup.Gamemode.PreventFor.Creative", true)) {
+                            if(player.getGameMode().equals(GameMode.CREATIVE)) {
+                                event.setCancelled(true);
+                            }
                         }
                     } else {
                         event.setCancelled(false);

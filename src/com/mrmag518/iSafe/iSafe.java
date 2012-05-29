@@ -37,6 +37,11 @@ import com.mrmag518.iSafe.Events.Entity.*;
 import com.mrmag518.iSafe.Events.Various.*;
 import com.mrmag518.iSafe.Events.World.*;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -140,16 +145,15 @@ public class iSafe extends JavaPlugin {
         
         PluginDescriptionFile pdffile = this.getDescription();
         
-        if(!(this.getDataFolder().exists())) {
-            log.info("[iSafe]" + " DataFolder not found, creating a new one.");
-            this.getDataFolder().mkdir();
+        if(!(getDataFolder().exists())) {
+            log.info("[iSafe]" + " iSafe folder not found, creating a new one.");
+            getDataFolder().mkdirs(); 
         }
         
-        File blacklistsFolder = new File(this.getDataFolder() + File.separator + "blacklists");
-        if(!(blacklistsFolder.exists())) {
-            blacklistsFolder.mkdir();
+        File usersFolder = new File(getDataFolder() + File.separator + "Users");
+        if(!(usersFolder.exists())) {
+            usersFolder.mkdir();
         }
-        
         
         config = this.getConfig();
         loadConfig();
@@ -185,8 +189,8 @@ public class iSafe extends JavaPlugin {
             }
         }, 0, 432000);
         
-        this.executeCommands();
-        this.getServer().getPluginManager().getPermissions();
+        executeCommands();
+        getServer().getPluginManager().getPermissions();
         
         if(!(pdffile.getFullName().equals(fileversion))) {
             log.info("-----  iSafe vMatchConflict  -----");
@@ -254,6 +258,7 @@ public class iSafe extends JavaPlugin {
         
         config.addDefault("Flow.Disable-water-flow", false);
         config.addDefault("Flow.Disable-lava-flow", false);
+        config.addDefault("Flow.Disable-air-flow", false);
         
         config.addDefault("Piston.Prevent-piston-Extend", false);
         config.addDefault("Piston.Prevent-piston-Retract", false);
@@ -293,6 +298,7 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Teleport.Prevent-TeleportCause.Plugin", false);
         config.addDefault("Teleport.Prevent-TeleportCause.Unknown", false);
         
+        config.addDefault("Misc.Prevent-expBottle-throw", false);
         config.addDefault("Misc.Enable-kick-messages", false);
         config.addDefault("Misc.Disable-LeavesDecay", false);
         config.addDefault("Misc.Prevent-crop-trampling-by-creature", false);
@@ -395,7 +401,7 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Player.Instantbreak", false);
         //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         //--
-        config.addDefault("Player-Interact.Erase the old values if you haven't already(this node is not a setting)", "#");
+        config.addDefault("Player-Interact.Erase the old values if you haven't already(this node is not an option)", "#");
         //--
         config.addDefault("Player-Interact.Disable.Buttons", false);
         config.addDefault("Player-Interact.Disable.Chests", false);
@@ -440,6 +446,8 @@ public class iSafe extends JavaPlugin {
         blacklist.addDefault("Place.Alert/log.To-console", true);
         blacklist.addDefault("Place.Alert/log.To-player", true);
         blacklist.addDefault("Place.Alert/log.To-server-chat", false);
+        blacklist.addDefault("Place.Gamemode.PreventFor.Survival", true);
+        blacklist.addDefault("Place.Gamemode.PreventFor.Creative", true);
         blacklist.addDefault("Place.Worlds", Arrays.asList(Data.worldslist));
         Data.worlds = blacklist.getStringList("Place.Worlds");
         blacklist.addDefault("Place.Blacklist", Arrays.asList(Data.placedblockslist));
@@ -451,6 +459,8 @@ public class iSafe extends JavaPlugin {
         blacklist.addDefault("Break.Alert/log.To-console", true);
         blacklist.addDefault("Break.Alert/log.To-player", true);
         blacklist.addDefault("Break.Alert/log.To-server-chat", false);
+        blacklist.addDefault("Break.Gamemode.PreventFor.Survival", true);
+        blacklist.addDefault("Break.Gamemode.PreventFor.Creative", true);
         blacklist.addDefault("Break.Worlds", Arrays.asList(Data.worldslist));
         Data.worlds = blacklist.getStringList("Break.Worlds");
         blacklist.addDefault("Break.Blacklist", Arrays.asList(Data.brokenblockslist));
@@ -462,6 +472,8 @@ public class iSafe extends JavaPlugin {
         blacklist.addDefault("Drop.Alert/log.To-console", true);
         blacklist.addDefault("Drop.Alert/log.To-player", true);
         blacklist.addDefault("Drop.Alert/log.To-server-chat", false);
+        blacklist.addDefault("Drop.Gamemode.PreventFor.Survival", true);
+        blacklist.addDefault("Drop.Gamemode.PreventFor.Creative", true);
         blacklist.addDefault("Drop.Worlds", Arrays.asList(Data.worldslist));
         Data.worlds = blacklist.getStringList("Drop.Worlds");
         blacklist.addDefault("Drop.Blacklist", Arrays.asList(Data.dropedblockslist));
@@ -473,6 +485,8 @@ public class iSafe extends JavaPlugin {
         blacklist.addDefault("Pickup.Alert/log.To-console", true);
         blacklist.addDefault("Pickup.Alert/log.To-player", true);
         blacklist.addDefault("Pickup.Alert/log.To-server-chat", false);
+        blacklist.addDefault("Pickup.Gamemode.PreventFor.Survival", true);
+        blacklist.addDefault("Pickup.Gamemode.PreventFor.Creative", true);
         blacklist.addDefault("Pickup.Worlds", Arrays.asList(Data.Pickupworldslist));
         Data.Pickupworlds = blacklist.getStringList("Pickup.Worlds");
         blacklist.addDefault("Pickup.Blacklist", Arrays.asList(Data.pickupedblockslist));

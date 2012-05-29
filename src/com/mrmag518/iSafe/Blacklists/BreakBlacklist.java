@@ -24,6 +24,7 @@ import java.util.List;
 import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -79,8 +80,18 @@ public class BreakBlacklist implements Listener {
                 
                     if (plugin.getBlacklist().getList("Break.Worlds", Breakworlds).contains(worldname))
                     {
-                        if(!(block == null)) {
-                            event.setCancelled(true);
+                        if (plugin.getBlacklist().getBoolean("Break.Gamemode.PreventFor.Survival", true)) {
+                            if(player.getGameMode().equals(GameMode.SURVIVAL)) {
+                                if(!(block == null)) {
+                                    event.setCancelled(true);
+                                }
+                            }
+                        } else if (plugin.getBlacklist().getBoolean("Break.Gamemode.PreventFor.Creative", true)) {
+                            if(player.getGameMode().equals(GameMode.CREATIVE)) {
+                                if(!(block == null)) {
+                                    event.setCancelled(true);
+                                }
+                            }
                         }
                     } else {
                         event.setCancelled(false);

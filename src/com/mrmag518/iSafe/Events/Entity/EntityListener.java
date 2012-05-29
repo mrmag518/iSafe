@@ -174,6 +174,14 @@ public class EntityListener implements Listener {
     }
     
     @EventHandler
+    public void expBottle(ExpBottleEvent event) {
+        if(plugin.getConfig().getBoolean("Misc.Prevent-expBottle-throw", true)) {
+            event.setExperience(0);
+            event.setShowEffect(false);
+        }
+    }
+    
+    @EventHandler
     public void EndermenGriefing(EntityChangeBlockEvent event) {
         if (event.isCancelled())
         {

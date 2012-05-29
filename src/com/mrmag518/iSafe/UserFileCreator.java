@@ -28,9 +28,9 @@ public class UserFileCreator implements Listener {
             plugin.log.info("[iSafe] Generating user file for " + user.getName() + ".");
             try {
                 FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
-                uFile.set("UserName", user.getName());
-                uFile.set("DisplayName", user.getDisplayName());
-                uFile.set("User_IP", event.getPlayer().getAddress().getAddress().toString().replace("/", ""));
+                uFile.set("Username", user.getName());
+                uFile.set("Displayname", user.getDisplayName());
+                uFile.set("IPAddress", event.getPlayer().getAddress().getAddress().toString().replace("/", ""));
                 uFile.save(userFile);
                 plugin.log.info("[iSafe] Generated user file for " + user.getName() + ".");
             } catch (Exception e) {
@@ -40,7 +40,7 @@ public class UserFileCreator implements Listener {
         } else {
             String UserIP = event.getPlayer().getAddress().getAddress().toString();
             UserIP = UserIP.replace("/", "");
-            UserString(event.getPlayer(), UserIP, "User_IP");
+            UserString(event.getPlayer(), UserIP, "IPAddress");
         }
     }
     

@@ -2,7 +2,12 @@ Displaying the Change Log of iSafe.
 
 Version 2.70
 * Fixed kick messages displaying the default leave message and the kick message at the same time.
-* Added a fullbright check/prevention option.
+* Added a fullbright prevention option.
+* Made it so the Users directory is being made when the plugin is enabling instead of when a player joins.
+* Added gamemode options to blacklists.
+* Improved the reload command to check if wether the iSafe folder exists or not.
+* Fixed air flow always being prevented.
+* Added prevention for throwing exp bottles.
 * 
 
 Version 2.68_1
