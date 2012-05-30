@@ -48,7 +48,6 @@ import org.bukkit.inventory.ItemStack;
 
 
 public class BlockListener implements Listener {
-    
     public static iSafe plugin;
     public BlockListener(iSafe instance)
     {
@@ -66,7 +65,7 @@ public class BlockListener implements Listener {
         Player p = event.getPlayer();
         byte level = p.getLocation().getBlock().getLightLevel();
         
-        if(plugin.getConfig().getBoolean("Player.Prevent-fullbright-hacking", true)) {
+        if(plugin.getConfig().getBoolean("Player.Prevent-fullbright-hacking(force lightlevel)", true)) {
             if(level < 1) {
                 event.setCancelled(true);
                 p.sendMessage(ChatColor.YELLOW + "Place a torch!");

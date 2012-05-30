@@ -185,7 +185,7 @@ public class PlayerListener implements Listener  {
             if(player.hasPermission("iSafe.teleport")) {
                 //access
             } else {
-                event.setCancelled(true);
+                event.setTo(event.getFrom());
                 player.sendMessage(ChatColor.RED + "You do not have access to teleport.");
             }
         }
@@ -196,7 +196,7 @@ public class PlayerListener implements Listener  {
                 //access
             } else {
                 if (event.getCause() == TeleportCause.COMMAND) {
-                    event.setCancelled(true);
+                    event.setTo(event.getFrom());
                     player.sendMessage(ChatColor.RED + "You do not have access to teleport trough commands.");
                 }
             }
@@ -208,7 +208,7 @@ public class PlayerListener implements Listener  {
                 //access
             } else {
                 if (event.getCause() == TeleportCause.ENDER_PEARL) {
-                    event.setCancelled(true);
+                    event.setTo(event.getFrom());
                     player.sendMessage(ChatColor.RED + "You do not have access to teleport with ender pearls.");
                 }
             }
@@ -220,7 +220,7 @@ public class PlayerListener implements Listener  {
                 //access
             } else {
                 if (event.getCause() == TeleportCause.PLUGIN) {
-                    event.setCancelled(true);
+                    event.setTo(event.getFrom());
                     player.sendMessage(ChatColor.RED + "You do not have access to teleport trough plugins.");
                 }
             }
@@ -232,7 +232,7 @@ public class PlayerListener implements Listener  {
                 //access
             } else {
                 if (event.getCause() == TeleportCause.UNKNOWN) {
-                    event.setCancelled(true);
+                    event.setTo(event.getFrom());
                     player.sendMessage(ChatColor.RED + "You do not have access to teleport with an unknown cause.");
                 }
             }
@@ -244,7 +244,7 @@ public class PlayerListener implements Listener  {
                 //access
             } else {
                 if (event.getCause() == TeleportCause.END_PORTAL) {
-                    event.setCancelled(true);
+                    event.setTo(event.getFrom());
                     player.sendMessage(ChatColor.RED + "You do not have access to teleport with an end portal cause.");
                 }
             }
@@ -256,7 +256,7 @@ public class PlayerListener implements Listener  {
                 //access
             } else {
                 if (event.getCause() == TeleportCause.NETHER_PORTAL) {
-                    event.setCancelled(true);
+                    event.setTo(event.getFrom());
                     player.sendMessage(ChatColor.RED + "You do not have access to teleport with a nether portal cause.");
                 }
             }

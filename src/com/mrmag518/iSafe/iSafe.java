@@ -37,11 +37,6 @@ import com.mrmag518.iSafe.Events.Entity.*;
 import com.mrmag518.iSafe.Events.Various.*;
 import com.mrmag518.iSafe.Events.World.*;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -384,7 +379,7 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Entity-Damage.Creatures.Disable-Suicide-damage", false);
         config.addDefault("Entity-Damage.Creatures.Disable-Void-damage", false);
         
-        config.addDefault("Player.Prevent-fullbright-hacking", false);
+        config.addDefault("Player.Prevent-fullbright-hacking(force lightlevel)", false);
         config.addDefault("Player.Prevent-Sprinting", false);
         config.addDefault("Player.Prevent-Sneaking", false);
         config.addDefault("Player.Enable-fishing-permissions", false);

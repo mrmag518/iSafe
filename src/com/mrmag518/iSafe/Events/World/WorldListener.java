@@ -59,7 +59,7 @@ public class WorldListener implements Listener {
         if(plugin.getConfig().getBoolean("World.Register-world(s)-save", true))
         {
             System.out.println(("[iSafe] Saved '"+ (world.getName() + "' succsesfully.")));
-        }     
+        }
     }
     
     @EventHandler(priority = EventPriority.NORMAL)
@@ -97,6 +97,7 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onChunkLoad(ChunkLoadEvent event) {
+        World world = event.getWorld();
         if(!plugin.getConfig().getBoolean("Chunk.Enable-Chunk-emergency-loader", true))
         {
             event.getChunk().load();

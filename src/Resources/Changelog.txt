@@ -8,7 +8,8 @@ Version 2.70
 * Improved the reload command to check if wether the iSafe folder exists or not.
 * Fixed air flow always being prevented.
 * Added prevention for throwing exp bottles.
-* 
+* Fixed preventions from teleport causes not correctly working.
+* Supports 1.2.5-R3.0
 
 Version 2.68_1
 * Fixed vMatchConflict on plugin enable.

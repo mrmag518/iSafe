@@ -67,7 +67,7 @@ public class PlaceBlacklist implements Listener {
         final List<Block> placedblocks = new ArrayList<Block>();
         
         if (plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(blockID)
-                || plugin.getBlacklist().getList("Place." + worldname, placedblocks).contains(BlockNAME_Lowercase) 
+                || plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(BlockNAME_Lowercase) 
                 || plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(BlockNAME_Uppercase)
                 || plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(BlockNAME_Name)
                 || plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(BlockNAME))
