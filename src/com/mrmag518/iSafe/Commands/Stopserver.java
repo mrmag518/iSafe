@@ -44,6 +44,11 @@ public class Stopserver implements CommandExecutor {
             if (sender instanceof Player) {
                 Player player = (Player)sender;
                 if (hasStopserver(player)) {
+                    for (Player aimPlayers : plugin.getServer().getOnlinePlayers()) {
+                        if(!(aimPlayers == null)) {
+                            aimPlayers.kickPlayer(ChatColor.GOLD + "Server is shutting down.");
+                        }
+                    }
                     stopServer();
                 } else {
                     player.sendMessage(ChatColor.RED + "You do not have access to that.");
@@ -66,7 +71,7 @@ public class Stopserver implements CommandExecutor {
     }
     
     public void stopServer() {
-        Bukkit.getServer().broadcastMessage(ChatColor.GRAY + "Server shutting down ..");
+        Bukkit.getServer().broadcastMessage(ChatColor.GOLD + "Server is shutting down.");
         Bukkit.getServer().shutdown();
     }
 }

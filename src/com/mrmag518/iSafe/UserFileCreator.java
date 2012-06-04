@@ -28,8 +28,16 @@ public class UserFileCreator implements Listener {
             plugin.log.info("[iSafe] Generating user file for " + user.getName() + ".");
             try {
                 FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
-                uFile.set("Username", user.getName());
-                uFile.set("Displayname", user.getDisplayName());
+                if(user.getName().contains("?")) {
+                    uFile.set("Username", user.getName().replace("?", ""));
+                } else {
+                    uFile.set("Username", user.getName());
+                }
+                if(user.getDisplayName().contains("?")) {
+                    uFile.set("Displayname", user.getDisplayName().replace("?", ""));
+                } else {
+                    uFile.set("Displayname", user.getDisplayName());
+                }
                 uFile.set("IPAddress", event.getPlayer().getAddress().getAddress().toString().replace("/", ""));
                 uFile.save(userFile);
                 plugin.log.info("[iSafe] Generated user file for " + user.getName() + ".");

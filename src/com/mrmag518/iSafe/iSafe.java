@@ -53,7 +53,7 @@ public class iSafe extends JavaPlugin {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //Remember to change this on every version!
     
-    public String fileversion = "iSafe v2.70";
+    public String fileversion = "iSafe v2.71";
     
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
@@ -617,6 +617,7 @@ public class iSafe extends JavaPlugin {
         mobsConfig.addDefault("MobSpawn.Egg.Blacklist", Arrays.asList(Data.mobspawnegglist));
         Data.mobspawnegg = mobsConfig.getStringList("MobSpawn.Egg.Blacklist");
         
+        mobsConfig.addDefault("MobSpawn.SpawnerEgg.Do_not_insert_the_spawner_egg_ID_here,_Here_you'll_insert_the_Animal_ID_(Like:_Creeper,_60,_PIG)".trim(), "Thanks");
         mobsConfig.addDefault("MobSpawn.SpawnerEgg.Debug.To-console", false);
         mobsConfig.addDefault("MobSpawn.SpawnerEgg.Worlds", Arrays.asList(Data.worlds5list));
         Data.worlds5 = mobsConfig.getStringList("MobSpawn.SpawnerEgg.Worlds");

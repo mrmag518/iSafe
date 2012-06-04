@@ -62,6 +62,7 @@ public class PlaceBlacklist implements Listener {
         World world = p.getWorld();
         Location loc = p.getLocation();
         String worldname = world.getName();
+        String pName = p.getName();
         
         //Blacklist
         final List<Block> placedblocks = new ArrayList<Block>();

@@ -29,65 +29,75 @@ public class Data {
         plugin = instance;
     }
     
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     public static List<String> placedblocks = new ArrayList<String>();
     public static String[] placedblockslist = { "No defaults added." };
     public static List<String> worlds = new ArrayList<String>();
     public static String[] worldslist = { "world", "world_nether" };
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
     public static List<String> brokenblocks = new ArrayList<String>();
     public static String[] brokenblockslist = { "No defaults added." };
     public static List<String> Breakworlds = new ArrayList<String>();
     public static String[] Breakworldslist = { "world", "world_nether" };
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
     public static List<String> dropedblocks = new ArrayList<String>();
     public static String[] dropedblockslist = { "No defaults added." };
     public static List<String> Dropworlds = new ArrayList<String>();
     public static String[] Dropworldslist = { "world", "world_nether" };
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
     public static List<String> pickupedblocks = new ArrayList<String>();
     public static String[] pickupedblockslist = { "No defaults added." };
     public static List<String> Pickupworlds = new ArrayList<String>();
     public static String[] Pickupworldslist = { "world", "world_nether" };
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
     public static List<String> commands = new ArrayList<String>();
     public static String[] commandslist = { "/nuke" };
     public static List<String> cmdworlds = new ArrayList<String>();
     public static String[] cmdworldlist = { "world", "world_nether" };
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
     public static List<String> mobspawnnatural = new ArrayList<String>();
     public static String[] mobspawnnaturallist = { "No defaults added." };
     public static List<String> worlds1 = new ArrayList<String>();
     public static String[] worlds1list = { "world", "world_nether" };
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
     public static List<String> mobspawnspawner = new ArrayList<String>();
     public static String[] mobspawnspawnerlist = { "No defaults added." };
     public static List<String> worlds2 = new ArrayList<String>();
     public static String[] worlds2list = { "world", "world_nether" };
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
     public static List<String> mobspawncustom = new ArrayList<String>();
     public static String[] mobspawncustomlist = { "No defaults added." };
     public static List<String> worlds3 = new ArrayList<String>();
     public static String[] worlds3list = { "world", "world_nether" };
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
     public static List<String> mobspawnegg = new ArrayList<String>();
     public static String[] mobspawnegglist = { "No defaults added." };
     public static List<String> worlds4 = new ArrayList<String>();
     public static String[] worlds4list = { "world", "world_nether" };
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
     public static List<String> mobspawnspawneregg = new ArrayList<String>();
     public static String[] mobspawnspawneregglist = { "No defaults added." };
     public static List<String> worlds5 = new ArrayList<String>();
     public static String[] worlds5list = { "world", "world_nether" };
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
     public static List<String> lbworlds = new ArrayList<String>();
     public static String[] lbworldslist = { "world", "world_nether" };
     public static List<String> wbworlds = new ArrayList<String>();
     public static String[] wbworldslist = { "world", "world_nether" };
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
     public static List<String> censoredWords = new ArrayList<String>();
     public static String[] censoredWordsList = { "No defaults added." };
-    //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
     
     public static String getDate() {
         String date;
@@ -105,21 +115,24 @@ public class Data {
     
     public static String setConfigHeader() {
         String header = "This is the main configuration file in association to iSafe; take a decent look through it to manage your own preferred settings." 
-        + "\nIf you need assistance you can search up it in the iSafe wiki or contact mrmag518.\n";
+        + "\nIf you need assistance you can search up it in the iSafe wiki or contact mrmag518."
+        + "\nThis file was generated: " + getDate() + "\n";
         return header;
     }
     
     public static String setBlacklistHeader() {
         String header = "This is the blacklist config on behalf of iSafe, read the iSafe wiki for assistance." 
         + "\nRemember that the world listing is case sensetive."
-                + "\nBlacklists related to mobs and creatures are found in the mobsConfig.yml\n";
+        + "\nBlacklists related to mobs and creatures are found in the mobsConfig.yml"
+        + "\nThis file was generated: " + getDate() + "\n";
         return header;
     }
     
     public static String setmobsConfigHeader() {
         String header = "This is the Mob Control config associated to regulatory characteristics aimed at mobs in Minecraft."
         + "\nVisit the iSafe wiki for assistance."
-        + "\nA list of mob IDs can be found at the minercaft wiki, http://www.minecraftwiki.net/wiki/Data_values In the section 'Entity IDs'\n";
+        + "\nA list of mob IDs can be found at the minercaft wiki, http://www.minecraftwiki.net/wiki/Data_values In the section 'Entity IDs'"
+        + "\nThis file was generated: " + getDate() + "\n";
         return header;
     }
 }
