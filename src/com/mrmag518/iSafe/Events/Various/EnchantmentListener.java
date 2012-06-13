@@ -18,13 +18,16 @@
 
 package com.mrmag518.iSafe.Events.Various;
 
-import com.mrmag518.iSafe.Events.*;
 import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
+import org.bukkit.inventory.ItemStack;
 
 
 public class EnchantmentListener implements Listener {
@@ -37,23 +40,17 @@ public class EnchantmentListener implements Listener {
     }
     
     @EventHandler
-    public void EnchantmentPreventer(EnchantItemEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
+    public void EnchantmentManager(EnchantItemEvent event) {
+        Player p = event.getEnchanter();
         
         if(plugin.getConfig().getBoolean("Enchantment.Prevent-Enchantment", true))
         {
-            event.setCancelled(true);
-            event.getEnchanter().sendMessage(ChatColor.RED + "You cannot enchant.");
+            if(!(p.hasPermission("iSafe.enchant"))) {
+                event.setCancelled(true);
+                event.getEnchanter().sendMessage(ChatColor.RED + "You do not ave access to enchant items.");
+            }
         }
         
-        /**
-         * Todo
-         * - Add preventions for specefic level "payments"
-         * - Add permissions.
-         * - ?
-         */
+        
     }
 }

@@ -140,9 +140,9 @@ public class iSafe extends JavaPlugin {
         
         PluginDescriptionFile pdffile = this.getDescription();
         
-        if(!(getDataFolder().exists())) {
+        if(!(this.getDataFolder().exists())) {
             log.info("[iSafe]" + " iSafe folder not found, creating a new one.");
-            getDataFolder().mkdirs(); 
+            this.getDataFolder().mkdirs(); 
         }
         
         File usersFolder = new File(getDataFolder() + File.separator + "Users");

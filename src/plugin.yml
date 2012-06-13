@@ -89,6 +89,7 @@ permissions:
       iSafe.canceldamage.suffocation: true
       iSafe.canceldamage.suicide: true
       iSafe.canceldamage.void: true
+      iSafe.enchant: true
   iSafe.canceldamage.*:
     description: Allow the user to get access to all the Canceldamage permissions.
     default: op
@@ -148,6 +149,8 @@ permissions:
       iSafe.vehicle.destory.minecart: true
       iSafe.vehicle.destory.boat: true
   iSafe.lavabucket.empty:
+    default: op
+  iSafe.enchant:
     default: op
   iSafe.sprint:
     default: op

@@ -58,27 +58,25 @@ public class WorldListener implements Listener {
         World world = event.getWorld();
         if(plugin.getConfig().getBoolean("World.Register-world(s)-save", true))
         {
-            System.out.println(("[iSafe] Saved '"+ (world.getName() + "' succsesfully.")));
+            System.out.println("[iSafe] Saved '"+ (world.getName() + "' succsesfully."));
         }
     }
     
     @EventHandler(priority = EventPriority.NORMAL)
     public void onWorldLoad(WorldLoadEvent event) {
         World world = event.getWorld();
-        
         if(plugin.getConfig().getBoolean("World.Register-world(s)-load", true))
         {
-            System.out.println(("[iSafe] Loaded '"+ (world.getName() + "' succsesfully.")));
+            System.out.println("[iSafe] Loaded '"+ (world.getName() + "' succsesfully."));
         }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onWorldInit(WorldInitEvent event) {
         World world = event.getWorld();
-        
         if(plugin.getConfig().getBoolean("World.Register-world(s)-init", true))
         {
-            System.out.println(("[iSafe] Initialized '"+ (world.getName() + "' succsesfully.")));
+            System.out.println("[iSafe] Initialized '"+ (world.getName() + "' succsesfully."));
         }
     }
 
@@ -97,7 +95,6 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onChunkLoad(ChunkLoadEvent event) {
-        World world = event.getWorld();
         if(!plugin.getConfig().getBoolean("Chunk.Enable-Chunk-emergency-loader", true))
         {
             event.getChunk().load();
