@@ -239,6 +239,7 @@ public class iSafe extends JavaPlugin {
         config.options().header(Data.setConfigHeader());
         
         config.addDefault("Enchantment.Prevent-Enchantment", false);
+        config.addDefault("Enchantment.Prevent-creativeEnchanting", false);
         
         config.addDefault("EntityTo-SpawnLocation.On-Void-fall(Player)", false);
         config.addDefault("EntityTo-SpawnLocation.On-Void-fall(Creature)", false);

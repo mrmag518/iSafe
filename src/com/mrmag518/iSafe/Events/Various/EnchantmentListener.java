@@ -21,6 +21,7 @@ package com.mrmag518.iSafe.Events.Various;
 import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -51,6 +52,13 @@ public class EnchantmentListener implements Listener {
             }
         }
         
-        
+        if(plugin.getConfig().getBoolean("Enchantment.Prevent-creativeEnchanting", true)) {
+            if(p.getGameMode().equals(GameMode.CREATIVE)) {
+                if(!(p.hasPermission("iSafe.enchant"))) {
+                    event.setCancelled(true);
+                    event.getEnchanter().sendMessage(ChatColor.RED + "You do not ave access to enchant items in creative mode.");
+                }
+            }
+        }
     }
 }
