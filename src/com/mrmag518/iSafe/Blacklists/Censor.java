@@ -62,20 +62,20 @@ public class Censor implements Listener {
             if(!(event.isCancelled())) 
             {
                 event.setCancelled(true);
-            }
-        }
-        
-        if (plugin.getBlacklist().getBoolean("Censor.Alert/log.To-console", true))
-        {
-            if (event.isCancelled()) {
-                plugin.log.info("[iSafe] "+ p.getName() + " tried to say the blacklisted word: "+ word);
-            }
-        }
-        
-        if (plugin.getBlacklist().getBoolean("Censor.Alert/log.To-player", true))
-        {
-            if (event.isCancelled()) {
-                p.sendMessage(ChatColor.RED + "The word '"+ ChatColor.GRAY + word + ChatColor.RED + "' is blacklisted.");
+                
+                if (plugin.getBlacklist().getBoolean("Censor.Alert/log.To-console", true))
+                {
+                    if (event.isCancelled()) {
+                        plugin.log.info("[iSafe] "+ p.getName() + " tried to say the blacklisted word: "+ word);
+                    }
+                }
+                
+                if (plugin.getBlacklist().getBoolean("Censor.Alert/log.To-player", true))
+                {
+                    if (event.isCancelled()) {
+                        p.sendMessage(ChatColor.RED + "The word '"+ ChatColor.GRAY + word + ChatColor.RED + "' is blacklisted.");
+                    }
+                }
             }
         }
     }

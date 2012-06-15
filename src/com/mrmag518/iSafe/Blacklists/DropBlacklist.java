@@ -89,50 +89,50 @@ public class DropBlacklist implements Listener {
                                 event.setCancelled(true);
                             }
                         }
+                        
+                        if (plugin.getBlacklist().getBoolean("Drop.Kick-Player", true))
+                        {
+                            if (event.isCancelled())
+                            {
+                                player.kickPlayer(ChatColor.RED + "You got kicked for attempting to drop: "+ ChatColor.GRAY + event.getItemDrop().getItemStack().getType().name().toLowerCase());
+                            }    
+                        }
+
+                        if (plugin.getBlacklist().getBoolean("Place.Kill-Player", true))
+                        {
+                            if (event.isCancelled())
+                            {
+                                player.setHealth(0);
+                                KillAlertPlayer(player, event, worldname);
+                            }    
+                        }
+
+                        if (plugin.getBlacklist().getBoolean("Drop.Alert/log.To-console", true))
+                        {
+                            if (event.isCancelled()) 
+                            {
+                                AlertConsole(player, event, loc, worldname);
+                            }
+                        }
+
+                        if (plugin.getBlacklist().getBoolean("Drop.Alert/log.To-player", true))
+                        {
+                            if (event.isCancelled()) 
+                            {
+                                AlertPlayer(player, event, worldname);
+                            }
+                        }
+
+                        if (plugin.getBlacklist().getBoolean("Drop.Alert/log.To-server-chat", true))
+                        {
+                            if (event.isCancelled()) 
+                            {
+                                AlertServer(server, event, worldname, player);
+                            }
+                        }
                     } else {
                         event.setCancelled(false);
                     }
-                }
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Drop.Kick-Player", true))
-            {
-                if (event.isCancelled())
-                {
-                    player.kickPlayer(ChatColor.RED + "You got kicked for attempting to drop: "+ ChatColor.GRAY + event.getItemDrop().getItemStack().getType().name().toLowerCase());
-                }    
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Place.Kill-Player", true))
-            {
-                if (event.isCancelled())
-                {
-                    player.setHealth(0);
-                    KillAlertPlayer(player, event, worldname);
-                }    
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Drop.Alert/log.To-console", true))
-            {
-                if (event.isCancelled()) 
-                {
-                    AlertConsole(player, event, loc, worldname);
-                }
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Drop.Alert/log.To-player", true))
-            {
-                if (event.isCancelled()) 
-                {
-                    AlertPlayer(player, event, worldname);
-                }
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Drop.Alert/log.To-server-chat", true))
-            {
-                if (event.isCancelled()) 
-                {
-                    AlertServer(server, event, worldname, player);
                 }
             }
         }

@@ -455,13 +455,6 @@ public class PlayerListener implements Listener  {
         } catch (NullPointerException npe) {
             //ignored
         }
-        
-        if(plugin.getConfig().getBoolean("Misc.Prevent-crop-trampling", true))
-        {
-            if (event.getMaterial() == Material.SOIL && event.getPlayer() instanceof Player) {
-                event.setCancelled(true);
-            }
-        }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)

@@ -71,35 +71,35 @@ public class CommandBlacklist implements Listener {
                 if (plugin.getBlacklist().getList("Command.Worlds", cmdworlds).contains(worldname))
                 {
                     event.setCancelled(true);
+                    
+                    if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-console", true))
+                    {
+                        if (event.isCancelled()) {
+                            plugin.log.info("[iSafe] "+ player.getName() + " tried to do the command: "+ command);
+                        }
+                    }
+
+                    if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-player", true))
+                    {
+                        if (event.isCancelled()) {
+                            player.sendMessage(ChatColor.RED + "You cannot do the command: "+ command);
+                        }
+                    }
+
+                    if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-server-chat", true))
+                    {
+                        if (event.isCancelled()) {
+                            server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to do the command: "+ command);
+                        }
+                    }
+
+                    if(plugin.getBlacklist().getBoolean("Command.Disallow-commands", true))
+                    {
+                        event.setCancelled(true);
+                        player.sendMessage(ChatColor.RED + "All commands are disabled.");
+                    }
                 }
             }    
-        }
-        
-        if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-console", true))
-        {
-            if (event.isCancelled()) {
-                plugin.log.info("[iSafe] "+ player.getName() + " tried to do the command: "+ command);
-            }
-        }
-        
-        if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-player", true))
-        {
-            if (event.isCancelled()) {
-                player.sendMessage(ChatColor.RED + "You cannot do the command: "+ command);
-            }
-        }
-        
-        if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-server-chat", true))
-        {
-            if (event.isCancelled()) {
-                server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to do the command: "+ command);
-            }
-        }
-        
-        if(plugin.getBlacklist().getBoolean("Command.Disallow-commands", true))
-        {
-            event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "All commands are disabled.");
         }
     }
 }

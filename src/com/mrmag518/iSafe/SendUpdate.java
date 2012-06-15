@@ -23,8 +23,8 @@ public class SendUpdate implements Listener {
             try {
                 String oldVersion = plugin.getDescription().getVersion();
                 if (!(plugin.newVersion.contains(oldVersion))) {
-                    p.sendMessage(ChatColor.GREEN + "A new version of iSafe is out! ("+ ChatColor.DARK_PURPLE +  plugin.newVersion + ChatColor.GREEN + " )");
-                    p.sendMessage(ChatColor.GREEN + "You are currently running " + ChatColor.DARK_PURPLE + "iSafe v" + oldVersion + ChatColor.GREEN + ".");
+                    p.sendMessage(ChatColor.GREEN + "A new version of iSafe is out! ("+ ChatColor.GOLD +  plugin.newVersion + ChatColor.GREEN + ")");
+                    p.sendMessage(ChatColor.GREEN + "You are currently running " + ChatColor.GOLD + "iSafe v" + oldVersion + ChatColor.GREEN + ".");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

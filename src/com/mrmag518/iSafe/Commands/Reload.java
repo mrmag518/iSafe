@@ -51,7 +51,7 @@ public class Reload implements CommandExecutor {
                     
                     plugin.reloadBlacklist();
                     plugin.reloadConfig();
-                    plugin.reloadMobsConfig();
+                    plugin.reloadEntityManager();
                     sender.sendMessage(ChatColor.GOLD + "Reloaded iSafe" + ChatColor.DARK_PURPLE + " (v" + v + ")");
             } else { 
                     sender.sendMessage(ChatColor.RED + "You do not have access to that." );
@@ -64,7 +64,7 @@ public class Reload implements CommandExecutor {
                 
                 plugin.reloadBlacklist();
                 plugin.reloadConfig();
-                plugin.reloadMobsConfig();
+                plugin.reloadEntityManager();
                 sender.sendMessage("Reloaded iSafe" +" (v" + v + ")");
             }
             return true;

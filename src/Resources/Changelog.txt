@@ -1,5 +1,18 @@
 Displaying the Change Log of iSafe.
 
+Version 2.80
+* Fixed endermen griefing always being prevented.
+* Players' inventories will no longer get cleared when they die, if you have disabled entity drops.
+* Fixed duplication of blaze combust prevention code.
+* mobsConfig is now re-coded and re-done. mobsConfig is now named "EntityManager". Almost everything related to entities will go inside the EntityManager file. All settings previously found in the mobsConfig is now re-named and re-done in EntityManager.
+* Re-colored and fixed spacing when alerting for new iSafe updates.
+* Fixed blacklists alerting if the event was cancelled, even if it was not iSafe who cancelled it.
+* Added DispenseBlacklist.
+* Removed the cleardrops command.
+* Corrected the blacklist header.
+* Re-coded and improved the crop trampling prevention.
+* 
+
 Version 2.71
 * Files now displays the data when they were generated in the headers. (Note that this will be a false date if the file already exist before this update)
 * Added a comment node to the SpawnerEgg blacklist displaying to not use SpawnerEgg IDs but creature IDs.

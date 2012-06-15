@@ -99,6 +99,11 @@ public class Data {
     public static String[] censoredWordsList = { "No defaults added." };
     
     
+    public static List<String> dispensedBlock = new ArrayList<String>();
+    public static String[] dispensedBlockList = { "No defaults added." };
+    public static List<String> dispenseWorlds = new ArrayList<String>();
+    public static String[] dispenseWorldsList = { "world", "world_nether" };
+    
     public static String getDate() {
         String date;
         Calendar calendar = Calendar.getInstance();
@@ -123,15 +128,17 @@ public class Data {
     public static String setBlacklistHeader() {
         String header = "This is the blacklist config on behalf of iSafe, read the iSafe wiki for assistance." 
         + "\nRemember that the world listing is case sensetive."
-        + "\nBlacklists related to mobs and creatures are found in the mobsConfig.yml"
+        + "\nBlacklists related to creatures is found in the entityManager.yml"
         + "\nThis file was generated: " + getDate() + "\n";
         return header;
     }
     
-    public static String setmobsConfigHeader() {
-        String header = "This is the Mob Control config associated to regulatory characteristics aimed at mobs in Minecraft."
-        + "\nVisit the iSafe wiki for assistance."
-        + "\nA list of mob IDs can be found at the minercaft wiki, http://www.minecraftwiki.net/wiki/Data_values In the section 'Entity IDs'"
+    public static String setEntityManagerHeader() {
+        String header = "This is the entityManager config associated to entities in Minecraft."
+        + "\nIn this configuration file you can manage entities, such as Creatures, Spawn eggs and so on."
+        + "\nA list of entity IDs can be found at the minercaft wiki, http://www.minecraftwiki.net/wiki/Data_values In the section Entity IDs"
+        + "\nPlease remember that not everything related to entities have been added to this config file yet, and not everything will either."
+        + "\nThe Player section is just specific player events related to something specific related to entities. (Most player options is in the config.yml)"
         + "\nThis file was generated: " + getDate() + "\n";
         return header;
     }

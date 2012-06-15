@@ -94,53 +94,52 @@ public class PlaceBlacklist implements Listener {
                                 }
                             }
                         }
+                            if (plugin.getBlacklist().getBoolean("Place.Kick-Player", true))
+                            {
+                                if (event.isCancelled())
+                                {
+                                    p.kickPlayer(ChatColor.RED + "You got kicked for attempting to place: "+ ChatColor.GRAY + block.getType().name().toLowerCase());
+                                }    
+                            }
+
+                            if (plugin.getBlacklist().getBoolean("Place.Kill-Player", true))
+                            {
+                                if (event.isCancelled())
+                                {
+                                    p.setHealth(0);
+                                    KillAlertPlayer(p, block);
+                                }    
+                            }
+
+                            if (plugin.getBlacklist().getBoolean("Place.Alert/log.To-console", true))
+                            {
+                                if (event.isCancelled()) 
+                                {
+                                    AlertConsole(p, block, loc, worldname);
+                                }
+                            }
+
+                            if (plugin.getBlacklist().getBoolean("Place.Alert/log.To-player", true))
+                            {
+                                if (event.isCancelled()) 
+                                {
+                                    AlertPlayer(p, block, worldname);
+                                }
+                            }
+
+                            if (plugin.getBlacklist().getBoolean("Place.Alert/log.To-server-chat", true))
+                            {
+                                if (event.isCancelled()) 
+                                {
+                                    AlertServer(server, block, worldname, p);
+                                }
+                            }
+                        }
                     } else {
                         event.setCancelled(false);
                     }
                 }
             }
-            
-            if (plugin.getBlacklist().getBoolean("Place.Kick-Player", true))
-            {
-                if (event.isCancelled())
-                {
-                    p.kickPlayer(ChatColor.RED + "You got kicked for attempting to place: "+ ChatColor.GRAY + block.getType().name().toLowerCase());
-                }    
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Place.Kill-Player", true))
-            {
-                if (event.isCancelled())
-                {
-                    p.setHealth(0);
-                    KillAlertPlayer(p, block);
-                }    
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Place.Alert/log.To-console", true))
-            {
-                if (event.isCancelled()) 
-                {
-                    AlertConsole(p, block, loc, worldname);
-                }
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Place.Alert/log.To-player", true))
-            {
-                if (event.isCancelled()) 
-                {
-                    AlertPlayer(p, block, worldname);
-                }
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Place.Alert/log.To-server-chat", true))
-            {
-                if (event.isCancelled()) 
-                {
-                    AlertServer(server, block, worldname, p);
-                }
-            }
-        }
         
         if (plugin.getBlacklist().getBoolean("Place.Complete-Disallow-placing", true))
         {

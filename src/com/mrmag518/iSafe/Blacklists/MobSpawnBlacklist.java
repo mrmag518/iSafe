@@ -38,16 +38,16 @@ public class MobSpawnBlacklist implements Listener {
          * Spawn reason: Natural.
          */
         final List<Entity> naturalSpawnedMobs = new ArrayList<Entity>();
-        if (plugin.getMobsConfig().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityID)
-                || plugin.getMobsConfig().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityNameLowercase)
-                || plugin.getMobsConfig().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityNameUppercase)
-                || plugin.getMobsConfig().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityName)
-                || plugin.getMobsConfig().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityNameString))
+        if (plugin.getEntityManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityID)
+                || plugin.getEntityManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityNameLowercase)
+                || plugin.getEntityManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityNameUppercase)
+                || plugin.getEntityManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityName)
+                || plugin.getEntityManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityNameString))
         {
             if (!event.isCancelled())
             {
-                final List<String> worlds1 = plugin.getMobsConfig().getStringList("MobSpawn.Natural.Worlds");
-                if (plugin.getMobsConfig().getList("MobSpawn.Natural.Worlds", worlds1).contains(worldname))
+                final List<String> worlds1 = plugin.getEntityManager().getStringList("MobSpawn.Natural.Worlds");
+                if (plugin.getEntityManager().getList("MobSpawn.Natural.Worlds", worlds1).contains(worldname))
                 {
                     if (event.getSpawnReason() == SpawnReason.NATURAL)
                     {
@@ -61,7 +61,7 @@ public class MobSpawnBlacklist implements Listener {
                 }
             }
             
-            if (plugin.getMobsConfig().getBoolean("MobSpawn.Natural.Debug.To-console", true))
+            if (plugin.getEntityManager().getBoolean("MobSpawn.Natural.Debug.To-console", true))
             {
                 int x = (int) loc.getX();
                 int y = (int) loc.getY();
@@ -77,16 +77,16 @@ public class MobSpawnBlacklist implements Listener {
          * Spawn reason: Spawner.
          */
         final List<Entity> spawnerSpawnedMobs = new ArrayList<Entity>();
-        if (plugin.getMobsConfig().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityID)
-                || plugin.getMobsConfig().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityNameLowercase)
-                || plugin.getMobsConfig().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityNameUppercase)
-                || plugin.getMobsConfig().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityName)
-                || plugin.getMobsConfig().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityNameString))
+        if (plugin.getEntityManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityID)
+                || plugin.getEntityManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityNameLowercase)
+                || plugin.getEntityManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityNameUppercase)
+                || plugin.getEntityManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityName)
+                || plugin.getEntityManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityNameString))
         {
             if (!event.isCancelled())
             {
-                final List<String> worlds2 = plugin.getMobsConfig().getStringList("MobSpawn.Spawner.Worlds");
-                if (plugin.getMobsConfig().getList("MobSpawn.Spawner.Worlds", worlds2).contains(worldname))
+                final List<String> worlds2 = plugin.getEntityManager().getStringList("MobSpawn.Spawner.Worlds");
+                if (plugin.getEntityManager().getList("MobSpawn.Spawner.Worlds", worlds2).contains(worldname))
                 {
                     if (event.getSpawnReason() == SpawnReason.SPAWNER)
                     {
@@ -100,7 +100,7 @@ public class MobSpawnBlacklist implements Listener {
                 }
             }
             
-            if (plugin.getMobsConfig().getBoolean("MobSpawn.Spawner.Debug.To-console", true))
+            if (plugin.getEntityManager().getBoolean("MobSpawn.Spawner.Debug.To-console", true))
             {
                 int x = (int) loc.getX();
                 int y = (int) loc.getY();
@@ -116,16 +116,16 @@ public class MobSpawnBlacklist implements Listener {
          * Spawn reason: Custom.
          */
         final List<Entity> customSpawnedMobs = new ArrayList<Entity>();
-        if (plugin.getMobsConfig().getList("MobSpawn.Spawner.Blacklist", customSpawnedMobs).contains(entityID)
-                || plugin.getMobsConfig().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityNameLowercase)
-                || plugin.getMobsConfig().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityNameUppercase)
-                || plugin.getMobsConfig().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityName)
-                || plugin.getMobsConfig().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityNameString))
+        if (plugin.getEntityManager().getList("MobSpawn.Spawner.Blacklist", customSpawnedMobs).contains(entityID)
+                || plugin.getEntityManager().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityNameLowercase)
+                || plugin.getEntityManager().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityNameUppercase)
+                || plugin.getEntityManager().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityName)
+                || plugin.getEntityManager().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityNameString))
         {
             if (!event.isCancelled())
             {
-                final List<String> worlds3 = plugin.getMobsConfig().getStringList("MobSpawn.Custom.Worlds");
-                if (plugin.getMobsConfig().getList("MobSpawn.Custom.Worlds", worlds3).contains(worldname))
+                final List<String> worlds3 = plugin.getEntityManager().getStringList("MobSpawn.Custom.Worlds");
+                if (plugin.getEntityManager().getList("MobSpawn.Custom.Worlds", worlds3).contains(worldname))
                 {
                     if (event.getSpawnReason() == SpawnReason.CUSTOM)
                     {
@@ -139,7 +139,7 @@ public class MobSpawnBlacklist implements Listener {
                 }
             }
             
-            if (plugin.getMobsConfig().getBoolean("MobSpawn.Custom.Debug.To-console", true))
+            if (plugin.getEntityManager().getBoolean("MobSpawn.Custom.Debug.To-console", true))
             {
                 int x = (int) loc.getX();
                 int y = (int) loc.getY();
@@ -155,16 +155,16 @@ public class MobSpawnBlacklist implements Listener {
          * Spawn reason: Egg.
          */
         final List<Entity> eggSpawnedMobs = new ArrayList<Entity>();
-        if (plugin.getMobsConfig().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityID)
-                || plugin.getMobsConfig().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityNameLowercase)
-                || plugin.getMobsConfig().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityNameUppercase)
-                || plugin.getMobsConfig().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityName)
-                || plugin.getMobsConfig().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityNameString))
+        if (plugin.getEntityManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityID)
+                || plugin.getEntityManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityNameLowercase)
+                || plugin.getEntityManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityNameUppercase)
+                || plugin.getEntityManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityName)
+                || plugin.getEntityManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityNameString))
         {
             if (!event.isCancelled())
             {
-                final List<String> worlds4 = plugin.getMobsConfig().getStringList("MobSpawn.Egg.Worlds");
-                if (plugin.getMobsConfig().getList("MobSpawn.Egg.Worlds", worlds4).contains(worldname))
+                final List<String> worlds4 = plugin.getEntityManager().getStringList("MobSpawn.Egg.Worlds");
+                if (plugin.getEntityManager().getList("MobSpawn.Egg.Worlds", worlds4).contains(worldname))
                 {
                     if (event.getSpawnReason() == SpawnReason.EGG)
                     {
@@ -178,7 +178,7 @@ public class MobSpawnBlacklist implements Listener {
                 }
             }
             
-            if (plugin.getMobsConfig().getBoolean("MobSpawn.Egg.Debug.To-console", true))
+            if (plugin.getEntityManager().getBoolean("MobSpawn.Egg.Debug.To-console", true))
             {
                 int x = (int) loc.getX();
                 int y = (int) loc.getY();
@@ -194,16 +194,16 @@ public class MobSpawnBlacklist implements Listener {
          * Spawn reason: SpawnerEgg.
          */
         final List<Entity> spawnereggSpawnedMobs = new ArrayList<Entity>();
-        if (plugin.getMobsConfig().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityID)
-                || plugin.getMobsConfig().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityNameLowercase)
-                || plugin.getMobsConfig().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityNameUppercase)
-                || plugin.getMobsConfig().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityName)
-                || plugin.getMobsConfig().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityNameString))
+        if (plugin.getEntityManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityID)
+                || plugin.getEntityManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityNameLowercase)
+                || plugin.getEntityManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityNameUppercase)
+                || plugin.getEntityManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityName)
+                || plugin.getEntityManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityNameString))
         {
             if (!event.isCancelled())
             {
-                final List<String> worlds5 = plugin.getMobsConfig().getStringList("MobSpawn.SpawnerEgg.Worlds");
-                if (plugin.getMobsConfig().getList("MobSpawn.SpawnerEgg.Worlds", worlds5).contains(worldname))
+                final List<String> worlds5 = plugin.getEntityManager().getStringList("MobSpawn.SpawnerEgg.Worlds");
+                if (plugin.getEntityManager().getList("MobSpawn.SpawnerEgg.Worlds", worlds5).contains(worldname))
                 {
                     if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
                     {
@@ -217,7 +217,7 @@ public class MobSpawnBlacklist implements Listener {
                 }
             }
             
-            if (plugin.getMobsConfig().getBoolean("MobSpawn.SpawnerEgg.Debug.To-console", true))
+            if (plugin.getEntityManager().getBoolean("MobSpawn.SpawnerEgg.Debug.To-console", true))
             {
                 int x = (int) loc.getX();
                 int y = (int) loc.getY();

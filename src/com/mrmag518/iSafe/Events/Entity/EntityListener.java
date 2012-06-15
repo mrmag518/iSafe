@@ -23,6 +23,8 @@ import com.mrmag518.iSafe.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -175,7 +177,7 @@ public class EntityListener implements Listener {
     
     @EventHandler
     public void expBottle(ExpBottleEvent event) {
-        if(plugin.getConfig().getBoolean("Misc.Prevent-expBottle-throw", true)) {
+        if(plugin.getEntityManager().getBoolean("Player.Prevent-expBottle-throw", true)) {
             event.setExperience(0);
             event.setShowEffect(false);
         }
@@ -190,7 +192,7 @@ public class EntityListener implements Listener {
         
         Entity entity = event.getEntity();
 
-        if(plugin.getMobsConfig().getBoolean("Mobs.Endermen.Prevent-Endermen-griefing", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.Endermen.Prevent-Endermen-griefing", true))
         {
             if (entity instanceof Enderman) {
                 event.setCancelled(true);
@@ -708,10 +710,13 @@ public class EntityListener implements Listener {
         {
             event.setDroppedExp(0);
         }
+        LivingEntity entity = event.getEntity();
         
-        if(plugin.getMobsConfig().getBoolean("Misc.DeathDrop.Disable-drops-onDeath", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.Death.Disable-drops-onDeath", true))
         {
-            event.getDrops().clear();
+            if(!(entity instanceof Player)) {
+                event.getDrops().clear();
+            }
         }
     }
 
@@ -722,7 +727,7 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getMobsConfig().getBoolean("Misc.Prevent-SlimeSplit", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.Slime.Prevent-SlimeSplit", true))
         {
             event.setCancelled(true);
         }
@@ -735,63 +740,63 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-closest_player-target", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-closest_player-target", true))
         {
             if(event.getReason() == TargetReason.CLOSEST_PLAYER) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-custom-target", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-custom-target", true))
         {
             if(event.getReason() == TargetReason.CUSTOM) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-forgot_target-target", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-forgot_target-target", true))
         {
             if(event.getReason() == TargetReason.FORGOT_TARGET) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-owner_attacked_target-target", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-owner_attacked_target-target", true))
         {
             if(event.getReason() == TargetReason.OWNER_ATTACKED_TARGET) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-pig_zombie_target-target", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-pig_zombie_target-target", true))
         {
             if(event.getReason() == TargetReason.PIG_ZOMBIE_TARGET) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-random_target-target", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-random_target-target", true))
         {
             if(event.getReason() == TargetReason.RANDOM_TARGET) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-target_attacked_entity-target", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-target_attacked_entity-target", true))
         {
             if(event.getReason() == TargetReason.TARGET_ATTACKED_ENTITY) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-target_attacked_owner-target", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-target_attacked_owner-target", true))
         {
             if(event.getReason() == TargetReason.TARGET_ATTACKED_OWNER) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("EntityTarget.Disable-target_died-target", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-target_died-target", true))
         {
             if(event.getReason() == TargetReason.TARGET_DIED) 
             {
@@ -801,22 +806,28 @@ public class EntityListener implements Listener {
     }
     
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onEntityInteract(EntityInteractEvent event) {
+    public void manageCropTrampling(EntityInteractEvent event) {
         if (event.isCancelled())
         {
             return;
         }
+        Block b  = event.getBlock();
+        Entity entity = event.getEntity();
         
-        if(plugin.getConfig().getBoolean("Misc.Prevent-crop-trampling-by-creature", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.Prevent-cropTrampling", true))
         {
-            if (event.getBlock().getType() == Material.SOIL && event.getEntity() instanceof Creature) {
-                event.setCancelled(true);
+            if(entity instanceof LivingEntity) {
+                if(entity instanceof Creature && !(entity instanceof Player)) {
+                    event.setCancelled(true);
+                }
             }
         }
-        if(plugin.getConfig().getBoolean("Misc.Prevent-crop-trampling-by-player", true))
+        if(plugin.getEntityManager().getBoolean("Player.Prevent-cropTrampling", true))
         {
-            if (event.getBlock().getType() == Material.SOIL && event.getEntity() instanceof Player) {
-                event.setCancelled(true);
+            if(entity instanceof LivingEntity) {
+                if(entity instanceof Player && !(entity instanceof Creature)) {
+                    event.setCancelled(true);
+                }
             }
         }
     }
@@ -828,7 +839,7 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getMobsConfig().getBoolean("Misc.Prevent-PigZap", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.Pig.Prevent-PigZap", true))
         {
             event.setCancelled(true);
         }
@@ -840,10 +851,17 @@ public class EntityListener implements Listener {
         {
             return;
         }
+        LivingEntity entity = event.getEntity();
         
-        if(plugin.getMobsConfig().getBoolean("Misc.Tame.Prevent-taming", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.Tame.Prevent-taming", true))
         {
             event.setCancelled(true);
+        }
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Tame.Prevent-taming-for.Wolf", true)) {
+            if(entity instanceof Wolf) {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -875,19 +893,19 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getMobsConfig().getBoolean("Powered-Creepers.Prevent-PowerCause.Lightning", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.PoweredCreepers.Prevent-PowerCause.Lightning", true))
         {
             if (event.getCause() == PowerCause.LIGHTNING) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Powered-Creepers.Prevent-PowerCause.Set-Off", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.PoweredCreepers.Prevent-PowerCause.Set-Off", true))
         {
             if (event.getCause() == PowerCause.SET_OFF) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Powered-Creepers.Prevent-PowerCause.Set-On", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.PoweredCreepers.Prevent-PowerCause.Set-On", true))
         {
             if (event.getCause() == PowerCause.SET_ON) {
                 event.setCancelled(true);
@@ -903,196 +921,215 @@ public class EntityListener implements Listener {
         }
         Entity entity = event.getEntity();
         
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-Entity-Combust", true))
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for-allCreatures", true))
         {
             event.setDuration(0);
             event.setCancelled(true);
         }
         
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Blaze", true)) 
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Blaze", true)) 
         {
             if(entity instanceof Blaze) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.CaveSpider", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.CaveSpider", true)) 
         {
             if(entity instanceof CaveSpider) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Chicken", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Chicken", true)) 
         {
             if(entity instanceof Chicken) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Cow", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Cow", true)) 
         {
             if(entity instanceof Cow) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Creeper", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Creeper", true)) 
         {
             if(entity instanceof Creeper) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.EnderDragon", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.EnderDragon", true)) 
         {
             if(entity instanceof EnderDragon) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Enderman", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Enderman", true)) 
         {
             if(entity instanceof Enderman) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Ghast", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Ghast", true)) 
         {
             if(entity instanceof Ghast) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Giant", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Giant", true)) 
         {
             if(entity instanceof Giant) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Golem", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Golem", true)) 
         {
             if(entity instanceof Golem) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.IronGolem", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.IronGolem", true)) 
         {
             if(entity instanceof IronGolem) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.MagmaCube", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.MagmaCube", true)) 
         {
             if(entity instanceof MagmaCube) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.MushroomCow", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.MushroomCow", true)) 
         {
             if(entity instanceof MushroomCow) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Ocelot", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Ocelot", true)) 
         {
             if(entity instanceof Ocelot) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Pig", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Pig", true)) 
         {
             if(entity instanceof Pig) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.PigZombie", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.PigZombie", true)) 
         {
             if(entity instanceof PigZombie) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Sheep", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Sheep", true)) 
         {
             if(entity instanceof Sheep) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Silverfish", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Silverfish", true)) 
         {
             if(entity instanceof Silverfish) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Skeleton", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Skeleton", true)) 
         {
             if(entity instanceof Skeleton) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Slime", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Slime", true)) 
         {
             if(entity instanceof Slime) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Snowman", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Snowman", true)) 
         {
             if(entity instanceof Snowman) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Spider", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Spider", true)) 
         {
             if(entity instanceof Spider) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Squid", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Squid", true)) 
         {
             if(entity instanceof Squid) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Villager", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Villager", true)) 
         {
             if(entity instanceof Villager) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
         }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Wolf", true)) 
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Wolf", true)) 
         {
             if(entity instanceof Wolf) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
-        }if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Zombie", true)) 
+        }
+        
+        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Zombie", true)) 
         {
             if(entity instanceof Zombie) {
-                event.setDuration(0);
-                event.setCancelled(true);
-            }
-        }
-        if(plugin.getMobsConfig().getBoolean("Entity-Combust.Disable-for.Blaze", true)) 
-        {
-            if(entity instanceof Blaze) {
                 event.setDuration(0);
                 event.setCancelled(true);
             }
@@ -1161,12 +1198,12 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if (plugin.getMobsConfig().getBoolean("Completely-Prevent-SheepDyeWool", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Completely-Prevent-SheepDyeWool", true))
         {
             event.setCancelled(true);
         }    
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Black", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Black", true))
         {
             if (event.getColor() == DyeColor.BLACK) 
             {
@@ -1174,7 +1211,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Blue", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Blue", true))
         {
             if (event.getColor() == DyeColor.BLUE) 
             {
@@ -1182,7 +1219,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Brown", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Brown", true))
         {
             if (event.getColor() == DyeColor.BROWN) 
             {
@@ -1190,7 +1227,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Cyan", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Cyan", true))
         {
             if (event.getColor() == DyeColor.CYAN) 
             {
@@ -1198,7 +1235,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Gray", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Gray", true))
         {
             if (event.getColor() == DyeColor.GRAY) 
             {
@@ -1206,7 +1243,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Green", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Green", true))
         {
             if (event.getColor() == DyeColor.GREEN) 
             {
@@ -1214,7 +1251,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Light_Blue", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Light_Blue", true))
         {
             if (event.getColor() == DyeColor.LIGHT_BLUE) 
             {
@@ -1222,7 +1259,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Lime", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Lime", true))
         {
             if (event.getColor() == DyeColor.LIME) 
             {
@@ -1230,7 +1267,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Magenta", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Magenta", true))
         {
             if (event.getColor() == DyeColor.MAGENTA) 
             {
@@ -1238,7 +1275,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Orange", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Orange", true))
         {
             if (event.getColor() == DyeColor.ORANGE) 
             {
@@ -1246,7 +1283,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Pink", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Pink", true))
         {
             if (event.getColor() == DyeColor.PINK) 
             {
@@ -1254,7 +1291,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Purple", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Purple", true))
         {
             if (event.getColor() == DyeColor.PURPLE) 
             {
@@ -1262,7 +1299,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Red", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Red", true))
         {
             if (event.getColor() == DyeColor.RED) 
             {
@@ -1270,7 +1307,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Silver", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Silver", true))
         {
             if (event.getColor() == DyeColor.SILVER) 
             {
@@ -1278,7 +1315,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.White", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.White", true))
         {
             if (event.getColor() == DyeColor.WHITE) 
             {
@@ -1286,7 +1323,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getMobsConfig().getBoolean("Prevent-SheepDyeWool-Color.Yellow", true))
+        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Yellow", true))
         {
             if (event.getColor() == DyeColor.YELLOW) 
             {
@@ -1302,7 +1339,7 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getMobsConfig().getBoolean("Misc.Prevent-mobs-breaking-doors", true)) {
+        if(plugin.getEntityManager().getBoolean("Creatures.DoorBreaking-PreventFor-zombies", true)) {
             event.setCancelled(true);
         }
     }

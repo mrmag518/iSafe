@@ -89,52 +89,51 @@ public class PickupBlacklist implements Listener {
                                 event.setCancelled(true);
                             }
                         }
+                        if (plugin.getBlacklist().getBoolean("Pickup.Kick-Player", true))
+                        {
+                            if (event.isCancelled())
+                            {
+                                player.kickPlayer(ChatColor.RED + "You got kicked for attempting to pickup: "+ ChatColor.GRAY + event.getItem().getItemStack().getType().name().toLowerCase());
+                            }    
+                        }
+
+                        if (plugin.getBlacklist().getBoolean("Place.Kill-Player", true))
+                        {
+                            if (event.isCancelled())
+                            {
+                                player.setHealth(0);
+                                KillAlertPlayer(player, event, worldname);
+                            }    
+                        }
+
+                        if (plugin.getBlacklist().getBoolean("Pickup.Alert/log.To-console", true))
+                        {
+                            if (event.isCancelled()) 
+                            {
+                                AlertConsole(player, event, worldname, loc);
+                            }
+                        }
+
+                        if (plugin.getBlacklist().getBoolean("Pickup.Alert/log.To-player", true))
+                        {
+                            if (event.isCancelled()) 
+                            {
+                                AlertPlayer(player, event);
+                            }
+                        }
+
+                        if (plugin.getBlacklist().getBoolean("Pickup.Alert/log.To-server-chat", true))
+                        {
+                            if (event.isCancelled()) 
+                            {
+                                if (message == 0) {
+                                    server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to pickup: "+ event.getItem().getItemStack().getType().name().toLowerCase());
+                                    message = 1;
+                                }
+                            }
+                        }
                     } else {
                         event.setCancelled(false);
-                    }
-                }
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Pickup.Kick-Player", true))
-            {
-                if (event.isCancelled())
-                {
-                    player.kickPlayer(ChatColor.RED + "You got kicked for attempting to pickup: "+ ChatColor.GRAY + event.getItem().getItemStack().getType().name().toLowerCase());
-                }    
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Place.Kill-Player", true))
-            {
-                if (event.isCancelled())
-                {
-                    player.setHealth(0);
-                    KillAlertPlayer(player, event, worldname);
-                }    
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Pickup.Alert/log.To-console", true))
-            {
-                if (event.isCancelled()) 
-                {
-                    AlertConsole(player, event, worldname, loc);
-                }
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Pickup.Alert/log.To-player", true))
-            {
-                if (event.isCancelled()) 
-                {
-                    AlertPlayer(player, event);
-                }
-            }
-            
-            if (plugin.getBlacklist().getBoolean("Pickup.Alert/log.To-server-chat", true))
-            {
-                if (event.isCancelled()) 
-                {
-                    if (message == 0) {
-                        server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to pickup: "+ event.getItem().getItemStack().getType().name().toLowerCase());
-                        message = 1;
                     }
                 }
             }
