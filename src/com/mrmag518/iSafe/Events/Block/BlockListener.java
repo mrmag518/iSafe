@@ -36,6 +36,7 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 import org.bukkit.event.block.BlockPhysicsEvent;
@@ -53,6 +54,17 @@ public class BlockListener implements Listener {
     {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+    
+    @EventHandler
+    public void blockGrowManager(BlockGrowEvent event) {
+        if (event.isCancelled())
+        {
+            return;
+        }
+        if(plugin.getConfig().getBoolean("Misc.Prevent-BlockGrow", true)) {
+            event.setCancelled(true);
+        }
     }
     
     @EventHandler

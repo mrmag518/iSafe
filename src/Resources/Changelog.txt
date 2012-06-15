@@ -6,7 +6,9 @@ Version 2.71
 * Improved the Stopserver command to check if there is players online, and if so; kick them and send them a message.
 * Fixed InvalidConfigurationException on userFile generation.
 * Added 'iSafe.enchant' permission.
-* 
+* Added prevention for creative players from enchanting items.
+* Added prevention for BlockGrow.
+* Supports 1.2.5-R4.0
 
 Version 2.70
 * Fixed kick messages displaying the default leave message and the kick message at the same time.

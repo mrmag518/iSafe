@@ -300,6 +300,7 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Misc.Prevent-crop-trampling-by-creature", false);
         config.addDefault("Misc.Prevent-crop-trampling-by-player", false);
         config.addDefault("Misc.Prevent-portal-creation", false);
+        config.addDefault("Misc.Prevent-BlockGrow", false);
         
         config.addDefault("Gamemode.Prevent-Gamemode-change", false);
         config.addDefault("Gamemode.Prevent-Gamemode-to-CreativeMode-change", false);
