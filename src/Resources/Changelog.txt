@@ -11,6 +11,7 @@ Version 2.80
 * Removed the cleardrops command.
 * Corrected the blacklist header.
 * Re-coded and improved the crop trampling prevention.
+* Cleaned up the enable process.
 * 
 
 Version 2.71

@@ -49,12 +49,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class iSafe extends JavaPlugin {
-    
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //Remember to change this on every version!
-    
-    public String fileversion = "iSafe v2.80";
-    
+    private String fileversion = "iSafe v2.80";
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     public PlayerListener playerListener = null;
@@ -66,10 +63,8 @@ public class iSafe extends JavaPlugin {
     public WorldListener worldListener = null;
     public EnchantmentListener enchantmentListener = null;
     public DropListener dropListener = null;
-    
     public UserFileCreator UFC = null;
     public SendUpdate sendUpdate = null;
-    
     public DropBlacklist dropBlacklist = null;
     public PlaceBlacklist placeBlacklist = null;
     public BreakBlacklist breakBlacklist = null;
@@ -78,27 +73,20 @@ public class iSafe extends JavaPlugin {
     public MobSpawnBlacklist mobSpawnBlacklist = null;
     public Censor censor = null;
     public DispenseBlacklist dispenseBlacklist = null;
-    
     private Reload reloadcmd = null;
     private Info isafeInfocmd = null;
     private Serverinfo serverinfocmd = null;
     private Superbreak superbreakcmd = null;
     private Stopserver stopServercmd = null;
-    
     public String version = null;
     public String newVersion = null;
-    
     public static iSafe plugin;
-    
     public final Logger log = Logger.getLogger("Minecraft");
-    
     public FileConfiguration entityManager = null;
     public File entityManagerFile = null;
-    
     public FileConfiguration blacklist = null;
     public File blacklistFile = null;
     public FileConfiguration config;
-    
     public Set<Player> superbreak = new HashSet<Player>();
     
     @Override
@@ -110,7 +98,37 @@ public class iSafe extends JavaPlugin {
     @Override
     public void onEnable() {
         version = this.getDescription().getVersion();
-        
+        registerClasses(); //1
+        PluginDescriptionFile pdffile = this.getDescription();
+        doFileGenerations(); //2
+        //Update checker - From MilkBowl.
+        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    newVersion = updateCheck(version);
+                    String oldVersion = version;
+                    
+                    if (!newVersion.contains(oldVersion)) {
+                        log.info("-----  iSafe UpdateChecker  -----");
+                        log.info("You are not using the recommended build of iSafe; "+ newVersion);
+                        log.info("You are currently using v" + oldVersion);
+                        log.info("Please use the latest recommended build of iSafe.("+newVersion+")");
+                        log.info("You can find this version at: http://dev.bukkit.org/server-mods/blockthattnt/files/");
+                        log.info("-----  -------------------  -----");
+                    }
+                } catch (Exception ignored) {
+                    //Ignored
+                }
+            }
+        }, 0, 432000);
+        executeCommands(); //3
+        getServer().getPluginManager().getPermissions();
+        checkMatch(); //4
+        log.info("[" + pdffile.getName() + " :: " + version + "] " + " Enabled succesfully.");
+    }
+    
+    private void registerClasses() {
         playerListener = new PlayerListener(this);
         blockListener = new BlockListener(this);
         entityListener = new EntityListener(this);
@@ -138,16 +156,18 @@ public class iSafe extends JavaPlugin {
         serverinfocmd = new Serverinfo(this);
         superbreakcmd = new Superbreak(this);
         stopServercmd = new Stopserver(this);
-        
-        PluginDescriptionFile pdffile = this.getDescription();
-        
-        if(!(this.getDataFolder().exists())) {
+    }
+    
+    private void doFileGenerations() {
+        if(!(this.getDataFolder().exists())) 
+        {
             log.info("[iSafe]" + " iSafe folder not found, creating a new one.");
             this.getDataFolder().mkdirs(); 
         }
         
         File usersFolder = new File(getDataFolder() + File.separator + "Users");
-        if(!(usersFolder.exists())) {
+        if(!(usersFolder.exists())) 
+        {
             usersFolder.mkdir();
         }
         
@@ -162,32 +182,10 @@ public class iSafe extends JavaPlugin {
         entityManager = this.getEntityManager();
         loadEntityManager();
         reloadEntityManager();
-        
-        //Update checker - From MilkBowl.
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    newVersion = updateCheck(version);
-                    String oldVersion = version;
-                    
-                    if (!newVersion.contains(oldVersion)) {
-                        log.info("-----  iSafe UpdateChecker  -----");
-                        log.info("You are not using the recommended build of iSafe; "+ newVersion);
-                        log.info("You are currently using v" + oldVersion);
-                        log.info("Please use the latest recommended build of iSafe.("+newVersion+")");
-                        log.info("You can find this version at: http://dev.bukkit.org/server-mods/blockthattnt/files/");
-                        log.info("-----  -------------------  -----");
-                    }
-                } catch (Exception ignored) {
-                    //Ignored
-                }
-            }
-        }, 0, 432000);
-        
-        executeCommands();
-        getServer().getPluginManager().getPermissions();
-        
+    }
+    
+    private void checkMatch() {
+        PluginDescriptionFile pdffile = this.getDescription();
         if(!(pdffile.getFullName().equals(fileversion))) {
             log.info("-----  iSafe vMatchConflict  -----");
             log.warning("[iSafe] The version in the pdffile is not the same as the file.");
@@ -198,10 +196,6 @@ public class iSafe extends JavaPlugin {
         } else {
             log.info("[iSafe] The file and pdffile versions matched eachother correctly.");
         }
-        
-        //blacklistDebug();
-        
-        log.info("[" + pdffile.getName() + " :: " + version + "] " + " Enabled succesfully.");
     }
     
     //Update checker - Old code from MilkBowl's Vault.
@@ -226,7 +220,7 @@ public class iSafe extends JavaPlugin {
         return currentVersion;
     }
     
-    public void executeCommands() {
+    private void executeCommands() {
         getCommand("iSafe-reload").setExecutor(reloadcmd);
         getCommand("iSafe-info").setExecutor(isafeInfocmd);
         getCommand("serverinfo").setExecutor(serverinfocmd);
