@@ -125,6 +125,14 @@ public class iSafe extends JavaPlugin {
         executeCommands(); //3
         getServer().getPluginManager().getPermissions();
         checkMatch(); //4
+        
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException e) {
+            // Failed to submit the stats :-(
+        }
+        
         log.info("[" + pdffile.getName() + " :: " + version + "] " + " Enabled succesfully.");
     }
     
@@ -674,87 +682,4 @@ public class iSafe extends JavaPlugin {
         this.getEntityManager().options().copyDefaults(true);
         saveEntityManager();
     }
-    
-    /**
-    private void blacklistDebug() {
-        log.info("[iSafe] Blacklist debug mode is on.");
-        
-        log.info("[iSafe] -----  Place Blacklist  -----");
-        if(Data.worlds != null) {
-            log.info("[iSafe] Blacklisiting in the world(s): " + Data.worlds);
-            log.info("[iSafe] World(s) blacklisting in: " + Data.placedblocks.size());
-        } else {
-            if(Data.placedblocks != null) {
-                log.warning("[iSafe] You have objects in the blacklist list, but no worlds to blacklist in!");
-            } else {
-                log.info("[iSafe] Blacklisting in the world(s): " + Data.worlds);
-            }
-        }
-        if(Data.placedblocks != null) {
-            log.info("[iSafe] Blacklisted blocks: " + Data.placedblocks);
-            log.info("[iSafe] Total blacklisted blocks: " + Data.placedblocks.size());
-        } else {
-            log.info("[iSafe] Blacklisted blocks: " + "None");
-            log.info("[iSafe] Total blacklisted blocks: " + "0");
-        }
-        log.info("[iSafe] Kick player: " + this.getBlacklist().getBoolean("Place.Kick-Player"));
-        log.info("[iSafe] Kill player: " + this.getBlacklist().getBoolean("Place.Kill-Player"));
-        log.info("[iSafe] Logging to: ");
-        log.info("[iSafe] - Console: " + this.getBlacklist().getBoolean("Place.Alert/log.To-console"));
-        log.info("[iSafe] - Player: "+ this.getBlacklist().getBoolean("Place.Alert/log.To-player"));
-        log.info("[iSafe] - ServerChat: "+ this.getBlacklist().getBoolean("Place.Alert/log.To-server-chat"));
-        log.info("[iSafe] -----------------------------");
-        
-        log.info("[iSafe] -----  Break Blacklist  -----");
-        if(Data.worlds != null) {
-            log.info("[iSafe] Blacklisiting in the world(s): " + Data.Breakworlds);
-            log.info("[iSafe] World(s) blacklisting in: " + Data.Breakworlds.size());
-        } else {
-            if(Data.placedblocks != null) {
-                log.warning("[iSafe] You have objects in the blacklist list, but no worlds to blacklist in!");
-            } else {
-                log.info("[iSafe] Blacklisting in the world(s): " + Data.Breakworlds);
-            }
-        }
-        if(Data.placedblocks != null) {
-            log.info("[iSafe] Blacklisted blocks: " + Data.brokenblocks);
-            log.info("[iSafe] Total blacklisted blocks: " + Data.brokenblocks.size());
-        } else {
-            log.info("[iSafe] Blacklisted blocks: " + "None");
-            log.info("[iSafe] Total blacklisted blocks: " + "0");
-        }
-        log.info("[iSafe] Kick player: " + this.getBlacklist().getBoolean("Break.Kick-Player"));
-        log.info("[iSafe] Kill player: " + this.getBlacklist().getBoolean("Break.Kill-Player"));
-        log.info("[iSafe] Logging to: ");
-        log.info("[iSafe] - Console: " + this.getBlacklist().getBoolean("Break.Alert/log.To-console"));
-        log.info("[iSafe] - Player: "+ this.getBlacklist().getBoolean("Break.Alert/log.To-player"));
-        log.info("[iSafe] - ServerChat: "+ this.getBlacklist().getBoolean("Break.Alert/log.To-server-chat"));
-        log.info("[iSafe] -----------------------------");
-        
-        log.info("[iSafe] -----  Drop Blacklist  -----");
-        if(Data.worlds != null) {
-            log.info("[iSafe] Blacklisiting in the world(s): " + Data.Dropworlds);
-            log.info("[iSafe] World(s) blacklisting in: " + Data.Dropworlds.size());
-        } else {
-            if(Data.placedblocks != null) {
-                log.warning("[iSafe] You have objects in the blacklist list, but no worlds to blacklist in!");
-            } else {
-                log.info("[iSafe] Blacklisting in the world(s): " + Data.Dropworlds);
-            }
-        }
-        if(Data.placedblocks != null) {
-            log.info("[iSafe] Blacklisted blocks: " + Data.dropedblocks);
-            log.info("[iSafe] Total blacklisted blocks: " + Data.dropedblocks.size());
-        } else {
-            log.info("[iSafe] Blacklisted blocks: " + "None");
-            log.info("[iSafe] Total blacklisted blocks: " + "0");
-        }
-        log.info("[iSafe] Kick player: " + this.getBlacklist().getBoolean("Drop.Kick-Player"));
-        log.info("[iSafe] Kill player: " + this.getBlacklist().getBoolean("Drop.Kill-Player"));
-        log.info("[iSafe] Logging to: ");
-        log.info("[iSafe] - Console: " + this.getBlacklist().getBoolean("Drop.Alert/log.To-console"));
-        log.info("[iSafe] - Player: "+ this.getBlacklist().getBoolean("Drop.Alert/log.To-player"));
-        log.info("[iSafe] - ServerChat: "+ this.getBlacklist().getBoolean("Drop.Alert/log.To-server-chat"));
-        log.info("[iSafe] ----------------------------");
-    }*/
 }

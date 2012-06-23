@@ -4,9 +4,7 @@ import com.mrmag518.iSafe.iSafe;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDispenseEvent;
@@ -28,16 +26,15 @@ public class DispenseBlacklist implements Listener {
         }
         Block b = event.getBlock();
         String worldname = b.getWorld().getName();
-        ItemStack air = new ItemStack(Material.AIR, 0);
         
-        int blockID = event.getBlock().getTypeId();
-        String BlockNAME_Lowercase = b.getType().name().toLowerCase();
-        String BlockNAME_Uppercase = b.getType().name().toUpperCase();
-        String BlockNAME_Name = b.getType().name();
-        String BlockNAME = b.toString();
+        int itemID = event.getItem().getTypeId();
+        String BlockNAME_Lowercase = event.getItem().getType().name().toLowerCase();
+        String BlockNAME_Uppercase = event.getItem().getType().name().toUpperCase();
+        String BlockNAME_Name = event.getItem().getType().name();
+        Material BlockNAME = event.getItem().getType();
         
-        final List<Block> dispensedBlock = new ArrayList<Block>();
-        if (plugin.getBlacklist().getList("Dispense.Blacklist", dispensedBlock).contains(blockID)
+        final List<ItemStack> dispensedBlock = new ArrayList<ItemStack>();
+        if (plugin.getBlacklist().getList("Dispense.Blacklist", dispensedBlock).contains(itemID)
                 || plugin.getBlacklist().getList("Dispense.Blacklist", dispensedBlock).contains(BlockNAME_Lowercase)
                 || plugin.getBlacklist().getList("Dispense.Blacklist", dispensedBlock).contains(BlockNAME_Uppercase)
                 || plugin.getBlacklist().getList("Dispense.Blacklist", dispensedBlock).contains(BlockNAME)
@@ -49,9 +46,8 @@ public class DispenseBlacklist implements Listener {
                 if (plugin.getBlacklist().getList("Dispense.Worlds", dispenseWorlds).contains(worldname))
                 {
                     event.setCancelled(true);
-                    event.setItem(air);
                     if(plugin.getBlacklist().getBoolean("Dispense.Alert/log-to.Console", true)) {
-                        plugin.log.info("[iSafe] A blacklisted block was prevented from dispensing." + BlockNAME_Lowercase);
+                        plugin.log.info("[iSafe] A blacklisted block was prevented from dispensing. " + BlockNAME_Name);
                     }
                 }
             }

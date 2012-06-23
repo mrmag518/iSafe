@@ -12,7 +12,7 @@ Version 2.80
 * Corrected the blacklist header.
 * Re-coded and improved the crop trampling prevention.
 * Cleaned up the enable process.
-* 
+* Implemented plugin metrics (http://metrics.griefcraft.com/plugin/iSafe).
 
 Version 2.71
 * Files now displays the data when they were generated in the headers. (Note that this will be a false date if the file already exist before this update)
