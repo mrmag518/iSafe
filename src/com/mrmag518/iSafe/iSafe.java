@@ -37,6 +37,7 @@ import com.mrmag518.iSafe.Events.Entity.*;
 import com.mrmag518.iSafe.Events.Various.*;
 import com.mrmag518.iSafe.Events.World.*;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -48,10 +49,19 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * TODO:
+ * Use new method for no permission output. (plugin.NO_PERMISSION())
+ * Fix iSafe commands to use arguments.
+ * Change plugin package from com.mrmag518.iSafe.blah --> com | mrmag518 | iSafe | Blah
+ * Manage plugin tickets.
+ * ...
+ */
+
 public class iSafe extends JavaPlugin {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //Remember to change this on every version!
-    private String fileversion = "iSafe v2.80";
+    private String fileversion = "iSafe v2.81";
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     public PlayerListener playerListener = null;
@@ -90,6 +100,12 @@ public class iSafe extends JavaPlugin {
     public Set<Player> superbreak = new HashSet<Player>();
     
     @Override
+    public void onLoad() {
+        //To smooth the load up, let's manage files while the plugin is loading and not when it's enabling.
+        doFileGenerations();
+    }
+    
+    @Override
     public void onDisable() {
         PluginDescriptionFile pdffile = this.getDescription();
         log.info("[" + pdffile.getName() + " :: " + version + "] " + " Disabled succesfully.");
@@ -98,9 +114,8 @@ public class iSafe extends JavaPlugin {
     @Override
     public void onEnable() {
         version = this.getDescription().getVersion();
-        registerClasses(); //1
+        registerClasses();
         PluginDescriptionFile pdffile = this.getDescription();
-        doFileGenerations(); //2
         //Update checker - From MilkBowl.
         this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
             @Override
@@ -122,9 +137,9 @@ public class iSafe extends JavaPlugin {
                 }
             }
         }, 0, 432000);
-        executeCommands(); //3
+        executeCommands();
         getServer().getPluginManager().getPermissions();
-        checkMatch(); //4
+        checkMatch();
         
         try {
             Metrics metrics = new Metrics(this);
@@ -134,6 +149,12 @@ public class iSafe extends JavaPlugin {
         }
         
         log.info("[" + pdffile.getName() + " :: " + version + "] " + " Enabled succesfully.");
+    }
+    
+    public String NO_PERMISSION() {
+        ChatColor RED = ChatColor.RED;
+        String no_permission = RED + "No permission";
+        return no_permission;
     }
     
     private void registerClasses() {

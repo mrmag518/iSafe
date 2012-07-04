@@ -19,7 +19,7 @@ commands:
   cleardrops:
     usage: "Usage: /<command>"
 permissions:
-  iSafe.*:
+  iSafe.admin:
     description: Allow the user to get access to all the iSafe permissions.
     default: op
     children:
@@ -90,6 +90,7 @@ permissions:
       iSafe.canceldamage.suicide: true
       iSafe.canceldamage.void: true
       iSafe.enchant: true
+      iSafe.use.flintandsteel: true
   iSafe.canceldamage.*:
     description: Allow the user to get access to all the Canceldamage permissions.
     default: op

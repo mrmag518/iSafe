@@ -21,6 +21,7 @@ package com.mrmag518.iSafe.Events.Block;
 import com.mrmag518.iSafe.*;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -75,10 +76,12 @@ public class BlockListener implements Listener {
         }
         Block b = event.getBlock();
         Player p = event.getPlayer();
+        Location loc = p.getLocation();
         byte level = p.getLocation().getBlock().getLightLevel();
         
+        
         if(plugin.getConfig().getBoolean("Player.Prevent-fullbright-hacking(force lightlevel)", true)) {
-            if(level < 1) {
+            if(level < 1 && !b.isLiquid() && !loc.getBlock().isLiquid()) {
                 event.setCancelled(true);
                 p.sendMessage(ChatColor.YELLOW + "Place a torch!");
             }
@@ -118,14 +121,19 @@ public class BlockListener implements Listener {
                 return;
             }
         }
+        
         if(!plugin.getConfig().getBoolean("Enviroment-Damage.Allow-Flint_and_steel-usage", true))
         {
             if(event.getCause() == IgniteCause.FLINT_AND_STEEL) 
             {
-                event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You cannot use a lighter.");
+                Player p = event.getPlayer();
+                if(!p.hasPermission("iSafe.use.flintandsteel")) {
+                    event.setCancelled(true);
+                    player.sendMessage(plugin.NO_PERMISSION());
+                }
             }
         }
+        
         if(!plugin.getConfig().getBoolean("Enviroment-Damage.Allow-Enviroment-ignition", true))
         {
             if(event.getCause() == IgniteCause.LAVA || event.getCause() == IgniteCause.LIGHTNING) 
@@ -133,6 +141,7 @@ public class BlockListener implements Listener {
                 event.setCancelled(true);
             }
         }
+        
         if(plugin.getConfig().getBoolean("Misc.Prevent-portal-creation", true))
         {
             if(event.getBlock().getTypeId() == 49 || event.getBlock().getRelative(BlockFace.DOWN).getTypeId() == 49) 

@@ -1,5 +1,12 @@
 Displaying the Change Log of iSafe.
 
+Version 2.81
+* Fixed players not being able to break block in water.
+* Added permission node iSafe.use.flintandsteel.
+* Renamed permission node iSafe.* to iSafe.admin.
+* Now managing files while the plugin is loading, not when it's enabling.
+* 
+
 Version 2.80
 * Fixed endermen griefing always being prevented.
 * Players' inventories will no longer get cleared when they die, if you have disabled entity drops.
