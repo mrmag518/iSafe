@@ -57,6 +57,11 @@ public class UserFileCreator implements Listener {
             
             uFile.set("IPAddress", user.getAddress().getAddress().toString().replace("/", ""));
             uFile.set("Gamemode", user.getGameMode().name().toLowerCase());
+            try {
+                uFile.save(userFile);
+            } catch (IOException ex) {
+                Logger.getLogger(UserFileCreator.class.getName()).log(Level.SEVERE, "Error trying to save userFile", ex);
+            }
         }
     }
 }

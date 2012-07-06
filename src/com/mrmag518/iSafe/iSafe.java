@@ -216,7 +216,7 @@ public class iSafe extends JavaPlugin {
             }
         }
         
-        // Weird bug going on.. Need to manage configs in the following way ..
+        // Weird bug going on.. Need to manage configs in the following order ..
         // Reload - If the file is null, generate it.
         // Load - Add/manage settings in the file.
         // Reload - Reload the file again to make the settings apply for the server.
@@ -536,7 +536,7 @@ public class iSafe extends JavaPlugin {
             config.addDefault(newNode2, nodeBoolean);
             config.addDefault(newNode3, nodeBoolean);
             config.set(oldNode, null);
-            // Lets check if the file contains the last node of this category.
+            // Lets check if the section is still existing.
             if(config.contains(lastNode)) {
                 config.set(lastNode, null);
                 log.info("[iSafe] Erased " + lastNode + " category.");
@@ -551,7 +551,7 @@ public class iSafe extends JavaPlugin {
             config.addDefault("Fire.DisableLightningIgnition", false);
         }
         
-        // Convetion end.
+        // Convertion end.
         // ################################################################
         
         this.getConfig().options().copyDefaults(true);
