@@ -19,7 +19,7 @@ public class SendUpdate implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void sendUpdate(PlayerJoinEvent event) {
         Player p = event.getPlayer();
-        if (p.hasPermission("iSafe.*")) {
+        if (p.hasPermission("iSafe.admin") || p.isOp()) {
             try {
                 String oldVersion = plugin.getDescription().getVersion();
                 if (!(plugin.newVersion.contains(oldVersion))) {

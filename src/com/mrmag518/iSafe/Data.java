@@ -21,6 +21,8 @@ package com.mrmag518.iSafe;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 public class Data {
     public static iSafe plugin;
@@ -141,5 +143,18 @@ public class Data {
         + "\nThe Player section is just specific player events related to something specific related to entities. (Most player options is in the config.yml)"
         + "\nThis file was generated: " + getDate() + "\n";
         return header;
+    }
+    
+    public static String setMessageHeader() {
+        String header = "This is the file where you can alter messages sent by iSafe."
+        + "\nFor an example the 'No permission.' message."
+        + "\nColor support is being worked on.";
+        return header;
+    }
+    
+    public static void sendNoPermission(Player p) {
+        ChatColor RED = ChatColor.RED;
+        String no_permission = RED + plugin.getMessages().getString("Permissions.DefaultNoPermission");
+        p.sendMessage(no_permission);
     }
 }

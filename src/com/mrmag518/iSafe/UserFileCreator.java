@@ -3,6 +3,10 @@ package com.mrmag518.iSafe;
 import java.io.File;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,23 +26,24 @@ public class UserFileCreator implements Listener {
     @EventHandler
     public void CreateUserFile(PlayerJoinEvent event) {
         Player user = event.getPlayer();
-        File userFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + user.getName() + ".txt");
+        File userFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + user.getName() + ".yml");
         
         if (!userFile.exists()) {
+            
+            // iSafe v3.0 convertion.
+            File oldFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + user.getName() + ".txt");
+            if(oldFile.exists()) {
+                oldFile.delete();
+                plugin.log.info("[iSafe] Detected old userfile format, deleting .. ("+oldFile.getName()+")");
+            }
+            
             plugin.log.info("[iSafe] Generating user file for " + user.getName() + ".");
             try {
                 FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
-                if(user.getName().contains("?")) {
-                    uFile.set("Username", user.getName().replace("?", ""));
-                } else {
-                    uFile.set("Username", user.getName());
-                }
-                if(user.getDisplayName().contains("?")) {
-                    uFile.set("Displayname", user.getDisplayName().replace("?", ""));
-                } else {
-                    uFile.set("Displayname", user.getDisplayName());
-                }
+                uFile.set("Username", user.getName());
+                uFile.set("DisplayName", user.getDisplayName());
                 uFile.set("IPAddress", event.getPlayer().getAddress().getAddress().toString().replace("/", ""));
+                uFile.set("Gamemode", user.getGameMode().name().toLowerCase());
                 uFile.save(userFile);
                 plugin.log.info("[iSafe] Generated user file for " + user.getName() + ".");
             } catch (Exception e) {
@@ -46,22 +51,12 @@ public class UserFileCreator implements Listener {
                 e.printStackTrace();
             }
         } else {
-            String UserIP = event.getPlayer().getAddress().getAddress().toString();
-            UserIP = UserIP.replace("/", "");
-            UserString(event.getPlayer(), UserIP, "IPAddress");
-        }
-    }
-    
-    public static void UserString(OfflinePlayer ofpl, String value, String path) {
-        File UserOneData = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + ofpl.getName() + ".txt");
-        if (UserOneData.exists()) {
-            FileConfiguration pFile = YamlConfiguration.loadConfiguration(UserOneData);
-            pFile.set(path, value);
-            try {
-                pFile.save(UserOneData);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
+            uFile.set("IPAddress", null);
+            uFile.set("Gamemode", null);
+            
+            uFile.set("IPAddress", user.getAddress().getAddress().toString().replace("/", ""));
+            uFile.set("Gamemode", user.getGameMode().name().toLowerCase());
         }
     }
 }

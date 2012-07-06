@@ -112,32 +112,29 @@ public class BlockListener implements Listener {
         IgniteCause cause = event.getCause();
         Player player = event.getPlayer();
         
-        boolean isFireSpread = cause == IgniteCause.SPREAD;
-        
-        if(plugin.getConfig().getBoolean("Enviroment-Damage.Prevent-Fire-spread", true))
-        {
-            if(isFireSpread) {
+        if(cause == IgniteCause.SPREAD) {
+            if(plugin.getConfig().getBoolean("Fire.DisableFireSpread", true)) {
                 event.setCancelled(true);
                 return;
             }
-        }
-        
-        if(!plugin.getConfig().getBoolean("Enviroment-Damage.Allow-Flint_and_steel-usage", true))
-        {
-            if(event.getCause() == IgniteCause.FLINT_AND_STEEL) 
-            {
+        } else if (cause == IgniteCause.FLINT_AND_STEEL) {
+            if(plugin.getConfig().getBoolean("Fire.PreventFlintAndSteelUsage", true)) {
                 Player p = event.getPlayer();
                 if(!p.hasPermission("iSafe.use.flintandsteel")) {
                     event.setCancelled(true);
-                    player.sendMessage(plugin.NO_PERMISSION());
+                    Data.sendNoPermission(p);
                 }
             }
-        }
-        
-        if(!plugin.getConfig().getBoolean("Enviroment-Damage.Allow-Enviroment-ignition", true))
-        {
-            if(event.getCause() == IgniteCause.LAVA || event.getCause() == IgniteCause.LIGHTNING) 
-            {
+        } else if (cause == IgniteCause.LAVA) {
+            if(plugin.getConfig().getBoolean("Fire.DisableLavaIgnition", true)) {
+                event.setCancelled(true);
+            }
+        } else if (cause == IgniteCause.FIREBALL) {
+            if(plugin.getConfig().getBoolean("Fire.DisableFireballIgnition", true)) {
+                event.setCancelled(true);
+            }
+        } else if (cause == IgniteCause.LIGHTNING) {
+            if(plugin.getConfig().getBoolean("Fire.DisableLightningIgnition", true)) {
                 event.setCancelled(true);
             }
         }
