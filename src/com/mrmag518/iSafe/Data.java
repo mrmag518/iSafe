@@ -21,8 +21,6 @@ package com.mrmag518.iSafe;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 public class Data {
     public static iSafe plugin;
@@ -148,7 +146,25 @@ public class Data {
     public static String setMessageHeader() {
         String header = "This is the file where you can alter messages sent by iSafe."
         + "\nFor an example the 'No permission.' message."
-        + "\nColor support is being worked on.";
+        + "\nColor support is being worked on."
+        + "\nThis file was generated: " + getDate() + "\n";
+        return header;
+    }
+    
+    public static String setExFileHeader() {
+        String header = "This is an example file of a User File. Everything is being automatically updated, except the Username."
+        + "\n'Username' = The name of the player."
+        + "\n'Displayname' = The name displayed in the chat."
+        + "\n'IPAddress' = The IP Address the player logged in with."
+        + "\n'Gamemode' = The gamemode the player is in."
+        + "\n'Level' = The exp level the player has."
+        + "\nThis file was generated: " + getDate() + "\n";
+        return header;
+    }
+    
+    public static String setISafeConfigHeader() {
+        String header = "This is the configuration file where you can manage settings directly related to iSafe."
+        + "\nThis file was generated: " + getDate() + "\n";
         return header;
     }
 }

@@ -6,18 +6,9 @@ load: STARTUP
 version: 'Upcoming 3.0'
 website: http://dev.bukkit.org/server-mods/blockthattnt/
 commands:
-  iSafe-reload:
-    usage: "Usage: /<command>"
-  iSafe-info:
-    usage: "Usage: /<command>"
-  serverinfo:
-    usage: "Usage: /<command>"
-  superbreak:
-    usage: "Usage: /<command>"
-  stopserver:
-    usage: "Usage: /<command>"
-  cleardrops:
-    usage: "Usage: /<command>"
+  iSafe:
+    description: Main command for iSafe.
+    usage: /<command>
 permissions:
   iSafe.admin:
     description: Allow the user to get access to all the iSafe permissions.

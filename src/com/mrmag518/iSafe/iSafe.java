@@ -44,6 +44,7 @@ import com.mrmag518.iSafe.Blacklists.*;
 import com.mrmag518.iSafe.Commands.*;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -59,10 +60,9 @@ import org.w3c.dom.NodeList;
  * TODO:
  * Use new method for no permission output. (plugin.NO_PERMISSION())
  * Fix iSafe commands to use arguments.
- * Change plugin package from com.mrmag518.iSafe.blah --> com | mrmag518 | iSafe | Blah
  * Manage plugin tickets.
- * 
- * Do all config convertions. (THIS IS A LOT!)
+ * Finish Verbose logging.
+ * Finish debug mode.
  * 
  */
 
@@ -91,16 +91,14 @@ public class iSafe extends JavaPlugin {
     public MobSpawnBlacklist mobSpawnBlacklist = null;
     public Censor censor = null;
     public DispenseBlacklist dispenseBlacklist = null;
-    private Reload reloadcmd = null;
-    private Info isafeInfocmd = null;
-    private Serverinfo serverinfocmd = null;
-    private Superbreak superbreakcmd = null;
-    private Stopserver stopServercmd = null;
     public String version = null;
     public String newVersion = null;
     public static iSafe plugin;
     public final Logger log = Logger.getLogger("Minecraft");
+    public String DEBUG_PREFIX = "[iSafe] Debug: ";
     
+    public FileConfiguration iSafeConfig = null;
+    public File iSafeConfigFile = null;
     public FileConfiguration messages = null;
     public File messagesFile = null;
     public FileConfiguration entityManager = null;
@@ -108,47 +106,55 @@ public class iSafe extends JavaPlugin {
     public FileConfiguration blacklist = null;
     public File blacklistFile = null;
     public FileConfiguration config;
-    public Set<Player> superbreak = new HashSet<Player>();
     
     @Override
     public void onLoad() {
-        // To smooth the load up, let's manage files while the plugin is loading and not when it's enabling.
-        doFileGenerations();
+        fileManagement();
     }
     
     @Override
     public void onDisable() {
         PluginDescriptionFile pdffile = this.getDescription();
-        log.info("[" + pdffile.getName() + " :: " + version + "] " + " Disabled succesfully.");
+        if(verboseLogging() == true) {
+            log.info("[" + pdffile.getName() + " :: " + version + "] " + " Disabled succesfully.");
+        } else if (debugMode() == true) {
+            log.info(DEBUG_PREFIX + "Verbose logging is off.");
+        }
     }
     
     @Override
     public void onEnable() {
         version = this.getDescription().getVersion();
+        if(debugMode() == true) {
+            log.info(DEBUG_PREFIX + "Debug mode is enabled!");
+        }
+        
         registerClasses();
         PluginDescriptionFile pdffile = this.getDescription();
-        //Update checker - From MilkBowl.
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    newVersion = updateCheck(version);
-                    String oldVersion = version;
-                    
-                    if (!newVersion.contains(oldVersion)) {
-                        log.info("-----  iSafe UpdateChecker  -----");
-                        log.info("You are not using the recommended version of iSafe; "+ newVersion);
-                        log.info("You are currently using v" + oldVersion);
-                        log.info("Please use the latest recommended version of iSafe.("+newVersion+")");
-                        log.info("You can find this version at: http://dev.bukkit.org/server-mods/blockthattnt/files/");
-                        log.info("-----  -------------------  -----");
+        if(getISafeConfig().getBoolean("CheckForUpdates", true)) {
+            //Update checker - From MilkBowl.
+            this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        newVersion = updateCheck(version);
+                        String oldVersion = version;
+
+                        if (!newVersion.contains(oldVersion)) {
+                            log.info("#######  iSafe UpdateChecker  #######");
+                            log.info("A new update for iSafe was found! " + newVersion);
+                            log.info("You are currently running iSafe v" + oldVersion);
+                            log.info("You can find this new version at BukkitDev.");
+                            log.info("http://dev.bukkit.org/server-mods/blockthattnt/");
+                            log.info("#####################################");
+                        }
+                    } catch (Exception ignored) {
+                        //Ignored
                     }
-                } catch (Exception ignored) {
-                    //Ignored
                 }
-            }
-        }, 0, 432000);
-        executeCommands();
+            }, 0, 432000);
+        }
+        getCommand("iSafe").setExecutor(new Commands(this));
         getServer().getPluginManager().getPermissions();
         checkMatch();
         
@@ -159,8 +165,15 @@ public class iSafe extends JavaPlugin {
             // Failed to submit the stats :-(
         }
         
-        log.info("[" + pdffile.getName() + " :: " + version + "] " + " Enabled succesfully.");
+        if(verboseLogging() == true) {
+            log.info("[" + pdffile.getName() + " :: " + version + "] " + " Enabled succesfully.");
+        } else if (debugMode() == true) {
+            log.info(DEBUG_PREFIX + "Verbose logging is off.");
+        }
     }
+    
+    public boolean verboseLogging(){return getISafeConfig().getBoolean("VerboseLogging");}
+    public boolean debugMode(){return getISafeConfig().getBoolean("DebugMode");}
     
     private void registerClasses() {
         playerListener = new PlayerListener(this);
@@ -174,7 +187,12 @@ public class iSafe extends JavaPlugin {
         dropListener = new DropListener(this);
         
         UFC = new UserFileCreator(this);
-        sendUpdate = new SendUpdate(this);
+        if(getISafeConfig().getBoolean("CheckForUpdates", true)) {
+            sendUpdate = new SendUpdate(this);
+        } else if (debugMode() == true) {
+            log.info(DEBUG_PREFIX + "CheckForUpdates in the iSafeConfig.yml was disabled, therefore not registering "
+                    + "the sendUpdate class.");
+        }
         
         dropBlacklist = new DropBlacklist(this);
         placeBlacklist = new PlaceBlacklist(this);
@@ -185,34 +203,40 @@ public class iSafe extends JavaPlugin {
         censor = new Censor(this);
         dispenseBlacklist = new DispenseBlacklist(this);
         
-        reloadcmd = new Reload(this);
-        isafeInfocmd = new Info(this);
-        serverinfocmd = new Serverinfo(this);
-        superbreakcmd = new Superbreak(this);
-        stopServercmd = new Stopserver(this);
+        if(debugMode() == true) {
+            log.info(DEBUG_PREFIX + "Registered classes.");
+        }
     }
     
-    private void doFileGenerations() {
-        if(!(this.getDataFolder().exists())) 
+    private void fileManagement() {
+        if(!(getDataFolder().exists())) 
         {
-            log.info("[iSafe]" + " iSafe folder not found, creating a new one.");
-            this.getDataFolder().mkdirs(); 
+            if(verboseLogging() == true) {
+                log.info("[iSafe]" + " iSafe folder not found, creating one ..");
+            }
+            getDataFolder().mkdirs(); 
         }
         
         File usersFolder = new File(getDataFolder() + File.separator + "Users");
         if(!(usersFolder.exists())) 
         {
+            if(debugMode() == true) {
+                log.info(DEBUG_PREFIX + "Users folder was not found, creating one ..");
+            }
             usersFolder.mkdir();
         }
         
-        File exaFile = new File(usersFolder + File.separator + "example.yml");
+        File exaFile = new File(usersFolder + File.separator + "_example.yml");
         if(!(exaFile.exists()))
         {
             try {
                 FileConfiguration exampFile = YamlConfiguration.loadConfiguration(exaFile);
+                exampFile.options().header(Data.setExFileHeader());
                 exampFile.set("Username", "example");
                 exampFile.set("Displayname", "example");
                 exampFile.set("IPAddress", "127.0.0.1");
+                exampFile.set("Gamemode", "survival");
+                exampFile.set("Level", "50");
                 exampFile.save(exaFile);
             } catch (Exception e) {
                 log.info("[iSafe] Error creating example user file.");
@@ -224,6 +248,10 @@ public class iSafe extends JavaPlugin {
         // Reload - If the file is null, generate it.
         // Load - Add/manage settings in the file.
         // Reload - Reload the file again to make the settings apply for the server.
+        
+        reloadISafeConfig();
+        loadISafeConfig();
+        reloadISafeConfig();
         
         reloadConfig();
         loadConfig();
@@ -240,6 +268,10 @@ public class iSafe extends JavaPlugin {
         reloadMessages();
         loadMessages();
         reloadMessages();
+        
+        if(verboseLogging() == true) {
+            log.info("[iSafe] Loaded all files.");
+        }
     }
     
     private void checkMatch() {
@@ -251,12 +283,10 @@ public class iSafe extends JavaPlugin {
             log.info("[iSafe] File version: "+ fileversion);
             log.warning("[iSafe] Please deliver this infomation to "+ pdffile.getAuthors() +" at BukkitDev.");
             log.info("-----  --------------------  -----");
-        } else {
-            log.info("[iSafe] The file and pdffile versions matched eachother correctly.");
         }
     }
     
-    //Update checker - Old code from MilkBowl's Vault.
+    //Update checker
     public String updateCheck(String currentVersion) throws Exception {
         String pluginUrlString = "http://dev.bukkit.org/server-mods/blockthattnt/files.rss";
         try {
@@ -276,14 +306,6 @@ public class iSafe extends JavaPlugin {
             //Ingored
         }
         return currentVersion;
-    }
-    
-    private void executeCommands() {
-        getCommand("iSafe-reload").setExecutor(reloadcmd);
-        getCommand("iSafe-info").setExecutor(isafeInfocmd);
-        getCommand("serverinfo").setExecutor(serverinfocmd);
-        getCommand("superbreak").setExecutor(superbreakcmd);
-        getCommand("stopserver").setExecutor(stopServercmd);
     }
     
     public void loadConfig() {
@@ -440,7 +462,6 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Player.Disable-all-commands", false);
         config.addDefault("Player.Infinite-itemtacks", false);
         config.addDefault("Player.Kick-player-if-anther-user-with-same-username-log's-on", true);
-        config.addDefault("Player.Instantbreak", false);
         //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         //--
         config.addDefault("Player-Interact.Erase the old values if you haven't already(this node is not an option)", "#");
@@ -475,88 +496,13 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Drop-configure.Bookshelf.Drop.Bookshelf", false);
         config.addDefault("Drop-configure.Grass_thingy.Drop.Grass_thingy", false);
         
-        // ################################################################
-        // Convertions - v3.0 convertions.
-        // Make these convertions deprecated after 1-2 months.
         
-        // Count how many convertions we've done. Starts at one.
-        int count = 1;
-        
-        if(config.contains("Enviroment-Damage.Prevent-Fire-spread")) {
-            String oldNode = "Enviroment-Damage.Prevent-Fire-spread";
-            String newNode = "Fire.DisableFireSpread";
-            boolean nodeBoolean = config.getBoolean(oldNode);
-            
-            // We always want to use addDefault() to get organized in the file.
-            // We do not want to erase what the old setting for this node, therefore we use the previous setting.
-            // Note to self: Sometimes we want to set the boolean the oppsite of what it was before, only if the
-            // old node is written the oppsite of what the new one is.
-            config.addDefault(newNode, nodeBoolean);
-            // Set the old node to null, that will erase it.
-            config.set(oldNode, null);
-            log.info("[iSafe] Converted "+oldNode+" to "+newNode+" ("+count+")");
-            // Increase the counter for each time we convert a node.
-            count++;
-        } else {
-            config.addDefault("Fire.DisableFireSpread", false);
-        }
-        
-        if(config.contains("Enviroment-Damage.Allow-Flint_and_steel-usage")) {
-            String oldNode = "Enviroment-Damage.Allow-Flint_and_steel-usage";
-            String newNode = "Fire.PreventFlintAndSteelUsage";
-            boolean nodeBoolean = config.getBoolean(oldNode);
-            
-            if(nodeBoolean == true) {
-                nodeBoolean = false;
-            } else {
-                nodeBoolean = true;
-            }
-            log.info("[iSafe] Switched setting boolean.");
-            
-            config.addDefault(newNode, nodeBoolean);
-            config.set(oldNode, null);
-            log.info("[iSafe] Converted "+oldNode+" to "+newNode+" ("+count+")");
-            count++;
-        } else {
-            config.addDefault("Fire.PreventFlintAndSteelUsage", false);
-        }
-        
-        if(config.contains("Enviroment-Damage.Allow-Enviroment-ignition")) {
-            String oldNode = "Enviroment-Damage.Allow-Enviroment-ignition";
-            String newNode1 = "Fire.DisableLavaIgnition";
-            String newNode2 = "Fire.DisableFireballIgnition";
-            String newNode3 = "Fire.DisableLightningIgnition";
-            String lastNode = "Enviroment-Damage";
-            boolean nodeBoolean = config.getBoolean(oldNode);
-            
-            if(nodeBoolean == true) {
-                nodeBoolean = false;
-            } else {
-                nodeBoolean = true;
-            }
-            log.info("[iSafe] Switched setting boolean.");
-            
-            config.addDefault(newNode1, nodeBoolean);
-            config.addDefault(newNode2, nodeBoolean);
-            config.addDefault(newNode3, nodeBoolean);
-            config.set(oldNode, null);
-            // Lets check if the section is still existing.
-            if(config.contains(lastNode)) {
-                config.set(lastNode, null);
-                log.info("[iSafe] Erased " + lastNode + " category.");
-            }
-            log.info("[iSafe] Converted "+oldNode+" to "+newNode1+" ("+count+")");
-            log.info("[iSafe] Converted "+oldNode+" to "+newNode2+" ("+count+")");
-            log.info("[iSafe] Converted "+oldNode+" to "+newNode3+" ("+count+")");
-            count++;
-        } else {
-            config.addDefault("Fire.DisableLavaIgnition", false);
-            config.addDefault("Fire.DisableFireballIgnition", false);
-            config.addDefault("Fire.DisableLightningIgnition", false);
-        }
-        
-        // Convertion end.
-        // ################################################################
+        // Figured out there's too many nodes to convert.. Lets just erase the old node and add the new node.
+        config.addDefault("Fire.DisableFireSpread", false);
+        config.addDefault("Fire.PreventFlintAndSteelUsage", false);
+        config.addDefault("Fire.DisableLavaIgnition", false);
+        config.addDefault("Fire.DisableFireballIgnition", false);
+        config.addDefault("Fire.DisableLightningIgnition", false);
         
         this.getConfig().options().copyDefaults(true);
         saveConfig();
@@ -641,9 +587,14 @@ public class iSafe extends JavaPlugin {
         saveBlacklist();
     }
     
-    public void sendNoPermission(Player p) {
+    public void noPermission(Player p) {
         String no_permission = ChatColor.RED + getMessages().getString("Permissions.DefaultNoPermission");
         p.sendMessage(no_permission);
+    }
+    
+    public void noCmdPermission(CommandSender sender) {
+        String no_permission = ChatColor.RED + getMessages().getString("Permissions.NoCmdPermission");
+        sender.sendMessage(no_permission);
     }
     
     public void loadMessages() {
@@ -651,107 +602,13 @@ public class iSafe extends JavaPlugin {
         messages.options().header(Data.setMessageHeader());
         
         messages.addDefault("Permissions.DefaultNoPermission", "No permission.");
+        messages.addDefault("Permissions.NoCmdPermission", "No permission to do this command.");
         
         this.getMessages().options().copyDefaults(true);
         saveMessages();
     }
     
-    public void reloadMessages() {
-        if (messagesFile == null) {
-            messagesFile = new File(getDataFolder(), "messages.yml");
-        }
-        messages = YamlConfiguration.loadConfiguration(messagesFile);
         
-        // Look for defaults in the jar
-        InputStream defConfigStream = getResource("messages.yml");
-        if (defConfigStream != null) {
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-            messages.setDefaults(defConfig);
-        }
-    }
-    
-    public FileConfiguration getMessages() {
-        if (messages == null) {
-            reloadBlacklist();
-        }
-        return messages;
-    }
-    
-    public void saveMessages() {
-        if (messages == null || messagesFile == null) {
-            return;
-        }
-        try {
-            messages.save(messagesFile);
-        } catch (IOException ex) {
-            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving Messages to " + messagesFile, ex);
-        }
-    }
-    
-    public void reloadBlacklist() {
-        if (blacklistFile == null) {
-            blacklistFile = new File(getDataFolder(), "blacklist.yml");
-        }
-        blacklist = YamlConfiguration.loadConfiguration(blacklistFile);
-        
-        // Look for defaults in the jar
-        InputStream defConfigStream = getResource("blacklist.yml");
-        if (defConfigStream != null) {
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-            blacklist.setDefaults(defConfig);
-        }
-    }
-    
-    public FileConfiguration getBlacklist() {
-        if (blacklist == null) {
-            reloadBlacklist();
-        }
-        return blacklist;
-    }
-    
-    public void saveBlacklist() {
-        if (blacklist == null || blacklistFile == null) {
-            return;
-        }
-        try {
-            blacklist.save(blacklistFile);
-        } catch (IOException ex) {
-            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving blacklist to " + blacklistFile, ex);
-        }
-    }
-    
-    //MobsConfig re-do:
-    public void reloadEntityManager() {
-        if (entityManagerFile == null) {
-            entityManagerFile = new File(getDataFolder(), "entityManager.yml");
-        }
-        entityManager = YamlConfiguration.loadConfiguration(entityManagerFile);
-        
-        InputStream defConfigStream = getResource("entityManager.yml");
-        if (defConfigStream != null) {
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-            entityManager.setDefaults(defConfig);
-        }
-    }
-    
-    public FileConfiguration getEntityManager() {
-        if (entityManager == null) {
-            reloadEntityManager();
-        }
-        return entityManager;
-    }
-    
-    public void saveEntityManager() {
-        if (entityManager == null || entityManagerFile == null) {
-            return;
-        }
-        try {
-            entityManager.save(entityManagerFile);
-        } catch (IOException ex) {
-            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving entityManager to " + entityManagerFile, ex);
-        }
-    }
-    
     public void loadEntityManager() {
         entityManager = getEntityManager();
         entityManager.options().header(Data.setEntityManagerHeader());
@@ -859,5 +716,145 @@ public class iSafe extends JavaPlugin {
         
         this.getEntityManager().options().copyDefaults(true);
         saveEntityManager();
+    }
+    
+    public void loadISafeConfig() {
+        iSafeConfig = getISafeConfig();
+        // Header..
+        
+        iSafeConfig.addDefault("VerboseLogging", false);
+        iSafeConfig.addDefault("DebugMode", false);
+        iSafeConfig.addDefault("CheckForUpdates", true);
+        
+        this.getISafeConfig().options().copyDefaults(true);
+        saveISafeConfig();
+    }
+    
+    public void reloadISafeConfig() {
+        if (iSafeConfigFile == null) {
+            iSafeConfigFile = new File(getDataFolder(), "iSafeConfig.yml");
+        }
+        iSafeConfig = YamlConfiguration.loadConfiguration(iSafeConfigFile);
+        
+        // Look for defaults in the jar
+        InputStream defConfigStream = getResource("iSafeConfig.yml");
+        if (defConfigStream != null) {
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            iSafeConfig.setDefaults(defConfig);
+        }
+    }
+    
+    public FileConfiguration getISafeConfig() {
+        if (iSafeConfig == null) {
+            reloadBlacklist();
+        }
+        return iSafeConfig;
+    }
+    
+    public void saveISafeConfig() {
+        if (iSafeConfig == null || iSafeConfigFile == null) {
+            return;
+        }
+        try {
+            iSafeConfig.save(iSafeConfigFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving iSafeConfig to " + iSafeConfigFile, ex);
+        }
+    }
+    
+    public void reloadMessages() {
+        if (messagesFile == null) {
+            messagesFile = new File(getDataFolder(), "messages.yml");
+        }
+        messages = YamlConfiguration.loadConfiguration(messagesFile);
+        
+        // Look for defaults in the jar
+        InputStream defConfigStream = getResource("messages.yml");
+        if (defConfigStream != null) {
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            messages.setDefaults(defConfig);
+        }
+    }
+    
+    public FileConfiguration getMessages() {
+        if (messages == null) {
+            reloadBlacklist();
+        }
+        return messages;
+    }
+    
+    public void saveMessages() {
+        if (messages == null || messagesFile == null) {
+            return;
+        }
+        try {
+            messages.save(messagesFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving Messages to " + messagesFile, ex);
+        }
+    }
+    
+    public void reloadBlacklist() {
+        if (blacklistFile == null) {
+            blacklistFile = new File(getDataFolder(), "blacklist.yml");
+        }
+        blacklist = YamlConfiguration.loadConfiguration(blacklistFile);
+        
+        // Look for defaults in the jar
+        InputStream defConfigStream = getResource("blacklist.yml");
+        if (defConfigStream != null) {
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            blacklist.setDefaults(defConfig);
+        }
+    }
+    
+    public FileConfiguration getBlacklist() {
+        if (blacklist == null) {
+            reloadBlacklist();
+        }
+        return blacklist;
+    }
+    
+    public void saveBlacklist() {
+        if (blacklist == null || blacklistFile == null) {
+            return;
+        }
+        try {
+            blacklist.save(blacklistFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving blacklist to " + blacklistFile, ex);
+        }
+    }
+    
+    //MobsConfig re-do:
+    public void reloadEntityManager() {
+        if (entityManagerFile == null) {
+            entityManagerFile = new File(getDataFolder(), "entityManager.yml");
+        }
+        entityManager = YamlConfiguration.loadConfiguration(entityManagerFile);
+        
+        InputStream defConfigStream = getResource("entityManager.yml");
+        if (defConfigStream != null) {
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            entityManager.setDefaults(defConfig);
+        }
+    }
+    
+    public FileConfiguration getEntityManager() {
+        if (entityManager == null) {
+            reloadEntityManager();
+        }
+        return entityManager;
+    }
+    
+    public void saveEntityManager() {
+        if (entityManager == null || entityManagerFile == null) {
+            return;
+        }
+        try {
+            entityManager.save(entityManagerFile);
+        } catch (IOException ex) {
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving entityManager to " + entityManagerFile, ex);
+        }
     }
 }

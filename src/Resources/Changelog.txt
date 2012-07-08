@@ -13,6 +13,15 @@ Version 3.0
 * Added fireballs to ignition prevention.
 * Improved the node updater in the userFiles.
 * Added gamemode and level to user files.
+* Added a new file called iSafeConfig.yml, in this file you can manage settings directly related to iSafe.
+* Added simple Verbose logging.
+* There's now only one main command which follows with several arguments. (/iSafe [argument])
+* Added simple debug mode.
+* Rewritten the update checker.
+* Made it configurable to check for updates or not.
+* Updated the info command.
+* Removed instantbreak and superbreak command.
+* Removed stopserver command.
 * 
 
 Version 2.80

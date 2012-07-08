@@ -124,7 +124,7 @@ public class BlockListener implements Listener {
                 Player p = event.getPlayer();
                 if(!p.hasPermission("iSafe.use.flintandsteel")) {
                     event.setCancelled(true);
-                    plugin.sendNoPermission(p);
+                    plugin.noPermission(p);
                 }
             }
         } else if (cause == IgniteCause.LAVA) {
@@ -292,24 +292,6 @@ public class BlockListener implements Listener {
             if (block.getTypeId() == 80) {
                 event.setCancelled(true);
             }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onBlockDamage(BlockDamageEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
-        
-        if (plugin.superbreak.contains(event.getPlayer())) 
-        {
-            event.setInstaBreak(true);
-        }
-        
-        if(plugin.getConfig().getBoolean("Player.Instantbreak", true))
-        {
-            event.setInstaBreak(true);
         }
     }
 
