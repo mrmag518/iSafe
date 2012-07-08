@@ -1,3 +1,5 @@
+package com.mrmag518.Events.WorldEvents;
+
 /*
  * iSafe
  * Copyright (C) 2011-2012 mrmag518 <magnusaub@yahoo.no>
@@ -16,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mrmag518.iSafe.Events.World;
+
 
 import com.mrmag518.iSafe.*;
 

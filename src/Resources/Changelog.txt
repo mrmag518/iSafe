@@ -11,9 +11,9 @@ Version 3.0
 * Added an extra check for OP status when a new update is found.
 * Improved fire prevention code.
 * Added fireballs to ignition prevention.
-* Improved the IPAddress updater in the userFiles.
-* Added gamemode to user files.
-*
+* Improved the node updater in the userFiles.
+* Added gamemode and level to user files.
+* 
 
 Version 2.80
 * Fixed endermen griefing always being prevented.

@@ -151,10 +151,4 @@ public class Data {
         + "\nColor support is being worked on.";
         return header;
     }
-    
-    public static void sendNoPermission(Player p) {
-        ChatColor RED = ChatColor.RED;
-        String no_permission = RED + plugin.getMessages().getString("Permissions.DefaultNoPermission");
-        p.sendMessage(no_permission);
-    }
 }

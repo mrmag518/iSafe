@@ -18,6 +18,16 @@
 
 package com.mrmag518.iSafe;
 
+import com.mrmag518.Events.BlockEvents.BlockListener;
+import com.mrmag518.Events.BlockEvents.DropListener;
+import com.mrmag518.Events.EntityEvents.EnchantmentListener;
+import com.mrmag518.Events.EntityEvents.EntityListener;
+import com.mrmag518.Events.EntityEvents.InventoryListener;
+import com.mrmag518.Events.EntityEvents.PlayerListener;
+import com.mrmag518.Events.EntityEvents.VehicleListener;
+import com.mrmag518.Events.WorldEvents.WeatherListener;
+import com.mrmag518.Events.WorldEvents.WorldListener;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -32,14 +42,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import com.mrmag518.iSafe.Blacklists.*;
 import com.mrmag518.iSafe.Commands.*;
-import com.mrmag518.iSafe.Events.Block.*;
-import com.mrmag518.iSafe.Events.Entity.*;
-import com.mrmag518.iSafe.Events.Various.*;
-import com.mrmag518.iSafe.Events.World.*;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -637,11 +641,16 @@ public class iSafe extends JavaPlugin {
         saveBlacklist();
     }
     
+    public void sendNoPermission(Player p) {
+        String no_permission = ChatColor.RED + getMessages().getString("Permissions.DefaultNoPermission");
+        p.sendMessage(no_permission);
+    }
+    
     public void loadMessages() {
         messages = getMessages();
         messages.options().header(Data.setMessageHeader());
         
-        messages.addDefault("Permissions.DefaultNoPermission", "No Permission.");
+        messages.addDefault("Permissions.DefaultNoPermission", "No permission.");
         
         this.getMessages().options().copyDefaults(true);
         saveMessages();

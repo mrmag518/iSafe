@@ -1,3 +1,5 @@
+package com.mrmag518.Events.BlockEvents;
+
 /*
  * iSafe
  * Copyright (C) 2011-2012 mrmag518 <magnusaub@yahoo.no>
@@ -16,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.mrmag518.iSafe.Events.Block;
+
 
 import com.mrmag518.iSafe.*;
 
@@ -122,7 +124,7 @@ public class BlockListener implements Listener {
                 Player p = event.getPlayer();
                 if(!p.hasPermission("iSafe.use.flintandsteel")) {
                     event.setCancelled(true);
-                    Data.sendNoPermission(p);
+                    plugin.sendNoPermission(p);
                 }
             }
         } else if (cause == IgniteCause.LAVA) {
