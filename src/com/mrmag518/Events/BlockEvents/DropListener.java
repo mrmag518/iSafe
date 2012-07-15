@@ -25,7 +25,6 @@ import com.mrmag518.iSafe.iSafe;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -38,7 +37,7 @@ public class DropListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler
     public void onBlockPlace(BlockBreakEvent event) {
         if (event.isCancelled())
         {
@@ -47,10 +46,8 @@ public class DropListener implements Listener {
         
         Block block = event.getBlock();
         
-        if (plugin.getConfig().getBoolean("Drop-configure.Glass.Drop.Glass", true))
-        {
-            if (block.getTypeId() == 20) 
-            {
+        if (plugin.getConfig().getBoolean("ForceDrop.Glass", true)){
+            if (block.getTypeId() == 20) {
                 if(!(event.isCancelled())) {
                     ItemStack glass = new ItemStack(event.getBlock().getType(), 1);
                     event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), glass);
@@ -59,10 +56,8 @@ public class DropListener implements Listener {
             }
         }
         
-        if (plugin.getConfig().getBoolean("Drop-configure.Mobspawner.Drop.Mobspawner", true))
-        {
-            if (block.getTypeId() == 52) 
-            {
+        if (plugin.getConfig().getBoolean("ForceDrop.MobSpawner", true)){
+            if (block.getTypeId() == 52) {
                 if(!(event.isCancelled())) {
                     ItemStack mobspawner = new ItemStack(event.getBlock().getType(), 1);
                     event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), mobspawner);
@@ -71,52 +66,22 @@ public class DropListener implements Listener {
             }
         }
         
-        if (plugin.getConfig().getBoolean("Drop-configure.Ice.Drop.Ice", true))
-        {
-            if (block.getTypeId() == 79) 
-            {
+        if (plugin.getConfig().getBoolean("ForceDrop.Ice", true)){
+            if (block.getTypeId() == 79) {
                 if(!(event.isCancelled())) {
                     ItemStack ice = new ItemStack(event.getBlock().getType(), 1);
                     event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), ice);
-                    if (plugin.getConfig().getBoolean("Drop-configure.Ice.Drop.Ice-options.Prevent-water", true)) {
-                        block.setType(Material.AIR);
-                        block.setType(Material.AIR);
-                    }
+                    block.setType(Material.AIR);
+                    block.setType(Material.AIR);
                 }
             }
         }
         
-        if (plugin.getConfig().getBoolean("Drop-configure.Bedrock.Drop.Bedrock", true))
-        {
-            if (block.getTypeId() == 7) 
-            {
+        if (plugin.getConfig().getBoolean("ForceDrop.Bedrock", true)){
+            if (block.getTypeId() == 7) {
                 if(!(event.isCancelled())) {
                     ItemStack bedrock = new ItemStack(event.getBlock().getType(), 1);
                     event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), bedrock);
-                    block.setType(Material.AIR);
-                }
-            }
-        }
-        
-        if (plugin.getConfig().getBoolean("Drop-configure.Bookshelf.Drop.Bookshelf", true))
-        {
-            if (block.getTypeId() == 47)
-            {
-                if(!(event.isCancelled())) {
-                    ItemStack bookshelf = new ItemStack(event.getBlock().getType(), 1);
-                    event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), bookshelf);
-                    block.setType(Material.AIR);
-                }
-            }
-        }
-        
-        if (plugin.getConfig().getBoolean("Drop-configure.Grass_thingy.Drop.Grass_thingy", true))
-        {      
-            if (block.getTypeId() == 31 || block.getTypeId() == 32) 
-            {
-                if(!(event.isCancelled())) {
-                    ItemStack grass = new ItemStack(event.getBlock().getType(), 1);
-                    event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), grass);
                     block.setType(Material.AIR);
                 }
             }

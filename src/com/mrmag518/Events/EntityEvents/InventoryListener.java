@@ -42,7 +42,7 @@ public class InventoryListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Furnace.Disable-furnace-burning", true))
+        if(plugin.getConfig().getBoolean("Furnace.DisableFurnaceUsage", true))
         {
             event.setBurnTime(0);
             event.setCancelled(true);
@@ -56,7 +56,7 @@ public class InventoryListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Furnace.Disable-furnace-smelting", true))
+        if(plugin.getConfig().getBoolean("Furnace.DisableFurnaceUsage", true))
         {
             event.setCancelled(true);
         }

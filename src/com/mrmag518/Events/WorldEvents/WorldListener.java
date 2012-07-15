@@ -24,18 +24,15 @@ import com.mrmag518.iSafe.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.TreeType;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.event.world.PortalCreateEvent;
+import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.event.world.StructureGrowEvent;
-import org.bukkit.event.world.WorldInitEvent;
-import org.bukkit.event.world.WorldLoadEvent;
-import org.bukkit.event.world.WorldSaveEvent;
-import org.bukkit.event.world.WorldUnloadEvent;
 
 public class WorldListener implements Listener {
     public static iSafe plugin;
@@ -45,43 +42,15 @@ public class WorldListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onWorldUnload(WorldUnloadEvent event) {
-        World world = event.getWorld();
-        
-        if(plugin.getConfig().getBoolean("World.Register-world(s)-unload", true))
-        {
-            System.out.println(("[iSafe] Unloaded '"+ (world.getName() + "' succsesfully.")));
+    @EventHandler
+    public void portalManagement(PortalCreateEvent event) {
+        if(plugin.getConfig().getBoolean("World.DisablePortalGeneration", true)) {
+            if(event.getReason() == CreateReason.OBC_DESTINATION) {
+                event.setCancelled(true);
+            }
         }
     }
     
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onWorldSave(WorldSaveEvent event) {
-        World world = event.getWorld();
-        if(plugin.getConfig().getBoolean("World.Register-world(s)-save", true))
-        {
-            System.out.println("[iSafe] Saved '"+ (world.getName() + "' succsesfully."));
-        }
-    }
-    
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onWorldLoad(WorldLoadEvent event) {
-        World world = event.getWorld();
-        if(plugin.getConfig().getBoolean("World.Register-world(s)-load", true))
-        {
-            System.out.println("[iSafe] Loaded '"+ (world.getName() + "' succsesfully."));
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onWorldInit(WorldInitEvent event) {
-        World world = event.getWorld();
-        if(plugin.getConfig().getBoolean("World.Register-world(s)-init", true))
-        {
-            System.out.println("[iSafe] Initialized '"+ (world.getName() + "' succsesfully."));
-        }
-    }
-
     @EventHandler(priority = EventPriority.NORMAL)
     public void onChunkUnload(ChunkUnloadEvent event) {
         if (event.isCancelled())
@@ -89,7 +58,7 @@ public class WorldListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Chunk.Prevent.unload-chunks(Use with caution)", true))
+        if(plugin.getConfig().getBoolean("World.PreventChunkUnload", true))
         {
             event.setCancelled(true);
         }
@@ -97,7 +66,7 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onChunkLoad(ChunkLoadEvent event) {
-        if(!plugin.getConfig().getBoolean("Chunk.Enable-Chunk-emergency-loader", true))
+        if(!plugin.getConfig().getBoolean("World.MakeISafeLoadChunks", true))
         {
             event.getChunk().load();
         }
@@ -109,46 +78,43 @@ public class WorldListener implements Listener {
         {
             return;
         }
-        Player player = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Structure.Prevent-strcuture-growth", true))
-        {
+        if(plugin.getConfig().getBoolean("World.DisableStructureGrowth", true)) {
             event.setCancelled(true);
         }
         
-        if(plugin.getConfig().getBoolean("Structure.Prevent-bonemeal-usage", true))
-        {
+        if(plugin.getConfig().getBoolean("World.PreventBonemealUsage", true)) {
             if (event.isFromBonemeal()) {
-                event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You cannot use bonemeal.");
+                Player p = event.getPlayer();
+                if(!p.hasPermission("iSafe.use.bonemeal")) {
+                    event.setCancelled(true);
+                    plugin.noPermission(p);
+                }
             }
         }
         
-        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.BIG_TREE", true))
-        {
+        if(plugin.getConfig().getBoolean("TreeGrowth.DisableFor.BigTree", true)) {
             if (event.getSpecies() == TreeType.BIG_TREE)
             {
                 event.setCancelled(true);
             }
         }
         
-        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.BIRCH", true))
-        {
+        if(plugin.getConfig().getBoolean("TreeGrowth.DisableFor.Birch", true)) {
             if (event.getSpecies() == TreeType.BIRCH)
             {
                 event.setCancelled(true);
             }
         }
         
-        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.BROWN_MUSHROOM", true))
-        {
+        if(plugin.getConfig().getBoolean("TreeGrowth.DisableFor.BrownMushroom", true)) {
             if (event.getSpecies() == TreeType.BROWN_MUSHROOM)
             {
                 event.setCancelled(true);
             }
         }
         
-        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.REDWOOD", true))
+        if(plugin.getConfig().getBoolean("TreeGrowth.DisableFor.Redwood", true))
         {
             if (event.getSpecies() == TreeType.REDWOOD)
             {
@@ -156,7 +122,7 @@ public class WorldListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.RED_MUSHROOM", true))
+        if(plugin.getConfig().getBoolean("TreeGrowth.DisableFor.RedMushroom", true))
         {
             if (event.getSpecies() == TreeType.RED_MUSHROOM)
             {
@@ -164,7 +130,7 @@ public class WorldListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.TALL_REDWOOD", true))
+        if(plugin.getConfig().getBoolean("TreeGrowth.DisableFor.TallRedwood", true))
         {
             if (event.getSpecies() == TreeType.TALL_REDWOOD)
             {
@@ -172,7 +138,7 @@ public class WorldListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.TREE", true))
+        if(plugin.getConfig().getBoolean("TreeGrowth.DisableFor.Tree", true))
         {
             if (event.getSpecies() == TreeType.TREE)
             {
@@ -180,17 +146,9 @@ public class WorldListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.JUNGLE", true))
+        if(plugin.getConfig().getBoolean("TreeGrowth.DisableFor.Jungle", true))
         {
             if (event.getSpecies() == TreeType.JUNGLE)
-            {
-                event.setCancelled(true);
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Structure.Prevent-structure-growth.TALL_REDWOOD", true))
-        {
-            if (event.getSpecies() == TreeType.TALL_REDWOOD)
             {
                 event.setCancelled(true);
             }

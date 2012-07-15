@@ -1,28 +1,56 @@
 Displaying the Change Log of iSafe.
 
 Version 3.0
+Fixed:
 * Fixed players not being able to break block under water.
-* Added permission node iSafe.use.flintandsteel.
-* Renamed permission node iSafe.* to iSafe.admin.
-* Now managing files while the plugin is loading, not when it's enabling.
-* Added 'Messages.yml'. In this file you can alter messages sent out by iSafe.
 * Fixed a NPE sometimes appearing during file generations.
-* Added example user file.
+* Fixed structures not growing in worlds.
+* Fixed duplication of TreeGrowth Redwood prevention.
+* Fixed another exploitation which made you able to break blocks in protected regions.
+* Fixed players not being teleported to spawn on void fall is damage was disabled.
+* 
+
+Added:
+* Added permissions to use flint and steel.
+* Added 'Messages.yml'. In this file you can alter messages sendt out by iSafe.
+** Alter the default no permission message.
+** Alter the no permission for this command message.
+* Added an example user file.
 * Added an extra check for OP status when a new update is found.
-* Improved fire prevention code.
-* Added fireballs to ignition prevention.
-* Improved the node updater in the userFiles.
 * Added gamemode and level to user files.
 * Added a new file called iSafeConfig.yml, in this file you can manage settings directly related to iSafe.
-* Added simple Verbose logging.
-* There's now only one main command which follows with several arguments. (/iSafe [argument])
-* Added simple debug mode.
-* Rewritten the update checker.
-* Made it configurable to check for updates or not.
-* Updated the info command.
+** Added VerboseLogging.
+** Added simple DebugMode.
+** Configurable to check for updates.
+* Added fireballs to ignition prevention.
+* Added the possibility to disable portal generation.
+* Added config setting VoidFall.TeleportPlayerBackAndFixHole.
+** Choose between fixing hole with bedrock or glass.
+* 
+
+Removed:
 * Removed instantbreak and superbreak command.
 * Removed stopserver command.
+* Removed world registering.
+* Removed infinite itemtacks.
+* Removed useless fire spread code.
+* Removed World.Prevent-naturally-object-dispensing, this can now be altered in the dispense blacklist.
+* Removed forcedrop bookshelf as it now drops books.
+* Why would anyone teleport a creeper to the spawn if he falls in the void? Removed..
 * 
+
+Improvements:
+* Renamed permission node iSafe.* to iSafe.admin.
+* Now managing files while the plugin is loading, not when it's enabling.
+* Improved fire prevention code.
+* Improved the node updater in the userFiles.
+* There's now only one main command which follows with several arguments. (/iSafe [argument])
+* Rewritten the update checker.
+* Updated the info command.
+* Now fire spread is 100% disabled if prevented.
+* 
+
+--------------------------------------------------------------------------------
 
 Version 2.80
 * Fixed endermen griefing always being prevented.

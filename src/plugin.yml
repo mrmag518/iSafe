@@ -10,6 +10,15 @@ commands:
     description: Main command for iSafe.
     usage: /<command>
 permissions:
+  iSafe.command.reload:
+    default: op
+  iSafe.command.info:
+    default: op
+  iSafe.command.serverinfo:
+    default: op
+  iSafe.enchant:
+    default: op
+    
   iSafe.admin:
     description: Allow the user to get access to all the iSafe permissions.
     default: op

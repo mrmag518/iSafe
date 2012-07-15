@@ -31,23 +31,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockCanBuildEvent;
-import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.BlockFormEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockGrowEvent;
-import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
-import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockSpreadEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.inventory.ItemStack;
 
 
@@ -65,7 +50,7 @@ public class BlockListener implements Listener {
         {
             return;
         }
-        if(plugin.getConfig().getBoolean("Misc.Prevent-BlockGrow", true)) {
+        if(plugin.getConfig().getBoolean("Miscellaneous.DisableBlockGrow", true)) {
             event.setCancelled(true);
         }
     }
@@ -82,26 +67,11 @@ public class BlockListener implements Listener {
         byte level = p.getLocation().getBlock().getLightLevel();
         
         
-        if(plugin.getConfig().getBoolean("Player.Prevent-fullbright-hacking(force lightlevel)", true)) {
-            if(level < 1 && !b.isLiquid() && !loc.getBlock().isLiquid()) {
+        if(plugin.getConfig().getBoolean("AntiCheat.ForceLightLevel(Fullbright)", true)) {
+            if(level <= 1 && !b.isLiquid() && !loc.getBlock().isLiquid()) {
                 event.setCancelled(true);
                 p.sendMessage(ChatColor.YELLOW + "Place a torch!");
             }
-        }
-    }
-    
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
-        Player player = event.getPlayer();
-        
-        if(plugin.getConfig().getBoolean("Player.Infinite-itemtacks", true))
-        {
-            ItemStack itst = player.getItemInHand();
-            itst.setAmount(-1);
         }
     }
     
@@ -140,15 +110,6 @@ public class BlockListener implements Listener {
                 event.setCancelled(true);
             }
         }
-        
-        if(plugin.getConfig().getBoolean("Misc.Prevent-portal-creation", true))
-        {
-            if(event.getBlock().getTypeId() == 49 || event.getBlock().getRelative(BlockFace.DOWN).getTypeId() == 49) 
-            {
-                event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You do not have access to create a portal.");
-            }
-        }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -159,21 +120,21 @@ public class BlockListener implements Listener {
         }
         Block block = event.getBlock();
         
-        if(plugin.getConfig().getBoolean("Flow.Disable-water-flow", true))
+        if(plugin.getConfig().getBoolean("Flow.DisableWaterFlow", true))
         {
             if (block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("Flow.Disable-lava-flow", true))
+        if(plugin.getConfig().getBoolean("Flow.DisableLavaFlow", true))
         {
             if (block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
                 
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("Flow.Disable-air-flow", true))
+        if(plugin.getConfig().getBoolean("Flow.DisableAirFlow", true))
         {
             if (block.getType() == Material.AIR) 
             {
@@ -189,8 +150,7 @@ public class BlockListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Piston.Prevent-piston-Extend", true))
-        {
+        if(plugin.getConfig().getBoolean("Pistons.DisablePistonExtend", true)){
             event.setCancelled(true);
         }
     }
@@ -202,8 +162,7 @@ public class BlockListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Piston.Prevent-piston-Retract", true))
-        {
+        if(plugin.getConfig().getBoolean("Pistons.DisablePistonRetract", true)){
             event.setCancelled(true);
         }
     }
@@ -215,25 +174,8 @@ public class BlockListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Enviroment-Damage.Prevent-Fire-spread", true))
-        {
+        if(plugin.getConfig().getBoolean("Fire.PreventBlockBurn", true)){
             event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onBlockForm(BlockFormEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
-        
-        if(plugin.getConfig().getBoolean("Enviroment-Damage.Prevent-Fire-spread", true))
-        {
-            if(event.getBlock().getType() == Material.FIRE) 
-            {
-                event.setCancelled(true);
-            }
         }
     }
 
@@ -244,8 +186,7 @@ public class BlockListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Misc.Disable-LeavesDecay", true))
-        {
+        if(plugin.getConfig().getBoolean("Miscellaneous.DisableLeavesDecay", true)){
             event.setCancelled(true);
         }
     }
@@ -256,18 +197,15 @@ public class BlockListener implements Listener {
         {
             return;
         }
-        Block block = event.getBlock();
-        int ID = block.getTypeId();
+        Block b = event.getBlock();
         
-        if(plugin.getConfig().getBoolean("Physics.Disable-sand-physics", true))
-        {
-            if (ID == 12) {
+        if(plugin.getConfig().getBoolean("BlockPhysics.DisableSandPhysics", true)){
+            if (b.getType() == Material.SAND) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("Physics.Disable-gravel-physics", true))
-        {
-            if (ID == 13) {
+        if(plugin.getConfig().getBoolean("BlockPhysics.DisableGravelPhysics", true)){
+            if (b.getType() == Material.GRAVEL) {
                 event.setCancelled(true);
             }
         }
@@ -281,14 +219,12 @@ public class BlockListener implements Listener {
         }
         Block block = event.getBlock();
         
-        if(plugin.getConfig().getBoolean("Fade.Prevent-Ice-melting", true))
-        {
+        if(plugin.getConfig().getBoolean("BlockFade.DisableIceMelting", true)){
             if (block.getTypeId() == 79) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("Fade.Prevent-Snow-melting", true))
-        {
+        if(plugin.getConfig().getBoolean("BlockFade.DisableSnowMelting", true)){
             if (block.getTypeId() == 80) {
                 event.setCancelled(true);
             }
@@ -296,24 +232,10 @@ public class BlockListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onBlockDispense(BlockDispenseEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
-        
-        if(plugin.getConfig().getBoolean("World.Prevent-naturally-object-dispensing", true))
-        {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockCanBuild(BlockCanBuildEvent event) {
-        if(plugin.getConfig().getBoolean("World.Force-blocks-to-be-buildable", true))
-        {
-            if (!event.isBuildable()) 
-            {
+        
+        if(plugin.getConfig().getBoolean("Miscellaneous.ForceBlocksToBeBuildable", true)){
+            if (!event.isBuildable()) {
                 event.setBuildable(true);
             }
         }
@@ -326,9 +248,14 @@ public class BlockListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("World.Prevent-blocks-spreading", true))
-        {
+        if(plugin.getConfig().getBoolean("Miscellaneous.DisableBlockSpreading", true)){
             event.setCancelled(true);
+        }
+        
+        if(event.getSource().getType() == Material.FIRE) {
+            if(plugin.getConfig().getBoolean("Fire.DisableFireSpread", true)) {
+                event.setCancelled(true);
+            }
         }
     }
 }

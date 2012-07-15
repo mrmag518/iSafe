@@ -45,23 +45,32 @@ public class EntityListener implements Listener {
     }
     
     @EventHandler
+    public void managePortalCreation(EntityCreatePortalEvent event) {
+        if (event.isCancelled())
+        {
+            return;
+        }
+        
+        if(event.getEntity() instanceof Player) {
+            Player p = (Player)event.getEntity();
+            if(!p.hasPermission("iSafe.createportal")) {
+                event.setCancelled(true);
+                plugin.noPermission(p);
+            }
+        }
+    }
+    
+    @EventHandler
     public void onExplosionPrime(ExplosionPrimeEvent event) {
         if (event.isCancelled())
         {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.Disable-primed-explosions", true))
+        if(plugin.getConfig().getBoolean("Explosions.DisablePrimedExplosions", true))
         {
             event.getEntity().remove();
             event.setCancelled(true);
-        }
-        
-        if(plugin.getConfig().getBoolean("Explosions.Prevent-creeper-death-on-explosion", true)) {
-            if (event.isCancelled()) 
-            {
-                NoCreeperDeathOnExplosion(event);
-            }
         }
     }
     
@@ -78,11 +87,11 @@ public class EntityListener implements Listener {
         int z = (int) event.getLocation().getZ();
         String world = ent.getWorld().getName();
         
-        if(plugin.getConfig().getBoolean("Explosions.Disable-explosions", true))
+        if(plugin.getConfig().getBoolean("Explosions.DisableAllExplosions", true))
         {
             int blocks = event.blockList().size();
             event.blockList().clear();
-            if(plugin.getConfig().getBoolean("Explosions.Debug-explosions", true))
+            if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true))
             {
                 plugin.log.info("[iSafe](Debug)" + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
                         + " Z: "+ z + " | Yield: "+ event.getYield()
@@ -91,14 +100,14 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.Disable-Creeper-explosions", true))
+        if(plugin.getConfig().getBoolean("Explosions.DisableCreeperExplosions", true))
         {
             int blocks = event.blockList().size();
             if (ent instanceof Creeper) 
             {
                 event.blockList().clear();
                 
-                if(plugin.getConfig().getBoolean("Explosions.Debug-explosions", true))
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true))
                 {
                 plugin.log.info("[iSafe](Debug)" + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
                         + " Z: "+ z + " | Yield: "+ event.getYield()
@@ -108,14 +117,14 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.Disable-EnderDragon-blockdamage", true))
+        if(plugin.getConfig().getBoolean("Explosions.DisableEnderdragonBlockDamage", true))
         {
             int blocks = event.blockList().size();
             if (ent instanceof EnderDragon) 
             {
                 event.blockList().clear();
                 
-                if(plugin.getConfig().getBoolean("Explosions.Debug-explosions", true))
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true))
                 {
                 plugin.log.info("[iSafe](Debug)" + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
                         + " Z: "+ z + " | Yield: "+ event.getYield()
@@ -125,14 +134,14 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.Disable-TNT-explosions", true))
+        if(plugin.getConfig().getBoolean("Explosions.DisableTntExplosions", true))
         {
             int blocks = event.blockList().size();
             if (ent instanceof TNTPrimed) 
             {
                 event.blockList().clear();
                 
-                if(plugin.getConfig().getBoolean("Explosions.Debug-explosions", true))
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true))
                 {
                 plugin.log.info("[iSafe](Debug)" + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
                         + " Z: "+ z + " | Yield: "+ event.getYield()
@@ -142,14 +151,14 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.Disable-Fireball-explosions", true))
+        if(plugin.getConfig().getBoolean("Explosions.DisableFireballExplosions", true))
         {
             int blocks = event.blockList().size();
             if (ent instanceof Fireball) 
             {
                 event.blockList().clear();
                 
-                if(plugin.getConfig().getBoolean("Explosions.Debug-explosions", true))
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true))
                 {
                 plugin.log.info("[iSafe](Debug)" + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
                         + " Z: "+ z + " | Yield: "+ event.getYield()
@@ -159,14 +168,14 @@ public class EntityListener implements Listener {
             }  
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.Disable-EnderCrystal-explosions", true))
+        if(plugin.getConfig().getBoolean("Explosions.DisableEnderCrystalExplosions", true))
         {
             int blocks = event.blockList().size();
             if (ent instanceof EnderCrystal) 
             {
                 event.blockList().clear();
                 
-                if(plugin.getConfig().getBoolean("Explosions.Debug-explosions", true))
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true))
                 {
                     plugin.log.info("[iSafe](Debug)" + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
                             + " Z: "+ z + " | Yield: "+ event.getYield()
@@ -178,7 +187,7 @@ public class EntityListener implements Listener {
     }
     
     @EventHandler
-    public void expBottle(ExpBottleEvent event) {
+    public void expBottleManagement(ExpBottleEvent event) {
         if(plugin.getEntityManager().getBoolean("Player.Prevent-expBottle-throw", true)) {
             event.setExperience(0);
             event.setShowEffect(false);
@@ -204,30 +213,29 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
         Entity entity = event.getEntity();
         World world = entity.getWorld();
         
-        if(plugin.getConfig().getBoolean("EntityTo-SpawnLocation.On-Void-fall(Player)", true)) 
-        {
-            if(entity instanceof Player) 
-            {
-                if(event.getCause() == DamageCause.VOID) 
-                {
-                    entity.teleport(world.getSpawnLocation());
-                }
-            }
-        }
-        if(plugin.getConfig().getBoolean("EntityTo-SpawnLocation.On-Void-fall(Creature)", true)) 
-        {
-            if(entity instanceof Creature || entity instanceof Animals) 
-            {
-                if(event.getCause() == DamageCause.VOID) 
-                {
-                    entity.teleport(world.getSpawnLocation());
+        if(event.getCause() == DamageCause.VOID) {
+            if(entity instanceof Player) {
+                Player p = (Player)entity;
+                if(event.isCancelled() || !event.isCancelled()) {
+                    if(plugin.getConfig().getBoolean("VoidFall.TeleportPlayerToSpawn", true)) {
+                        p.teleport(world.getSpawnLocation());
+                    } else if(plugin.getConfig().getBoolean("VoidFall.TeleportPlayerBackAndFixHole", true)) {
+                        int highestY = p.getWorld().getHighestBlockYAt(p.getLocation());
+                        Location loc = new Location(p.getWorld(), p.getLocation().getX(), highestY+5, p.getLocation().getZ());
+                        Block b = p.getWorld().getBlockAt(loc.getBlockX(), 0, loc.getBlockZ());
+                        if(plugin.getConfig().getBoolean("VoidFall.FixHoleWithGlass", true)) {
+                            b.setTypeId(20);
+                        } else if(plugin.getConfig().getBoolean("VoidFall.FixHoleWithBedrock", true)) {
+                            b.setTypeId(7);
+                        } else {
+                            plugin.getConfig().set("VoidFall.FixHoleWithGlass", true);
+                            b.setTypeId(20);
+                        }
+                        p.teleport(loc);
+                    }
                 }
             }
         }
@@ -240,6 +248,7 @@ public class EntityListener implements Listener {
                 event.setCancelled(true);
             }
         }
+        
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-player-death/damage", true))
         {
             if(entity instanceof Player) 
@@ -258,6 +267,7 @@ public class EntityListener implements Listener {
                 }
             }
         }
+        
         if(plugin.getConfig().getBoolean("Explosions.Disable-(Block)Explosion-damage.To-Creatures", true))
         {
             if(event.getCause() == DamageCause.BLOCK_EXPLOSION) {
@@ -267,6 +277,7 @@ public class EntityListener implements Listener {
                 }
             }
         }
+        
         if(plugin.getConfig().getBoolean("Explosions.Disable-(Entity)Explosion-damage.To-Players", true))
         {
             if(event.getCause() == DamageCause.ENTITY_EXPLOSION) {
@@ -276,6 +287,7 @@ public class EntityListener implements Listener {
                 }
             }
         }
+        
         if(plugin.getConfig().getBoolean("Explosions.Disable-(Entity)Explosion-damage.To-Creatures", true))
         {
             if(event.getCause() == DamageCause.ENTITY_EXPLOSION) {
@@ -1343,17 +1355,6 @@ public class EntityListener implements Listener {
         
         if(plugin.getEntityManager().getBoolean("Creatures.DoorBreaking-PreventFor-zombies", true)) {
             event.setCancelled(true);
-        }
-    }
-    
-    public void NoCreeperDeathOnExplosion(ExplosionPrimeEvent event) {
-        if ( event.getEntity() instanceof Creeper == false ) 
-            return;
-        Creeper creeper = (Creeper) event.getEntity();
-         
-        if (creeper.getTarget() instanceof Player ) {
-            event.setCancelled(true);
-            creeper.setTarget(null);
         }
     }
 }

@@ -18,21 +18,13 @@
 
 package com.mrmag518.iSafe;
 
-import com.mrmag518.Events.BlockEvents.BlockListener;
-import com.mrmag518.Events.BlockEvents.DropListener;
-import com.mrmag518.Events.EntityEvents.EnchantmentListener;
-import com.mrmag518.Events.EntityEvents.EntityListener;
-import com.mrmag518.Events.EntityEvents.InventoryListener;
-import com.mrmag518.Events.EntityEvents.PlayerListener;
-import com.mrmag518.Events.EntityEvents.VehicleListener;
-import com.mrmag518.Events.WorldEvents.WeatherListener;
-import com.mrmag518.Events.WorldEvents.WorldListener;
+import com.mrmag518.Events.BlockEvents.*;
+import com.mrmag518.Events.EntityEvents.*;
+import com.mrmag518.Events.WorldEvents.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.File;
@@ -117,8 +109,10 @@ public class iSafe extends JavaPlugin {
         PluginDescriptionFile pdffile = this.getDescription();
         if(verboseLogging() == true) {
             log.info("[" + pdffile.getName() + " :: " + version + "] " + " Disabled succesfully.");
-        } else if (debugMode() == true) {
-            log.info(DEBUG_PREFIX + "Verbose logging is off.");
+        } else {
+            if (debugMode() == true) {
+                log.info(DEBUG_PREFIX + "Verbose logging is off.");
+            }
         }
     }
     
@@ -167,8 +161,10 @@ public class iSafe extends JavaPlugin {
         
         if(verboseLogging() == true) {
             log.info("[" + pdffile.getName() + " :: " + version + "] " + " Enabled succesfully.");
-        } else if (debugMode() == true) {
-            log.info(DEBUG_PREFIX + "Verbose logging is off.");
+        } else {
+            if (debugMode() == true) {
+                log.info(DEBUG_PREFIX + "Verbose logging is off.");
+            }
         }
     }
     
@@ -189,9 +185,12 @@ public class iSafe extends JavaPlugin {
         UFC = new UserFileCreator(this);
         if(getISafeConfig().getBoolean("CheckForUpdates", true)) {
             sendUpdate = new SendUpdate(this);
-        } else if (debugMode() == true) {
-            log.info(DEBUG_PREFIX + "CheckForUpdates in the iSafeConfig.yml was disabled, therefore not registering "
+        } else {
+            sendUpdate = null;
+            if (debugMode() == true) {
+                log.info(DEBUG_PREFIX + "CheckForUpdates in the iSafeConfig.yml was disabled, therefore not registering "
                     + "the sendUpdate class.");
+            }
         }
         
         dropBlacklist = new DropBlacklist(this);
@@ -244,11 +243,6 @@ public class iSafe extends JavaPlugin {
             }
         }
         
-        // Weird bug going on.. Need to manage configs in the following order ..
-        // Reload - If the file is null, generate it.
-        // Load - Add/manage settings in the file.
-        // Reload - Reload the file again to make the settings apply for the server.
-        
         reloadISafeConfig();
         loadISafeConfig();
         reloadISafeConfig();
@@ -274,47 +268,84 @@ public class iSafe extends JavaPlugin {
         }
     }
     
-    private void checkMatch() {
-        PluginDescriptionFile pdffile = this.getDescription();
-        if(!(pdffile.getFullName().equals(fileversion))) {
-            log.info("-----  iSafe vMatchConflict  -----");
-            log.warning("[iSafe] The version in the pdffile is not the same as the file.");
-            log.info("[iSafe] pdffile version: "+ pdffile.getFullName());
-            log.info("[iSafe] File version: "+ fileversion);
-            log.warning("[iSafe] Please deliver this infomation to "+ pdffile.getAuthors() +" at BukkitDev.");
-            log.info("-----  --------------------  -----");
-        }
-    }
-    
-    //Update checker
-    public String updateCheck(String currentVersion) throws Exception {
-        String pluginUrlString = "http://dev.bukkit.org/server-mods/blockthattnt/files.rss";
-        try {
-            URL url = new URL(pluginUrlString);
-             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url.openConnection().getInputStream());
-             doc.getDocumentElement().normalize();
-             NodeList nodes = doc.getElementsByTagName("item");
-             Node firstNode = nodes.item(0);
-             if (firstNode.getNodeType() == 1) {
-                 Element firstElement = (Element) firstNode;
-                 NodeList firstElementTagName = firstElement.getElementsByTagName("title");
-                 Element firstNameElement = (Element) firstElementTagName.item(0);
-                 NodeList firstNodes = firstNameElement.getChildNodes();
-                 return firstNodes.item(0).getNodeValue();
-             }
-        } catch (Exception ignored) {
-            //Ingored
-        }
-        return currentVersion;
-    }
-    
     public void loadConfig() {
         config = getConfig();
         config.options().header(Data.setConfigHeader());
         
-        config.addDefault("Enchantment.Prevent-Enchantment", false);
-        config.addDefault("Enchantment.Prevent-creativeEnchanting", false);
+        /*
+         * New = New 3.0 nodes.
+         * Old = Old 2.80 and lower nodes.
+         */
         
+        // New
+        config.addDefault("Fire.DisableFireSpread", false);
+        config.addDefault("Fire.PreventFlintAndSteelUsage", false);
+        config.addDefault("Fire.DisableLavaIgnition", false);
+        config.addDefault("Fire.DisableFireballIgnition", false);
+        config.addDefault("Fire.DisableLightningIgnition", false);
+        config.addDefault("Fire.PreventBlockBurn", false);
+        
+        config.addDefault("Enchantment.PreventEnchantment", false);
+        config.addDefault("Enchantment.PreventCreativeModeEnchanting", false);
+        
+        config.addDefault("Furnace.DisableFurnaceUsage", false);
+        
+        config.addDefault("Weather.Disable.LightningStrike", false);
+        config.addDefault("Weather.Disable.Thunder", false);
+        config.addDefault("Weather.Disable.Storm", false);
+        
+        config.addDefault("World.PreventChunkUnload", false);
+        config.addDefault("World.MakeISafeLoadChunks", false);
+        config.addDefault("World.DisableStructureGrowth", false);
+        config.addDefault("World.PreventBonemealUsage", false);
+        config.addDefault("World.DisablePortalGeneration", false);
+        
+        config.addDefault("TreeGrowth.DisableFor.BigTree", false);
+        config.addDefault("TreeGrowth.DisableFor.Birch", false);
+        config.addDefault("TreeGrowth.DisableFor.BrownMushroom", false);
+        config.addDefault("TreeGrowth.DisableFor.Redwood", false);
+        config.addDefault("TreeGrowth.DisableFor.RedMushroom", false);
+        config.addDefault("TreeGrowth.DisableFor.TallRedwood", false);
+        config.addDefault("TreeGrowth.DisableFor.Tree", false);
+        config.addDefault("TreeGrowth.DisableFor.Jungle", false);
+        
+        config.addDefault("Miscellaneous.DisableBlockGrow", false);
+        config.addDefault("Miscellaneous.DisableLeavesDecay", false);
+        config.addDefault("Miscellaneous.ForceBlocksToBeBuildable", false);
+        
+        config.addDefault("AntiCheat.ForceLightLevel(Fullbright)", false);
+        
+        config.addDefault("Explosions.DisablePrimedExplosions", false);
+        config.addDefault("Explosions.DisableAllExplosions", false);
+        config.addDefault("Explosions.DisableCreeperExplosions", false);
+        config.addDefault("Explosions.DisableEnderdragonBlockDamage", false);
+        config.addDefault("Explosions.DisableTntExplosions", false);
+        config.addDefault("Explosions.DisableFireballExplosions", false);
+        config.addDefault("Explosions.DisableEnderCrystalExplosions", false);
+        config.addDefault("Explosions.DebugExplosions", false);
+        
+        config.addDefault("Flow.DisableWaterFlow", false);
+        config.addDefault("Flow.DisableLavaFlow", false);
+        config.addDefault("Flow.DisableAirFlow", false);
+        
+        config.addDefault("Pistons.DisablePistonExtend", false);
+        config.addDefault("Pistons.DisablePistonRetract", false);
+        
+        config.addDefault("BlockPhysics.DisableSandPhysics", false);
+        config.addDefault("BlockPhysics.DisableGravelPhysics", false);
+        
+        config.addDefault("BlockFade.DisableIceMelting", false);
+        config.addDefault("BlockFade.DisableSnowMelting", false);
+        
+        config.addDefault("ForceDrop.Glass", false);
+        config.addDefault("ForceDrop.MobSpawner", false);
+        config.addDefault("ForceDrop.Ice", false);
+        config.addDefault("ForceDrop.Bedrock", false);
+        
+        config.addDefault("TeleportPlayerToSpawn.OnVoidFall", false);
+        
+        
+        // Old
         config.addDefault("EntityTo-SpawnLocation.On-Void-fall(Player)", false);
         config.addDefault("EntityTo-SpawnLocation.On-Void-fall(Creature)", false);
         
@@ -332,9 +363,6 @@ public class iSafe extends JavaPlugin {
         
         config.addDefault("Piston.Prevent-piston-Extend", false);
         config.addDefault("Piston.Prevent-piston-Retract", false);
-        
-        config.addDefault("Furnace.Disable-furnace-burning", false);
-        config.addDefault("Furnace.Disable-furnace-smelting", false);
         
         config.addDefault("Physics.Disable-sand-physics", false);
         config.addDefault("Physics.Disable-gravel-physics", false);
@@ -415,7 +443,7 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Entity-Damage.Disable-npc(Villagers)-death/damage", false);
         config.addDefault("Entity-Damage.Disable-player-death/damage", false);
         config.addDefault("Entity-Damage.Enable-permissions", false);
-        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
         config.addDefault("Entity-Damage.Players.Disable-Fire-damage", false);
         config.addDefault("Entity-Damage.Players.Disable-Contact-damage", false);
         config.addDefault("Entity-Damage.Players.Disable-Custom-damage", false);
@@ -431,7 +459,7 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Entity-Damage.Players.Disable-Suffocation-damage", false);
         config.addDefault("Entity-Damage.Players.Disable-Suicide-damage", false);
         config.addDefault("Entity-Damage.Players.Disable-Void-damage", false);
-        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
         config.addDefault("Entity-Damage.Creatures.Disable-Fire-damage", false);
         config.addDefault("Entity-Damage.Creatures.Disable-Contact-damage", false);
         config.addDefault("Entity-Damage.Creatures.Disable-Custom-damage", false);
@@ -462,10 +490,8 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Player.Disable-all-commands", false);
         config.addDefault("Player.Infinite-itemtacks", false);
         config.addDefault("Player.Kick-player-if-anther-user-with-same-username-log's-on", true);
-        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        //--
-        config.addDefault("Player-Interact.Erase the old values if you haven't already(this node is not an option)", "#");
-        //--
+        
+        config.set("Player-Interact.Erase the old values if you haven't already(this node is not an option)", null);
         config.addDefault("Player-Interact.Disable.Buttons", false);
         config.addDefault("Player-Interact.Disable.Chests", false);
         config.addDefault("Player-Interact.Disable.Dispensers", false);
@@ -476,7 +502,7 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Player-Interact.Disable.WoodenPressurePlates", false);
         config.addDefault("Player-Interact.Disable.Trapdoors", false);
         config.addDefault("Player-Interact.Disable.WoodenFenceGates", false);
-        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
         config.addDefault("Entity/Player.Completely-Prevent.Health-Regeneration", false);
         config.addDefault("Entity/Player.Prevent.Custom-Health-Regeneration", false);
         config.addDefault("Entity/Player.Prevent.Eating-Health-Regeneration", false);
@@ -484,10 +510,10 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Entity/Player.Prevent.Satiated-Health-Regeneration", false);
         config.addDefault("Entity/Player.Prevent.Magic-Health-Regeneration", false);
         config.addDefault("Entity/Player.Prevent.MagicRegen-Health-Regeneration", false);
-        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
         config.addDefault("PlayerInteractEntity.Prevent-snowball-hitting-player", false);
         config.addDefault("PlayerInteractEntity.Prevent-arrow-hitting-player", false);
-        //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
         config.addDefault("Drop-configure.Glass.Drop.Glass", false);
         config.addDefault("Drop-configure.Mobspawner.Drop.Mobspawner", false);
         config.addDefault("Drop-configure.Ice.Drop.Ice", false);
@@ -508,95 +534,6 @@ public class iSafe extends JavaPlugin {
         saveConfig();
     }
     
-    public void loadBlacklist() {
-        blacklist = getBlacklist();
-        blacklist.options().header(Data.setBlacklistHeader());
-        
-        blacklist.addDefault("Place.Complete-Disallow-placing", false);
-        blacklist.addDefault("Place.Kick-Player", false);
-        blacklist.addDefault("Place.Kill-Player", false);
-        blacklist.addDefault("Place.Alert/log.To-console", true);
-        blacklist.addDefault("Place.Alert/log.To-player", true);
-        blacklist.addDefault("Place.Alert/log.To-server-chat", false);
-        blacklist.addDefault("Place.Gamemode.PreventFor.Survival", true);
-        blacklist.addDefault("Place.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Place.Worlds", Arrays.asList(Data.worldslist));
-        Data.worlds = blacklist.getStringList("Place.Worlds");
-        blacklist.addDefault("Place.Blacklist", Arrays.asList(Data.placedblockslist));
-        Data.placedblocks = blacklist.getStringList("Place.Blacklist");
-        
-        blacklist.addDefault("Break.Complete-Disallow-breaking", false);
-        blacklist.addDefault("Break.Kick-Player", false);
-        blacklist.addDefault("Break.Kill-Player", false);
-        blacklist.addDefault("Break.Alert/log.To-console", true);
-        blacklist.addDefault("Break.Alert/log.To-player", true);
-        blacklist.addDefault("Break.Alert/log.To-server-chat", false);
-        blacklist.addDefault("Break.Gamemode.PreventFor.Survival", true);
-        blacklist.addDefault("Break.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Break.Worlds", Arrays.asList(Data.worldslist));
-        Data.worlds = blacklist.getStringList("Break.Worlds");
-        blacklist.addDefault("Break.Blacklist", Arrays.asList(Data.brokenblockslist));
-        Data.brokenblocks = blacklist.getStringList("Break.Blacklist");
-        
-        blacklist.addDefault("Drop.Complete-Disallow-droping", false);
-        blacklist.addDefault("Drop.Kick-Player", false);
-        blacklist.addDefault("Drop.Kill-Player", false);
-        blacklist.addDefault("Drop.Alert/log.To-console", true);
-        blacklist.addDefault("Drop.Alert/log.To-player", true);
-        blacklist.addDefault("Drop.Alert/log.To-server-chat", false);
-        blacklist.addDefault("Drop.Gamemode.PreventFor.Survival", true);
-        blacklist.addDefault("Drop.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Drop.Worlds", Arrays.asList(Data.worldslist));
-        Data.worlds = blacklist.getStringList("Drop.Worlds");
-        blacklist.addDefault("Drop.Blacklist", Arrays.asList(Data.dropedblockslist));
-        Data.dropedblocks = blacklist.getStringList("Drop.Blacklist");
-        
-        blacklist.addDefault("Pickup.Complete-Disallow-pickuping", false);
-        blacklist.addDefault("Pickup.Kick-Player", false);
-        blacklist.addDefault("Pickup.Kill-Player", false);
-        blacklist.addDefault("Pickup.Alert/log.To-console", true);
-        blacklist.addDefault("Pickup.Alert/log.To-player", true);
-        blacklist.addDefault("Pickup.Alert/log.To-server-chat", false);
-        blacklist.addDefault("Pickup.Gamemode.PreventFor.Survival", true);
-        blacklist.addDefault("Pickup.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Pickup.Worlds", Arrays.asList(Data.Pickupworldslist));
-        Data.Pickupworlds = blacklist.getStringList("Pickup.Worlds");
-        blacklist.addDefault("Pickup.Blacklist", Arrays.asList(Data.pickupedblockslist));
-        Data.pickupedblocks = blacklist.getStringList("Pickup.Blacklist");
-        
-        blacklist.addDefault("Command.Disallow-commands", false);
-        blacklist.addDefault("Command.Alert/log.To-console", true);
-        blacklist.addDefault("Command.Alert/log.To-player", true);
-        blacklist.addDefault("Command.Alert/log.To-server-chat", false);
-        blacklist.addDefault("Command.Worlds", Arrays.asList(Data.cmdworldlist));
-        Data.cmdworlds = blacklist.getStringList("Command.Worlds");
-        blacklist.addDefault("Command.Blacklist", Arrays.asList(Data.commandslist));
-        Data.commands = blacklist.getStringList("Command.Blacklist");
-        
-        blacklist.addDefault("Censor.Alert/log.To-console", false);
-        blacklist.addDefault("Censor.Alert/log.To-player", true);
-        blacklist.addDefault("Censor.Words/Blacklist", Arrays.asList(Data.censoredWordsList));
-        Data.censoredWords = blacklist.getStringList("Censor.Words/Blacklist");
-        
-        blacklist.addDefault("Dispense.Worlds", Arrays.asList(Data.dispenseWorldsList));
-        Data.dispenseWorlds = blacklist.getStringList("Dispense.Worlds");
-        blacklist.addDefault("Dispense.Blacklist", Arrays.asList(Data.dispensedBlockList));
-        Data.dispensedBlock = blacklist.getStringList("Dispense.Blacklist");
-        
-        this.getBlacklist().options().copyDefaults(true);
-        saveBlacklist();
-    }
-    
-    public void noPermission(Player p) {
-        String no_permission = ChatColor.RED + getMessages().getString("Permissions.DefaultNoPermission");
-        p.sendMessage(no_permission);
-    }
-    
-    public void noCmdPermission(CommandSender sender) {
-        String no_permission = ChatColor.RED + getMessages().getString("Permissions.NoCmdPermission");
-        sender.sendMessage(no_permission);
-    }
-    
     public void loadMessages() {
         messages = getMessages();
         messages.options().header(Data.setMessageHeader());
@@ -608,7 +545,18 @@ public class iSafe extends JavaPlugin {
         saveMessages();
     }
     
+    public void loadISafeConfig() {
+        iSafeConfig = getISafeConfig();
+        // Header..
         
+        iSafeConfig.addDefault("VerboseLogging", false);
+        iSafeConfig.addDefault("DebugMode", false);
+        iSafeConfig.addDefault("CheckForUpdates", true);
+        
+        this.getISafeConfig().options().copyDefaults(true);
+        saveISafeConfig();
+    }
+    
     public void loadEntityManager() {
         entityManager = getEntityManager();
         entityManager.options().header(Data.setEntityManagerHeader());
@@ -718,16 +666,93 @@ public class iSafe extends JavaPlugin {
         saveEntityManager();
     }
     
-    public void loadISafeConfig() {
-        iSafeConfig = getISafeConfig();
-        // Header..
+    public void loadBlacklist() {
+        blacklist = getBlacklist();
+        blacklist.options().header(Data.setBlacklistHeader());
         
-        iSafeConfig.addDefault("VerboseLogging", false);
-        iSafeConfig.addDefault("DebugMode", false);
-        iSafeConfig.addDefault("CheckForUpdates", true);
+        blacklist.addDefault("Place.Complete-Disallow-placing", false);
+        blacklist.addDefault("Place.Kick-Player", false);
+        blacklist.addDefault("Place.Kill-Player", false);
+        blacklist.addDefault("Place.Alert/log.To-console", true);
+        blacklist.addDefault("Place.Alert/log.To-player", true);
+        blacklist.addDefault("Place.Alert/log.To-server-chat", false);
+        blacklist.addDefault("Place.Gamemode.PreventFor.Survival", true);
+        blacklist.addDefault("Place.Gamemode.PreventFor.Creative", true);
+        blacklist.addDefault("Place.Worlds", Arrays.asList(Data.worldslist));
+        Data.worlds = blacklist.getStringList("Place.Worlds");
+        blacklist.addDefault("Place.Blacklist", Arrays.asList(Data.placedblockslist));
+        Data.placedblocks = blacklist.getStringList("Place.Blacklist");
         
-        this.getISafeConfig().options().copyDefaults(true);
-        saveISafeConfig();
+        blacklist.addDefault("Break.Complete-Disallow-breaking", false);
+        blacklist.addDefault("Break.Kick-Player", false);
+        blacklist.addDefault("Break.Kill-Player", false);
+        blacklist.addDefault("Break.Alert/log.To-console", true);
+        blacklist.addDefault("Break.Alert/log.To-player", true);
+        blacklist.addDefault("Break.Alert/log.To-server-chat", false);
+        blacklist.addDefault("Break.Gamemode.PreventFor.Survival", true);
+        blacklist.addDefault("Break.Gamemode.PreventFor.Creative", true);
+        blacklist.addDefault("Break.Worlds", Arrays.asList(Data.worldslist));
+        Data.worlds = blacklist.getStringList("Break.Worlds");
+        blacklist.addDefault("Break.Blacklist", Arrays.asList(Data.brokenblockslist));
+        Data.brokenblocks = blacklist.getStringList("Break.Blacklist");
+        
+        blacklist.addDefault("Drop.Complete-Disallow-droping", false);
+        blacklist.addDefault("Drop.Kick-Player", false);
+        blacklist.addDefault("Drop.Kill-Player", false);
+        blacklist.addDefault("Drop.Alert/log.To-console", true);
+        blacklist.addDefault("Drop.Alert/log.To-player", true);
+        blacklist.addDefault("Drop.Alert/log.To-server-chat", false);
+        blacklist.addDefault("Drop.Gamemode.PreventFor.Survival", true);
+        blacklist.addDefault("Drop.Gamemode.PreventFor.Creative", true);
+        blacklist.addDefault("Drop.Worlds", Arrays.asList(Data.worldslist));
+        Data.worlds = blacklist.getStringList("Drop.Worlds");
+        blacklist.addDefault("Drop.Blacklist", Arrays.asList(Data.dropedblockslist));
+        Data.dropedblocks = blacklist.getStringList("Drop.Blacklist");
+        
+        blacklist.addDefault("Pickup.Complete-Disallow-pickuping", false);
+        blacklist.addDefault("Pickup.Kick-Player", false);
+        blacklist.addDefault("Pickup.Kill-Player", false);
+        blacklist.addDefault("Pickup.Alert/log.To-console", true);
+        blacklist.addDefault("Pickup.Alert/log.To-player", true);
+        blacklist.addDefault("Pickup.Alert/log.To-server-chat", false);
+        blacklist.addDefault("Pickup.Gamemode.PreventFor.Survival", true);
+        blacklist.addDefault("Pickup.Gamemode.PreventFor.Creative", true);
+        blacklist.addDefault("Pickup.Worlds", Arrays.asList(Data.Pickupworldslist));
+        Data.Pickupworlds = blacklist.getStringList("Pickup.Worlds");
+        blacklist.addDefault("Pickup.Blacklist", Arrays.asList(Data.pickupedblockslist));
+        Data.pickupedblocks = blacklist.getStringList("Pickup.Blacklist");
+        
+        blacklist.addDefault("Command.Disallow-commands", false);
+        blacklist.addDefault("Command.Alert/log.To-console", true);
+        blacklist.addDefault("Command.Alert/log.To-player", true);
+        blacklist.addDefault("Command.Alert/log.To-server-chat", false);
+        blacklist.addDefault("Command.Worlds", Arrays.asList(Data.cmdworldlist));
+        Data.cmdworlds = blacklist.getStringList("Command.Worlds");
+        blacklist.addDefault("Command.Blacklist", Arrays.asList(Data.commandslist));
+        Data.commands = blacklist.getStringList("Command.Blacklist");
+        
+        blacklist.addDefault("Censor.Alert/log.To-console", false);
+        blacklist.addDefault("Censor.Alert/log.To-player", true);
+        blacklist.addDefault("Censor.Words/Blacklist", Arrays.asList(Data.censoredWordsList));
+        Data.censoredWords = blacklist.getStringList("Censor.Words/Blacklist");
+        
+        blacklist.addDefault("Dispense.Worlds", Arrays.asList(Data.dispenseWorldsList));
+        Data.dispenseWorlds = blacklist.getStringList("Dispense.Worlds");
+        blacklist.addDefault("Dispense.Blacklist", Arrays.asList(Data.dispensedBlockList));
+        Data.dispensedBlock = blacklist.getStringList("Dispense.Blacklist");
+        
+        this.getBlacklist().options().copyDefaults(true);
+        saveBlacklist();
+    }
+    
+    public void noPermission(Player p) {
+        String no_permission = ChatColor.RED + getMessages().getString("Permissions.DefaultNoPermission");
+        p.sendMessage(no_permission);
+    }
+    
+    public void noCmdPermission(CommandSender sender) {
+        String no_permission = ChatColor.RED + getMessages().getString("Permissions.NoCmdPermission");
+        sender.sendMessage(no_permission);
     }
     
     public void reloadISafeConfig() {
@@ -856,5 +881,39 @@ public class iSafe extends JavaPlugin {
         } catch (IOException ex) {
             Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving entityManager to " + entityManagerFile, ex);
         }
+    }
+    
+    private void checkMatch() {
+        PluginDescriptionFile pdffile = this.getDescription();
+        if(!(pdffile.getFullName().equals(fileversion))) {
+            log.info("-----  iSafe vMatchConflict  -----");
+            log.warning("[iSafe] The version in the pdffile is not the same as the file.");
+            log.info("[iSafe] pdffile version: "+ pdffile.getFullName());
+            log.info("[iSafe] File version: "+ fileversion);
+            log.warning("[iSafe] Please deliver this infomation to "+ pdffile.getAuthors() +" at BukkitDev.");
+            log.info("-----  --------------------  -----");
+        }
+    }
+    
+    //Update checker
+    public String updateCheck(String currentVersion) throws Exception {
+        String pluginUrlString = "http://dev.bukkit.org/server-mods/blockthattnt/files.rss";
+        try {
+            URL url = new URL(pluginUrlString);
+             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url.openConnection().getInputStream());
+             doc.getDocumentElement().normalize();
+             NodeList nodes = doc.getElementsByTagName("item");
+             Node firstNode = nodes.item(0);
+             if (firstNode.getNodeType() == 1) {
+                 Element firstElement = (Element) firstNode;
+                 NodeList firstElementTagName = firstElement.getElementsByTagName("title");
+                 Element firstNameElement = (Element) firstElementTagName.item(0);
+                 NodeList firstNodes = firstNameElement.getChildNodes();
+                 return firstNodes.item(0).getNodeValue();
+             }
+        } catch (Exception ignored) {
+            //Ingored
+        }
+        return currentVersion;
     }
 }

@@ -24,13 +24,10 @@ import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
-import org.bukkit.inventory.ItemStack;
 
 
 public class EnchantmentListener implements Listener {
@@ -46,7 +43,7 @@ public class EnchantmentListener implements Listener {
     public void EnchantmentManager(EnchantItemEvent event) {
         Player p = event.getEnchanter();
         
-        if(plugin.getConfig().getBoolean("Enchantment.Prevent-Enchantment", true))
+        if(plugin.getConfig().getBoolean("Enchantment.PreventEnchantment", true))
         {
             if(!(p.hasPermission("iSafe.enchant"))) {
                 event.setCancelled(true);
@@ -54,7 +51,7 @@ public class EnchantmentListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Enchantment.Prevent-creativeEnchanting", true)) {
+        if(plugin.getConfig().getBoolean("Enchantment.PreventCreativeModeEnchanting", true)) {
             if(p.getGameMode().equals(GameMode.CREATIVE)) {
                 if(!(p.hasPermission("iSafe.enchant"))) {
                     event.setCancelled(true);
