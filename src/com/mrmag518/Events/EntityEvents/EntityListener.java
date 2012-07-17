@@ -232,6 +232,7 @@ public class EntityListener implements Listener {
                             b.setTypeId(7);
                         } else {
                             plugin.getConfig().set("VoidFall.FixHoleWithGlass", true);
+                            plugin.saveConfig();
                             b.setTypeId(20);
                         }
                         p.teleport(loc);
@@ -239,6 +240,8 @@ public class EntityListener implements Listener {
                 }
             }
         }
+        
+        // Continue v3.0 ...
         
         if(plugin.getConfig().getBoolean("Entity-Damage.Disable-npc(Villagers)-death/damage", true))
         {

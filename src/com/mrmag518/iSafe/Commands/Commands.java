@@ -69,17 +69,25 @@ public class Commands implements CommandExecutor {
         String v = plugin.getDescription().getVersion();
         File userFolder = new File(plugin.getDataFolder() + File.separator + "Users");
         sender.sendMessage(G + "Reloading all iSafe " + v + " files ..");
+        
         if(!plugin.getDataFolder().exists()) {
             plugin.getDataFolder().mkdirs();
         }
+        
         if(!(userFolder.exists())) {
             userFolder.mkdir();
         }
+        
         plugin.reloadBlacklist();
         plugin.reloadConfig();
         plugin.reloadEntityManager();
         plugin.reloadISafeConfig();
         plugin.reloadMessages();
+        
+        if(plugin.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
+            plugin.setupPermissions();
+        }
+        
         sender.sendMessage(G + "Reloaded all iSafe " + v + " files.");
         return true;
     }

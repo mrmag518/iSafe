@@ -35,12 +35,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import com.mrmag518.iSafe.Blacklists.*;
 import com.mrmag518.iSafe.Commands.*;
 
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.w3c.dom.Document;
@@ -50,11 +53,14 @@ import org.w3c.dom.NodeList;
 
 /**
  * TODO:
- * Use new method for no permission output. (plugin.NO_PERMISSION())
- * Fix iSafe commands to use arguments.
+ * Use new method for no permission output. 
  * Manage plugin tickets.
  * Finish Verbose logging.
  * Finish debug mode.
+ * 
+ * 
+ * New permissions(just to note):
+ * iSafe.bypass.fullbright
  * 
  */
 
@@ -88,6 +94,7 @@ public class iSafe extends JavaPlugin {
     public static iSafe plugin;
     public final Logger log = Logger.getLogger("Minecraft");
     public String DEBUG_PREFIX = "[iSafe] Debug: ";
+    public static Permission perms = null;
     
     public FileConfiguration iSafeConfig = null;
     public File iSafeConfigFile = null;
@@ -152,6 +159,13 @@ public class iSafe extends JavaPlugin {
         getServer().getPluginManager().getPermissions();
         checkMatch();
         
+        if(iSafeConfig.getBoolean("UseVaultForPermissions", true)) {
+            setupPermissions();
+            if(verboseLogging() == true) {
+                log.info("[iSafe] Using Vault for permissions!");
+            }
+        }
+        
         try {
             Metrics metrics = new Metrics(this);
             metrics.start();
@@ -210,18 +224,12 @@ public class iSafe extends JavaPlugin {
     private void fileManagement() {
         if(!(getDataFolder().exists())) 
         {
-            if(verboseLogging() == true) {
-                log.info("[iSafe]" + " iSafe folder not found, creating one ..");
-            }
             getDataFolder().mkdirs(); 
         }
         
         File usersFolder = new File(getDataFolder() + File.separator + "Users");
         if(!(usersFolder.exists())) 
         {
-            if(debugMode() == true) {
-                log.info(DEBUG_PREFIX + "Users folder was not found, creating one ..");
-            }
             usersFolder.mkdir();
         }
         
@@ -265,6 +273,24 @@ public class iSafe extends JavaPlugin {
         
         if(verboseLogging() == true) {
             log.info("[iSafe] Loaded all files.");
+        }
+    }
+    
+    public boolean hasPermission(Player p, String permission) {
+        if(iSafeConfig.getBoolean("UseVaultForPermissions", true)) {
+            if(perms.has(p, permission)) {
+                return true;
+            } else {
+                noPermission(p);
+                return false;
+            }
+        } else {
+            if(p.hasPermission(permission)) {
+                return true;
+            } else {
+                noPermission(p);
+                return false;
+            }
         }
     }
     
@@ -552,6 +578,7 @@ public class iSafe extends JavaPlugin {
         iSafeConfig.addDefault("VerboseLogging", false);
         iSafeConfig.addDefault("DebugMode", false);
         iSafeConfig.addDefault("CheckForUpdates", true);
+        iSafeConfig.addDefault("UseVaultForPermissions", false);
         
         this.getISafeConfig().options().copyDefaults(true);
         saveISafeConfig();
@@ -881,6 +908,12 @@ public class iSafe extends JavaPlugin {
         } catch (IOException ex) {
             Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving entityManager to " + entityManagerFile, ex);
         }
+    }
+    
+    public boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        perms = rsp.getProvider();
+        return perms != null;
     }
     
     private void checkMatch() {

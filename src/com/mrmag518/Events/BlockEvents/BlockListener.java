@@ -26,14 +26,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
-import org.bukkit.inventory.ItemStack;
 
 
 public class BlockListener implements Listener {
@@ -66,11 +64,12 @@ public class BlockListener implements Listener {
         Location loc = p.getLocation();
         byte level = p.getLocation().getBlock().getLightLevel();
         
-        
         if(plugin.getConfig().getBoolean("AntiCheat.ForceLightLevel(Fullbright)", true)) {
             if(level <= 1 && !b.isLiquid() && !loc.getBlock().isLiquid()) {
-                event.setCancelled(true);
-                p.sendMessage(ChatColor.YELLOW + "Place a torch!");
+                if(!(plugin.hasPermission(p, "iSafe.bypass.fullbright"))) {
+                    event.setCancelled(true);
+                    p.sendMessage(ChatColor.YELLOW + "Place a torch!");
+                }
             }
         }
     }
@@ -92,9 +91,8 @@ public class BlockListener implements Listener {
         } else if (cause == IgniteCause.FLINT_AND_STEEL) {
             if(plugin.getConfig().getBoolean("Fire.PreventFlintAndSteelUsage", true)) {
                 Player p = event.getPlayer();
-                if(!p.hasPermission("iSafe.use.flintandsteel")) {
+                if(!(plugin.hasPermission(p, "iSafe.use.flintandsteel"))) {
                     event.setCancelled(true);
-                    plugin.noPermission(p);
                 }
             }
         } else if (cause == IgniteCause.LAVA) {

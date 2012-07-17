@@ -26,6 +26,8 @@ Added:
 * Added the possibility to disable portal generation.
 * Added config setting VoidFall.TeleportPlayerBackAndFixHole.
 ** Choose between fixing hole with bedrock or glass.
+* Added Vault support! iSafe is no longer only using super perms.
+** You can chose wether to use Vault for permissions or super perms.
 * 
 
 Removed:
