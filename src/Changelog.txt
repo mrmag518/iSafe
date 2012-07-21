@@ -8,6 +8,7 @@ Fixed:
 * Fixed duplication of TreeGrowth Redwood prevention.
 * Fixed another exploitation which made you able to break blocks in protected regions.
 * Fixed players not being teleported to spawn on void fall is damage was disabled.
+* Fixed a compatibility issue related to sneak & sprint prevention.
 * 
 
 Added:
@@ -19,16 +20,19 @@ Added:
 * Added an extra check for OP status when a new update is found.
 * Added gamemode and level to user files.
 * Added a new file called iSafeConfig.yml, in this file you can manage settings directly related to iSafe.
-** Added VerboseLogging.
-** Added simple DebugMode.
-** Configurable to check for updates.
+* Added VerboseLogging.
+* Added simple DebugMode.
+* Made it configurable to check for updates.
 * Added fireballs to ignition prevention.
 * Added the possibility to disable portal generation.
 * Added config setting VoidFall.TeleportPlayerBackAndFixHole.
 ** Choose between fixing hole with bedrock or glass.
 * Added Vault support! iSafe is no longer only using super perms.
-** You can chose wether to use Vault for permissions or super perms.
-* 
+** You can chose whether  to use Vault for permissions or super perms.
+* Added color support, you can customize the color for messages in the messages.yml file.
+* Added variables support.
+** +playername = Player name.
+** 
 
 Removed:
 * Removed instantbreak and superbreak command.
@@ -38,18 +42,21 @@ Removed:
 * Removed useless fire spread code.
 * Removed World.Prevent-naturally-object-dispensing, this can now be altered in the dispense blacklist.
 * Removed forcedrop bookshelf as it now drops books.
-* Why would anyone teleport a creeper to the spawn if he falls in the void? Removed..
+* Why would anyone teleport a creeper to the spawn point if he falls down in the void? Removed..
+* Removed attk prevention.
 * 
 
 Improvements:
 * Renamed permission node iSafe.* to iSafe.admin.
 * Now managing files while the plugin is loading, not when it's enabling.
 * Improved fire prevention code.
-* Improved the node updater in the userFiles.
+* Improved the user node updater in the userFiles.
 * There's now only one main command which follows with several arguments. (/iSafe [argument])
 * Rewritten the update checker.
 * Updated the info command.
-* Now fire spread is 100% disabled if prevented.
+* Now fire spread will be 100% disabled if prevented.
+* Replaced entityManager.yml with creatureManager.yml.
+** The only thing being inside entityManager was creature settings, and after some thinking I just thought it would be better to leave it as a creatureManager file.
 * 
 
 --------------------------------------------------------------------------------

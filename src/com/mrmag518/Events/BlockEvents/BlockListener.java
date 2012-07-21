@@ -64,6 +64,7 @@ public class BlockListener implements Listener {
         Location loc = p.getLocation();
         byte level = p.getLocation().getBlock().getLightLevel();
         
+        
         if(plugin.getConfig().getBoolean("AntiCheat.ForceLightLevel(Fullbright)", true)) {
             if(level <= 1 && !b.isLiquid() && !loc.getBlock().isLiquid()) {
                 if(!(plugin.hasPermission(p, "iSafe.bypass.fullbright"))) {
@@ -231,7 +232,6 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockCanBuild(BlockCanBuildEvent event) {
-        
         if(plugin.getConfig().getBoolean("Miscellaneous.ForceBlocksToBeBuildable", true)){
             if (!event.isBuildable()) {
                 event.setBuildable(true);

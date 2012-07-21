@@ -27,13 +27,11 @@ import com.mrmag518.iSafe.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -41,7 +39,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginDescriptionFile;
 
 public class PlayerListener implements Listener  {
     public static iSafe plugin;
@@ -67,7 +64,7 @@ public class PlayerListener implements Listener  {
             final List<String> lbworlds = plugin.getConfig().getStringList("Buckets.Lava.Worlds");
             if (plugin.getConfig().getList("Buckets.Lava.Worlds", lbworlds).contains(worldname))
             {
-                if(player.hasPermission("iSafe.lavabucket.empty")) {
+                if(plugin.hasPermission(player, "iSafe.use.lavabuckets")) {
                     //Access
                 } else {
                     if (event.getBucket().equals(Material.LAVA_BUCKET))
@@ -87,7 +84,7 @@ public class PlayerListener implements Listener  {
             final List<String> wbworlds = plugin.getConfig().getStringList("Buckets.Water.Worlds");
             if (plugin.getConfig().getList("Buckets.Water.Worlds", wbworlds).contains(worldname))
             {
-                if(player.hasPermission("iSafe.waterbucket.empty")) {
+                if(plugin.hasPermission(player, "iSafe.use.waterbuckets")) {
                     //Access
                 } else {
                     if (event.getBucket().equals(Material.WATER_BUCKET)) 
@@ -113,35 +110,15 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Player.Prevent-Sprinting", true))
         {
-            if(player.hasPermission("iSafe.sprint")) {
-                event.setCancelled(false);
-            } else {
-                if(player.isSprinting()) {
-                    event.setCancelled(true);
-                }
+            if(!(plugin.hasPermission(player, "iSafe.bypass.sprint"))) {
+                event.setCancelled(true);
             }
         }
         if(plugin.getConfig().getBoolean("Player.Prevent-Sneaking", true))
         {
-            if(player.hasPermission("iSafe.sneak")) {
-                event.setCancelled(false);
-            } else {
-                if(player.isSneaking()) {
-                    event.setCancelled(true);
-                }
+            if(!(plugin.hasPermission(player, "iSafe.bypass.sneak"))) {
+                event.setCancelled(true);
             }
-        }
-    }
-    
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        PluginDescriptionFile pdffile = plugin.getDescription();
-        
-        if(plugin.getConfig().getBoolean("Player.Broadcast-iSafe-message-on-join", true))
-        {
-                player.sendMessage(ChatColor.BLUE + "Welcome " + player.getName() + ", This server is running " 
-                        + ChatColor.YELLOW + pdffile.getFullName() + ChatColor.BLUE + ".");
         }
     }
 
@@ -172,82 +149,52 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Teleport.Disallow-Teleporting", true))
         {
-            if(player.hasPermission("iSafe.teleport")) {
-                //access
-            } else {
+            if(!(plugin.hasPermission(player, "iSafe.teleport"))) {
                 event.setTo(event.getFrom());
-                player.sendMessage(ChatColor.RED + "You do not have access to teleport.");
             }
         }
         
         if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.Command", true))
         {
-            if(player.hasPermission("iSafe.teleport.command")) {
-                //access
-            } else {
-                if (event.getCause() == TeleportCause.COMMAND) {
+            if (event.getCause() == TeleportCause.COMMAND) {
+                if(!(plugin.hasPermission(player, "iSafe.teleport.command"))) {
                     event.setTo(event.getFrom());
-                    player.sendMessage(ChatColor.RED + "You do not have access to teleport trough commands.");
                 }
             }
         }
         
         if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.EnderPearl", true))
         {
-            if(player.hasPermission("iSafe.teleport.enderpearl")) {
-                //access
-            } else {
-                if (event.getCause() == TeleportCause.ENDER_PEARL) {
+            if (event.getCause() == TeleportCause.ENDER_PEARL) {
+                if(!(plugin.hasPermission(player, "iSafe.teleport.enderpearl"))) {
                     event.setTo(event.getFrom());
-                    player.sendMessage(ChatColor.RED + "You do not have access to teleport with ender pearls.");
                 }
             }
         }
         
         if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.Plugin", true))
         {
-            if(player.hasPermission("iSafe.teleport.plugin")) {
-                //access
-            } else {
-                if (event.getCause() == TeleportCause.PLUGIN) {
+            if (event.getCause() == TeleportCause.PLUGIN) {
+                if(!(plugin.hasPermission(player, "iSafe.teleport.plugin"))) {
                     event.setTo(event.getFrom());
-                    player.sendMessage(ChatColor.RED + "You do not have access to teleport trough plugins.");
                 }
             }
         }
         
         if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.Unknown", true))
         {
-            if(player.hasPermission("iSafe.teleport.unknown")) {
-                //access
-            } else {
-                if (event.getCause() == TeleportCause.UNKNOWN) {
+            if (event.getCause() == TeleportCause.UNKNOWN) {
+                if(!(plugin.hasPermission(player, "iSafe.teleport.unknown"))) {
                     event.setTo(event.getFrom());
-                    player.sendMessage(ChatColor.RED + "You do not have access to teleport with an unknown cause.");
                 }
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.Unknown", true))
+        if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.netherporal", true))
         {
-            if(player.hasPermission("iSafe.teleport.endportal")) {
-                //access
-            } else {
-                if (event.getCause() == TeleportCause.END_PORTAL) {
+            if (event.getCause() == TeleportCause.NETHER_PORTAL) {
+                if(!(plugin.hasPermission(player, "iSafe.teleport.netherportal"))) {
                     event.setTo(event.getFrom());
-                    player.sendMessage(ChatColor.RED + "You do not have access to teleport with an end portal cause.");
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.Unknown", true))
-        {
-            if(player.hasPermission("iSafe.teleport.netherportal")) {
-                //access
-            } else {
-                if (event.getCause() == TeleportCause.NETHER_PORTAL) {
-                    event.setTo(event.getFrom());
-                    player.sendMessage(ChatColor.RED + "You do not have access to teleport with a nether portal cause.");
                 }
             }
         }
@@ -263,30 +210,9 @@ public class PlayerListener implements Listener  {
         Player player = event.getPlayer();
         World world = player.getWorld();
         
-        if(plugin.getConfig().getBoolean("Chat.Enable-Chat-permissions", true))
-        {
-           if(player.hasPermission("iSafe.chat")) {
-               //access
-           } else {
-               event.setCancelled(true);
-               player.sendMessage(ChatColor.RED + "You do not have access to chat.");
-           }
-        }
-        
-        if(plugin.getConfig().getBoolean("Chat.Prevent-arrow-to-the-knee-jokes", true))
-        {
-            if (msg.contains("arrow") && msg.contains("knee") || msg.contains("ARROW") && msg.contains("KNEE") 
-                    || msg.contains("Arrow") && msg.contains("Knee") || msg.contains("arow") && msg.contains("kne")) {
+        if(plugin.getConfig().getBoolean("Chat.ForcePermissionToChat", true)) {
+            if(!(plugin.hasPermission(player, "iSafe.chat"))) {
                 event.setCancelled(true);
-                player.sendMessage(ChatColor.YELLOW + "ATTK jokes.. No!");
-            }
-        }
-        if(plugin.getConfig().getBoolean("Chat.Punish-arrow-to-the-knee-jokes", true))
-        {
-            if (msg.contains("arrow") && msg.contains("knee") || msg.contains("ARROW") && msg.contains("KNEE") 
-                    || msg.contains("Arrow") && msg.contains("Knee") || msg.contains("arow") && msg.contains("kne")) {
-                player.sendMessage(ChatColor.YELLOW + "ATTK jokes.. No!");
-                world.spawnCreature(player.getLocation(), EntityType.PRIMED_TNT);
             }
         }
     }
@@ -301,11 +227,8 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Player.Enable-Bed-permissions", true))
         {
-            if(player.hasPermission("iSafe.bed-enter")) {
-                //access
-            } else {
+            if(!(plugin.hasPermission(player, "iSafe.use.bed"))) {
                 event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You do not have access to sleep.");
             }
         }
     }
@@ -319,13 +242,15 @@ public class PlayerListener implements Listener  {
         Player p = event.getPlayer();
         Server s = p.getServer();
         
-        if(plugin.getConfig().getBoolean("Misc.Enable-kick-messages", true))
+        if(plugin.getConfig().getBoolean("Miscellaneous.EnableKickMessages", true))
         {
-            s.broadcastMessage(ChatColor.YELLOW + p.getName() + " was kicked.");
+            plugin.kickMessage(p);
             event.setLeaveMessage(null);
         }
     }
-
+    
+    
+    
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerFish(PlayerFishEvent event) {
         if (event.isCancelled())
@@ -336,11 +261,8 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Player.Enable-fishing-permissions", true))
         {
-            if(player.hasPermission("iSafe.fish")) {
-                //access
-            } else {
+            if(!(plugin.hasPermission(player, "iSafe.fish"))) {
                 event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You do not have access to fish.");
             }
         }
     }
@@ -356,6 +278,8 @@ public class PlayerListener implements Listener  {
             Player p = event.getPlayer();
             Block block = event.getClickedBlock();
             int ID = block.getTypeId();
+            
+            //TODO v3.0: Make interaction blacklist.
             
             /**
              * Add all interaction blocks and change the permission nodes.
@@ -447,7 +371,7 @@ public class PlayerListener implements Listener  {
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerLogin(PlayerLoginEvent event) {
+    public void onPlayerLogin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Player.Only-let-OPs-join", true))
@@ -457,6 +381,7 @@ public class PlayerListener implements Listener  {
             }
         }
         
+        /*
         if(plugin.getConfig().getBoolean("Player.Kick-player-if-anther-user-with-same-username-log's-on", true))
         {
             String name = player.getName();
@@ -468,7 +393,7 @@ public class PlayerListener implements Listener  {
                     user.kickPlayer(ChatColor.RED + "The username: "+ ChatColor.WHITE + name + ChatColor.RED + " logged on from another location.");
                 }
             }
-        }
+        }*/
     }
 
     @EventHandler(priority = EventPriority.NORMAL)

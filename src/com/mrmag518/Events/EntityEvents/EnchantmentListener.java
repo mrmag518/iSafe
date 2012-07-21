@@ -45,7 +45,7 @@ public class EnchantmentListener implements Listener {
         
         if(plugin.getConfig().getBoolean("Enchantment.PreventEnchantment", true))
         {
-            if(!(p.hasPermission("iSafe.enchant"))) {
+            if(!(plugin.hasPermission(p, "iSafe.enchant"))) {
                 event.setCancelled(true);
                 event.getEnchanter().sendMessage(ChatColor.RED + "You do not ave access to enchant items.");
             }
@@ -53,7 +53,7 @@ public class EnchantmentListener implements Listener {
         
         if(plugin.getConfig().getBoolean("Enchantment.PreventCreativeModeEnchanting", true)) {
             if(p.getGameMode().equals(GameMode.CREATIVE)) {
-                if(!(p.hasPermission("iSafe.enchant"))) {
+                if(!(plugin.hasPermission(p, "iSafe.enchant"))) {
                     event.setCancelled(true);
                     event.getEnchanter().sendMessage(ChatColor.RED + "You do not have access to enchant items in creative mode.");
                 }

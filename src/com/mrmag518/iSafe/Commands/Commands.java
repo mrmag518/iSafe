@@ -80,7 +80,7 @@ public class Commands implements CommandExecutor {
         
         plugin.reloadBlacklist();
         plugin.reloadConfig();
-        plugin.reloadEntityManager();
+        plugin.reloadCreatureManager();
         plugin.reloadISafeConfig();
         plugin.reloadMessages();
         

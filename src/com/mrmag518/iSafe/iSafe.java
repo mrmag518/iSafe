@@ -38,6 +38,7 @@ import com.mrmag518.iSafe.Commands.*;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -57,10 +58,29 @@ import org.w3c.dom.NodeList;
  * Manage plugin tickets.
  * Finish Verbose logging.
  * Finish debug mode.
- * 
+ * Recreate all permission nodes.
  * 
  * New permissions(just to note):
- * iSafe.bypass.fullbright
+ * iSafe.bypass.fullbright || default: op
+ * iSafe.forcedrop.glass || default: true
+ * iSafe.forcedrop.mobspawner || default: true
+ * iSafe.forcedrop.ice || default: true
+ * iSafe.forcedrop.bedrock || default: true
+ * iSafe.disablehunger || default: true
+ * iSafe.canceltarget.closestplayer || default: true
+ * iSafe.canceltarget.custom || default: true
+ * iSafe.canceltarget.forgot || default: true
+ * iSafe.canceltarget.ownerattacked || default: true
+ * iSafe.canceltarget.pigzombie || default: true
+ * iSafe.canceltarget.random || default: true
+ * iSafe.canceltarget.targetattackedentity || default: true
+ * iSafe.canceltarget.targetattackedowner || default: true
+ * iSafe.canceltarget.targetdied || default: true
+ * iSafe.bypass.croptrampling || default: false
+ * iSafe.use.lavabuckets || default: op
+ * iSafe.use.waterbuckets || default: op
+ * iSafe.use.bed || default: op
+ * iSafe.fish || default: op
  * 
  */
 
@@ -100,8 +120,8 @@ public class iSafe extends JavaPlugin {
     public File iSafeConfigFile = null;
     public FileConfiguration messages = null;
     public File messagesFile = null;
-    public FileConfiguration entityManager = null;
-    public File entityManagerFile = null;
+    public FileConfiguration creatureManager = null;
+    public File creatureManagerFile = null;
     public FileConfiguration blacklist = null;
     public File blacklistFile = null;
     public FileConfiguration config;
@@ -202,7 +222,7 @@ public class iSafe extends JavaPlugin {
         } else {
             sendUpdate = null;
             if (debugMode() == true) {
-                log.info(DEBUG_PREFIX + "CheckForUpdates in the iSafeConfig.yml was disabled, therefore not registering "
+                log.info(DEBUG_PREFIX + "CheckForUpdates in the iSafeConfig.yml was disabled, therefor not registering "
                     + "the sendUpdate class.");
             }
         }
@@ -263,9 +283,9 @@ public class iSafe extends JavaPlugin {
         loadBlacklist();
         reloadBlacklist();
 
-        reloadEntityManager();
-        loadEntityManager();
-        reloadEntityManager();
+        reloadCreatureManager();
+        loadCreatureManager();
+        reloadCreatureManager();
         
         reloadMessages();
         loadMessages();
@@ -273,6 +293,31 @@ public class iSafe extends JavaPlugin {
         
         if(verboseLogging() == true) {
             log.info("[iSafe] Loaded all files.");
+        }
+    }
+    
+    /**
+     * Efficient method for checking whether we use Vault for perms or Bukkit/super perms.
+     * 
+     * @param p
+     * @param permission
+     * @return 
+     */
+    public boolean hasPermission(CommandSender p, String permission) {
+        if(iSafeConfig.getBoolean("UseVaultForPermissions", true)) {
+            if(perms.has(p, permission)) {
+                return true;
+            } else {
+                noCmdPermission(p);
+                return false;
+            }
+        } else {
+            if(p.hasPermission(permission)) {
+                return true;
+            } else {
+                noCmdPermission(p);
+                return false;
+            }
         }
     }
     
@@ -292,6 +337,32 @@ public class iSafe extends JavaPlugin {
                 return false;
             }
         }
+    }
+    
+    public String colorize(String s) {
+        if(s == null) return null;
+            return s.replaceAll("&([0-9a-f])", "\u00A7$1");
+    }
+    
+    public void noPermission(Player p) {
+        String no_permission = getMessages().getString("Permissions.DefaultNoPermission");
+        p.sendMessage(colorize(no_permission));
+    }
+    
+    public void noCmdPermission(CommandSender sender) {
+        String no_permission = getMessages().getString("Permissions.NoCmdPermission");
+        sender.sendMessage(colorize(no_permission));
+    }
+    
+    public void kickMessage(Player p) {
+        String kickMsg = getMessages().getString("KickMessage");
+        Server s = p.getServer();
+        s.broadcastMessage(colorize(variablePName(p, kickMsg)));
+    }
+    
+    public String variablePName(Player p, String s) {
+        String pName = p.getName();
+        return s.replace("+playername", pName);
     }
     
     public void loadConfig() {
@@ -338,6 +409,8 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Miscellaneous.DisableBlockGrow", false);
         config.addDefault("Miscellaneous.DisableLeavesDecay", false);
         config.addDefault("Miscellaneous.ForceBlocksToBeBuildable", false);
+        config.addDefault("Miscellaneous.PreventExpBottleThrow", false);
+        config.addDefault("Miscellaneous.EnableKickMessages", true);
         
         config.addDefault("AntiCheat.ForceLightLevel(Fullbright)", false);
         
@@ -540,14 +613,6 @@ public class iSafe extends JavaPlugin {
         config.addDefault("PlayerInteractEntity.Prevent-snowball-hitting-player", false);
         config.addDefault("PlayerInteractEntity.Prevent-arrow-hitting-player", false);
         
-        config.addDefault("Drop-configure.Glass.Drop.Glass", false);
-        config.addDefault("Drop-configure.Mobspawner.Drop.Mobspawner", false);
-        config.addDefault("Drop-configure.Ice.Drop.Ice", false);
-        config.addDefault("Drop-configure.Ice.Drop.Ice-options.Prevent-water", false);
-        config.addDefault("Drop-configure.Bedrock.Drop.Bedrock", false);
-        config.addDefault("Drop-configure.Bookshelf.Drop.Bookshelf", false);
-        config.addDefault("Drop-configure.Grass_thingy.Drop.Grass_thingy", false);
-        
         
         // Figured out there's too many nodes to convert.. Lets just erase the old node and add the new node.
         config.addDefault("Fire.DisableFireSpread", false);
@@ -564,8 +629,9 @@ public class iSafe extends JavaPlugin {
         messages = getMessages();
         messages.options().header(Data.setMessageHeader());
         
-        messages.addDefault("Permissions.DefaultNoPermission", "No permission.");
-        messages.addDefault("Permissions.NoCmdPermission", "No permission to do this command.");
+        messages.addDefault("Permissions.DefaultNoPermission", "&cNo permission.");
+        messages.addDefault("Permissions.NoCmdPermission", "&cNo permission to do this command.");
+        messages.addDefault("KickMessage", "&6+playername was kicked from the game.");
         
         this.getMessages().options().copyDefaults(true);
         saveMessages();
@@ -584,113 +650,109 @@ public class iSafe extends JavaPlugin {
         saveISafeConfig();
     }
     
-    public void loadEntityManager() {
-        entityManager = getEntityManager();
-        entityManager.options().header(Data.setEntityManagerHeader());
+    public void loadCreatureManager() {
+        creatureManager = getCreatureManager();
+        //creatureManager.options().header(Data.setEntityManagerHeader());
         
-        entityManager.addDefault("Creatures.CreatureTarget.Disable-closest_player-target", false);
-        entityManager.addDefault("Creatures.CreatureTarget.Disable-custom-target", false);
-        entityManager.addDefault("Creatures.CreatureTarget.Disable-forgot_target-target", false);
-        entityManager.addDefault("Creatures.CreatureTarget.Disable-owner_attacked_target-target", false);
-        entityManager.addDefault("Creatures.CreatureTarget.Disable-pig_zombie_target-target", false);
-        entityManager.addDefault("Creatures.CreatureTarget.Disable-random_target-target", false);
-        entityManager.addDefault("Creatures.CreatureTarget.Disable-target_attacked_entity-target", false);
-        entityManager.addDefault("Creatures.CreatureTarget.Disable-target_attacked_owner-target", false);
-        entityManager.addDefault("Creatures.CreatureTarget.Disable-target_died-target", false);
-        entityManager.addDefault("Creatures.PoweredCreepers.Disable-PowerCase-Lightning", false);
-        entityManager.addDefault("Creatures.PoweredCreepers.Disable-PowerCase-Set-Off", false);
-        entityManager.addDefault("Creatures.PoweredCreepers.Disable-PowerCase-Set-On", false);
-        entityManager.addDefault("Creatures.Endermen.Prevent-endermen-griefing", false);
-        entityManager.addDefault("Creatures.Tame.Prevent-taming", false);
-        entityManager.addDefault("Creatures.Tame.Prevent-taming-for.Wolf", false);
-        entityManager.addDefault("Creatures.Slime.Prevent-SlimeSplit", false);
-        entityManager.addDefault("Creatures.Pig.Prevent-PigZap", false);
-        entityManager.addDefault("Creatures.DoorBreaking-PreventFor-zombies", false);
-        entityManager.addDefault("Creatures.Death.Disable-drops-onDeath", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Completely-Prevent-SheepDyeWool", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Black", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Blue", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Brown", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Cyan", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Gray", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Green", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Light_Blue", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Lime", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Magenta", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Orange", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Pink", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Purple", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Red", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Silver", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.White", false);
-        entityManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Yellow", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for-allCreatures", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Blaze", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.CaveSpider", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Chicken", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Cow", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Creeper", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.EnderDragon", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Enderman", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Ghast", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Giant", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Golem", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.IronGolem", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.MagmaCube", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.MushroomCow", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Ocelot", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Pig", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.PigZombie", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Sheep", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Silverfish", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Skeleton", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Slime", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Snowman", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Spider", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Squid", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Villager", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Wolf", false);
-        entityManager.addDefault("Creatures.Combusting.Disable-for.Zombie", false);
-        entityManager.addDefault("Creatures.Prevent-cropTrampling", false);
-        
-        entityManager.addDefault("Player.Prevent-expBottle-throw", false);
-        entityManager.addDefault("Player.Prevent-cropTrampling", false);
+        creatureManager.addDefault("Creatures.CreatureTarget.Disable-closest_player-target", false);
+        creatureManager.addDefault("Creatures.CreatureTarget.Disable-custom-target", false);
+        creatureManager.addDefault("Creatures.CreatureTarget.Disable-forgot_target-target", false);
+        creatureManager.addDefault("Creatures.CreatureTarget.Disable-owner_attacked_target-target", false);
+        creatureManager.addDefault("Creatures.CreatureTarget.Disable-pig_zombie_target-target", false);
+        creatureManager.addDefault("Creatures.CreatureTarget.Disable-random_target-target", false);
+        creatureManager.addDefault("Creatures.CreatureTarget.Disable-target_attacked_entity-target", false);
+        creatureManager.addDefault("Creatures.CreatureTarget.Disable-target_attacked_owner-target", false);
+        creatureManager.addDefault("Creatures.CreatureTarget.Disable-target_died-target", false);
+        creatureManager.addDefault("Creatures.PoweredCreepers.Disable-PowerCase-Lightning", false);
+        creatureManager.addDefault("Creatures.PoweredCreepers.Disable-PowerCase-Set-Off", false);
+        creatureManager.addDefault("Creatures.PoweredCreepers.Disable-PowerCase-Set-On", false);
+        creatureManager.addDefault("Creatures.Endermen.Prevent-endermen-griefing", false);
+        creatureManager.addDefault("Creatures.Tame.Prevent-taming", false);
+        creatureManager.addDefault("Creatures.Tame.Prevent-taming-for.Wolf", false);
+        creatureManager.addDefault("Creatures.Slime.Prevent-SlimeSplit", false);
+        creatureManager.addDefault("Creatures.Pig.Prevent-PigZap", false);
+        creatureManager.addDefault("Creatures.DoorBreaking-PreventFor-zombies", false);
+        creatureManager.addDefault("Creatures.Death.Disable-drops-onDeath", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Completely-Prevent-SheepDyeWool", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Black", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Blue", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Brown", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Cyan", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Gray", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Green", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Light_Blue", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Lime", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Magenta", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Orange", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Pink", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Purple", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Red", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Silver", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.White", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Yellow", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for-allCreatures", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Blaze", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.CaveSpider", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Chicken", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Cow", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Creeper", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.EnderDragon", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Enderman", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Ghast", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Giant", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Golem", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.IronGolem", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.MagmaCube", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.MushroomCow", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Ocelot", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Pig", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.PigZombie", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Sheep", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Silverfish", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Skeleton", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Slime", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Snowman", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Spider", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Squid", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Villager", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Wolf", false);
+        creatureManager.addDefault("Creatures.Combusting.Disable-for.Zombie", false);
+        creatureManager.addDefault("Creatures.Prevent-cropTrampling", false);
         
         //MobSpawn blacklists.
         //Natural
-        entityManager.addDefault("MobSpawn.Natural.Debug.To-console", false);
-        entityManager.addDefault("MobSpawn.Natural.Worlds", Arrays.asList(Data.worlds1list));
-        Data.worlds1 = entityManager.getStringList("MobSpawn.Natural.Worlds");
-        entityManager.addDefault("MobSpawn.Natural.Blacklist", Arrays.asList(Data.mobspawnnaturallist));
-        Data.mobspawnnatural = entityManager.getStringList("MobSpawn.Natural.Blacklist");
+        creatureManager.addDefault("MobSpawn.Natural.Debug.To-console", false);
+        creatureManager.addDefault("MobSpawn.Natural.Worlds", Arrays.asList(Data.worlds1list));
+        Data.worlds1 = creatureManager.getStringList("MobSpawn.Natural.Worlds");
+        creatureManager.addDefault("MobSpawn.Natural.Blacklist", Arrays.asList(Data.mobspawnnaturallist));
+        Data.mobspawnnatural = creatureManager.getStringList("MobSpawn.Natural.Blacklist");
         //Spawner
-        entityManager.addDefault("MobSpawn.Spawner.Debug.To-console", false);
-        entityManager.addDefault("MobSpawn.Spawner.Worlds", Arrays.asList(Data.worlds2list));
-        Data.worlds2 = entityManager.getStringList("MobSpawn.Spawner.Worlds");
-        entityManager.addDefault("MobSpawn.Spawner.Blacklist", Arrays.asList(Data.mobspawnspawnerlist));
-        Data.mobspawnspawner = entityManager.getStringList("MobSpawn.Spawner.Blacklist");
+        creatureManager.addDefault("MobSpawn.Spawner.Debug.To-console", false);
+        creatureManager.addDefault("MobSpawn.Spawner.Worlds", Arrays.asList(Data.worlds2list));
+        Data.worlds2 = creatureManager.getStringList("MobSpawn.Spawner.Worlds");
+        creatureManager.addDefault("MobSpawn.Spawner.Blacklist", Arrays.asList(Data.mobspawnspawnerlist));
+        Data.mobspawnspawner = creatureManager.getStringList("MobSpawn.Spawner.Blacklist");
         //Custom
-        entityManager.addDefault("MobSpawn.Custom.Debug.To-console", false);
-        entityManager.addDefault("MobSpawn.Custom.Worlds", Arrays.asList(Data.worlds3list));
-        Data.worlds3 = entityManager.getStringList("MobSpawn.Custom.Worlds");
-        entityManager.addDefault("MobSpawn.Custom.Blacklist", Arrays.asList(Data.mobspawncustomlist));
-        Data.mobspawncustom = entityManager.getStringList("MobSpawn.Custom.Blacklist");
+        creatureManager.addDefault("MobSpawn.Custom.Debug.To-console", false);
+        creatureManager.addDefault("MobSpawn.Custom.Worlds", Arrays.asList(Data.worlds3list));
+        Data.worlds3 = creatureManager.getStringList("MobSpawn.Custom.Worlds");
+        creatureManager.addDefault("MobSpawn.Custom.Blacklist", Arrays.asList(Data.mobspawncustomlist));
+        Data.mobspawncustom = creatureManager.getStringList("MobSpawn.Custom.Blacklist");
         //Egg(Chicken egg)
-        entityManager.addDefault("MobSpawn.Egg.Debug.To-console", false);
-        entityManager.addDefault("MobSpawn.Egg.Worlds", Arrays.asList(Data.worlds4list));
-        Data.worlds4 = entityManager.getStringList("MobSpawn.Egg.Worlds");
-        entityManager.addDefault("MobSpawn.Egg.Blacklist", Arrays.asList(Data.mobspawnegglist));
-        Data.mobspawnegg = entityManager.getStringList("MobSpawn.Egg.Blacklist");
+        creatureManager.addDefault("MobSpawn.Egg.Debug.To-console", false);
+        creatureManager.addDefault("MobSpawn.Egg.Worlds", Arrays.asList(Data.worlds4list));
+        Data.worlds4 = creatureManager.getStringList("MobSpawn.Egg.Worlds");
+        creatureManager.addDefault("MobSpawn.Egg.Blacklist", Arrays.asList(Data.mobspawnegglist));
+        Data.mobspawnegg = creatureManager.getStringList("MobSpawn.Egg.Blacklist");
         //SpawnerEgg
-        entityManager.addDefault("MobSpawn.SpawnerEgg.Do_not_insert_the_spawner_egg_ID_here,_Here_you'll_insert_the_Animal_ID_(Like:_Creeper,_60,_PIG)".trim(), "Thanks");
-        entityManager.addDefault("MobSpawn.SpawnerEgg.Debug.To-console", false);
-        entityManager.addDefault("MobSpawn.SpawnerEgg.Worlds", Arrays.asList(Data.worlds5list));
-        Data.worlds5 = entityManager.getStringList("MobSpawn.SpawnerEgg.Worlds");
-        entityManager.addDefault("MobSpawn.SpawnerEgg.Blacklist", Arrays.asList(Data.mobspawnspawneregglist));
-        Data.mobspawnspawneregg = entityManager.getStringList("MobSpawn.SpawnerEgg.Blacklist");
+        creatureManager.addDefault("MobSpawn.SpawnerEgg.Debug.To-console", false);
+        creatureManager.addDefault("MobSpawn.SpawnerEgg.Worlds", Arrays.asList(Data.worlds5list));
+        Data.worlds5 = creatureManager.getStringList("MobSpawn.SpawnerEgg.Worlds");
+        creatureManager.addDefault("MobSpawn.SpawnerEgg.Blacklist", Arrays.asList(Data.mobspawnspawneregglist));
+        Data.mobspawnspawneregg = creatureManager.getStringList("MobSpawn.SpawnerEgg.Blacklist");
         
-        this.getEntityManager().options().copyDefaults(true);
-        saveEntityManager();
+        this.getCreatureManager().options().copyDefaults(true);
+        saveCreatureManager();
     }
     
     public void loadBlacklist() {
@@ -770,16 +832,6 @@ public class iSafe extends JavaPlugin {
         
         this.getBlacklist().options().copyDefaults(true);
         saveBlacklist();
-    }
-    
-    public void noPermission(Player p) {
-        String no_permission = ChatColor.RED + getMessages().getString("Permissions.DefaultNoPermission");
-        p.sendMessage(no_permission);
-    }
-    
-    public void noCmdPermission(CommandSender sender) {
-        String no_permission = ChatColor.RED + getMessages().getString("Permissions.NoCmdPermission");
-        sender.sendMessage(no_permission);
     }
     
     public void reloadISafeConfig() {
@@ -879,34 +931,34 @@ public class iSafe extends JavaPlugin {
     }
     
     //MobsConfig re-do:
-    public void reloadEntityManager() {
-        if (entityManagerFile == null) {
-            entityManagerFile = new File(getDataFolder(), "entityManager.yml");
+    public void reloadCreatureManager() {
+        if (creatureManagerFile == null) {
+            creatureManagerFile = new File(getDataFolder(), "creatureManager.yml");
         }
-        entityManager = YamlConfiguration.loadConfiguration(entityManagerFile);
+        creatureManager = YamlConfiguration.loadConfiguration(creatureManagerFile);
         
-        InputStream defConfigStream = getResource("entityManager.yml");
+        InputStream defConfigStream = getResource("creatureManager.yml");
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-            entityManager.setDefaults(defConfig);
+            creatureManager.setDefaults(defConfig);
         }
     }
     
-    public FileConfiguration getEntityManager() {
-        if (entityManager == null) {
-            reloadEntityManager();
+    public FileConfiguration getCreatureManager() {
+        if (creatureManager == null) {
+            reloadCreatureManager();
         }
-        return entityManager;
+        return creatureManager;
     }
     
-    public void saveEntityManager() {
-        if (entityManager == null || entityManagerFile == null) {
+    public void saveCreatureManager() {
+        if (creatureManager == null || creatureManagerFile == null) {
             return;
         }
         try {
-            entityManager.save(entityManagerFile);
+            creatureManager.save(creatureManagerFile);
         } catch (IOException ex) {
-            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving entityManager to " + entityManagerFile, ex);
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving creatureManager to " + creatureManagerFile, ex);
         }
     }
     

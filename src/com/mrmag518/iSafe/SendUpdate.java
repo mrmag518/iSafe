@@ -19,12 +19,12 @@ public class SendUpdate implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void sendUpdate(PlayerJoinEvent event) {
         Player p = event.getPlayer();
-        if (p.hasPermission("iSafe.admin") || p.isOp()) {
+        if(plugin.hasPermission(p, "iSafe.admin") || p.isOp()) {
             try {
                 String oldVersion = plugin.getDescription().getVersion();
                 if (!(plugin.newVersion.contains(oldVersion))) {
                     p.sendMessage(ChatColor.GREEN + "A new version of iSafe is out! ("+ ChatColor.GOLD +  plugin.newVersion + ChatColor.GREEN + ")");
-                    p.sendMessage(ChatColor.GREEN + "You are currently running " + ChatColor.GOLD + "iSafe v" + oldVersion + ChatColor.GREEN + ".");
+                    p.sendMessage(ChatColor.GREEN + "Current iSafe version running: " + ChatColor.GOLD + "iSafe v" + oldVersion + ChatColor.GREEN + ".");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

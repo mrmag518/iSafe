@@ -53,9 +53,8 @@ public class EntityListener implements Listener {
         
         if(event.getEntity() instanceof Player) {
             Player p = (Player)event.getEntity();
-            if(!p.hasPermission("iSafe.createportal")) {
+            if(!(plugin.hasPermission(p, "iSafe.createportal"))) {
                 event.setCancelled(true);
-                plugin.noPermission(p);
             }
         }
     }
@@ -188,7 +187,8 @@ public class EntityListener implements Listener {
     
     @EventHandler
     public void expBottleManagement(ExpBottleEvent event) {
-        if(plugin.getEntityManager().getBoolean("Player.Prevent-expBottle-throw", true)) {
+        if(plugin.getConfig().getBoolean("Miscellaneous.PreventExpBottleThrow", true)) {
+            event.getEntity().remove();
             event.setExperience(0);
             event.setShowEffect(false);
         }
@@ -203,7 +203,7 @@ public class EntityListener implements Listener {
         
         Entity entity = event.getEntity();
 
-        if(plugin.getEntityManager().getBoolean("Creatures.Endermen.Prevent-Endermen-griefing", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.Endermen.Prevent-Endermen-griefing", true))
         {
             if (entity instanceof Enderman) {
                 event.setCancelled(true);
@@ -307,7 +307,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.fire")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.fire")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -334,7 +334,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.contact")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.contact")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -361,7 +361,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.custom")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.custom")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -388,7 +388,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.drowning")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.drowning")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -415,7 +415,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.entityattack")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.entityattack")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -442,7 +442,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.fall")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.fall")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -469,7 +469,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.lava")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.lava")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -496,7 +496,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.lightning")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.lightning")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -523,7 +523,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.magic")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.magic")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -550,7 +550,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.poison")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.poison")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -577,7 +577,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.projectile")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.projectile")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -604,7 +604,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.starvation")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.starvation")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -631,7 +631,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.suffocation")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.suffocation")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -658,7 +658,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.suicide")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.suicide")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -685,7 +685,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
                         Player player = (Player)entity;
-                        if(player.hasPermission("iSafe.canceldamage.void")) {
+                        if(plugin.hasPermission(player, "iSafe.canceldamage.void")) {
                             event.setDamage(0);
                             event.setCancelled(true);
                         }
@@ -716,8 +716,13 @@ public class EntityListener implements Listener {
         
         if(plugin.getConfig().getBoolean("Player.Disable-Hunger", true))
         {
-            event.setCancelled(true);
-            event.setFoodLevel(20);
+            if(event.getEntity() instanceof Player) {
+                Player p = (Player)event.getEntity();
+                if(plugin.hasPermission(p, "iSafe.disablehunger")) {
+                    event.setCancelled(true);
+                    event.setFoodLevel(20);
+                }
+            }
         }
     }
 
@@ -729,7 +734,7 @@ public class EntityListener implements Listener {
         }
         LivingEntity entity = event.getEntity();
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Death.Disable-drops-onDeath", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.Death.Disable-drops-onDeath", true))
         {
             if(!(entity instanceof Player)) {
                 event.getDrops().clear();
@@ -744,7 +749,7 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Slime.Prevent-SlimeSplit", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.Slime.Prevent-SlimeSplit", true))
         {
             event.setCancelled(true);
         }
@@ -757,67 +762,112 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-closest_player-target", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.CreatureTarget.Disable-closest_player-target", true))
         {
             if(event.getReason() == TargetReason.CLOSEST_PLAYER) 
             {
-                event.setCancelled(true);
+                if(event.getEntity() instanceof Player) {
+                    Player target = (Player)event.getTarget();
+                    if(plugin.hasPermission(target, "iSafe.canceltarget.closestplayer")) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
-        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-custom-target", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.CreatureTarget.Disable-custom-target", true))
         {
             if(event.getReason() == TargetReason.CUSTOM) 
             {
-                event.setCancelled(true);
+                if(event.getEntity() instanceof Player) {
+                    Player target = (Player)event.getTarget();
+                    if(plugin.hasPermission(target, "iSafe.canceltarget.custom")) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
-        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-forgot_target-target", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.CreatureTarget.Disable-forgot_target-target", true))
         {
             if(event.getReason() == TargetReason.FORGOT_TARGET) 
             {
-                event.setCancelled(true);
+                if(event.getEntity() instanceof Player) {
+                    Player target = (Player)event.getTarget();
+                    if(plugin.hasPermission(target, "iSafe.canceltarget.forgot")) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
-        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-owner_attacked_target-target", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.CreatureTarget.Disable-owner_attacked_target-target", true))
         {
             if(event.getReason() == TargetReason.OWNER_ATTACKED_TARGET) 
             {
-                event.setCancelled(true);
+                if(event.getEntity() instanceof Player) {
+                    Player target = (Player)event.getTarget();
+                    if(plugin.hasPermission(target, "iSafe.canceltarget.ownerattacked")) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
-        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-pig_zombie_target-target", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.CreatureTarget.Disable-pig_zombie_target-target", true))
         {
             if(event.getReason() == TargetReason.PIG_ZOMBIE_TARGET) 
             {
-                event.setCancelled(true);
+                if(event.getEntity() instanceof Player) {
+                    Player target = (Player)event.getTarget();
+                    if(plugin.hasPermission(target, "iSafe.canceltarget.pigzombie")) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
-        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-random_target-target", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.CreatureTarget.Disable-random_target-target", true))
         {
             if(event.getReason() == TargetReason.RANDOM_TARGET) 
             {
-                event.setCancelled(true);
+                if(event.getEntity() instanceof Player) {
+                    Player target = (Player)event.getTarget();
+                    if(plugin.hasPermission(target, "iSafe.canceltarget.random")) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
-        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-target_attacked_entity-target", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.CreatureTarget.Disable-target_attacked_entity-target", true))
         {
             if(event.getReason() == TargetReason.TARGET_ATTACKED_ENTITY) 
             {
-                event.setCancelled(true);
+                if(event.getEntity() instanceof Player) {
+                    Player target = (Player)event.getTarget();
+                    if(plugin.hasPermission(target, "iSafe.canceltarget.targetattackedentity")) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
-        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-target_attacked_owner-target", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.CreatureTarget.Disable-target_attacked_owner-target", true))
         {
             if(event.getReason() == TargetReason.TARGET_ATTACKED_OWNER) 
             {
-                event.setCancelled(true);
+                if(event.getEntity() instanceof Player) {
+                    Player target = (Player)event.getTarget();
+                    if(plugin.hasPermission(target, "iSafe.canceltarget.targetattackedowner")) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
-        if(plugin.getEntityManager().getBoolean("Creatures.CreatureTarget.Disable-target_died-target", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.CreatureTarget.Disable-target_died-target", true))
         {
             if(event.getReason() == TargetReason.TARGET_DIED) 
             {
-                event.setCancelled(true);
+                if(event.getEntity() instanceof Player) {
+                    Player target = (Player)event.getTarget();
+                    if(plugin.hasPermission(target, "iSafe.canceltarget.targetdied")) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
     }
@@ -828,10 +878,9 @@ public class EntityListener implements Listener {
         {
             return;
         }
-        Block b  = event.getBlock();
         Entity entity = event.getEntity();
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Prevent-cropTrampling", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.Prevent-cropTrampling", true))
         {
             if(entity instanceof LivingEntity) {
                 if(entity instanceof Creature && !(entity instanceof Player)) {
@@ -839,11 +888,14 @@ public class EntityListener implements Listener {
                 }
             }
         }
-        if(plugin.getEntityManager().getBoolean("Player.Prevent-cropTrampling", true))
+        if(plugin.getCreatureManager().getBoolean("Player.Prevent-cropTrampling", true))
         {
             if(entity instanceof LivingEntity) {
                 if(entity instanceof Player && !(entity instanceof Creature)) {
-                    event.setCancelled(true);
+                    Player p = (Player)entity;
+                    if(!(plugin.hasPermission(p, "iSafe.bypass.croptrampling"))) {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }
@@ -856,7 +908,7 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Pig.Prevent-PigZap", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.Pig.Prevent-PigZap", true))
         {
             event.setCancelled(true);
         }
@@ -870,12 +922,12 @@ public class EntityListener implements Listener {
         }
         LivingEntity entity = event.getEntity();
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Tame.Prevent-taming", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.Tame.Prevent-taming", true))
         {
             event.setCancelled(true);
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Tame.Prevent-taming-for.Wolf", true)) {
+        if(plugin.getCreatureManager().getBoolean("Creatures.Tame.Prevent-taming-for.Wolf", true)) {
             if(entity instanceof Wolf) {
                 event.setCancelled(true);
             }
@@ -898,7 +950,8 @@ public class EntityListener implements Listener {
         if(plugin.getConfig().getBoolean("World.Prevent-items/objects-spawning-inside-vehicles", true))
         {
             if(event.getEntity().isInsideVehicle()) {
-                event.getEntity().leaveVehicle();
+                event.getEntity().eject();
+                event.getEntity().remove();
             }
         }
     }
@@ -910,19 +963,19 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.PoweredCreepers.Prevent-PowerCause.Lightning", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.PoweredCreepers.Prevent-PowerCause.Lightning", true))
         {
             if (event.getCause() == PowerCause.LIGHTNING) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getEntityManager().getBoolean("Creatures.PoweredCreepers.Prevent-PowerCause.Set-Off", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.PoweredCreepers.Prevent-PowerCause.Set-Off", true))
         {
             if (event.getCause() == PowerCause.SET_OFF) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getEntityManager().getBoolean("Creatures.PoweredCreepers.Prevent-PowerCause.Set-On", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.PoweredCreepers.Prevent-PowerCause.Set-On", true))
         {
             if (event.getCause() == PowerCause.SET_ON) {
                 event.setCancelled(true);
@@ -938,13 +991,13 @@ public class EntityListener implements Listener {
         }
         Entity entity = event.getEntity();
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for-allCreatures", true))
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for-allCreatures", true))
         {
             event.setDuration(0);
             event.setCancelled(true);
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Blaze", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Blaze", true)) 
         {
             if(entity instanceof Blaze) {
                 event.setDuration(0);
@@ -952,7 +1005,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.CaveSpider", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.CaveSpider", true)) 
         {
             if(entity instanceof CaveSpider) {
                 event.setDuration(0);
@@ -960,7 +1013,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Chicken", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Chicken", true)) 
         {
             if(entity instanceof Chicken) {
                 event.setDuration(0);
@@ -968,7 +1021,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Cow", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Cow", true)) 
         {
             if(entity instanceof Cow) {
                 event.setDuration(0);
@@ -976,7 +1029,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Creeper", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Creeper", true)) 
         {
             if(entity instanceof Creeper) {
                 event.setDuration(0);
@@ -984,7 +1037,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.EnderDragon", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.EnderDragon", true)) 
         {
             if(entity instanceof EnderDragon) {
                 event.setDuration(0);
@@ -992,7 +1045,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Enderman", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Enderman", true)) 
         {
             if(entity instanceof Enderman) {
                 event.setDuration(0);
@@ -1000,7 +1053,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Ghast", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Ghast", true)) 
         {
             if(entity instanceof Ghast) {
                 event.setDuration(0);
@@ -1008,7 +1061,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Giant", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Giant", true)) 
         {
             if(entity instanceof Giant) {
                 event.setDuration(0);
@@ -1016,7 +1069,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Golem", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Golem", true)) 
         {
             if(entity instanceof Golem) {
                 event.setDuration(0);
@@ -1024,7 +1077,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.IronGolem", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.IronGolem", true)) 
         {
             if(entity instanceof IronGolem) {
                 event.setDuration(0);
@@ -1032,7 +1085,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.MagmaCube", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.MagmaCube", true)) 
         {
             if(entity instanceof MagmaCube) {
                 event.setDuration(0);
@@ -1040,7 +1093,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.MushroomCow", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.MushroomCow", true)) 
         {
             if(entity instanceof MushroomCow) {
                 event.setDuration(0);
@@ -1048,7 +1101,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Ocelot", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Ocelot", true)) 
         {
             if(entity instanceof Ocelot) {
                 event.setDuration(0);
@@ -1056,7 +1109,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Pig", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Pig", true)) 
         {
             if(entity instanceof Pig) {
                 event.setDuration(0);
@@ -1064,7 +1117,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.PigZombie", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.PigZombie", true)) 
         {
             if(entity instanceof PigZombie) {
                 event.setDuration(0);
@@ -1072,7 +1125,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Sheep", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Sheep", true)) 
         {
             if(entity instanceof Sheep) {
                 event.setDuration(0);
@@ -1080,7 +1133,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Silverfish", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Silverfish", true)) 
         {
             if(entity instanceof Silverfish) {
                 event.setDuration(0);
@@ -1088,7 +1141,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Skeleton", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Skeleton", true)) 
         {
             if(entity instanceof Skeleton) {
                 event.setDuration(0);
@@ -1096,7 +1149,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Slime", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Slime", true)) 
         {
             if(entity instanceof Slime) {
                 event.setDuration(0);
@@ -1104,7 +1157,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Snowman", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Snowman", true)) 
         {
             if(entity instanceof Snowman) {
                 event.setDuration(0);
@@ -1112,7 +1165,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Spider", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Spider", true)) 
         {
             if(entity instanceof Spider) {
                 event.setDuration(0);
@@ -1120,7 +1173,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Squid", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Squid", true)) 
         {
             if(entity instanceof Squid) {
                 event.setDuration(0);
@@ -1128,7 +1181,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Villager", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Villager", true)) 
         {
             if(entity instanceof Villager) {
                 event.setDuration(0);
@@ -1136,7 +1189,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Wolf", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Wolf", true)) 
         {
             if(entity instanceof Wolf) {
                 event.setDuration(0);
@@ -1144,7 +1197,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.Combusting.Disable-for.Zombie", true)) 
+        if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.Disable-for.Zombie", true)) 
         {
             if(entity instanceof Zombie) {
                 event.setDuration(0);
@@ -1215,12 +1268,12 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Completely-Prevent-SheepDyeWool", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Completely-Prevent-SheepDyeWool", true))
         {
             event.setCancelled(true);
         }    
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Black", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Black", true))
         {
             if (event.getColor() == DyeColor.BLACK) 
             {
@@ -1228,7 +1281,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Blue", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Blue", true))
         {
             if (event.getColor() == DyeColor.BLUE) 
             {
@@ -1236,7 +1289,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Brown", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Brown", true))
         {
             if (event.getColor() == DyeColor.BROWN) 
             {
@@ -1244,7 +1297,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Cyan", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Cyan", true))
         {
             if (event.getColor() == DyeColor.CYAN) 
             {
@@ -1252,7 +1305,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Gray", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Gray", true))
         {
             if (event.getColor() == DyeColor.GRAY) 
             {
@@ -1260,7 +1313,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Green", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Green", true))
         {
             if (event.getColor() == DyeColor.GREEN) 
             {
@@ -1268,7 +1321,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Light_Blue", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Light_Blue", true))
         {
             if (event.getColor() == DyeColor.LIGHT_BLUE) 
             {
@@ -1276,7 +1329,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Lime", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Lime", true))
         {
             if (event.getColor() == DyeColor.LIME) 
             {
@@ -1284,7 +1337,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Magenta", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Magenta", true))
         {
             if (event.getColor() == DyeColor.MAGENTA) 
             {
@@ -1292,7 +1345,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Orange", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Orange", true))
         {
             if (event.getColor() == DyeColor.ORANGE) 
             {
@@ -1300,7 +1353,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Pink", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Pink", true))
         {
             if (event.getColor() == DyeColor.PINK) 
             {
@@ -1308,7 +1361,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Purple", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Purple", true))
         {
             if (event.getColor() == DyeColor.PURPLE) 
             {
@@ -1316,7 +1369,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Red", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Red", true))
         {
             if (event.getColor() == DyeColor.RED) 
             {
@@ -1324,7 +1377,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Silver", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Silver", true))
         {
             if (event.getColor() == DyeColor.SILVER) 
             {
@@ -1332,7 +1385,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.White", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.White", true))
         {
             if (event.getColor() == DyeColor.WHITE) 
             {
@@ -1340,7 +1393,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if (plugin.getEntityManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Yellow", true))
+        if (plugin.getCreatureManager().getBoolean("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Yellow", true))
         {
             if (event.getColor() == DyeColor.YELLOW) 
             {
@@ -1356,7 +1409,7 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getEntityManager().getBoolean("Creatures.DoorBreaking-PreventFor-zombies", true)) {
+        if(plugin.getCreatureManager().getBoolean("Creatures.DoorBreaking-PreventFor-zombies", true)) {
             event.setCancelled(true);
         }
     }
