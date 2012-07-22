@@ -25,8 +25,9 @@ public class Commands implements CommandExecutor {
             if(sender instanceof Player) {
                 if(args.length == 0) {
                     sender.sendMessage(A + "---iSafe Commands---");
-                    sender.sendMessage(G + "/iSafe reload" + GR + " Reload all the iSafe configuration files.");
-                    sender.sendMessage(G + "/iSafe ...");
+                    sender.sendMessage(G + "/iSafe reload" + GR + " Reloads all the iSafe configuration files.");
+                    sender.sendMessage(G + "/iSafe info " + GR + " Returns information about iSafe.");
+                    sender.sendMessage(G + "/iSafe serverinfo " + GR + " Returns information about the server.");
                 } else if (args.length == 1) {
                     if(args[0].equalsIgnoreCase("reload")) {
                         if(sender.hasPermission("iSafe.command.reload")) {
@@ -86,6 +87,12 @@ public class Commands implements CommandExecutor {
         
         if(plugin.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
             plugin.setupPermissions();
+        }
+        
+        if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
+            plugin.cancelDamagePerms = true;
+        } else {
+            plugin.cancelDamagePerms = false;
         }
         
         sender.sendMessage(G + "Reloaded all iSafe " + v + " files.");

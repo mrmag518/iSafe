@@ -25,20 +25,18 @@ import java.util.List;
 
 import com.mrmag518.iSafe.*;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.inventory.ItemStack;
 
 public class PlayerListener implements Listener  {
     public static iSafe plugin;
@@ -59,42 +57,22 @@ public class PlayerListener implements Listener  {
         World world = player.getWorld();
         String worldname = world.getName();
         
-        if(plugin.getConfig().getBoolean("Buckets.Prevent-LavaBucket-empty", true))
-        {
-            final List<String> lbworlds = plugin.getConfig().getStringList("Buckets.Lava.Worlds");
-            if (plugin.getConfig().getList("Buckets.Lava.Worlds", lbworlds).contains(worldname))
-            {
-                if(plugin.hasPermission(player, "iSafe.use.lavabuckets")) {
-                    //Access
-                } else {
-                    if (event.getBucket().equals(Material.LAVA_BUCKET))
-                    {
-                        event.setCancelled(true);
-                        event.getPlayer().getInventory().setItemInHand(new ItemStack(Material.LAVA_BUCKET,1));
-                        player.sendMessage(ChatColor.RED + "You cannot empty a LavaBucket in the world: "+ ChatColor.GRAY + worldname);
-                    } else {
-                        event.setCancelled(false);
-                    }
+        if(plugin.getConfig().getBoolean("Buckets.Lava.Prevent")) {
+            final List<String> lbworlds = plugin.getConfig().getStringList("Buckets.Lava.CheckedWorlds");
+            
+            if (plugin.getConfig().getList("Buckets.Lava.CheckedWorlds", lbworlds).contains(worldname)) {
+                if(!(plugin.hasPermission(player, "iSafe.use.lavabuckets"))) {
+                    event.setCancelled(true);
                 }
             }
         }
         
-        if(plugin.getConfig().getBoolean("Buckets.Prevent-WaterBucket-empty", true))
-        {
-            final List<String> wbworlds = plugin.getConfig().getStringList("Buckets.Water.Worlds");
-            if (plugin.getConfig().getList("Buckets.Water.Worlds", wbworlds).contains(worldname))
-            {
-                if(plugin.hasPermission(player, "iSafe.use.waterbuckets")) {
-                    //Access
-                } else {
-                    if (event.getBucket().equals(Material.WATER_BUCKET)) 
-                    {
-                        event.setCancelled(true);
-                        event.getPlayer().getInventory().setItemInHand(new ItemStack(Material.WATER_BUCKET,1));
-                        player.sendMessage(ChatColor.RED + "You do not have access to empty that");
-                    } else {
-                        event.setCancelled(false);
-                    }
+        if(plugin.getConfig().getBoolean("Buckets.Water.Prevent")) {
+            final List<String> lbworlds = plugin.getConfig().getStringList("Buckets.Water.CheckedWorlds");
+            
+            if (plugin.getConfig().getList("Buckets.Water.CheckedWorlds", lbworlds).contains(worldname)) {
+                if(!(plugin.hasPermission(player, "iSafe.use.waterbuckets"))) {
+                    event.setCancelled(true);
                 }
             }
         }
@@ -108,13 +86,13 @@ public class PlayerListener implements Listener  {
         }
         Player player = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Player.Prevent-Sprinting", true))
+        if(plugin.getConfig().getBoolean("Movement.DisableSprinting", true))
         {
             if(!(plugin.hasPermission(player, "iSafe.bypass.sprint"))) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("Player.Prevent-Sneaking", true))
+        if(plugin.getConfig().getBoolean("Movement.DisableSneaking", true))
         {
             if(!(plugin.hasPermission(player, "iSafe.bypass.sneak"))) {
                 event.setCancelled(true);
@@ -126,13 +104,13 @@ public class PlayerListener implements Listener  {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Gamemode.Change-to-SurvivalMode-onQuit", true)) {
+        if(plugin.getConfig().getBoolean("Gamemode.SwitchToSurvivalOnQuit", true)) {
             if(p.getGameMode().equals(GameMode.CREATIVE)) {
                 p.setGameMode(GameMode.SURVIVAL);
             }
         }
         
-        if(plugin.getConfig().getBoolean("Gamemode.Change-to-CreativeMode-onQuit", true)) {
+        if(plugin.getConfig().getBoolean("Gamemode.SwitchToCreativeOnQuit", true)) {
             if(p.getGameMode().equals(GameMode.SURVIVAL)) {
                 p.setGameMode(GameMode.CREATIVE);
             }
@@ -147,14 +125,14 @@ public class PlayerListener implements Listener  {
         }
         Player player = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Teleport.Disallow-Teleporting", true))
+        if(plugin.getConfig().getBoolean("Teleport.DisableAllTeleportCauses", true))
         {
             if(!(plugin.hasPermission(player, "iSafe.teleport"))) {
                 event.setTo(event.getFrom());
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.Command", true))
+        if(plugin.getConfig().getBoolean("Teleport.Disable.CommandCause", true))
         {
             if (event.getCause() == TeleportCause.COMMAND) {
                 if(!(plugin.hasPermission(player, "iSafe.teleport.command"))) {
@@ -163,7 +141,7 @@ public class PlayerListener implements Listener  {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.EnderPearl", true))
+        if(plugin.getConfig().getBoolean("Teleport.Disable.EnderpearlCause", true))
         {
             if (event.getCause() == TeleportCause.ENDER_PEARL) {
                 if(!(plugin.hasPermission(player, "iSafe.teleport.enderpearl"))) {
@@ -172,7 +150,7 @@ public class PlayerListener implements Listener  {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.Plugin", true))
+        if(plugin.getConfig().getBoolean("Teleport.Disable.PluginCause", true))
         {
             if (event.getCause() == TeleportCause.PLUGIN) {
                 if(!(plugin.hasPermission(player, "iSafe.teleport.plugin"))) {
@@ -181,7 +159,7 @@ public class PlayerListener implements Listener  {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.Unknown", true))
+        if(plugin.getConfig().getBoolean("Teleport.Disable.UnknownCause", true))
         {
             if (event.getCause() == TeleportCause.UNKNOWN) {
                 if(!(plugin.hasPermission(player, "iSafe.teleport.unknown"))) {
@@ -190,7 +168,7 @@ public class PlayerListener implements Listener  {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Prevent-TeleportCause.netherporal", true))
+        if(plugin.getConfig().getBoolean("Teleport.Disable.NetherportalCause", true))
         {
             if (event.getCause() == TeleportCause.NETHER_PORTAL) {
                 if(!(plugin.hasPermission(player, "iSafe.teleport.netherportal"))) {
@@ -211,7 +189,7 @@ public class PlayerListener implements Listener  {
         World world = player.getWorld();
         
         if(plugin.getConfig().getBoolean("Chat.ForcePermissionToChat", true)) {
-            if(!(plugin.hasPermission(player, "iSafe.chat"))) {
+            if(!(plugin.hasPermission(player, "iSafe.use.chat"))) {
                 event.setCancelled(true);
             }
         }
@@ -225,7 +203,7 @@ public class PlayerListener implements Listener  {
         }
         Player player = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Player.Enable-Bed-permissions", true))
+        if(plugin.getConfig().getBoolean("Miscellaneous.ForcePermissionsToUseBed", true))
         {
             if(!(plugin.hasPermission(player, "iSafe.use.bed"))) {
                 event.setCancelled(true);
@@ -242,7 +220,7 @@ public class PlayerListener implements Listener  {
         Player p = event.getPlayer();
         Server s = p.getServer();
         
-        if(plugin.getConfig().getBoolean("Miscellaneous.EnableKickMessages", true))
+        if(plugin.getConfig().getBoolean("Chat.EnableKickMessages", true))
         {
             plugin.kickMessage(p);
             event.setLeaveMessage(null);
@@ -259,7 +237,7 @@ public class PlayerListener implements Listener  {
         }
         Player player = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Player.Enable-fishing-permissions", true))
+        if(plugin.getConfig().getBoolean("Miscellaneous.ForcePermissionsToFish", true))
         {
             if(!(plugin.hasPermission(player, "iSafe.fish"))) {
                 event.setCancelled(true);
@@ -369,31 +347,31 @@ public class PlayerListener implements Listener  {
             //ignored
         }
     }
-
+    
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerLogin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
+    public void loginManagement(PlayerLoginEvent event) {
+        Player joiner = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Player.Only-let-OPs-join", true))
-        {
-            if(!player.isOp()) {
-                player.kickPlayer(ChatColor.RED + "You cannot join this server, 'cause you are not an OP.");
-            }
-        }
-        
-        /*
-        if(plugin.getConfig().getBoolean("Player.Kick-player-if-anther-user-with-same-username-log's-on", true))
-        {
-            String name = player.getName();
-            
-            for (Player user : plugin.getServer().getOnlinePlayers())
-            {
-                if (user.getName().equalsIgnoreCase(name)) 
-                {
-                    user.kickPlayer(ChatColor.RED + "The username: "+ ChatColor.WHITE + name + ChatColor.RED + " logged on from another location.");
+        if(plugin.getConfig().getBoolean("AntiCheat/Sucurity.KickJoinerIfSameNickIsOnline", true)){
+            for(Player onlinePl : Bukkit.getServer().getOnlinePlayers()) {
+                if(joiner.getName().equalsIgnoreCase(onlinePl.getName())) {
+                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, plugin.sameNickPlaying(joiner));
                 }
             }
-        }*/
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player joiner = event.getPlayer();
+        
+        // ¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤&#%"¤%
+        if(plugin.getConfig().getBoolean("Miscellaneous.OnlyLetOPsJoin", true))
+        {
+            if(!joiner.isOp()) {
+                joiner.kickPlayer(plugin.denyNonOpsJoin());
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -402,34 +380,10 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        String player = event.getPlayer().getName();
-        String command = event.getMessage();
+        Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Player.Log-commands", true))
-        {
-            plugin.getServer().getLogger().info(player + " did/tried the command :: " + command);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
-        Entity entity = event.getPlayer();
-        
-        if(plugin.getConfig().getBoolean("PlayerInteractEntity.Prevent-arrow-hitting-player", true))
-        {
-            if(entity.getEntityId() == 10) {
-                event.setCancelled(true);
-            }
-        }
-        if(plugin.getConfig().getBoolean("PlayerInteractEntity.Prevent-snowball-hitting-player", true))
-        {
-            if(entity.getEntityId() == 11) {
-                event.setCancelled(true);
-            }
+        if(plugin.getConfig().getBoolean("Chat.LogCommands", true)) {
+            plugin.log.info("[iSafe] " + plugin.commandLogger(p, event));
         }
     }
 
@@ -441,25 +395,28 @@ public class PlayerListener implements Listener  {
         }
         boolean survival = event.getNewGameMode().equals(GameMode.SURVIVAL);
         boolean creative = event.getNewGameMode().equals(GameMode.CREATIVE);
+        Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Gamemode.Prevent-Gamemode-change", true))
+        if(plugin.getConfig().getBoolean("Gamemode.DisableGamemodeChange", true))
         {
             event.setCancelled(true); 
         }
         
-        if(plugin.getConfig().getBoolean("Gamemode.Prevent-Gamemode-to-CreativeMode-change", true))
+        if(plugin.getConfig().getBoolean("Gamemode.DisableSurvivalToCreativeChange", true))
         {
             if (survival) 
             {
                 event.setCancelled(true);
+                p.setGameMode(GameMode.SURVIVAL);
             }
         }
         
-        if(plugin.getConfig().getBoolean("Gamemode.Prevent-Gamemode-to-SurvivalMode-change", true))
+        if(plugin.getConfig().getBoolean("Gamemode.DisableCreativeToSurvivalChange", true))
         {
             if (creative) 
             {
                 event.setCancelled(true);
+                p.setGameMode(GameMode.CREATIVE);
             }
         }
     }

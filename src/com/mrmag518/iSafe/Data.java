@@ -89,12 +89,6 @@ public class Data {
     public static String[] worlds5list = { "world", "world_nether" };
     
     
-    public static List<String> lbworlds = new ArrayList<String>();
-    public static String[] lbworldslist = { "world", "world_nether" };
-    public static List<String> wbworlds = new ArrayList<String>();
-    public static String[] wbworldslist = { "world", "world_nether" };
-    
-    
     public static List<String> censoredWords = new ArrayList<String>();
     public static String[] censoredWordsList = { "No defaults added." };
     
@@ -103,6 +97,11 @@ public class Data {
     public static String[] dispensedBlockList = { "No defaults added." };
     public static List<String> dispenseWorlds = new ArrayList<String>();
     public static String[] dispenseWorldsList = { "world", "world_nether" };
+    
+    public static List<String> lbEnabledWorlds = new ArrayList<String>();
+    public static String[] lbEnabledWorldList = { "world", "world_nether" };
+    public static List<String> wbEnabledWorlds = new ArrayList<String>();
+    public static String[] wbEnabledWorldList = { "world", "world_nether" };
     
     public static String getDate() {
         String date;

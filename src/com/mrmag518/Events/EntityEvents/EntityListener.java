@@ -51,10 +51,12 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(event.getEntity() instanceof Player) {
-            Player p = (Player)event.getEntity();
-            if(!(plugin.hasPermission(p, "iSafe.createportal"))) {
-                event.setCancelled(true);
+        if(plugin.getConfig().getBoolean("World.EnablePortalCreationPerms")) {
+            if(event.getEntity() instanceof Player) {
+                Player p = (Player)event.getEntity();
+                if(!(plugin.hasPermission(p, "iSafe.createportal"))) {
+                    event.setCancelled(true);
+                }
             }
         }
     }
@@ -241,9 +243,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        // Continue v3.0 ...
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-npc(Villagers)-death/damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableVillagerDamage", true))
         {
             if(entity instanceof Villager) 
             {
@@ -252,7 +252,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Disable-player-death/damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisablePlayerDamage", true))
         {
             if(entity instanceof Player) 
             {
@@ -261,7 +261,7 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.Disable-(Block)Explosion-damage.To-Players", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableExplosionDamage", true))
         {
             if(event.getCause() == DamageCause.BLOCK_EXPLOSION) {
                 if (entity instanceof Player) {
@@ -271,41 +271,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.Disable-(Block)Explosion-damage.To-Creatures", true))
-        {
-            if(event.getCause() == DamageCause.BLOCK_EXPLOSION) {
-                if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Explosions.Disable-(Entity)Explosion-damage.To-Players", true))
-        {
-            if(event.getCause() == DamageCause.ENTITY_EXPLOSION) {
-                if (entity instanceof Player) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Explosions.Disable-(Entity)Explosion-damage.To-Creatures", true))
-        {
-            if(event.getCause() == DamageCause.ENTITY_EXPLOSION) {
-                if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setCancelled(true);
-                    event.setDamage(0);
-                }
-            }
-        }
-        
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Fire-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableFireDamage", true))
         {
             if(event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.fire")) {
                             event.setDamage(0);
@@ -318,6 +288,11 @@ public class EntityListener implements Listener {
                 }
             }
         }
+        
+        /**
+         * PUT ALL CREATURE DAMAGE RELATED INTO THE CREATURE CONFIG.
+         */
+        
         if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Fire-damage", true))
         {
             if(event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK)) {
@@ -328,11 +303,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Contact-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableContactDamage", true))
         {
             if(event.getCause().equals(DamageCause.CONTACT)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.contact")) {
                             event.setDamage(0);
@@ -355,11 +330,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Custom-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableCustomDamage", true))
         {
             if(event.getCause().equals(DamageCause.CUSTOM)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.custom")) {
                             event.setDamage(0);
@@ -382,11 +357,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Drowning-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableDrowningDamage", true))
         {
             if(event.getCause().equals(DamageCause.DROWNING)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.drowning")) {
                             event.setDamage(0);
@@ -409,11 +384,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-EntityAttack-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableEntityAttackDamage", true))
         {
             if(event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.entityattack")) {
                             event.setDamage(0);
@@ -436,11 +411,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Fall-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableFallDamage", true))
         {
             if(event.getCause().equals(DamageCause.FALL)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.fall")) {
                             event.setDamage(0);
@@ -463,11 +438,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Lava-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableLavaDamage", true))
         {
             if(event.getCause().equals(DamageCause.LAVA)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.lava")) {
                             event.setDamage(0);
@@ -490,11 +465,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Lightning-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableLavaDamage", true))
         {
             if(event.getCause().equals(DamageCause.LIGHTNING)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.lightning")) {
                             event.setDamage(0);
@@ -507,7 +482,7 @@ public class EntityListener implements Listener {
                 }
             }
         }
-        if(plugin.getConfig().getBoolean("Entity-Damage.Creatures.Disable-Lightning-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableLightningDamage", true))
         {
             if(event.getCause().equals(DamageCause.LIGHTNING)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
@@ -517,11 +492,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Magic-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableMagicDamage", true))
         {
             if(event.getCause().equals(DamageCause.MAGIC)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.magic")) {
                             event.setDamage(0);
@@ -544,11 +519,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Poison-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisablePoisonDamage", true))
         {
             if(event.getCause().equals(DamageCause.POISON)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.poison")) {
                             event.setDamage(0);
@@ -571,11 +546,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Projectile-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableProjectileDamage", true))
         {
             if(event.getCause().equals(DamageCause.PROJECTILE)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.projectile")) {
                             event.setDamage(0);
@@ -598,11 +573,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Starvation-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableStarvationDamage", true))
         {
             if(event.getCause().equals(DamageCause.STARVATION)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.starvation")) {
                             event.setDamage(0);
@@ -625,11 +600,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Suffocation-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableSuffocationDamage", true))
         {
             if(event.getCause().equals(DamageCause.SUFFOCATION)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.suffocation")) {
                             event.setDamage(0);
@@ -652,11 +627,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Suicide-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableSuicideDamage", true))
         {
             if(event.getCause().equals(DamageCause.SUICIDE)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.suicide")) {
                             event.setDamage(0);
@@ -679,11 +654,11 @@ public class EntityListener implements Listener {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Entity-Damage.Players.Disable-Void-damage", true))
+        if(plugin.getConfig().getBoolean("Damage.DisableVoidDamage", true))
         {
             if(event.getCause().equals(DamageCause.VOID)) {
                 if (entity instanceof Player) {
-                    if(plugin.getConfig().getBoolean("Entity-Damage.Enable-permissions", true)) {
+                    if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.void")) {
                             event.setDamage(0);
@@ -714,7 +689,7 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Player.Disable-Hunger", true))
+        if(plugin.getConfig().getBoolean("Miscellaneous.DisableHunger", true))
         {
             if(event.getEntity() instanceof Player) {
                 Player p = (Player)event.getEntity();
@@ -728,7 +703,7 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDeath(EntityDeathEvent event) {
-        if(plugin.getConfig().getBoolean("World.Disable-ExperienceOrbs-drop", true))
+        if(plugin.getConfig().getBoolean("World.DisableExpDrop", true))
         {
             event.setDroppedExp(0);
         }
@@ -888,7 +863,8 @@ public class EntityListener implements Listener {
                 }
             }
         }
-        if(plugin.getCreatureManager().getBoolean("Player.Prevent-cropTrampling", true))
+        
+        if(plugin.getConfig().getBoolean("Movement.PreventCropTrampling", true))
         {
             if(entity instanceof LivingEntity) {
                 if(entity instanceof Player && !(entity instanceof Creature)) {
@@ -936,23 +912,14 @@ public class EntityListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onItemSpawn(ItemSpawnEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         
-        if(plugin.getConfig().getBoolean("World.Prevent-items/objects-to-spawn-into-the-world", true))
+        if(plugin.getConfig().getBoolean("World.DisableItemSpawn", true))
         {
             event.setCancelled(true);
             event.getEntity().remove();
-        }
-        
-        if(plugin.getConfig().getBoolean("World.Prevent-items/objects-spawning-inside-vehicles", true))
-        {
-            if(event.getEntity().isInsideVehicle()) {
-                event.getEntity().eject();
-                event.getEntity().remove();
-            }
         }
     }
 
@@ -1213,48 +1180,41 @@ public class EntityListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Entity/Player.Completely-Prevent.Health-Regeneration", true))
+        if(plugin.getConfig().getBoolean("HealthRegen.DisableHealthRegeneration", true))
         {
             event.setCancelled(true);
         }
-        if(plugin.getConfig().getBoolean("Entity/Player.Prevent.Custom-Health-Regeneration", true))
+        if(plugin.getConfig().getBoolean("HealthRegen.DisableCustomHealthRegen", true))
         {
             if (event.getRegainReason() == RegainReason.CUSTOM) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("Entity/Player.Prevent.Eating-Health-Regeneration", true))
+        if(plugin.getConfig().getBoolean("HealthRegen.DisableEatingHealthRegen", true))
         {
             if (event.getRegainReason() == RegainReason.EATING) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("Entity/Player.Prevent.Regen-Health-Regeneration", true))
+        if(plugin.getConfig().getBoolean("HealthRegen.DisableNaturalHealthRegen", true))
         {
             if (event.getRegainReason() == RegainReason.REGEN) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("Entity/Player.Prevent.Satiated-Health-Regeneration", true))
+        if(plugin.getConfig().getBoolean("HealthRegen.DisableSatiatedHealthRegen", true))
         {
             if (event.getRegainReason() == RegainReason.SATIATED) 
             {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("Entity/Player.Prevent.Magic-Health-Regeneration", true))
+        if(plugin.getConfig().getBoolean("HealthRegen.DisableMagicHealthRegen", true))
         {
-            if (event.getRegainReason() == RegainReason.MAGIC) 
-            {
-                event.setCancelled(true);
-            }
-        }
-        if(plugin.getConfig().getBoolean("Entity/Player.Prevent.MagicRegen-Health-Regeneration", true))
-        {
-            if (event.getRegainReason() == RegainReason.MAGIC_REGEN) 
+            if (event.getRegainReason() == RegainReason.MAGIC || event.getRegainReason() == RegainReason.MAGIC_REGEN) 
             {
                 event.setCancelled(true);
             }

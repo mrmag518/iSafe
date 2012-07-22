@@ -65,7 +65,7 @@ public class BlockListener implements Listener {
         byte level = p.getLocation().getBlock().getLightLevel();
         
         
-        if(plugin.getConfig().getBoolean("AntiCheat.ForceLightLevel(Fullbright)", true)) {
+        if(plugin.getConfig().getBoolean("AntiCheat/Sucurity.ForceLightLevel(Fullbright)", true)) {
             if(level <= 1 && !b.isLiquid() && !loc.getBlock().isLiquid()) {
                 if(!(plugin.hasPermission(p, "iSafe.bypass.fullbright"))) {
                     event.setCancelled(true);

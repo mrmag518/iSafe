@@ -18,8 +18,10 @@ public class SendUpdate implements Listener {
     //From MilkBowl's Vault. (with a few modifications)
     @EventHandler(priority = EventPriority.MONITOR)
     public void sendUpdate(PlayerJoinEvent event) {
+        plugin.checkingUpdatePerms = true;
         Player p = event.getPlayer();
         if(plugin.hasPermission(p, "iSafe.admin") || p.isOp()) {
+            plugin.checkingUpdatePerms = false;
             try {
                 String oldVersion = plugin.getDescription().getVersion();
                 if (!(plugin.newVersion.contains(oldVersion))) {
@@ -29,8 +31,6 @@ public class SendUpdate implements Listener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-            //ignored
         }
     }
 }

@@ -35,7 +35,6 @@ public class UserFileCreator implements Listener {
                 plugin.log.info("[iSafe] Detected old userfile format, deleting .. ("+oldFile.getName()+")");
             }
             
-            plugin.log.info("[iSafe] Generating user file for " + user.getName() + ".");
             try {
                 FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
                 uFile.options().header("Please remember you cannot modify anything in the user files."

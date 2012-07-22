@@ -22,15 +22,12 @@ package com.mrmag518.Events.EntityEvents;
 
 import com.mrmag518.iSafe.*;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 public class VehicleListener implements Listener {
@@ -49,96 +46,26 @@ public class VehicleListener implements Listener {
         }
         
         Entity entity = event.getEntered();
-        Player player = (Player) entity;
         Vehicle vec = event.getVehicle();
         
-       if(plugin.getConfig().getBoolean("Vehicle.Prevent.enter.Minecarts", true))
-       {
-            if(player.hasPermission("iSafe.vehicle.enter.minecart")) {
-                //access
-                } else {
-                try {
-                    if(vec.getEntityId() == 40) {
-                        if (event.getEntered() instanceof LivingEntity) {
-                            if (entity instanceof Player) {
-                                event.setCancelled(true);
-                                player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
-                            }
-                        }
+        if(vec.getEntityId() == 40) {
+            if(plugin.getConfig().getBoolean("Vehicle.DisableEnterMinecarts", true)) {
+                if(entity instanceof Player) {
+                    Player p = (Player)entity;
+                    if(!(plugin.hasPermission(p, "iSafe.use.minecarts"))) {
+                        event.setCancelled(true);
+                        vec.eject();
                     }
-                } catch (NullPointerException npe) {
-                    //ignored
                 }
             }
-        }
-        if(plugin.getConfig().getBoolean("Vehicle.Prevent.enter.Boats", true))
-        {
-            if(player.hasPermission("iSafe.vehicle.enter.boat")) {
-                //access
-            } else {
-                try {
-                    if(vec.getEntityId() == 41) {
-                        if (event.getEntered() instanceof LivingEntity) {
-                            if (entity instanceof Player) {
-                                event.setCancelled(true);
-                                player.sendMessage(ChatColor.RED + "You do not have access to enter that vehicle");
-                            }
-                        } 
-                    } 
-                } catch (NullPointerException npe) {
-                    //ignored
-                }
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onVehicleDestroy(VehicleDestroyEvent event) {
-        if (event.isCancelled())
-        {
-            return;
-        }
-        
-        Entity entity = event.getAttacker();
-        Vehicle vec = event.getVehicle();
-        Player player = (Player) entity;
-        
-        if(plugin.getConfig().getBoolean("Vehicle.Prevent.destroy.Minecarts", true))
-        {
-            if(player.hasPermission("iSafe.vehicle.destory.minecart")) {
-                //access
-            } else {
-                try {
-                    if(vec.getEntityId() == 40) {
-                        if (event.getAttacker() instanceof LivingEntity) {
-                            if (entity instanceof Player) {
-                                event.setCancelled(true);
-                                player.sendMessage(ChatColor.RED + "You do not have access to destory that vehicle");
-                            }
-                        }
-                    } 
-                } catch (NullPointerException npe) {
-                    //ignored
-                }
-            }
-        }
-            
-        if(plugin.getConfig().getBoolean("Vehicle.Prevent.destroy.Boats", true))
-        {
-            if(player.hasPermission("iSafe.vehicle.destory.boat")) {
-                //access
-            } else {
-                try {
-                    if(vec.getEntityId() == 41) {
-                        if (entity instanceof LivingEntity) {
-                            if (event.getAttacker() instanceof Player) {
-                                event.setCancelled(true);
-                                player.sendMessage(ChatColor.RED + "You do not have access to destory that vehicle");
-                            }
-                        }
-                    } 
-                } catch (NullPointerException npe) {
-                    //ignored
+        } else if(vec.getEntityId() == 41) {
+            if(plugin.getConfig().getBoolean("Vehicle.DisableEnterBoats", true)) {
+                if(entity instanceof Player) {
+                    Player p = (Player)entity;
+                    if(!(plugin.hasPermission(p, "iSafe.use.boats"))) {
+                        event.setCancelled(true);
+                        vec.eject();
+                    }
                 }
             }
         }
