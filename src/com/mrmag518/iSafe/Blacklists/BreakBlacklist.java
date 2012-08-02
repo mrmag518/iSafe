@@ -54,10 +54,7 @@ public class BreakBlacklist implements Listener {
         Server server = player.getServer();
         
         int blockID = b.getTypeId();
-        String BlockNAME_Lowercase = b.getType().name().toLowerCase();
-        String BlockNAME_Uppercase = b.getType().name().toUpperCase();
-        String BlockNAME_Name = b.getType().name();
-        String BlockNAME = b.toString();
+        String BlockNAME_Name = b.getType().name().toLowerCase();
         
         World world = player.getWorld();
         Location loc = player.getLocation();
@@ -66,19 +63,15 @@ public class BreakBlacklist implements Listener {
         //Blacklist
         final List<Block> brokenblocks = new ArrayList<Block>();
         if (plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(blockID)
-                || plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(BlockNAME_Lowercase)
-                || plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(BlockNAME_Uppercase)
-                || plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(BlockNAME)
-                || plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(BlockNAME_Name))
+                || plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(BlockNAME_Name.toLowerCase()))
         {
-            if(player.hasPermission("iSafe.break.blacklist.bypass")) {
-                //access
-            } else {
+            if(!plugin.hasBlacklistPermission(player, "iSafe.bypass.blacklist.break")) 
+            {
                 if (!event.isCancelled()) 
                 {
                     final List<String> Breakworlds = plugin.getBlacklist().getStringList("Break.Worlds");
                 
-                    if (plugin.getBlacklist().getList("Break.Worlds", Breakworlds).contains(worldname))
+                    if (plugin.getBlacklist().getList("Break.EnabledWorlds", Breakworlds).contains(worldname))
                     {
                         if (plugin.getBlacklist().getBoolean("Break.Gamemode.PreventFor.Survival", true)) {
                             if(player.getGameMode().equals(GameMode.SURVIVAL)) {
@@ -93,70 +86,45 @@ public class BreakBlacklist implements Listener {
                                 }
                             }
                         }
-                            if (plugin.getBlacklist().getBoolean("Break.Kick-Player", true))
+                        
+                        if (plugin.getBlacklist().getBoolean("Break.Kick-Player", true))
+                        {
+                            if (event.isCancelled())
                             {
-                                if (event.isCancelled())
-                                {
-                                    player.kickPlayer(ChatColor.RED + "You got kicked for attempting to break: "+ ChatColor.GRAY + b.getType().name().toLowerCase());
-                                }    
-                            }
+                                player.kickPlayer(ChatColor.RED + "You got kicked for attempting to break: "+ ChatColor.GRAY + b.getType().name().toLowerCase());
+                            }    
+                        }
 
-                            if (plugin.getBlacklist().getBoolean("Place.Kill-Player", true))
+                        if (plugin.getBlacklist().getBoolean("Break.Alert/log.To-console", true))
+                        {
+                            if (event.isCancelled()) 
                             {
-                                if (event.isCancelled())
-                                {
-                                    player.setHealth(0);
-                                    KillAlertPlayer(player, b);
-                                }
-                            }
-
-                            if (plugin.getBlacklist().getBoolean("Break.Alert/log.To-console", true))
-                            {
-                                if (event.isCancelled()) 
-                                {
-                                    AlertConsole(player, b, loc, worldname);
-                                }
-                            }
-
-                            if (plugin.getBlacklist().getBoolean("Break.Alert/log.To-player", true))
-                            {
-                                if (event.isCancelled()) 
-                                {
-                                    AlertPlayer(player, b);
-                                }
-                            }
-
-                            if (plugin.getBlacklist().getBoolean("Break.Alert/log.To-server-chat", true))
-                            {
-                                if (event.isCancelled()) 
-                                {
-                                    AlertServer(server, b, worldname, player);
-                                }
+                                AlertConsole(player, b, loc, worldname);
                             }
                         }
-                    } else {
-                        event.setCancelled(false);
+
+                        if (plugin.getBlacklist().getBoolean("Break.Alert/log.To-server-chat", true))
+                        {
+                            if (event.isCancelled()) 
+                            {
+                                AlertServer(server, b, worldname, player);
+                            }
+                        }
                     }
-                }     
-            }
-        
-        if (plugin.getBlacklist().getBoolean("Break.Complete-Disallow-breaking", true))
-        {
-            if (player.hasPermission("iSafe.break")) {
-                //access
+                }
             } else {
-                event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You cannot break objects.");
+                if(plugin.getBlacklist().getBoolean("Break.Alert/log.To-player", true)) {
+                    player.sendMessage(plugin.blacklistBreakKickMsg(b));
+                }
             }
         }
-    }
-    
-    private void KillAlertPlayer(Player player, Block b) {
-        player.sendMessage(ChatColor.RED + "You got killed for attempting to break: "+ ChatColor.GRAY + b.getType().name().toLowerCase());
-    }
-    
-    private void AlertPlayer(Player player, Block b) {
-        player.sendMessage(ChatColor.RED + "You cannot break: "+ ChatColor.GRAY + (b.getType().name().toLowerCase()));
+        
+        if (plugin.getBlacklist().getBoolean("Break.TotallyDisableBlockBreak", true))
+        {
+            if(!plugin.hasPermission(player, "iSafe.bypass.break")) {
+                event.setCancelled(true);
+            }
+        }
     }
     
     private void AlertServer(Server server, Block b, String worldname, Player player) {

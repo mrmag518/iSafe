@@ -34,14 +34,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import com.mrmag518.iSafe.Blacklists.*;
 import com.mrmag518.iSafe.Commands.*;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Server;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -85,8 +85,19 @@ import org.w3c.dom.NodeList;
  * iSafe.use.chat || default: op
  * iSafe.use.minecarts || default: op
  * iSafe.use.boats || default: op
+ * iSafe.bypass.blacklist.interact || default: op
+ * iSafe.bypass.blacklist.pickup || default: op
+ * iSafe.bypass.blacklist.break || default: op
+ * iSafe.bypass.blacklist.place || default: op
+ * iSafe.bypass.blacklist.drop || default: op
  * 
  */
+
+/*
+ * Add: Log file.
+ * Add: 'Homemade' log method, which will log into the log file. (optional)
+ */
+
 public class iSafe extends JavaPlugin {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //Remember to change this on every version!
@@ -112,6 +123,8 @@ public class iSafe extends JavaPlugin {
     public MobSpawnBlacklist mobSpawnBlacklist = null;
     public Censor censor = null;
     public DispenseBlacklist dispenseBlacklist = null;
+    public InteractBlacklist interactBlacklist = null;
+    
     public String version = null;
     public String newVersion = null;
     public static iSafe plugin;
@@ -202,12 +215,6 @@ public class iSafe extends JavaPlugin {
 
         checkingUpdatePerms = false;
 
-        if (getConfig().getBoolean("Damage.EnablePermissions", true)) {
-            cancelDamagePerms = true;
-        } else {
-            cancelDamagePerms = false;
-        }
-
         try {
             Metrics metrics = new Metrics(this);
             metrics.start();
@@ -269,6 +276,7 @@ public class iSafe extends JavaPlugin {
         mobSpawnBlacklist = new MobSpawnBlacklist(this);
         censor = new Censor(this);
         dispenseBlacklist = new DispenseBlacklist(this);
+        interactBlacklist = new InteractBlacklist(this);
 
         if (debugMode() == true) {
             log.info(DEBUG_PREFIX + "Registered classes.");
@@ -328,8 +336,6 @@ public class iSafe extends JavaPlugin {
     }
 
     /**
-     * Efficient method for checking whether we use Vault for perms or Bukkit/super perms.
-     * 
      * @param p
      * @param permission
      * @return 
@@ -351,13 +357,31 @@ public class iSafe extends JavaPlugin {
             }
         }
     }
+    
+    public boolean hasBlacklistPermission(Player p, String permission) {
+        if (iSafeConfig.getBoolean("UseVaultForPermissions", true)) {
+            if (perms.has(p, permission)) {
+                return true;
+            } else {
+                noCmdPermission(p);
+                return false;
+            }
+        } else {
+            if (p.hasPermission(permission)) {
+                return true;
+            } else {
+                //Send no perm message in the blacklist instead.
+                return false;
+            }
+        }
+    }
 
     public boolean hasPermission(Player p, String permission) {
         if (iSafeConfig.getBoolean("UseVaultForPermissions", true)) {
             if (perms.has(p, permission)) {
                 return true;
             } else {
-                if (checkingUpdatePerms == true || cancelDamagePerms == true) {
+                if (checkingUpdatePerms == true) {
                     p.sendMessage("");
                 } else {
                     noPermission(p);
@@ -368,7 +392,7 @@ public class iSafe extends JavaPlugin {
             if (p.hasPermission(permission)) {
                 return true;
             } else {
-                if (checkingUpdatePerms == true || cancelDamagePerms == true) {
+                if (checkingUpdatePerms == true) {
                     p.sendMessage("");
                 } else {
                     noPermission(p);
@@ -378,13 +402,33 @@ public class iSafe extends JavaPlugin {
         }
     }
 
+    public String scanVariables(String configString, String playerName, String cmd, String blockName, String item) {
+        String result = configString;
+        
+        if(playerName != null) {
+            result = result.replaceAll("%playername%", playerName);
+        }
+        if(cmd != null) {
+            result = result.replaceAll("%cmd%", cmd);
+        }
+        if(blockName != null) {
+            result = result.replaceAll("%block%", blockName);
+        }
+        if(item != null) {
+            result = result.replaceAll("%item%", item);
+        }
+        
+        result = colorize(result);
+        return result;
+    }
+    
     public String colorize(String s) {
         if (s == null) {
             return null;
         }
         return s.replaceAll("&([0-9a-f])", "\u00A7$1");
     }
-
+    
     public void noPermission(Player p) {
         String no_permission = getMessages().getString("Permissions.DefaultNoPermission");
         p.sendMessage(colorize(no_permission));
@@ -398,44 +442,58 @@ public class iSafe extends JavaPlugin {
     public void kickMessage(Player p) {
         String kickMsg = getMessages().getString("KickMessage");
         Server s = p.getServer();
-        s.broadcastMessage(colorize(variablePName(p, kickMsg)));
+        s.broadcastMessage(scanVariables(kickMsg, p.getName(), null, null, null));
     }
 
     public String sameNickPlaying(Player p) {
         String kickMsg = getMessages().getString("SameNickAlreadyPlaying");
-        return (colorize(variablePName(p, kickMsg)));
+        return scanVariables(kickMsg, p.getName(), null, null, null);
     }
 
     public String denyNonOpsJoin() {
         String kickMsg = getMessages().getString("OnlyOpsCanJoin");
-        return (colorize(kickMsg));
+        return scanVariables(kickMsg, null, null, null, null);
     }
 
     public String commandLogger(Player p, PlayerCommandPreprocessEvent event) {
         String logged = getMessages().getString("CommandLogger");
-        return variablePName(p, variableCmd(logged, event));
+        return scanVariables(logged, p.getName(), event.getMessage(), null, null);
     }
-
-    public String variablePName(Player p, String s) {
-        String pName = p.getName();
-        return s.replace("+playername", pName);
+    
+    public String blacklistInteractKickMsg(Block b) {
+        String kickMsg = getMessages().getString("Blacklists.Interact.KickMessage");
+        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null);
     }
-
-    public String variableCmd(String s, PlayerCommandPreprocessEvent event) {
-        String cmd = event.getMessage();
-        return s.replace("+command", cmd);
+    
+    public String blacklistPlaceKickMsg(Block b) {
+        String kickMsg = getMessages().getString("Blacklists.Place.KickMessage");
+        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null);
     }
-
+    
+    public String blacklistBreakKickMsg(Block b) {
+        String kickMsg = getMessages().getString("Blacklists.Break.KickMessage");
+        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null);
+    }
+    
+    public String blacklistCensorKickMsg(String word) {
+        String kickMsg = getMessages().getString("Blacklists.Censor.KickMessage");
+        return scanVariables(kickMsg, null, null, null, null);
+    }
+    
+    public String blacklistDropKickMsg(Item i) {
+        String kickMsg = getMessages().getString("Blacklists.Drop.KickMessage");
+        return scanVariables(kickMsg, null, null, null, i.getItemStack().getType().name().toLowerCase());
+    }
+    
+    public String blacklistPickupKickMsg(Item i) {
+        String kickMsg = getMessages().getString("Blacklists.Pickup.KickMessage");
+        return scanVariables(kickMsg, null, null, null, i.getItemStack().getType().name().toLowerCase());
+    }
+    
     public void loadConfig() {
         config = getConfig();
         config.options().header(Data.setConfigHeader());
 
-        /*
-         * New = New 3.0 nodes.
-         * Old = Old 2.80 and lower nodes.
-         */
-
-        // New
         config.addDefault("Fire.DisableFireSpread", false);
         config.addDefault("Fire.PreventFlintAndSteelUsage", false);
         config.addDefault("Fire.DisableLavaIgnition", false);
@@ -448,9 +506,9 @@ public class iSafe extends JavaPlugin {
 
         config.addDefault("Furnace.DisableFurnaceUsage", false);
 
-        config.addDefault("Weather.Disable.LightningStrike", false);
-        config.addDefault("Weather.Disable.Thunder", false);
-        config.addDefault("Weather.Disable.Storm", false);
+        config.addDefault("Weather.DisableLightningStrike", false);
+        config.addDefault("Weather.DisableThunder", false);
+        config.addDefault("Weather.DisableStorm", false);
 
         config.addDefault("World.PreventChunkUnload", false);
         config.addDefault("World.MakeISafeLoadChunks", false);
@@ -570,96 +628,6 @@ public class iSafe extends JavaPlugin {
         config.addDefault("HealthRegen.DisableSatiatedHealthRegen", false);
         config.addDefault("HealthRegen.DisableMagicHealthRegen", false);
 
-
-        // Old
-
-        config.addDefault("Fade.Prevent-Ice-melting", false);
-        config.addDefault("Fade.Prevent-Snow-melting", false);
-
-
-        config.addDefault("Weather.Disable-LightningStrike", false);
-        config.addDefault("Weather.Disable-Storm", false);
-        config.addDefault("Weather.Disable-Thunder", false);
-
-        config.addDefault("Vehicle.Prevent.enter.Minecarts", false);
-        config.addDefault("Vehicle.Prevent.enter.Boats", false);
-        config.addDefault("Vehicle.Prevent.destroy.Minecarts", false);
-        config.addDefault("Vehicle.Prevent.destroy.Boats", false);
-
-        config.addDefault("Teleport.Disallow-Teleporting", false);
-        config.addDefault("Teleport.Prevent-TeleportCause.Command", false);
-        config.addDefault("Teleport.Prevent-TeleportCause.EnderPearl", false);
-        config.addDefault("Teleport.Prevent-TeleportCause.Plugin", false);
-        config.addDefault("Teleport.Prevent-TeleportCause.Unknown", false);
-
-        config.addDefault("Misc.Disable-LeavesDecay", false);
-        config.addDefault("Misc.Prevent-portal-creation", false);
-        config.addDefault("Misc.Prevent-BlockGrow", false);
-
-        config.addDefault("Gamemode.Prevent-Gamemode-change", false);
-        config.addDefault("Gamemode.Prevent-Gamemode-to-CreativeMode-change", false);
-        config.addDefault("Gamemode.Prevent-Gamemode-to-SurvivalMode-change", false);
-        config.addDefault("Gamemode.Change-to-SurvivalMode-onQuit", false);
-        config.addDefault("Gamemode.Change-to-CreativeMode-onQuit", false);
-
-        config.addDefault("Structure.Prevent-structure-growth.BIG_TREE", false);
-        config.addDefault("Structure.Prevent-structure-growth.BIRCH", false);
-        config.addDefault("Structure.Prevent-structure-growth.BROWN_MUSHROOM", false);
-        config.addDefault("Structure.Prevent-structure-growth.REDWOOD", false);
-        config.addDefault("Structure.Prevent-structure-growth.RED_MUSHROOM", false);
-        config.addDefault("Structure.Prevent-structure-growth.TALL_REDWOOD", false);
-        config.addDefault("Structure.Prevent-structure-growth.TREE", false);
-        config.addDefault("Structure.Prevent-structure-growth.JUNGLE", false);
-        config.addDefault("Structure.Prevent-structure-growth.TALL_REDWOOD", false);
-        config.addDefault("Structure.Prevent-bonemeal-usage", false);
-        config.addDefault("Structure.Prevent-strcuture-growth", false);
-
-        config.addDefault("Entity-Damage.Disable-npc(Villagers)-death/damage", false);
-        config.addDefault("Entity-Damage.Disable-player-death/damage", false);
-        config.addDefault("Entity-Damage.Enable-permissions", false);
-
-        config.addDefault("Entity-Damage.Creatures.Disable-Fire-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Contact-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Custom-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Drowning-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-EntityAttack-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Fall-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Lava-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Lightning-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Magic-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Poison-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Projectile-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Starvation-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Suffocation-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Suicide-damage", false);
-        config.addDefault("Entity-Damage.Creatures.Disable-Void-damage", false);
-
-        config.addDefault("Player.Prevent-fullbright-hacking(force lightlevel)", false);
-        config.addDefault("Player.Prevent-Sprinting", false);
-        config.addDefault("Player.Prevent-Sneaking", false);
-        config.addDefault("Player.Enable-fishing-permissions", false);
-        config.addDefault("Player.Broadcast-iSafe-message-on-join", false);
-        config.addDefault("Player.Allow-creative-gamemode-on-player-quit", true);
-        config.addDefault("Player.Disable-Hunger", false);
-        config.addDefault("Player.Enable-Bed-permissions", false);
-        config.addDefault("Player.Enable-fishing-permissions", false);
-        config.addDefault("Player.Only-let-OPs-join", false);
-        config.addDefault("Player.Log-commands", true);
-        config.addDefault("Player.Disable-all-commands", false);
-        config.addDefault("Player.Infinite-itemtacks", false);
-        config.addDefault("Player.Kick-player-if-anther-user-with-same-username-log's-on", true);
-
-        config.addDefault("Player-Interact.Disable.Buttons", false);
-        config.addDefault("Player-Interact.Disable.Chests", false);
-        config.addDefault("Player-Interact.Disable.Dispensers", false);
-        config.addDefault("Player-Interact.Disable.Woodendoors", false);
-        config.addDefault("Player-Interact.Disable.Irondoors", false);
-        config.addDefault("Player-Interact.Disable.Levers", false);
-        config.addDefault("Player-Interact.Disable.StonePressurePlates", false);
-        config.addDefault("Player-Interact.Disable.WoodenPressurePlates", false);
-        config.addDefault("Player-Interact.Disable.Trapdoors", false);
-        config.addDefault("Player-Interact.Disable.WoodenFenceGates", false);
-
         this.getConfig().options().copyDefaults(true);
         saveConfig();
     }
@@ -670,10 +638,18 @@ public class iSafe extends JavaPlugin {
 
         messages.addDefault("Permissions.DefaultNoPermission", "&cNo permission.");
         messages.addDefault("Permissions.NoCmdPermission", "&cNo permission to do this command.");
-        messages.addDefault("KickMessage", "&6+playername was kicked from the game.");
+        messages.addDefault("KickMessage", "&6%playername% was kicked from the game.");
         messages.addDefault("SameNickAlreadyPlaying", "&cThe username &f+playername &cis already online!");
         messages.addDefault("OnlyOpsCanJoin", "&cOnly OPs can join this server!");
         messages.addDefault("CommandLogger", "+playername did or tried to do the command +command");
+        messages.addDefault("Blacklists.Interact.KickMessage", "&cKicked for attempting to interact with &f%block%");
+        messages.addDefault("Blacklists.Place.KickMessage", "&cKicked for attempting to place &f%block%");
+        messages.addDefault("Blacklists.Break.KickMessage", "&cKicked for attempting to break &f%block%");
+        messages.addDefault("Blacklists.Censor.KickMessage", "&cKicked for attempting to say a censored word");
+        messages.addDefault("Blacklists.Drop.KickMessage", "&cKicked for attempting to drop &f%item%");
+        messages.addDefault("Blacklists.Pickup.KickMessage", "&cKicked for attempting to pickup &f%item%");
+        
+        //messages.addDefault("Blacklists.Interact.KickMessage", "&cKicked for attemping to place &f+block");
 
         this.getMessages().options().copyDefaults(true);
         saveMessages();
@@ -801,59 +777,60 @@ public class iSafe extends JavaPlugin {
     public void loadBlacklist() {
         blacklist = getBlacklist();
         blacklist.options().header(Data.setBlacklistHeader());
-
-        blacklist.addDefault("Place.Complete-Disallow-placing", false);
+        
+        
+        blacklist.addDefault("Place.TotallyDisableBlockPlace", false);
         blacklist.addDefault("Place.Kick-Player", false);
-        blacklist.addDefault("Place.Kill-Player", false);
         blacklist.addDefault("Place.Alert/log.To-console", true);
         blacklist.addDefault("Place.Alert/log.To-player", true);
         blacklist.addDefault("Place.Alert/log.To-server-chat", false);
         blacklist.addDefault("Place.Gamemode.PreventFor.Survival", true);
         blacklist.addDefault("Place.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Place.Worlds", Arrays.asList(Data.worldslist));
+        blacklist.addDefault("Place.EnabledWorlds", Arrays.asList(Data.worldslist));
         Data.worlds = blacklist.getStringList("Place.Worlds");
         blacklist.addDefault("Place.Blacklist", Arrays.asList(Data.placedblockslist));
         Data.placedblocks = blacklist.getStringList("Place.Blacklist");
-
-        blacklist.addDefault("Break.Complete-Disallow-breaking", false);
+        
+        
+        blacklist.addDefault("Break.TotallyDisableBlockBreak", false);
         blacklist.addDefault("Break.Kick-Player", false);
-        blacklist.addDefault("Break.Kill-Player", false);
         blacklist.addDefault("Break.Alert/log.To-console", true);
         blacklist.addDefault("Break.Alert/log.To-player", true);
         blacklist.addDefault("Break.Alert/log.To-server-chat", false);
         blacklist.addDefault("Break.Gamemode.PreventFor.Survival", true);
         blacklist.addDefault("Break.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Break.Worlds", Arrays.asList(Data.worldslist));
+        blacklist.addDefault("Break.EnabledWorlds", Arrays.asList(Data.worldslist));
         Data.worlds = blacklist.getStringList("Break.Worlds");
         blacklist.addDefault("Break.Blacklist", Arrays.asList(Data.brokenblockslist));
         Data.brokenblocks = blacklist.getStringList("Break.Blacklist");
-
-        blacklist.addDefault("Drop.Complete-Disallow-droping", false);
+        
+        
+        blacklist.addDefault("Drop.TotallyDisableBlockDrop", false);
         blacklist.addDefault("Drop.Kick-Player", false);
-        blacklist.addDefault("Drop.Kill-Player", false);
         blacklist.addDefault("Drop.Alert/log.To-console", true);
         blacklist.addDefault("Drop.Alert/log.To-player", true);
         blacklist.addDefault("Drop.Alert/log.To-server-chat", false);
         blacklist.addDefault("Drop.Gamemode.PreventFor.Survival", true);
         blacklist.addDefault("Drop.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Drop.Worlds", Arrays.asList(Data.worldslist));
+        blacklist.addDefault("Drop.EnabledWorlds", Arrays.asList(Data.worldslist));
         Data.worlds = blacklist.getStringList("Drop.Worlds");
         blacklist.addDefault("Drop.Blacklist", Arrays.asList(Data.dropedblockslist));
         Data.dropedblocks = blacklist.getStringList("Drop.Blacklist");
-
-        blacklist.addDefault("Pickup.Complete-Disallow-pickuping", false);
+        
+        
+        blacklist.addDefault("Pickup.TotallyDisableBlockPickup", false);
         blacklist.addDefault("Pickup.Kick-Player", false);
-        blacklist.addDefault("Pickup.Kill-Player", false);
         blacklist.addDefault("Pickup.Alert/log.To-console", true);
         blacklist.addDefault("Pickup.Alert/log.To-player", true);
         blacklist.addDefault("Pickup.Alert/log.To-server-chat", false);
         blacklist.addDefault("Pickup.Gamemode.PreventFor.Survival", true);
         blacklist.addDefault("Pickup.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Pickup.Worlds", Arrays.asList(Data.Pickupworldslist));
+        blacklist.addDefault("Pickup.EnabledWorlds", Arrays.asList(Data.Pickupworldslist));
         Data.Pickupworlds = blacklist.getStringList("Pickup.Worlds");
         blacklist.addDefault("Pickup.Blacklist", Arrays.asList(Data.pickupedblockslist));
         Data.pickupedblocks = blacklist.getStringList("Pickup.Blacklist");
 
+        
         blacklist.addDefault("Command.Disallow-commands", false);
         blacklist.addDefault("Command.Alert/log.To-console", true);
         blacklist.addDefault("Command.Alert/log.To-player", true);
@@ -862,16 +839,25 @@ public class iSafe extends JavaPlugin {
         Data.cmdworlds = blacklist.getStringList("Command.Worlds");
         blacklist.addDefault("Command.Blacklist", Arrays.asList(Data.commandslist));
         Data.commands = blacklist.getStringList("Command.Blacklist");
-
+        
+        
         blacklist.addDefault("Censor.Alert/log.To-console", false);
         blacklist.addDefault("Censor.Alert/log.To-player", true);
         blacklist.addDefault("Censor.Words/Blacklist", Arrays.asList(Data.censoredWordsList));
         Data.censoredWords = blacklist.getStringList("Censor.Words/Blacklist");
-
+        
+        
         blacklist.addDefault("Dispense.Worlds", Arrays.asList(Data.dispenseWorldsList));
         Data.dispenseWorlds = blacklist.getStringList("Dispense.Worlds");
         blacklist.addDefault("Dispense.Blacklist", Arrays.asList(Data.dispensedBlockList));
         Data.dispensedBlock = blacklist.getStringList("Dispense.Blacklist");
+        
+        
+        blacklist.addDefault("Interact.KickPlayer", false);
+        blacklist.addDefault("Interact.Worlds", Arrays.asList(Data.interactBlacklistedWorldList));
+        Data.interactBlacklistedWorlds = blacklist.getStringList("Interact.Worlds");
+        blacklist.addDefault("Interact.Blacklist", Arrays.asList(Data.interactBlacklistedBlocksList));
+        Data.interactBlacklistedBlocks = blacklist.getStringList("Interact.Blacklist");
 
         this.getBlacklist().options().copyDefaults(true);
         saveBlacklist();

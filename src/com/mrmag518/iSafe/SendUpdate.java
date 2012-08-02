@@ -31,6 +31,8 @@ public class SendUpdate implements Listener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else {
+            plugin.checkingUpdatePerms = false;
         }
     }
 }

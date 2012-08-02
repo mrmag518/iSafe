@@ -54,11 +54,7 @@ public class PickupBlacklist implements Listener {
         World world = player.getWorld();
         
         int itemID = event.getItem().getItemStack().getTypeId();
-        String BlockNAME_Lowercase = event.getItem().getItemStack().getType().name().toLowerCase();
-        String BlockNAME_Uppercase = event.getItem().getItemStack().getType().name().toUpperCase();
-        String BlockNAME_Name = event.getItem().getItemStack().getType().name();
-        String BlockNAME = event.getItem().toString();
-        String BlackNameTrim = event.getItem().getItemStack().getType().name().trim();
+        String BlockNAME = event.getItem().getItemStack().getType().name().toLowerCase();
         
         Location loc = player.getLocation();
         String worldname = world.getName();
@@ -66,19 +62,15 @@ public class PickupBlacklist implements Listener {
         //Blacklist
         final List<Item> pickupedblocks = new ArrayList<Item>();
         if (plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(itemID)
-                || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME_Lowercase)
-                || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME_Uppercase)
-                || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME)
-                || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME_Name)
-                || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlackNameTrim))
+                || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME.toLowerCase()))
         {
-            if(player.hasPermission("iSafe.pickup.blacklist.bypass")) {
-                //access
-            } else {
+            if(!plugin.hasBlacklistPermission(player, "iSafe.bypass.blacklist.pickup")) 
+            {
                 if (!event.isCancelled()) 
                 {
                     final List<String> Pickupworlds = plugin.getBlacklist().getStringList("Pickup.Worlds");
-                    if (plugin.getBlacklist().getList("Pickup.Worlds", Pickupworlds).contains(worldname))
+                    
+                    if (plugin.getBlacklist().getList("Pickup.EnabledWorlds", Pickupworlds).contains(worldname))
                     {
                         if (plugin.getBlacklist().getBoolean("Pickup.Gamemode.PreventFor.Survival", true)) {
                             if(player.getGameMode().equals(GameMode.SURVIVAL)) {
@@ -97,28 +89,11 @@ public class PickupBlacklist implements Listener {
                             }    
                         }
 
-                        if (plugin.getBlacklist().getBoolean("Place.Kill-Player", true))
-                        {
-                            if (event.isCancelled())
-                            {
-                                player.setHealth(0);
-                                KillAlertPlayer(player, event, worldname);
-                            }    
-                        }
-
                         if (plugin.getBlacklist().getBoolean("Pickup.Alert/log.To-console", true))
                         {
                             if (event.isCancelled()) 
                             {
                                 AlertConsole(player, event, worldname, loc);
-                            }
-                        }
-
-                        if (plugin.getBlacklist().getBoolean("Pickup.Alert/log.To-player", true))
-                        {
-                            if (event.isCancelled()) 
-                            {
-                                AlertPlayer(player, event);
                             }
                         }
 
@@ -132,32 +107,16 @@ public class PickupBlacklist implements Listener {
                                 }
                             }
                         }
-                    } else {
-                        event.setCancelled(false);
                     }
                 }
             }
         }
         
-        if (plugin.getBlacklist().getBoolean("Pickup.Complete-Disallow-pickuping", true))
+        if (plugin.getBlacklist().getBoolean("Pickup.TotallyDisableBlockPickup", true))
         {
-            if (player.hasPermission("iSafe.pickup")) {
-                //access
-            } else {
+            if(!plugin.hasPermission(player, "iSafe.bypass.pickup")) {
                 event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You cannot pickup objects.");
             }
-        }
-    }
-    
-    private void KillAlertPlayer(Player player, PlayerPickupItemEvent event, String worldname) {
-        player.sendMessage(ChatColor.RED + "You got killed for attempting to pickup: "+ ChatColor.GRAY + event.getItem().getItemStack().getType().name().toLowerCase());
-    }
-    
-    private void AlertPlayer(Player player, PlayerPickupItemEvent event) {
-        if (message == 0) {
-            player.sendMessage(ChatColor.RED + "You cannot pickup: "+ ChatColor.GRAY + event.getItem().getItemStack().getType().name().toLowerCase());
-            message = 1;
         }
     }
     

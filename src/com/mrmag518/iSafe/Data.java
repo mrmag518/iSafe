@@ -103,6 +103,11 @@ public class Data {
     public static List<String> wbEnabledWorlds = new ArrayList<String>();
     public static String[] wbEnabledWorldList = { "world", "world_nether" };
     
+    public static List<String> interactBlacklistedBlocks = new ArrayList<String>();
+    public static String[] interactBlacklistedBlocksList = { "No defaults added." };
+    public static List<String> interactBlacklistedWorlds = new ArrayList<String>();
+    public static String[] interactBlacklistedWorldList = { "world", "world_nether" };
+    
     public static String getDate() {
         String date;
         Calendar calendar = Calendar.getInstance();

@@ -22,7 +22,6 @@ package com.mrmag518.Events.WorldEvents;
 
 import com.mrmag518.iSafe.*;
 
-import org.bukkit.ChatColor;
 import org.bukkit.TreeType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

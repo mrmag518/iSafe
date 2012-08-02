@@ -45,20 +45,12 @@ public class Censor implements Listener {
         }
         
         Player p = event.getPlayer();
-        Server s = p.getServer();
         
-        String word = event.getMessage();
-        String word_uppercase = event.getMessage().toUpperCase();
-        String word_lowercase = event.getMessage().toLowerCase();
-        String word_raw = event.getMessage().toString();
+        String word = event.getMessage().toLowerCase();
         
         //No need for multi-world support, yet thought.
         final List<String> censoredWords = new ArrayList<String>();
-        if (plugin.getBlacklist().getList("Censor.Words/Blacklist", censoredWords).contains(word)
-                || plugin.getBlacklist().getList("Censor.Words/Blacklist", censoredWords).contains(word_uppercase) 
-                || plugin.getBlacklist().getList("Censor.Words/Blacklist", censoredWords).contains(word_lowercase) 
-                || plugin.getBlacklist().getList("Censor.Words/Blacklist", censoredWords).contains(word_raw)) 
-        {
+        if (plugin.getBlacklist().getList("Censor.Words/Blacklist", censoredWords).contains(word.toLowerCase())) {
             if(!(event.isCancelled())) 
             {
                 event.setCancelled(true);

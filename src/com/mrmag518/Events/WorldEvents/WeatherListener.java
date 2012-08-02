@@ -44,7 +44,7 @@ public class WeatherListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Weather.Disable.LightningStrike", true))
+        if(plugin.getConfig().getBoolean("Weather.DisableLightningStrike", true))
         {
            event.setCancelled(true);
         }
@@ -57,7 +57,7 @@ public class WeatherListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Weather.Disable.Thunder", true))
+        if(plugin.getConfig().getBoolean("Weather.DisableThunder", true))
         {
             event.toThunderState();
             event.setCancelled(true);
@@ -71,7 +71,7 @@ public class WeatherListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Weather.Disable.Storm", true))
+        if(plugin.getConfig().getBoolean("Weather.DisableStorm", true))
         {
             event.toWeatherState();
             event.setCancelled(true);

@@ -3,7 +3,7 @@ description: "An assortment of beneficial features."
 main: com.mrmag518.iSafe.iSafe
 name: iSafe
 load: STARTUP
-version: 'Upcoming 3.0'
+version: 'Alpha 3.0'
 website: http://dev.bukkit.org/server-mods/blockthattnt/
 softdepend: [Vault]
 commands:
@@ -11,6 +11,9 @@ commands:
     description: Main command for iSafe.
     usage: /<command>
 permissions:
+  iSafe.bypass.blacklist.interact.*:
+    default: op
+  
   iSafe.command.reload:
     default: op
   iSafe.command.info:

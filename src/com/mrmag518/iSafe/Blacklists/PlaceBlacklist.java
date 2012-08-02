@@ -54,32 +54,25 @@ public class PlaceBlacklist implements Listener {
         Server server = p.getServer();
         
         int blockID = event.getBlock().getTypeId();
-        String BlockNAME_Lowercase = event.getBlock().getType().name().toLowerCase();
-        String BlockNAME_Uppercase = event.getBlock().getType().name().toUpperCase();
-        String BlockNAME_Name = event.getBlock().getType().name();
-        String BlockNAME = event.getBlock().toString();
+        String BlockNAME = event.getBlock().getType().name().toLowerCase();
         
         World world = p.getWorld();
         Location loc = p.getLocation();
         String worldname = world.getName();
-        String pName = p.getName();
         
         //Blacklist
         final List<Block> placedblocks = new ArrayList<Block>();
         
         if (plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(blockID)
-                || plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(BlockNAME_Lowercase) 
-                || plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(BlockNAME_Uppercase)
-                || plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(BlockNAME_Name)
-                || plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(BlockNAME))
+                || plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(BlockNAME.toLowerCase()))
         {
-            if(p.hasPermission("iSafe.place.blacklist.bypass")) {
-                //access
-            } else {
+            if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.place")) 
+            {
                 if (!event.isCancelled()) 
                 {
                     final List<String> worlds = plugin.getBlacklist().getStringList("Place.Worlds");
-                    if (plugin.getBlacklist().getList("Place.Worlds", worlds).contains(worldname))
+                    
+                    if (plugin.getBlacklist().getList("Place.EnabledWorlds", worlds).contains(worldname))
                     {
                         if (plugin.getBlacklist().getBoolean("Place.Gamemode.PreventFor.Survival", true)) {
                             if(p.getGameMode().equals(GameMode.SURVIVAL)) {
@@ -99,15 +92,6 @@ public class PlaceBlacklist implements Listener {
                                 if (event.isCancelled())
                                 {
                                     p.kickPlayer(ChatColor.RED + "You got kicked for attempting to place: "+ ChatColor.GRAY + block.getType().name().toLowerCase());
-                                }    
-                            }
-
-                            if (plugin.getBlacklist().getBoolean("Place.Kill-Player", true))
-                            {
-                                if (event.isCancelled())
-                                {
-                                    p.setHealth(0);
-                                    KillAlertPlayer(p, block);
                                 }    
                             }
 
@@ -135,25 +119,16 @@ public class PlaceBlacklist implements Listener {
                                 }
                             }
                         }
-                    } else {
-                        event.setCancelled(false);
                     }
                 }
             }
         
-        if (plugin.getBlacklist().getBoolean("Place.Complete-Disallow-placing", true))
+        if (plugin.getBlacklist().getBoolean("Place.TotallyDisableBlockPlace", true))
         {
-            if (p.hasPermission("iSafe.place")) {
-                //access
-            } else {
+            if(!plugin.hasPermission(p, "iSafe.bypass.place")) {
                 event.setCancelled(true);
-                p.sendMessage(ChatColor.RED + "You cannot place objects.");
             }
         }
-    }
-    
-    private void KillAlertPlayer(Player p, Block block) {
-        p.sendMessage(ChatColor.RED + "You got killed for attempting to place: "+ ChatColor.GRAY + block.getType().name().toLowerCase());
     }
     
     private void AlertPlayer(Player p, Block block, String worldname) {

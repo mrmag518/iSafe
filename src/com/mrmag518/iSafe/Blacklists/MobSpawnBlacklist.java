@@ -26,10 +26,8 @@ public class MobSpawnBlacklist implements Listener {
             return;
         }
         int entityID = event.getEntity().getEntityId();
-        String entityNameLowercase = event.getEntity().getType().getName().toLowerCase();
-        String entityNameUppercase = event.getEntity().getType().getName().toUpperCase();
-        String entityName = event.getEntity().getType().getName();
-        String entityNameString = event.getEntity().getType().getName().toString();        
+        String entityName = event.getEntity().getType().getName().toLowerCase();
+        
         World world = event.getEntity().getWorld();
         Location loc = event.getEntity().getLocation();
         String worldname = world.getName();
@@ -39,10 +37,7 @@ public class MobSpawnBlacklist implements Listener {
          */
         final List<Entity> naturalSpawnedMobs = new ArrayList<Entity>();
         if (plugin.getCreatureManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityID)
-                || plugin.getCreatureManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityNameLowercase)
-                || plugin.getCreatureManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityNameUppercase)
-                || plugin.getCreatureManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityName)
-                || plugin.getCreatureManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityNameString))
+                || plugin.getCreatureManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityName.toLowerCase()))
         {
             if (!event.isCancelled())
             {
@@ -68,7 +63,7 @@ public class MobSpawnBlacklist implements Listener {
                 int z = (int) loc.getZ();
                 if (event.isCancelled()) 
                 {
-                    plugin.log.info("[iSafe]" + " A(n) " + entityNameLowercase + "was cancelled its spawn, for the spawn reason: Natural; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    plugin.log.info("[iSafe]" + " A(n) " + entityName.toLowerCase() + "was cancelled its spawn, for the spawn reason: Natural; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }
@@ -78,10 +73,7 @@ public class MobSpawnBlacklist implements Listener {
          */
         final List<Entity> spawnerSpawnedMobs = new ArrayList<Entity>();
         if (plugin.getCreatureManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityID)
-                || plugin.getCreatureManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityNameLowercase)
-                || plugin.getCreatureManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityNameUppercase)
-                || plugin.getCreatureManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityName)
-                || plugin.getCreatureManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityNameString))
+                || plugin.getCreatureManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityName.toLowerCase()))
         {
             if (!event.isCancelled())
             {
@@ -107,7 +99,7 @@ public class MobSpawnBlacklist implements Listener {
                 int z = (int) loc.getZ();
                 if (event.isCancelled()) 
                 {
-                    plugin.log.info("[iSafe]" + " A(n) " + entityNameLowercase + " was cancelled its spawn, for the spawn reason: Spawner; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    plugin.log.info("[iSafe]" + " A(n) " + entityName.toLowerCase() + " was cancelled its spawn, for the spawn reason: Spawner; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }
@@ -117,10 +109,7 @@ public class MobSpawnBlacklist implements Listener {
          */
         final List<Entity> customSpawnedMobs = new ArrayList<Entity>();
         if (plugin.getCreatureManager().getList("MobSpawn.Spawner.Blacklist", customSpawnedMobs).contains(entityID)
-                || plugin.getCreatureManager().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityNameLowercase)
-                || plugin.getCreatureManager().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityNameUppercase)
-                || plugin.getCreatureManager().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityName)
-                || plugin.getCreatureManager().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityNameString))
+                || plugin.getCreatureManager().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(entityName.toLowerCase()))
         {
             if (!event.isCancelled())
             {
@@ -146,7 +135,7 @@ public class MobSpawnBlacklist implements Listener {
                 int z = (int) loc.getZ();
                 if (event.isCancelled()) 
                 {
-                    plugin.log.info("[iSafe]" + " A(n) " + entityNameLowercase + " was cancelled its spawn, for the spawn reason: Custom; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    plugin.log.info("[iSafe]" + " A(n) " + entityName.toLowerCase() + " was cancelled its spawn, for the spawn reason: Custom; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }
@@ -156,10 +145,7 @@ public class MobSpawnBlacklist implements Listener {
          */
         final List<Entity> eggSpawnedMobs = new ArrayList<Entity>();
         if (plugin.getCreatureManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityID)
-                || plugin.getCreatureManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityNameLowercase)
-                || plugin.getCreatureManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityNameUppercase)
-                || plugin.getCreatureManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityName)
-                || plugin.getCreatureManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityNameString))
+                || plugin.getCreatureManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityName.toLowerCase()))
         {
             if (!event.isCancelled())
             {
@@ -185,7 +171,7 @@ public class MobSpawnBlacklist implements Listener {
                 int z = (int) loc.getZ();
                 if (event.isCancelled()) 
                 {
-                    plugin.log.info("[iSafe]" + " A(n) " + entityNameLowercase + " was cancelled its spawn, for the spawn reason: Egg; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    plugin.log.info("[iSafe]" + " A(n) " + entityName.toLowerCase() + " was cancelled its spawn, for the spawn reason: Egg; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }
@@ -195,10 +181,7 @@ public class MobSpawnBlacklist implements Listener {
          */
         final List<Entity> spawnereggSpawnedMobs = new ArrayList<Entity>();
         if (plugin.getCreatureManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityID)
-                || plugin.getCreatureManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityNameLowercase)
-                || plugin.getCreatureManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityNameUppercase)
-                || plugin.getCreatureManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityName)
-                || plugin.getCreatureManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityNameString))
+                || plugin.getCreatureManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityName.toLowerCase()))
         {
             if (!event.isCancelled())
             {
@@ -224,7 +207,7 @@ public class MobSpawnBlacklist implements Listener {
                 int z = (int) loc.getZ();
                 if (event.isCancelled()) 
                 {
-                    plugin.log.info("[iSafe]" + " A(n) " + entityNameLowercase + " was cancelled its spawn, for the spawn reason: SpawnerEgg; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    plugin.log.info("[iSafe]" + " A(n) " + entityName.toLowerCase() + " was cancelled its spawn, for the spawn reason: SpawnerEgg; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }

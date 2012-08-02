@@ -51,19 +51,12 @@ public class CommandBlacklist implements Listener {
         Server server = player.getServer();
         World world = player.getWorld();
         
-        String command_lowercase = event.getMessage().toLowerCase();
-        String command_upercase = event.getMessage().toUpperCase();
-        String command = event.getMessage().toString();
-        String command_raw = event.getMessage();
+        String command = event.getMessage().toLowerCase();
         
         String worldname = world.getName();
         
         final List<String> commands = new ArrayList<String>();
-        if (plugin.getBlacklist().getList("Command.Blacklist", commands).contains(command_lowercase)
-                || plugin.getBlacklist().getList("Command.Blacklist", commands).contains(command_upercase)
-                || plugin.getBlacklist().getList("Command.Blacklist", commands).contains(command)
-                || plugin.getBlacklist().getList("Command.Blacklist", commands).contains(command_raw))
-        {
+        if (plugin.getBlacklist().getList("Command.Blacklist", commands).contains(command.toLowerCase())){
             if (!event.isCancelled())
             {
                 final List<String> cmdworlds = plugin.getBlacklist().getStringList("Place.Worlds");
@@ -71,6 +64,8 @@ public class CommandBlacklist implements Listener {
                 if (plugin.getBlacklist().getList("Command.Worlds", cmdworlds).contains(worldname))
                 {
                     event.setCancelled(true);
+                    event.getRecipients().clear();
+                    event.setMessage(null);
                     
                     if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-console", true))
                     {

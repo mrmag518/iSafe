@@ -55,10 +55,7 @@ public class DropBlacklist implements Listener {
         World world = player.getWorld();
         
         int itemID = event.getItemDrop().getItemStack().getTypeId();
-        String BlockNAME_Lowercase = event.getItemDrop().getItemStack().getType().name().toLowerCase();
-        String BlockNAME_Uppercase = event.getItemDrop().getItemStack().getType().name().toUpperCase();
-        String BlockNAME_Name = event.getItemDrop().getItemStack().getType().name();
-        String BlockNAME = event.getItemDrop().getItemStack().toString();
+        String BlockNAME = event.getItemDrop().getItemStack().getType().name().toLowerCase();
         
         Location loc = player.getLocation();
         String worldname = world.getName();
@@ -66,19 +63,15 @@ public class DropBlacklist implements Listener {
         //Blacklist
         final List<Item> dropedblocks = new ArrayList<Item>();
         if (plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(itemID)
-                || plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(BlockNAME_Lowercase)
-                || plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(BlockNAME_Uppercase)
-                || plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(BlockNAME)
-                || plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(BlockNAME_Name))
+                || plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(BlockNAME.toLowerCase()))
         {
-            if(player.hasPermission("iSafe.drop.blacklist.bypass")) {
-                //access
-            } else {
+            if(!plugin.hasBlacklistPermission(player, "iSafe.bypass.blacklist.drop")) 
+            {
                 if (!event.isCancelled()) 
                 {
                     final List<String> Dropworlds = plugin.getBlacklist().getStringList("Drop.Worlds");
                 
-                    if (plugin.getBlacklist().getList("Drop.Worlds", Dropworlds).contains(worldname))
+                    if (plugin.getBlacklist().getList("Drop.EnabledWorlds", Dropworlds).contains(worldname))
                     {
                         if (plugin.getBlacklist().getBoolean("Drop.Gamemode.PreventFor.Survival", true)) {
                             if(player.getGameMode().equals(GameMode.SURVIVAL)) {
@@ -95,15 +88,6 @@ public class DropBlacklist implements Listener {
                             if (event.isCancelled())
                             {
                                 player.kickPlayer(ChatColor.RED + "You got kicked for attempting to drop: "+ ChatColor.GRAY + event.getItemDrop().getItemStack().getType().name().toLowerCase());
-                            }    
-                        }
-
-                        if (plugin.getBlacklist().getBoolean("Place.Kill-Player", true))
-                        {
-                            if (event.isCancelled())
-                            {
-                                player.setHealth(0);
-                                KillAlertPlayer(player, event, worldname);
                             }    
                         }
 
@@ -130,26 +114,17 @@ public class DropBlacklist implements Listener {
                                 AlertServer(server, event, worldname, player);
                             }
                         }
-                    } else {
-                        event.setCancelled(false);
                     }
                 }
             }
         }
         
-        if (plugin.getBlacklist().getBoolean("Drop.Complete-Disallow-droping", true))
+        if (plugin.getBlacklist().getBoolean("Drop.TotallyDisableBlockDrop", true))
         {
-            if (player.hasPermission("iSafe.drop")) {
-                //access
-            } else {
+            if(!plugin.hasPermission(player, "iSafe.bypass.drop")) {
                 event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You cannot drop objects.");
             }
         }
-    }
-    
-    private void KillAlertPlayer(Player player, PlayerDropItemEvent event, String worldname) {
-        player.sendMessage(ChatColor.RED + "You got killed for attempting to break: "+ ChatColor.GRAY + event.getItemDrop().getItemStack().getType().name().toLowerCase());
     }
     
     private void AlertPlayer(Player player, PlayerDropItemEvent event, String worldname) {
