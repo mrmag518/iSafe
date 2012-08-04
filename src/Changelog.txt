@@ -34,8 +34,8 @@ Added:
 * Added the ability to kick the joiner if the same nick is already online.
 * Added permissions to create portals.
 * Added Interact blacklist.
-* Added permissions for each blacklisted block for blacklists!
-** Example: I am a member and do not have permissions to chests, an admin adds the permission iSafe.bypass.blacklist.interact.54, I will then be able to open chests.
+* Added 'ConfigVersion' to each configuration file. 
+** This will help me to determine which version your configuration file is so it can modified to be up to date in further versions.
 * 
 
 Removed:
@@ -48,6 +48,7 @@ Removed:
 * Removed forcedrop bookshelf as it now drops books.
 * Why would anyone teleport a creeper to the spawn point if he falls down into the void? Removed..
 * Removed attk prevention.
+* Removed pointless permissions check.
 * 
 
 Improvements:

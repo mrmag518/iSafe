@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class UserFileCreator implements Listener {
@@ -57,6 +58,29 @@ public class UserFileCreator implements Listener {
     
     @EventHandler
     public void updateNodes(PlayerQuitEvent event) {
+        Player user = event.getPlayer();
+        File userFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + user.getName() + ".yml");
+        
+        if(userFile.exists()) {
+             FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
+             uFile.set("IPAddress", null);
+             uFile.set("Gamemode", null);
+             uFile.set("Level", null);
+             
+             uFile.set("IPAddress", user.getAddress().getAddress().toString().replace("/", ""));
+             uFile.set("Gamemode", user.getGameMode().name().toLowerCase());
+             uFile.set("Level", user.getLevel());
+            try {
+                uFile.save(userFile);
+            } catch (IOException ex) {
+                Logger.getLogger(UserFileCreator.class.getName()).log(Level.SEVERE, "Error trying to save userFile", ex);
+            }
+        }
+    }
+    
+    //Need to check kick too ..
+    @EventHandler
+    public void updateNodesKick(PlayerKickEvent event) {
         Player user = event.getPlayer();
         File userFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + user.getName() + ".yml");
         

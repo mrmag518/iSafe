@@ -125,7 +125,7 @@ public class Data {
     public static String setConfigHeader() {
         String header = "This is the main configuration file in association to iSafe; take a decent look through it to manage your own preferred settings." 
         + "\nIf you need assistance you can search up it in the iSafe wiki or contact mrmag518."
-        + "\nThis file was generated: " + getDate() + "\n";
+        + "\nThis file was last modified: " + getDate() + "\n";
         return header;
     }
     
@@ -133,25 +133,21 @@ public class Data {
         String header = "This is the blacklist config on behalf of iSafe, read the iSafe wiki for assistance." 
         + "\nRemember that the world listing is case sensetive."
         + "\nBlacklists related to creatures is found in the creatureManager.yml"
-        + "\nThis file was generated: " + getDate() + "\n";
+        + "\nThis file was last modified: " + getDate() + "\n";
         return header;
     }
     
-    public static String setEntityManagerHeader() {
-        String header = "This is the entityManager config associated to entities in Minecraft."
-        + "\nIn this configuration file you can manage entities, such as Creatures, Spawn eggs and so on."
+    public static String setCreatureManagerHeader() {
+        String header = "This is the createManager config associated to creatures in Minecraft."
         + "\nA list of entity IDs can be found at the minercaft wiki, http://www.minecraftwiki.net/wiki/Data_values In the section Entity IDs"
-        + "\nPlease remember that not everything related to entities have been added to this config file yet, and not everything will either."
-        + "\nThe Player section is just specific player events related to something specific related to entities. (Most player options is in the config.yml)"
-        + "\nThis file was generated: " + getDate() + "\n";
+        + "\nThis file was last modified: " + getDate() + "\n";
         return header;
     }
     
     public static String setMessageHeader() {
         String header = "This is the file where you can alter messages sent by iSafe."
         + "\nFor an example the 'No permission.' message."
-        + "\nColor support is being worked on."
-        + "\nThis file was generated: " + getDate() + "\n";
+        + "\nThis file was last modified: " + getDate() + "\n";
         return header;
     }
     
@@ -162,13 +158,13 @@ public class Data {
         + "\n'IPAddress' = The IP Address the player logged in with."
         + "\n'Gamemode' = The gamemode the player is in."
         + "\n'Level' = The exp level the player has."
-        + "\nThis file was generated: " + getDate() + "\n";
+        + "\nThis file was last modified: " + getDate() + "\n";
         return header;
     }
     
     public static String setISafeConfigHeader() {
         String header = "This is the configuration file where you can manage settings directly related to iSafe."
-        + "\nThis file was generated: " + getDate() + "\n";
+        + "\nThis file was last modified: " + getDate() + "\n";
         return header;
     }
 }

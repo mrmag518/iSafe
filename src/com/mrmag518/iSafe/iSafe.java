@@ -93,9 +93,17 @@ import org.w3c.dom.NodeList;
  * 
  */
 
-/*
- * Add: Log file.
- * Add: 'Homemade' log method, which will log into the log file. (optional)
+/**
+ * 
+ * 
+ * 
+ * Use the Utilities class.
+ * Change verbose logging.
+ * Change debug logging.
+ * 
+ * 
+ * 
+ * @author magnus
  */
 
 public class iSafe extends JavaPlugin {
@@ -104,42 +112,42 @@ public class iSafe extends JavaPlugin {
 
     private String fileversion = "iSafe v3.0";
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    public PlayerListener playerListener = null;
-    public BlockListener blockListener = null;
-    public EntityListener entityListener = null;
-    public WeatherListener weatherListener = null;
-    public InventoryListener inventoryListener = null;
-    public VehicleListener vehicleListener = null;
-    public WorldListener worldListener = null;
-    public EnchantmentListener enchantmentListener = null;
-    public DropListener dropListener = null;
-    public UserFileCreator UFC = null;
-    public SendUpdate sendUpdate = null;
-    public DropBlacklist dropBlacklist = null;
-    public PlaceBlacklist placeBlacklist = null;
-    public BreakBlacklist breakBlacklist = null;
-    public PickupBlacklist pickupBlacklist = null;
-    public CommandBlacklist commandBlacklist = null;
-    public MobSpawnBlacklist mobSpawnBlacklist = null;
-    public Censor censor = null;
-    public DispenseBlacklist dispenseBlacklist = null;
-    public InteractBlacklist interactBlacklist = null;
+    private PlayerListener playerListener = null;
+    private BlockListener blockListener = null;
+    private EntityListener entityListener = null;
+    private WeatherListener weatherListener = null;
+    private InventoryListener inventoryListener = null;
+    private VehicleListener vehicleListener = null;
+    private WorldListener worldListener = null;
+    private EnchantmentListener enchantmentListener = null;
+    private DropListener dropListener = null;
+    private UserFileCreator UFC = null;
+    private SendUpdate sendUpdate = null;
+    private DropBlacklist dropBlacklist = null;
+    private PlaceBlacklist placeBlacklist = null;
+    private BreakBlacklist breakBlacklist = null;
+    private PickupBlacklist pickupBlacklist = null;
+    private CommandBlacklist commandBlacklist = null;
+    private MobSpawnBlacklist mobSpawnBlacklist = null;
+    private Censor censor = null;
+    private DispenseBlacklist dispenseBlacklist = null;
+    private InteractBlacklist interactBlacklist = null;
     
     public String version = null;
     public String newVersion = null;
     public static iSafe plugin;
     public final Logger log = Logger.getLogger("Minecraft");
-    public String DEBUG_PREFIX = "[iSafe] Debug: ";
+    public String DEBUG_PREFIX = "[iSafe DEBUG]" + " ";
     public static Permission perms = null;
-    public FileConfiguration iSafeConfig = null;
-    public File iSafeConfigFile = null;
-    public FileConfiguration messages = null;
-    public File messagesFile = null;
-    public FileConfiguration creatureManager = null;
-    public File creatureManagerFile = null;
-    public FileConfiguration blacklist = null;
-    public File blacklistFile = null;
-    public FileConfiguration config;
+    private FileConfiguration iSafeConfig = null;
+    private File iSafeConfigFile = null;
+    private FileConfiguration messages = null;
+    private File messagesFile = null;
+    private FileConfiguration creatureManager = null;
+    private File creatureManagerFile = null;
+    private FileConfiguration blacklist = null;
+    private File blacklistFile = null;
+    private FileConfiguration config;
     public boolean checkingUpdatePerms = false;
     public boolean cancelDamagePerms = false;
 
@@ -152,20 +160,16 @@ public class iSafe extends JavaPlugin {
     public void onDisable() {
         PluginDescriptionFile pdffile = this.getDescription();
         if (verboseLogging() == true) {
-            log.info("[" + pdffile.getName() + " :: " + version + "] " + " Disabled succesfully.");
+            verboseLog("v" + pdffile.getVersion() + " Disabled.");
         } else {
-            if (debugMode() == true) {
-                log.info(DEBUG_PREFIX + "Verbose logging is off.");
-            }
+            debugLog("Verbose logging is off.");
         }
     }
 
     @Override
     public void onEnable() {
         version = this.getDescription().getVersion();
-        if (debugMode() == true) {
-            log.info(DEBUG_PREFIX + "Debug mode is enabled!");
-        }
+        debugLog("Debug mode is enabled!");
 
         registerClasses();
         PluginDescriptionFile pdffile = this.getDescription();
@@ -180,12 +184,14 @@ public class iSafe extends JavaPlugin {
                         String oldVersion = version;
 
                         if (!newVersion.contains(oldVersion)) {
+                            log.info(" ");
                             log.info("#######  iSafe UpdateChecker  #######");
                             log.info("A new update for iSafe was found! " + newVersion);
                             log.info("You are currently running iSafe v" + oldVersion);
                             log.info("You can find this new version at BukkitDev.");
                             log.info("http://dev.bukkit.org/server-mods/blockthattnt/");
                             log.info("#####################################");
+                            log.info(" ");
                         }
                     } catch (Exception ignored) {
                         //Ignored
@@ -194,24 +200,9 @@ public class iSafe extends JavaPlugin {
             }, 0, 432000);
         }
         getCommand("iSafe").setExecutor(new Commands(this));
-        getServer().getPluginManager().getPermissions();
         checkMatch();
 
-        if (iSafeConfig.getBoolean("UseVaultForPermissions", true)) {
-            if (getServer().getPluginManager().getPlugin("Vault") != null) {
-                setupPermissions();
-            } else {
-                log.severe("[iSafe] Vault.jar was NOT found in your plugins folder!");
-                log.severe("[iSafe] You HAVE to have Vault.jar in the plugins folder if you use Vault for permissions!");
-                log.warning("[iSafe] Settings UseVaultForPermissions in your iSafeConfig.yml to false ..");
-                getISafeConfig().set("UseVaultForPermissions", false);
-                saveISafeConfig();
-                reloadISafeConfig();
-            }
-            if (verboseLogging() == true) {
-                log.info("[iSafe] Using Vault for permissions!");
-            }
-        }
+        initVault();
 
         checkingUpdatePerms = false;
 
@@ -223,11 +214,9 @@ public class iSafe extends JavaPlugin {
         }
 
         if (verboseLogging() == true) {
-            log.info("[" + pdffile.getName() + " :: " + version + "] " + " Enabled succesfully.");
+            verboseLog("v" + pdffile.getVersion() + " Enabled.");
         } else {
-            if (debugMode() == true) {
-                log.info(DEBUG_PREFIX + "Verbose logging is off.");
-            }
+            debugLog("Verbose logging is off.");
         }
     }
 
@@ -237,6 +226,22 @@ public class iSafe extends JavaPlugin {
 
     public boolean debugMode() {
         return getISafeConfig().getBoolean("DebugMode");
+    }
+    
+    public void initVault() {
+        if(iSafeConfig.getBoolean("UseVaultForPermissions", true)) {
+            if (getServer().getPluginManager().getPlugin("Vault") != null) {
+                verboseLog("Using Vault for permissions!");
+                setupPermissions();
+            } else {
+                log.severe("[iSafe] Vault.jar was NOT found in your plugins folder!");
+                log.severe("[iSafe] You HAVE to have Vault.jar in the plugins folder if you use Vault for permissions!");
+                log.warning("[iSafe] Settings UseVaultForPermissions in your iSafeConfig.yml to false ..");
+                getISafeConfig().set("UseVaultForPermissions", false);
+                saveISafeConfig();
+                reloadISafeConfig();
+            }
+        }
     }
 
     private void registerClasses() {
@@ -254,18 +259,14 @@ public class iSafe extends JavaPlugin {
             UFC = new UserFileCreator(this);
         } else {
             UFC = null;
-            if (debugMode() == true) {
-                log.info(DEBUG_PREFIX + "CreateUserFiles in the iSafeConfig.yml was disable, therefor not register the UserFileCreator class.");
-            }
+            debugLog("CreateUserFiles in the iSafeConfig.yml was disabled, therefor not register the UserFileCreator class.");
         }
 
         if (getISafeConfig().getBoolean("CheckForUpdates", true)) {
             sendUpdate = new SendUpdate(this);
         } else {
             sendUpdate = null;
-            if (debugMode() == true) {
-                log.info(DEBUG_PREFIX + "CheckForUpdates in the iSafeConfig.yml was disabled, therefor not registering the sendUpdate class.");
-            }
+            debugLog("CheckForUpdates in the iSafeConfig.yml was disabled, therefor not registering the sendUpdate class.");
         }
 
         dropBlacklist = new DropBlacklist(this);
@@ -278,19 +279,19 @@ public class iSafe extends JavaPlugin {
         dispenseBlacklist = new DispenseBlacklist(this);
         interactBlacklist = new InteractBlacklist(this);
 
-        if (debugMode() == true) {
-            log.info(DEBUG_PREFIX + "Registered classes.");
-        }
+        debugLog("Registered classes.");
     }
 
     private void fileManagement() {
         if (!(getDataFolder().exists())) {
             getDataFolder().mkdirs();
+            debugLog("The DataFolder did not exist, created a new one.");
         }
 
-        File usersFolder = new File(getDataFolder() + File.separator + "Users");
+        File usersFolder = new File(getDataFolder(), "Users");
         if (!(usersFolder.exists())) {
             usersFolder.mkdir();
+            debugLog("The Users directory did not exist, created a new one.");
         }
 
         File exaFile = new File(usersFolder + File.separator + "_example.yml");
@@ -305,7 +306,7 @@ public class iSafe extends JavaPlugin {
                 exampFile.set("Level", "50");
                 exampFile.save(exaFile);
             } catch (Exception e) {
-                log.info("[iSafe] Error creating example user file.");
+                log.info("[iSafe] Error creating example user file. (_example.yml)");
                 e.printStackTrace();
             }
         }
@@ -329,9 +330,19 @@ public class iSafe extends JavaPlugin {
         reloadMessages();
         loadMessages();
         reloadMessages();
-
-        if (verboseLogging() == true) {
-            log.info("[iSafe] Loaded all files.");
+        
+        verboseLog("Loaded all files.");
+    }
+    
+    public void verboseLog(String string) {
+        if(verboseLogging() == true) {
+            log.info("[iSafe] " + string);
+        }
+    }
+    
+    public void debugLog(String string) {
+        if(debugMode() == true) {
+            log.info(DEBUG_PREFIX + string);
         }
     }
 
@@ -382,7 +393,7 @@ public class iSafe extends JavaPlugin {
                 return true;
             } else {
                 if (checkingUpdatePerms == true) {
-                    p.sendMessage("");
+                    //nothing
                 } else {
                     noPermission(p);
                 }
@@ -393,7 +404,7 @@ public class iSafe extends JavaPlugin {
                 return true;
             } else {
                 if (checkingUpdatePerms == true) {
-                    p.sendMessage("");
+                    //nothing
                 } else {
                     noPermission(p);
                 }
@@ -402,20 +413,38 @@ public class iSafe extends JavaPlugin {
         }
     }
 
-    public String scanVariables(String configString, String playerName, String cmd, String blockName, String item) {
+    private String scanVariables(String configString, String playerName, String cmd, String blockName, String item, String world, String word) {
         String result = configString;
         
         if(playerName != null) {
-            result = result.replaceAll("%playername%", playerName);
+            if(configString.contains("%playername%")) {
+                result = result.replaceAll("%playername%", playerName);
+            }
         }
         if(cmd != null) {
-            result = result.replaceAll("%cmd%", cmd);
+            if(configString.contains("%command%")) {
+                result = result.replaceAll("%command%", cmd);
+            }
         }
         if(blockName != null) {
-            result = result.replaceAll("%block%", blockName);
+            if(configString.contains("%block%")) {
+                result = result.replaceAll("%block%", blockName);
+            }
         }
         if(item != null) {
-            result = result.replaceAll("%item%", item);
+            if(configString.contains("%item%")) {
+                result = result.replaceAll("%item%", item);
+            }
+        }
+        if(world != null) {
+            if(configString.contains("%world%")) {
+                result = result.replaceAll("%world%", world);
+            }
+        }
+        if(word != null) {
+            if(configString.contains("%word%")) {
+                result = result.replaceAll("%word%", word);
+            }
         }
         
         result = colorize(result);
@@ -442,58 +471,96 @@ public class iSafe extends JavaPlugin {
     public void kickMessage(Player p) {
         String kickMsg = getMessages().getString("KickMessage");
         Server s = p.getServer();
-        s.broadcastMessage(scanVariables(kickMsg, p.getName(), null, null, null));
+        s.broadcastMessage(scanVariables(kickMsg, p.getName(), null, null, null, p.getWorld().getName(), null));
     }
 
     public String sameNickPlaying(Player p) {
         String kickMsg = getMessages().getString("SameNickAlreadyPlaying");
-        return scanVariables(kickMsg, p.getName(), null, null, null);
+        return scanVariables(kickMsg, p.getName(), null, null, null, p.getWorld().getName(), null);
     }
 
     public String denyNonOpsJoin() {
         String kickMsg = getMessages().getString("OnlyOpsCanJoin");
-        return scanVariables(kickMsg, null, null, null, null);
+        return scanVariables(kickMsg, null, null, null, null, null, null);
     }
 
     public String commandLogger(Player p, PlayerCommandPreprocessEvent event) {
         String logged = getMessages().getString("CommandLogger");
-        return scanVariables(logged, p.getName(), event.getMessage(), null, null);
+        return scanVariables(logged, p.getName(), event.getMessage(), null, null, p.getWorld().getName(), null);
     }
     
     public String blacklistInteractKickMsg(Block b) {
         String kickMsg = getMessages().getString("Blacklists.Interact.KickMessage");
-        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null);
+        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
     }
     
     public String blacklistPlaceKickMsg(Block b) {
         String kickMsg = getMessages().getString("Blacklists.Place.KickMessage");
-        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null);
+        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
     }
     
     public String blacklistBreakKickMsg(Block b) {
         String kickMsg = getMessages().getString("Blacklists.Break.KickMessage");
-        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null);
+        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
     }
     
-    public String blacklistCensorKickMsg(String word) {
+    public String blacklistCensorKickMsg() {
         String kickMsg = getMessages().getString("Blacklists.Censor.KickMessage");
-        return scanVariables(kickMsg, null, null, null, null);
+        return scanVariables(kickMsg, null, null, null, null, null, null);
     }
     
     public String blacklistDropKickMsg(Item i) {
         String kickMsg = getMessages().getString("Blacklists.Drop.KickMessage");
-        return scanVariables(kickMsg, null, null, null, i.getItemStack().getType().name().toLowerCase());
+        return scanVariables(kickMsg, null, null, null, i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(), null);
     }
     
     public String blacklistPickupKickMsg(Item i) {
         String kickMsg = getMessages().getString("Blacklists.Pickup.KickMessage");
-        return scanVariables(kickMsg, null, null, null, i.getItemStack().getType().name().toLowerCase());
+        return scanVariables(kickMsg, null, null, null, i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(), null);
     }
     
-    public void loadConfig() {
+    
+    public String blacklistInteractMsg(Block b) {
+        String disallowedMsg = getMessages().getString("Blacklists.Interact.DisallowedMessage");
+        return scanVariables(disallowedMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
+    }
+    
+    public String blacklistPlaceMsg(Block b) {
+        String disallowedMsg = getMessages().getString("Blacklists.Place.DisallowedMessage");
+        return scanVariables(disallowedMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
+    }
+    
+    public String blacklistBreakMsg(Block b) {
+        String disallowedMsg = getMessages().getString("Blacklists.Break.DisallowedMessage");
+        return scanVariables(disallowedMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
+    }
+    
+    public String blacklistCensorMsg(String word) {
+        String disallowedMsg = getMessages().getString("Blacklists.Censor.DisallowedMessage");
+        return scanVariables(disallowedMsg, null, null, null, null, null, word);
+    }
+    
+    public String blacklistDropMsg(Item i) {
+        String disallowedMsg = getMessages().getString("Blacklists.Drop.DisallowedMessage");
+        return scanVariables(disallowedMsg, null, null, null, i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(), null);
+    }
+    
+    public String blacklistPickupMsg(Item i) {
+        String disallowedMsg = getMessages().getString("Blacklists.Pickup.DisallowedMessage");
+        return scanVariables(disallowedMsg, null, null, null, i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(), null);
+    }
+    
+    private void loadConfig() {
         config = getConfig();
         config.options().header(Data.setConfigHeader());
-
+        
+        int ConfigVersion = 3;
+        config.addDefault("ConfigVersion", Integer.valueOf(ConfigVersion));
+        if(config.getInt("ConfigVersion") != Integer.valueOf(ConfigVersion)) {
+            log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
+            config.set("ConfigVersion", Integer.valueOf(ConfigVersion));
+        }
+        
         config.addDefault("Fire.DisableFireSpread", false);
         config.addDefault("Fire.PreventFlintAndSteelUsage", false);
         config.addDefault("Fire.DisableLavaIgnition", false);
@@ -632,33 +699,57 @@ public class iSafe extends JavaPlugin {
         saveConfig();
     }
 
-    public void loadMessages() {
+    private void loadMessages() {
         messages = getMessages();
         messages.options().header(Data.setMessageHeader());
+        
+        int ConfigVersion = 3;
+        messages.addDefault("ConfigVersion", Integer.valueOf(ConfigVersion));
+        if(messages.getInt("ConfigVersion") != Integer.valueOf(ConfigVersion)) {
+            log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
+            messages.set("ConfigVersion", Integer.valueOf(ConfigVersion));
+        }
 
         messages.addDefault("Permissions.DefaultNoPermission", "&cNo permission.");
         messages.addDefault("Permissions.NoCmdPermission", "&cNo permission to do this command.");
         messages.addDefault("KickMessage", "&6%playername% was kicked from the game.");
-        messages.addDefault("SameNickAlreadyPlaying", "&cThe username &f+playername &cis already online!");
+        messages.addDefault("SameNickAlreadyPlaying", "&cThe username &f%playername% &cis already online!");
         messages.addDefault("OnlyOpsCanJoin", "&cOnly OPs can join this server!");
-        messages.addDefault("CommandLogger", "+playername did or tried to do the command +command");
+        messages.addDefault("CommandLogger", "%playername% did or tried to do the command %command%");
+        //----
         messages.addDefault("Blacklists.Interact.KickMessage", "&cKicked for attempting to interact with &f%block%");
+        messages.addDefault("Blacklists.Interact.DisallowedMessage", "&cYou do not have access to interact with &7%block% &cin world &7%world%");
+        //----
         messages.addDefault("Blacklists.Place.KickMessage", "&cKicked for attempting to place &f%block%");
+        messages.addDefault("Blacklists.Place.DisallowedMessage", "&cYou do not have access to place &7%block% &cin world &7%world%");
+        //----
         messages.addDefault("Blacklists.Break.KickMessage", "&cKicked for attempting to break &f%block%");
+        messages.addDefault("Blacklists.Break.DisallowedMessage", "&cYou do not have access to break &7%block% &cin world &7%world%");
+        //----
         messages.addDefault("Blacklists.Censor.KickMessage", "&cKicked for attempting to say a censored word");
+        messages.addDefault("Blacklists.Censor.DisallowedMessage", "&c%word% is censored!");
+        //----
         messages.addDefault("Blacklists.Drop.KickMessage", "&cKicked for attempting to drop &f%item%");
+        messages.addDefault("Blacklists.Drop.DisallowedMessage", "&cYou do not have access to drop &7%item% &cin world &7%world%");
+        //----
         messages.addDefault("Blacklists.Pickup.KickMessage", "&cKicked for attempting to pickup &f%item%");
-        
-        //messages.addDefault("Blacklists.Interact.KickMessage", "&cKicked for attemping to place &f+block");
+        messages.addDefault("Blacklists.Pickup.DisallowedMessage", "&cYou do not have access to pickup &7%item% &cin world &7%world%");
 
         this.getMessages().options().copyDefaults(true);
         saveMessages();
     }
 
-    public void loadISafeConfig() {
+    private void loadISafeConfig() {
         iSafeConfig = getISafeConfig();
-        // Header..
-
+        // Header.
+        
+        int ConfigVersion = 3;
+        iSafeConfig.addDefault("ConfigVersion", Integer.valueOf(ConfigVersion));
+        if(iSafeConfig.getInt("ConfigVersion") != Integer.valueOf(ConfigVersion)) {
+            log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
+            iSafeConfig.set("ConfigVersion", Integer.valueOf(ConfigVersion));
+        }
+        
         iSafeConfig.addDefault("VerboseLogging", false);
         iSafeConfig.addDefault("DebugMode", false);
         iSafeConfig.addDefault("CheckForUpdates", true);
@@ -669,10 +760,17 @@ public class iSafe extends JavaPlugin {
         saveISafeConfig();
     }
 
-    public void loadCreatureManager() {
+    private void loadCreatureManager() {
         creatureManager = getCreatureManager();
-        //creatureManager.options().header(Data.setEntityManagerHeader());
-
+        creatureManager.options().header(Data.setCreatureManagerHeader());
+        
+        int ConfigVersion = 3;
+        creatureManager.addDefault("ConfigVersion", Integer.valueOf(ConfigVersion));
+        if(creatureManager.getInt("ConfigVersion") != Integer.valueOf(ConfigVersion)) {
+            log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
+            creatureManager.set("ConfigVersion", Integer.valueOf(ConfigVersion));
+        }
+        
         creatureManager.addDefault("Creatures.CreatureTarget.Disable-closest_player-target", false);
         creatureManager.addDefault("Creatures.CreatureTarget.Disable-custom-target", false);
         creatureManager.addDefault("Creatures.CreatureTarget.Disable-forgot_target-target", false);
@@ -774,10 +872,16 @@ public class iSafe extends JavaPlugin {
         saveCreatureManager();
     }
 
-    public void loadBlacklist() {
+    private void loadBlacklist() {
         blacklist = getBlacklist();
         blacklist.options().header(Data.setBlacklistHeader());
         
+        int ConfigVersion = 3;
+        blacklist.addDefault("ConfigVersion", Integer.valueOf(ConfigVersion));
+        if(blacklist.getInt("ConfigVersion") != Integer.valueOf(ConfigVersion)) {
+            log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
+            blacklist.set("ConfigVersion", Integer.valueOf(ConfigVersion));
+        }
         
         blacklist.addDefault("Place.TotallyDisableBlockPlace", false);
         blacklist.addDefault("Place.Kick-Player", false);
@@ -991,9 +1095,10 @@ public class iSafe extends JavaPlugin {
         }
     }
 
-    public boolean setupPermissions() {
+    private boolean setupPermissions() {
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
         perms = rsp.getProvider();
+        verboseLog("[iSafe] Hooked to permissions plugin: " + perms.getName());
         return perms != null;
     }
 
@@ -1010,7 +1115,7 @@ public class iSafe extends JavaPlugin {
     }
 
     //Update checker
-    public String updateCheck(String currentVersion) throws Exception {
+    private String updateCheck(String currentVersion) throws Exception {
         String pluginUrlString = "http://dev.bukkit.org/server-mods/blockthattnt/files.rss";
         try {
             URL url = new URL(pluginUrlString);

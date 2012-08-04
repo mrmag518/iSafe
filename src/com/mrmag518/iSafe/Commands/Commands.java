@@ -68,7 +68,7 @@ public class Commands implements CommandExecutor {
     
     public boolean reload(CommandSender sender) {
         String v = plugin.getDescription().getVersion();
-        File userFolder = new File(plugin.getDataFolder() + File.separator + "Users");
+        File userFolder = new File(plugin.getDataFolder(), "Users");
         sender.sendMessage(G + "Reloading all iSafe " + v + " files ..");
         
         if(!plugin.getDataFolder().exists()) {
@@ -85,9 +85,7 @@ public class Commands implements CommandExecutor {
         plugin.reloadISafeConfig();
         plugin.reloadMessages();
         
-        if(plugin.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
-            plugin.setupPermissions();
-        }
+        plugin.initVault();
         
         if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
             plugin.cancelDamagePerms = true;
