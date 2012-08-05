@@ -45,23 +45,17 @@ public class DropBlacklist implements Listener {
     
     @EventHandler
     public void BlacklistDrop(PlayerDropItemEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
-        
         Player player = event.getPlayer();
-        Server server = player.getServer();
         World world = player.getWorld();
-        
         int itemID = event.getItemDrop().getItemStack().getTypeId();
         String BlockNAME = event.getItemDrop().getItemStack().getType().name().toLowerCase();
-        
-        Location loc = player.getLocation();
         String worldname = world.getName();
         
-        //Blacklist
         final List<Item> dropedblocks = new ArrayList<Item>();
+        
         if (plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(itemID)
                 || plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(BlockNAME.toLowerCase()))
         {
@@ -83,11 +77,11 @@ public class DropBlacklist implements Listener {
                             }
                         }
                         
-                        if (plugin.getBlacklist().getBoolean("Drop.Kick-Player", true))
+                        if (plugin.getBlacklist().getBoolean("Drop.KickPlayer", true))
                         {
                             if (event.isCancelled())
                             {
-                                player.kickPlayer(ChatColor.RED + "You got kicked for attempting to drop: "+ ChatColor.GRAY + event.getItemDrop().getItemStack().getType().name().toLowerCase());
+                                player.kickPlayer(plugin.blacklistDropKickMsg(event.getItemDrop()));
                             }    
                         }
 
@@ -95,7 +89,7 @@ public class DropBlacklist implements Listener {
                         {
                             if (event.isCancelled()) 
                             {
-                                AlertConsole(player, event, loc, worldname);
+                                //AlertConsole(player, event, loc, worldname);
                             }
                         }
 
@@ -103,15 +97,7 @@ public class DropBlacklist implements Listener {
                         {
                             if (event.isCancelled()) 
                             {
-                                AlertPlayer(player, event, worldname);
-                            }
-                        }
-
-                        if (plugin.getBlacklist().getBoolean("Drop.Alert/log.To-server-chat", true))
-                        {
-                            if (event.isCancelled()) 
-                            {
-                                AlertServer(server, event, worldname, player);
+                                player.sendMessage(plugin.blacklistDropMsg(null));
                             }
                         }
                     }
@@ -125,17 +111,5 @@ public class DropBlacklist implements Listener {
                 event.setCancelled(true);
             }
         }
-    }
-    
-    private void AlertPlayer(Player player, PlayerDropItemEvent event, String worldname) {
-        player.sendMessage(ChatColor.RED + "You cannot drop: "+ ChatColor.GRAY + event.getItemDrop().getItemStack().getType().name().toLowerCase() + ChatColor.RED + " In the world: "+ ChatColor.GRAY + worldname);
-    }
-    
-    private void AlertServer(Server server, PlayerDropItemEvent event, String worldname, Player player) {
-        server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to drop: "+ ChatColor.RED + event.getItemDrop().getItemStack().getType().name().toLowerCase() + ChatColor.DARK_GRAY + " In the world: "+ ChatColor.RED + worldname);
-    }
-    
-    private void AlertConsole(Player player, PlayerDropItemEvent event, Location loc, String worldname) {
-        plugin.log.info("[iSafe] "+ player.getName() + " tried to drop: "+ event.getItemDrop().getItemStack().getType().name().toLowerCase() + ", At the location: "+ " X: "+ loc.getBlockX() +" Y: "+ loc.getBlockY() +" Z: "+ loc.getBlockZ()+ ", In the world: "+ worldname);
     }
 }

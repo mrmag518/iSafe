@@ -42,21 +42,21 @@ public class CommandBlacklist implements Listener {
     
     @EventHandler
     public void CommandBlacklist(PlayerCommandPreprocessEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
-        
         Player player = event.getPlayer();
         Server server = player.getServer();
         World world = player.getWorld();
-        
         String command = event.getMessage().toLowerCase();
-        
         String worldname = world.getName();
+        String[] split = event.getMessage().split(" ");  
+        if (split.length < 1) return;
+        String cmd = split[0].trim().substring(1).toLowerCase();
         
         final List<String> commands = new ArrayList<String>();
-        if (plugin.getBlacklist().getList("Command.Blacklist", commands).contains(command.toLowerCase())){
+        
+        if (plugin.getBlacklist().getList("Command.Blacklist", commands).contains(cmd.toLowerCase())){
             if (!event.isCancelled())
             {
                 final List<String> cmdworlds = plugin.getBlacklist().getStringList("Place.Worlds");
@@ -64,34 +64,28 @@ public class CommandBlacklist implements Listener {
                 if (plugin.getBlacklist().getList("Command.Worlds", cmdworlds).contains(worldname))
                 {
                     event.setCancelled(true);
-                    event.getRecipients().clear();
-                    event.setMessage(null);
                     
-                    if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-console", true))
-                    {
+                    if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-console", true)){
                         if (event.isCancelled()) {
-                            plugin.log.info("[iSafe] "+ player.getName() + " tried to do the command: "+ command);
+                            plugin.log.info("[iSafe] "+ player.getName() + " tried to do the blacklisted command: "+ command);
                         }
                     }
 
-                    if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-player", true))
-                    {
+                    if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-player", true)){
                         if (event.isCancelled()) {
-                            player.sendMessage(ChatColor.RED + "You cannot do the command: "+ command);
+                            player.sendMessage(plugin.blacklistCommandMsg(cmd, worldname));
+                        }
+                    }
+                    
+                    if (plugin.getBlacklist().getBoolean("Command.KickPlayer", true)){
+                        if (event.isCancelled()) {
+                            player.sendMessage(plugin.blacklistCommandKickMsg(cmd, worldname));
                         }
                     }
 
-                    if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-server-chat", true))
-                    {
-                        if (event.isCancelled()) {
-                            server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to do the command: "+ command);
-                        }
-                    }
-
-                    if(plugin.getBlacklist().getBoolean("Command.Disallow-commands", true))
-                    {
+                    if(plugin.getBlacklist().getBoolean("Command.TotallyDisallowCommands", true)){
                         event.setCancelled(true);
-                        player.sendMessage(ChatColor.RED + "All commands are disabled.");
+                        player.sendMessage(ChatColor.RED + "Commands are disabled!");
                     }
                 }
             }    

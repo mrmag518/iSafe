@@ -11,6 +11,8 @@ Fixed:
 * Fixed prevention for vehicles.
 * Fixed the place blacklist sometimes allowing blocks to be placed even if the block was disallowed.
 * Fixed break blacklist breaking block loggers.
+* Fixed prevention for gamemode change being opposite of what displayed.
+* Fixed censor listener having the command blacklist name.
 * 
 
 Added:
@@ -28,7 +30,7 @@ Added:
 * Added config setting VoidFall.TeleportPlayerBackAndFixHole.
 ** Choose between fixing hole with bedrock or glass.
 * Added Vault support! iSafe is no longer only using super perms.
-** You can chose whether  to use vault for permissions or super perms.
+** You can chose whether to use vault for permissions or super perms.
 * Added color support, you can customize the color for messages in the messages.yml file.
 * Made it configurable to create user files.
 * Added the ability to kick the joiner if the same nick is already online.
@@ -49,6 +51,8 @@ Removed:
 * Why would anyone teleport a creeper to the spawn point if he falls down into the void? Removed..
 * Removed attk prevention.
 * Removed pointless permissions check.
+* Temporary removed alerts with the pickup blacklist untill I find a better fix for spam.
+* Removed combustin prevention for creatures that doesn't normally combust.
 * 
 
 Improvements:

@@ -3,7 +3,6 @@ package com.mrmag518.iSafe.Blacklists;
 import com.mrmag518.iSafe.iSafe;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

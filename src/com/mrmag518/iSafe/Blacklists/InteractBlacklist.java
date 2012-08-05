@@ -22,8 +22,7 @@ public class InteractBlacklist implements Listener {
     
     @EventHandler
     public void InteractBlacklist(PlayerInteractEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         Action action = event.getAction();
@@ -45,7 +44,7 @@ public class InteractBlacklist implements Listener {
             if (plugin.getBlacklist().getList("Interact.Blacklist", ineractedBlock).contains(blockID)
                 || plugin.getBlacklist().getList("Interact.Blacklist", ineractedBlock).contains(BlockNAME.toLowerCase()))
             {
-                if(!plugin.hasPermission(p, "iSafe.bypass.blacklist.interact"))
+                if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.interact"))
                 {
                     if (!event.isCancelled()) 
                     {
@@ -63,11 +62,15 @@ public class InteractBlacklist implements Listener {
                                 }
                             }
                             
-                            if (plugin.getBlacklist().getBoolean("Interact.KickPlayer", true))
-                            {
-                                if (event.isCancelled())
-                                {
+                            if (plugin.getBlacklist().getBoolean("Interact.KickPlayer", true)){
+                                if (event.isCancelled()){
                                     p.kickPlayer(plugin.blacklistInteractKickMsg(b));
+                                }
+                            }
+                            
+                            if (plugin.getBlacklist().getBoolean("Interact.Alert/log.ToPlayer", true)){
+                                if (event.isCancelled()){
+                                    p.sendMessage(plugin.blacklistInteractMsg(b));
                                 }
                             }
                         }

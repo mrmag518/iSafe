@@ -44,20 +44,19 @@ public class BreakBlacklist implements Listener {
     
     @EventHandler
     public void BreakBlacklist(BlockBreakEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         
         Player player = event.getPlayer();
         Block b = event.getBlock();
-        Server server = player.getServer();
+        //Server server = player.getServer();
         
         int blockID = b.getTypeId();
         String BlockNAME_Name = b.getType().name().toLowerCase();
         
         World world = player.getWorld();
-        Location loc = player.getLocation();
+        //Location loc = player.getLocation();
         String worldname = world.getName(); 
         
         //Blacklist
@@ -87,34 +86,30 @@ public class BreakBlacklist implements Listener {
                             }
                         }
                         
-                        if (plugin.getBlacklist().getBoolean("Break.Kick-Player", true))
-                        {
-                            if (event.isCancelled())
-                            {
-                                player.kickPlayer(ChatColor.RED + "You got kicked for attempting to break: "+ ChatColor.GRAY + b.getType().name().toLowerCase());
+                        if (plugin.getBlacklist().getBoolean("Break.KickPlayer", true)){
+                            if (event.isCancelled()){
+                                player.kickPlayer(plugin.blacklistBreakKickMsg(b));
                             }    
                         }
-
-                        if (plugin.getBlacklist().getBoolean("Break.Alert/log.To-console", true))
-                        {
-                            if (event.isCancelled()) 
-                            {
-                                AlertConsole(player, b, loc, worldname);
+                        
+                        if(plugin.getBlacklist().getBoolean("Break.Alert/log.To-player", true)) {
+                            if(event.isCancelled()) {
+                                player.sendMessage(plugin.blacklistBreakMsg(b));
                             }
                         }
 
-                        if (plugin.getBlacklist().getBoolean("Break.Alert/log.To-server-chat", true))
-                        {
-                            if (event.isCancelled()) 
-                            {
-                                AlertServer(server, b, worldname, player);
+                        if (plugin.getBlacklist().getBoolean("Break.Alert/log.To-console", true)){
+                            if (event.isCancelled()) {
+                                //AlertConsole(player, b, loc, worldname);
+                            }
+                        }
+
+                        if (plugin.getBlacklist().getBoolean("Break.Alert/log.To-server-chat", true)){
+                            if (event.isCancelled()) {
+                                //AlertServer(server, b, worldname, player);
                             }
                         }
                     }
-                }
-            } else {
-                if(plugin.getBlacklist().getBoolean("Break.Alert/log.To-player", true)) {
-                    player.sendMessage(plugin.blacklistBreakKickMsg(b));
                 }
             }
         }
@@ -125,13 +120,5 @@ public class BreakBlacklist implements Listener {
                 event.setCancelled(true);
             }
         }
-    }
-    
-    private void AlertServer(Server server, Block b, String worldname, Player player) {
-        server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to break: "+ ChatColor.RED + b.getType().name().toLowerCase() + ChatColor.DARK_GRAY + " In the world: "+ ChatColor.RED + worldname);
-    }
-    
-    private void AlertConsole(Player player, Block b, Location loc, String worldname) {
-        plugin.log.info("[iSafe] "+ player.getName() + " tried to break: "+ b.getType().name().toLowerCase() + ", At the location: "+ " X: "+ loc.getBlockX() +" Y: "+ loc.getBlockY() +" Z: "+ loc.getBlockZ()+ ", In the world: "+ worldname);
     }
 }

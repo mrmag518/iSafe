@@ -11,18 +11,61 @@ commands:
     description: Main command for iSafe.
     usage: /<command>
 permissions:
-  iSafe.bypass.blacklist.interact.*:
+  # We do not need to input permissions defaulting to OP, except wildcards.
+  # This is because bukkit already does this for us.
+  # ------------------------
+  iSafe.admin:
     default: op
-  
-  iSafe.command.reload:
+    children:
+      iSafe.bypass.*: true
+      iSafe.canceltarget.*: true
+      iSafe.use.*: true
+      iSafe.forcedrop.*: true
+  # ------------------------
+  iSafe.bypass.*:
     default: op
-  iSafe.command.info:
+    children:
+      iSafe.bypass.fullbright: true
+      iSafe.bypass.croptrampling: true
+      iSafe.bypass.hunger: true
+      iSafe.bypass.fish: true
+      iSafe.bypass.blacklist.interact: true
+      iSafe.bypass.blacklist.pickup: true
+      iSafe.bypass.blacklist.break: true
+      iSafe.bypass.blacklist.place: true
+      iSafe.bypass.blacklist.drop: true
+  # ------------------------
+  iSafe.canceltarget.*:
     default: op
-  iSafe.command.serverinfo:
+    children:
+      iSafe.canceltarget.closestplayer: true
+      iSafe.canceltarget.custom: true
+      iSafe.canceltarget.forgot: true
+      iSafe.canceltarget.ownerattacked: true
+      iSafe.canceltarget.pigzombie: true
+      iSafe.canceltarget.random: true
+      iSafe.canceltarget.targetattackedentity: true
+      iSafe.canceltarget.targetattackedowner: true
+      iSafe.canceltarget.targetdied: true
+  # ------------------------
+  iSafe.use.*:
     default: op
-  iSafe.enchant:
-    default: op
-    
-  recreate all permission nodes, no worries I have backup ^^:
-    default: false
-    
+    children:
+      iSafe.use.lavabuckets: true
+      iSafe.use.waterbuckets: true
+      iSafe.use.bed: true
+      iSafe.use.chat: true
+      iSafe.use.minecarts: true
+      iSafe.use.boats: true
+  # ------------------------
+  iSafe.forcedrop.*:
+    default: true
+    children:
+      iSafe.forcedrop.glass: true
+      iSafe.forcedrop.mobspawner: true
+      iSafe.forcedrop.ice: true
+      iSafe.forcedrop.bedrock: true
+  # ------------------------
+  iSafe.bypass.hunger:
+    default: true
+      

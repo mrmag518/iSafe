@@ -1,4 +1,4 @@
-package com.mrmag518.Events.EntityEvents;
+package com.mrmag518.iSafe.Events.EntityEvents;
 
 /*
  * iSafe

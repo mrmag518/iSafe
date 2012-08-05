@@ -23,7 +23,6 @@ import com.mrmag518.iSafe.iSafe;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,34 +37,34 @@ public class Censor implements Listener {
     }
     
     @EventHandler
-    public void CommandBlacklist(PlayerChatEvent event) {
-        if (event.isCancelled())
-        {
+    public void Censor(PlayerChatEvent event) {
+        if (event.isCancelled()){
             return;
         }
-        
         Player p = event.getPlayer();
-        
         String word = event.getMessage().toLowerCase();
         
-        //No need for multi-world support, yet thought.
         final List<String> censoredWords = new ArrayList<String>();
+        
         if (plugin.getBlacklist().getList("Censor.Words/Blacklist", censoredWords).contains(word.toLowerCase())) {
-            if(!(event.isCancelled())) 
-            {
+            if(!(event.isCancelled())) {
                 event.setCancelled(true);
                 
-                if (plugin.getBlacklist().getBoolean("Censor.Alert/log.To-console", true))
-                {
+                if (plugin.getBlacklist().getBoolean("Censor.Alert/log.To-console", true)){
                     if (event.isCancelled()) {
-                        plugin.log.info("[iSafe] "+ p.getName() + " tried to say the blacklisted word: "+ word);
+                        plugin.log.info("[iSafe] " + p.getName() + "'s message contained the blacklisted word: " + word);
                     }
                 }
                 
-                if (plugin.getBlacklist().getBoolean("Censor.Alert/log.To-player", true))
-                {
+                if (plugin.getBlacklist().getBoolean("Censor.Alert/log.To-player", true)){
                     if (event.isCancelled()) {
-                        p.sendMessage(ChatColor.RED + "The word '"+ ChatColor.GRAY + word + ChatColor.RED + "' is blacklisted.");
+                        p.sendMessage(plugin.blacklistCensorMsg(word));
+                    }
+                }
+                
+                if (plugin.getBlacklist().getBoolean("Censor.KickPlayer", true)){
+                    if (event.isCancelled()) {
+                        p.kickPlayer(plugin.blacklistCensorKickMsg(word));
                     }
                 }
             }

@@ -17,9 +17,9 @@
  */
 package com.mrmag518.iSafe;
 
-import com.mrmag518.Events.BlockEvents.*;
-import com.mrmag518.Events.EntityEvents.*;
-import com.mrmag518.Events.WorldEvents.*;
+import com.mrmag518.iSafe.Events.BlockEvents.*;
+import com.mrmag518.iSafe.Events.EntityEvents.*;
+import com.mrmag518.iSafe.Events.WorldEvents.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,59 +52,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-/**
- * TODO:
- * Use new method for no permission output. 
- * Manage plugin tickets.
- * Finish Verbose logging.
- * Finish debug mode.
- * Recreate all permission nodes.
- * 
- * New permissions(just to note):
- * iSafe.bypass.fullbright || default: op
- * iSafe.forcedrop.glass || default: true
- * iSafe.forcedrop.mobspawner || default: true
- * iSafe.forcedrop.ice || default: true
- * iSafe.forcedrop.bedrock || default: true
- * iSafe.disablehunger || default: true
- * iSafe.canceltarget.closestplayer || default: true
- * iSafe.canceltarget.custom || default: true
- * iSafe.canceltarget.forgot || default: true
- * iSafe.canceltarget.ownerattacked || default: true
- * iSafe.canceltarget.pigzombie || default: true
- * iSafe.canceltarget.random || default: true
- * iSafe.canceltarget.targetattackedentity || default: true
- * iSafe.canceltarget.targetattackedowner || default: true
- * iSafe.canceltarget.targetdied || default: true
- * iSafe.bypass.croptrampling || default: false
- * iSafe.use.lavabuckets || default: op
- * iSafe.use.waterbuckets || default: op
- * iSafe.use.bed || default: op
- * iSafe.fish || default: op
- * iSafe.use.chat || default: op
- * iSafe.use.minecarts || default: op
- * iSafe.use.boats || default: op
- * iSafe.bypass.blacklist.interact || default: op
- * iSafe.bypass.blacklist.pickup || default: op
- * iSafe.bypass.blacklist.break || default: op
- * iSafe.bypass.blacklist.place || default: op
- * iSafe.bypass.blacklist.drop || default: op
- * 
- */
-
-/**
- * 
- * 
- * 
- * Use the Utilities class.
- * Change verbose logging.
- * Change debug logging.
- * 
- * 
- * 
- * @author magnus
- */
 
 public class iSafe extends JavaPlugin {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -285,13 +232,11 @@ public class iSafe extends JavaPlugin {
     private void fileManagement() {
         if (!(getDataFolder().exists())) {
             getDataFolder().mkdirs();
-            debugLog("The DataFolder did not exist, created a new one.");
         }
 
         File usersFolder = new File(getDataFolder(), "Users");
         if (!(usersFolder.exists())) {
             usersFolder.mkdir();
-            debugLog("The Users directory did not exist, created a new one.");
         }
 
         File exaFile = new File(usersFolder + File.separator + "_example.yml");
@@ -504,9 +449,9 @@ public class iSafe extends JavaPlugin {
         return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
     }
     
-    public String blacklistCensorKickMsg() {
+    public String blacklistCensorKickMsg(String word) {
         String kickMsg = getMessages().getString("Blacklists.Censor.KickMessage");
-        return scanVariables(kickMsg, null, null, null, null, null, null);
+        return scanVariables(kickMsg, null, null, null, null, null, word);
     }
     
     public String blacklistDropKickMsg(Item i) {
@@ -517,6 +462,11 @@ public class iSafe extends JavaPlugin {
     public String blacklistPickupKickMsg(Item i) {
         String kickMsg = getMessages().getString("Blacklists.Pickup.KickMessage");
         return scanVariables(kickMsg, null, null, null, i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(), null);
+    }
+    
+    public String blacklistCommandKickMsg(String cmd, String world) {
+        String kickMsg = getMessages().getString("Blacklists.Command.KickMessage");
+        return scanVariables(kickMsg, null, cmd, null, null, world, null);
     }
     
     
@@ -550,15 +500,20 @@ public class iSafe extends JavaPlugin {
         return scanVariables(disallowedMsg, null, null, null, i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(), null);
     }
     
+    public String blacklistCommandMsg(String cmd, String world) {
+        String disallowedMsg = getMessages().getString("Blacklists.Command.DisallowedMessage");
+        return scanVariables(disallowedMsg, null, cmd, null, null, world, null);
+    }
+    
     private void loadConfig() {
         config = getConfig();
         config.options().header(Data.setConfigHeader());
         
-        int ConfigVersion = 3;
-        config.addDefault("ConfigVersion", Integer.valueOf(ConfigVersion));
-        if(config.getInt("ConfigVersion") != Integer.valueOf(ConfigVersion)) {
+        double ConfigVersion = 3.00;
+        config.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
+        if(config.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
-            config.set("ConfigVersion", Integer.valueOf(ConfigVersion));
+            config.set("ConfigVersion", Double.valueOf(ConfigVersion));
         }
         
         config.addDefault("Fire.DisableFireSpread", false);
@@ -703,11 +658,11 @@ public class iSafe extends JavaPlugin {
         messages = getMessages();
         messages.options().header(Data.setMessageHeader());
         
-        int ConfigVersion = 3;
-        messages.addDefault("ConfigVersion", Integer.valueOf(ConfigVersion));
-        if(messages.getInt("ConfigVersion") != Integer.valueOf(ConfigVersion)) {
+        double ConfigVersion = 3.00;
+        messages.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
+        if(messages.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
-            messages.set("ConfigVersion", Integer.valueOf(ConfigVersion));
+            messages.set("ConfigVersion", Double.valueOf(ConfigVersion));
         }
 
         messages.addDefault("Permissions.DefaultNoPermission", "&cNo permission.");
@@ -726,7 +681,7 @@ public class iSafe extends JavaPlugin {
         messages.addDefault("Blacklists.Break.KickMessage", "&cKicked for attempting to break &f%block%");
         messages.addDefault("Blacklists.Break.DisallowedMessage", "&cYou do not have access to break &7%block% &cin world &7%world%");
         //----
-        messages.addDefault("Blacklists.Censor.KickMessage", "&cKicked for attempting to say a censored word");
+        messages.addDefault("Blacklists.Censor.KickMessage", "&cKicked for attempting to send a message contaning &7%word%");
         messages.addDefault("Blacklists.Censor.DisallowedMessage", "&c%word% is censored!");
         //----
         messages.addDefault("Blacklists.Drop.KickMessage", "&cKicked for attempting to drop &f%item%");
@@ -734,6 +689,9 @@ public class iSafe extends JavaPlugin {
         //----
         messages.addDefault("Blacklists.Pickup.KickMessage", "&cKicked for attempting to pickup &f%item%");
         messages.addDefault("Blacklists.Pickup.DisallowedMessage", "&cYou do not have access to pickup &7%item% &cin world &7%world%");
+        //----
+        messages.addDefault("Blacklists.Command.KickMessage", "&cKicked for attempting to do command &f%command%");
+        messages.addDefault("Blacklists.Command.DisallowedMessage", "&cThe command %command% is disabled!");
 
         this.getMessages().options().copyDefaults(true);
         saveMessages();
@@ -743,11 +701,11 @@ public class iSafe extends JavaPlugin {
         iSafeConfig = getISafeConfig();
         // Header.
         
-        int ConfigVersion = 3;
-        iSafeConfig.addDefault("ConfigVersion", Integer.valueOf(ConfigVersion));
-        if(iSafeConfig.getInt("ConfigVersion") != Integer.valueOf(ConfigVersion)) {
+        double ConfigVersion = 3.00;
+        iSafeConfig.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
+        if(iSafeConfig.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
-            iSafeConfig.set("ConfigVersion", Integer.valueOf(ConfigVersion));
+            iSafeConfig.set("ConfigVersion", Double.valueOf(ConfigVersion));
         }
         
         iSafeConfig.addDefault("VerboseLogging", false);
@@ -764,11 +722,11 @@ public class iSafe extends JavaPlugin {
         creatureManager = getCreatureManager();
         creatureManager.options().header(Data.setCreatureManagerHeader());
         
-        int ConfigVersion = 3;
-        creatureManager.addDefault("ConfigVersion", Integer.valueOf(ConfigVersion));
-        if(creatureManager.getInt("ConfigVersion") != Integer.valueOf(ConfigVersion)) {
+        double ConfigVersion = 3.00;
+        creatureManager.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
+        if(creatureManager.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
-            creatureManager.set("ConfigVersion", Integer.valueOf(ConfigVersion));
+            creatureManager.set("ConfigVersion", Double.valueOf(ConfigVersion));
         }
         
         creatureManager.addDefault("Creatures.CreatureTarget.Disable-closest_player-target", false);
@@ -780,61 +738,58 @@ public class iSafe extends JavaPlugin {
         creatureManager.addDefault("Creatures.CreatureTarget.Disable-target_attacked_entity-target", false);
         creatureManager.addDefault("Creatures.CreatureTarget.Disable-target_attacked_owner-target", false);
         creatureManager.addDefault("Creatures.CreatureTarget.Disable-target_died-target", false);
-        creatureManager.addDefault("Creatures.PoweredCreepers.Disable-PowerCase-Lightning", false);
-        creatureManager.addDefault("Creatures.PoweredCreepers.Disable-PowerCase-Set-Off", false);
-        creatureManager.addDefault("Creatures.PoweredCreepers.Disable-PowerCase-Set-On", false);
-        creatureManager.addDefault("Creatures.Endermen.Prevent-endermen-griefing", false);
-        creatureManager.addDefault("Creatures.Tame.Prevent-taming", false);
-        creatureManager.addDefault("Creatures.Tame.Prevent-taming-for.Wolf", false);
-        creatureManager.addDefault("Creatures.Slime.Prevent-SlimeSplit", false);
-        creatureManager.addDefault("Creatures.Pig.Prevent-PigZap", false);
-        creatureManager.addDefault("Creatures.DoorBreaking-PreventFor-zombies", false);
-        creatureManager.addDefault("Creatures.Death.Disable-drops-onDeath", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Completely-Prevent-SheepDyeWool", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Black", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Blue", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Brown", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Cyan", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Gray", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Green", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Light_Blue", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Lime", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Magenta", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Orange", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Pink", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Purple", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Red", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Silver", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.White", false);
-        creatureManager.addDefault("Creatures.SheepDyeWool.Prevent-SheepDyeWool-Color.Yellow", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for-allCreatures", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Blaze", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.CaveSpider", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Chicken", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Cow", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Creeper", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.EnderDragon", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Enderman", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Ghast", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Giant", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Golem", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.IronGolem", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.MagmaCube", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.MushroomCow", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Ocelot", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Pig", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.PigZombie", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Sheep", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Silverfish", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Skeleton", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Slime", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Snowman", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Spider", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Squid", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Villager", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Wolf", false);
-        creatureManager.addDefault("Creatures.Combusting.Disable-for.Zombie", false);
-        creatureManager.addDefault("Creatures.Prevent-cropTrampling", false);
+        
+        creatureManager.addDefault("Creatures.PoweredCreepers.DisableLightningCause", false);
+        creatureManager.addDefault("Creatures.PoweredCreepers.DisableSetOffCause", false);
+        creatureManager.addDefault("Creatures.PoweredCreepers.DisableSetOnCause", false);
+        
+        creatureManager.addDefault("Creatures.Endermen.PreventEndermenGriefing", false);
+        creatureManager.addDefault("Creatures.Tame.DisableTaming", false);
+        creatureManager.addDefault("Creatures.Slime.DisableSlimeSplit", false);
+        creatureManager.addDefault("Creatures.Pig.DisabletPigZap", false);
+        creatureManager.addDefault("Creatures.Zombie.DisableDoorBreak", false);
+        creatureManager.addDefault("Creatures.Death.DisableDrops", false);
+        creatureManager.addDefault("Creatures.DisableCropTrampling", false);
+        
+        creatureManager.addDefault("Creatures.SheepDyeWool.TotallyDisable", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Black", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Blue", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Brown", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Cyan", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Gray", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Green", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Light_Blue", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Lime", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Magenta", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Orange", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Pink", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Purple", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Red", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Silver", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.White", false);
+        creatureManager.addDefault("Creatures.SheepDyeWool.DisableColor.Yellow", false);
+        
+        creatureManager.addDefault("Creatures.Combusting.DisableFor-allCreatures", false);
+        creatureManager.addDefault("Creatures.Combusting.DisableFor.Giant", false);
+        creatureManager.addDefault("Creatures.Combusting.DisableFor.PigZombie", false);
+        creatureManager.addDefault("Creatures.Combusting.DisableFor.Skeleton", false);
+        creatureManager.addDefault("Creatures.Combusting.DisableFor.Zombie", false);
+        
+        creatureManager.addDefault("Creatures.Damage.DisableFireDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableContactDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableCustomDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableDrowningDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableEntityAttackDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableFallDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableLavaDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableLightningDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableMagicDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisablePoisonDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableProjectileDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableStarvationDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableSuffocationDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableSuicideDamage", false);
+        creatureManager.addDefault("Creatures.Damage.DisableVoidDamage", false);
 
         //MobSpawn blacklists.
         //Natural
@@ -876,18 +831,17 @@ public class iSafe extends JavaPlugin {
         blacklist = getBlacklist();
         blacklist.options().header(Data.setBlacklistHeader());
         
-        int ConfigVersion = 3;
-        blacklist.addDefault("ConfigVersion", Integer.valueOf(ConfigVersion));
-        if(blacklist.getInt("ConfigVersion") != Integer.valueOf(ConfigVersion)) {
+        double ConfigVersion = 3.00;
+        blacklist.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
+        if(blacklist.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
-            blacklist.set("ConfigVersion", Integer.valueOf(ConfigVersion));
+            blacklist.set("ConfigVersion", Double.valueOf(ConfigVersion));
         }
         
         blacklist.addDefault("Place.TotallyDisableBlockPlace", false);
-        blacklist.addDefault("Place.Kick-Player", false);
+        blacklist.addDefault("Place.KickPlayer", false);
         blacklist.addDefault("Place.Alert/log.To-console", true);
         blacklist.addDefault("Place.Alert/log.To-player", true);
-        blacklist.addDefault("Place.Alert/log.To-server-chat", false);
         blacklist.addDefault("Place.Gamemode.PreventFor.Survival", true);
         blacklist.addDefault("Place.Gamemode.PreventFor.Creative", true);
         blacklist.addDefault("Place.EnabledWorlds", Arrays.asList(Data.worldslist));
@@ -897,10 +851,9 @@ public class iSafe extends JavaPlugin {
         
         
         blacklist.addDefault("Break.TotallyDisableBlockBreak", false);
-        blacklist.addDefault("Break.Kick-Player", false);
+        blacklist.addDefault("Break.KickPlayer", false);
         blacklist.addDefault("Break.Alert/log.To-console", true);
         blacklist.addDefault("Break.Alert/log.To-player", true);
-        blacklist.addDefault("Break.Alert/log.To-server-chat", false);
         blacklist.addDefault("Break.Gamemode.PreventFor.Survival", true);
         blacklist.addDefault("Break.Gamemode.PreventFor.Creative", true);
         blacklist.addDefault("Break.EnabledWorlds", Arrays.asList(Data.worldslist));
@@ -910,10 +863,9 @@ public class iSafe extends JavaPlugin {
         
         
         blacklist.addDefault("Drop.TotallyDisableBlockDrop", false);
-        blacklist.addDefault("Drop.Kick-Player", false);
+        blacklist.addDefault("Drop.KickPlayer", false);
         blacklist.addDefault("Drop.Alert/log.To-console", true);
         blacklist.addDefault("Drop.Alert/log.To-player", true);
-        blacklist.addDefault("Drop.Alert/log.To-server-chat", false);
         blacklist.addDefault("Drop.Gamemode.PreventFor.Survival", true);
         blacklist.addDefault("Drop.Gamemode.PreventFor.Creative", true);
         blacklist.addDefault("Drop.EnabledWorlds", Arrays.asList(Data.worldslist));
@@ -923,10 +875,9 @@ public class iSafe extends JavaPlugin {
         
         
         blacklist.addDefault("Pickup.TotallyDisableBlockPickup", false);
-        blacklist.addDefault("Pickup.Kick-Player", false);
-        blacklist.addDefault("Pickup.Alert/log.To-console", true);
-        blacklist.addDefault("Pickup.Alert/log.To-player", true);
-        blacklist.addDefault("Pickup.Alert/log.To-server-chat", false);
+        blacklist.addDefault("Pickup.KickPlayer", false);
+        /*blacklist.addDefault("Pickup.Alert/log.To-console", true);
+        blacklist.addDefault("Pickup.Alert/log.To-player", true);*/
         blacklist.addDefault("Pickup.Gamemode.PreventFor.Survival", true);
         blacklist.addDefault("Pickup.Gamemode.PreventFor.Creative", true);
         blacklist.addDefault("Pickup.EnabledWorlds", Arrays.asList(Data.Pickupworldslist));
@@ -935,10 +886,10 @@ public class iSafe extends JavaPlugin {
         Data.pickupedblocks = blacklist.getStringList("Pickup.Blacklist");
 
         
-        blacklist.addDefault("Command.Disallow-commands", false);
+        blacklist.addDefault("Command.TotallyDisallowCommands", false);
+        blacklist.addDefault("Command.KickPlayer", false);
         blacklist.addDefault("Command.Alert/log.To-console", true);
         blacklist.addDefault("Command.Alert/log.To-player", true);
-        blacklist.addDefault("Command.Alert/log.To-server-chat", false);
         blacklist.addDefault("Command.Worlds", Arrays.asList(Data.cmdworldlist));
         Data.cmdworlds = blacklist.getStringList("Command.Worlds");
         blacklist.addDefault("Command.Blacklist", Arrays.asList(Data.commandslist));
@@ -958,6 +909,9 @@ public class iSafe extends JavaPlugin {
         
         
         blacklist.addDefault("Interact.KickPlayer", false);
+        blacklist.addDefault("Interact.Alert/log.ToPlayer", true);
+        blacklist.addDefault("Interact.Gamemode.PreventFor.Survival", true);
+        blacklist.addDefault("Interact.Gamemode.PreventFor.Creative", true);
         blacklist.addDefault("Interact.Worlds", Arrays.asList(Data.interactBlacklistedWorldList));
         Data.interactBlacklistedWorlds = blacklist.getStringList("Interact.Worlds");
         blacklist.addDefault("Interact.Blacklist", Arrays.asList(Data.interactBlacklistedBlocksList));

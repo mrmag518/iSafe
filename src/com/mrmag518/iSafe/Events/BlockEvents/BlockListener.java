@@ -1,4 +1,4 @@
-package com.mrmag518.Events.BlockEvents;
+package com.mrmag518.iSafe.Events.BlockEvents;
 
 /*
  * iSafe

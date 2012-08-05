@@ -1,4 +1,4 @@
-package com.mrmag518.Events.WorldEvents;
+package com.mrmag518.iSafe.Events.WorldEvents;
 
 /*
  * iSafe

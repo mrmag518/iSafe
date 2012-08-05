@@ -22,10 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.mrmag518.iSafe.iSafe;
 
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -44,19 +41,18 @@ public class PickupBlacklist implements Listener {
     
     @EventHandler
     public void BlacklistPickup(PlayerPickupItemEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         
         Player player = event.getPlayer();
-        Server server = player.getServer();
+        //Server server = player.getServer();
         World world = player.getWorld();
         
         int itemID = event.getItem().getItemStack().getTypeId();
         String BlockNAME = event.getItem().getItemStack().getType().name().toLowerCase();
         
-        Location loc = player.getLocation();
+        //Location loc = player.getLocation();
         String worldname = world.getName();
         
         //Blacklist
@@ -81,31 +77,13 @@ public class PickupBlacklist implements Listener {
                                 event.setCancelled(true);
                             }
                         }
-                        if (plugin.getBlacklist().getBoolean("Pickup.Kick-Player", true))
+                        
+                        if (plugin.getBlacklist().getBoolean("Pickup.KickPlayer", true))
                         {
                             if (event.isCancelled())
                             {
-                                player.kickPlayer(ChatColor.RED + "You got kicked for attempting to pickup: "+ ChatColor.GRAY + event.getItem().getItemStack().getType().name().toLowerCase());
+                                player.kickPlayer(plugin.blacklistPickupKickMsg(event.getItem()));
                             }    
-                        }
-
-                        if (plugin.getBlacklist().getBoolean("Pickup.Alert/log.To-console", true))
-                        {
-                            if (event.isCancelled()) 
-                            {
-                                AlertConsole(player, event, worldname, loc);
-                            }
-                        }
-
-                        if (plugin.getBlacklist().getBoolean("Pickup.Alert/log.To-server-chat", true))
-                        {
-                            if (event.isCancelled()) 
-                            {
-                                if (message == 0) {
-                                    server.broadcastMessage(ChatColor.DARK_GRAY + player.getName() + " tried to pickup: "+ event.getItem().getItemStack().getType().name().toLowerCase());
-                                    message = 1;
-                                }
-                            }
                         }
                     }
                 }
@@ -117,13 +95,6 @@ public class PickupBlacklist implements Listener {
             if(!plugin.hasPermission(player, "iSafe.bypass.pickup")) {
                 event.setCancelled(true);
             }
-        }
-    }
-    
-    private void AlertConsole(Player player, PlayerPickupItemEvent event, String worldname, Location loc) {
-        if (message == 0) {
-            plugin.log.info("[iSafe] "+ player.getName() + " tried to pickup: "+ event.getItem().getItemStack().getType().name().toLowerCase() + ", At the location: "+ " X: "+ loc.getBlockX() +" Y: "+ loc.getBlockY() +" Z: "+ loc.getBlockZ()+ ", In the world: "+ worldname);
-            message = 1;
         }
     }
 }

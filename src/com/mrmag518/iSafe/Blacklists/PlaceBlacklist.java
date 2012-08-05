@@ -23,10 +23,7 @@ import java.util.List;
 
 import com.mrmag518.iSafe.iSafe;
 
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -51,13 +48,10 @@ public class PlaceBlacklist implements Listener {
         }
         Player p = event.getPlayer();
         Block block = event.getBlock();
-        Server server = p.getServer();
-        
         int blockID = event.getBlock().getTypeId();
         String BlockNAME = event.getBlock().getType().name().toLowerCase();
-        
         World world = p.getWorld();
-        Location loc = p.getLocation();
+        //Location loc = p.getLocation();
         String worldname = world.getName();
         
         //Blacklist
@@ -88,7 +82,7 @@ public class PlaceBlacklist implements Listener {
                             }
                         }
                         
-                        if (plugin.getBlacklist().getBoolean("Place.Kick-Player", true)){
+                        if (plugin.getBlacklist().getBoolean("Place.KickPlayer", true)){
                             if (event.isCancelled()) {
                                 p.kickPlayer(plugin.blacklistPlaceKickMsg(block));
                             }    
@@ -103,12 +97,6 @@ public class PlaceBlacklist implements Listener {
                         if (plugin.getBlacklist().getBoolean("Place.Alert/log.To-player", true)){
                             if (event.isCancelled()) {
                                 p.sendMessage(plugin.blacklistPlaceMsg(block));
-                            }
-                        }
-
-                        if (plugin.getBlacklist().getBoolean("Place.Alert/log.To-server-chat", true)){
-                            if (event.isCancelled()) {
-                                //AlertServer(server, block, worldname, p);
                             }
                         }
                     }

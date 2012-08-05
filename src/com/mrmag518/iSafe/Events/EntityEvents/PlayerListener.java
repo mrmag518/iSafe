@@ -1,4 +1,4 @@
-package com.mrmag518.Events.EntityEvents;
+package com.mrmag518.iSafe.Events.EntityEvents;
 
 /*
  * iSafe
@@ -239,7 +239,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Miscellaneous.ForcePermissionsToFish", true))
         {
-            if(!(plugin.hasPermission(player, "iSafe.fish"))) {
+            if(!(plugin.hasPermission(player, "iSafe.bypass.fish"))) {
                 event.setCancelled(true);
             }
         }
@@ -262,7 +262,6 @@ public class PlayerListener implements Listener  {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player joiner = event.getPlayer();
         
-        // ¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤&#%"¤%
         if(plugin.getConfig().getBoolean("Miscellaneous.OnlyLetOPsJoin", true))
         {
             if(!joiner.isOp()) {
@@ -290,8 +289,6 @@ public class PlayerListener implements Listener  {
         {
             return;
         }
-        boolean survival = event.getNewGameMode().equals(GameMode.SURVIVAL);
-        boolean creative = event.getNewGameMode().equals(GameMode.CREATIVE);
         Player p = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Gamemode.DisableGamemodeChange", true))
@@ -299,18 +296,18 @@ public class PlayerListener implements Listener  {
             event.setCancelled(true); 
         }
         
-        if(plugin.getConfig().getBoolean("Gamemode.DisableSurvivalToCreativeChange", true))
+        if(plugin.getConfig().getBoolean("Gamemode.DisableCreativeToSurvivalChange", true))
         {
-            if (survival) 
+            if (event.getNewGameMode().equals(GameMode.SURVIVAL)) 
             {
                 event.setCancelled(true);
                 p.setGameMode(GameMode.SURVIVAL);
             }
         }
         
-        if(plugin.getConfig().getBoolean("Gamemode.DisableCreativeToSurvivalChange", true))
+        if(plugin.getConfig().getBoolean("Gamemode.DisableSurvivalToCreativeChange", true))
         {
-            if (creative) 
+            if (event.getNewGameMode().equals(GameMode.CREATIVE)) 
             {
                 event.setCancelled(true);
                 p.setGameMode(GameMode.CREATIVE);
