@@ -76,8 +76,7 @@ public class EntityListener implements Listener {
     
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         

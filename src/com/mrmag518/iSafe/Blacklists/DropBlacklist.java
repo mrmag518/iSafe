@@ -23,10 +23,7 @@ import com.mrmag518.iSafe.iSafe;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -48,18 +45,18 @@ public class DropBlacklist implements Listener {
         if (event.isCancelled()){
             return;
         }
-        Player player = event.getPlayer();
-        World world = player.getWorld();
+        Player p = event.getPlayer();
+        World world = p.getWorld();
         int itemID = event.getItemDrop().getItemStack().getTypeId();
-        String BlockNAME = event.getItemDrop().getItemStack().getType().name().toLowerCase();
+        String ItemNAME = event.getItemDrop().getItemStack().getType().name().toLowerCase();
         String worldname = world.getName();
         
         final List<Item> dropedblocks = new ArrayList<Item>();
         
         if (plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(itemID)
-                || plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(BlockNAME.toLowerCase()))
+                || plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(ItemNAME.toLowerCase()))
         {
-            if(!plugin.hasBlacklistPermission(player, "iSafe.bypass.blacklist.drop")) 
+            if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.drop")) 
             {
                 if (!event.isCancelled()) 
                 {
@@ -68,36 +65,35 @@ public class DropBlacklist implements Listener {
                     if (plugin.getBlacklist().getList("Drop.EnabledWorlds", Dropworlds).contains(worldname))
                     {
                         if (plugin.getBlacklist().getBoolean("Drop.Gamemode.PreventFor.Survival", true)) {
-                            if(player.getGameMode().equals(GameMode.SURVIVAL)) {
+                            if(p.getGameMode().equals(GameMode.SURVIVAL)) {
                                 event.setCancelled(true);
                             }
-                        } else if (plugin.getBlacklist().getBoolean("Drop.Gamemode.PreventFor.Creative", true)) {
-                            if(player.getGameMode().equals(GameMode.CREATIVE)) {
+                        }
+                        
+                        if (plugin.getBlacklist().getBoolean("Drop.Gamemode.PreventFor.Creative", true)) {
+                            if(p.getGameMode().equals(GameMode.CREATIVE)) {
                                 event.setCancelled(true);
                             }
                         }
                         
                         if (plugin.getBlacklist().getBoolean("Drop.KickPlayer", true))
                         {
-                            if (event.isCancelled())
-                            {
-                                player.kickPlayer(plugin.blacklistDropKickMsg(event.getItemDrop()));
+                            if (event.isCancelled()){
+                                p.kickPlayer(plugin.blacklistDropKickMsg(event.getItemDrop()));
                             }    
                         }
 
-                        if (plugin.getBlacklist().getBoolean("Drop.Alert/log.To-console", true))
+                        if (plugin.getBlacklist().getBoolean("Drop.Alert/log.ToConsole", true))
                         {
-                            if (event.isCancelled()) 
-                            {
-                                //AlertConsole(player, event, loc, worldname);
+                            if (event.isCancelled()) {
+                                plugin.log.info("[iSafe]" + p.getName() + " was prevented from dropping the blacklisted item: " + ItemNAME);
                             }
                         }
 
-                        if (plugin.getBlacklist().getBoolean("Drop.Alert/log.To-player", true))
+                        if (plugin.getBlacklist().getBoolean("Drop.Alert/log.ToPlayer", true))
                         {
-                            if (event.isCancelled()) 
-                            {
-                                player.sendMessage(plugin.blacklistDropMsg(null));
+                            if (event.isCancelled()) {
+                                p.sendMessage(plugin.blacklistDropMsg(ItemNAME));
                             }
                         }
                     }
@@ -107,7 +103,7 @@ public class DropBlacklist implements Listener {
         
         if (plugin.getBlacklist().getBoolean("Drop.TotallyDisableBlockDrop", true))
         {
-            if(!plugin.hasPermission(player, "iSafe.bypass.drop")) {
+            if(!plugin.hasPermission(p, "iSafe.bypass.drop")) {
                 event.setCancelled(true);
             }
         }

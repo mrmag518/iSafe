@@ -22,11 +22,10 @@ import com.mrmag518.iSafe.iSafe;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class Censor implements Listener {
     public static iSafe plugin;
@@ -37,7 +36,7 @@ public class Censor implements Listener {
     }
     
     @EventHandler
-    public void Censor(PlayerChatEvent event) {
+    public void Censor(AsyncPlayerChatEvent event) {
         if (event.isCancelled()){
             return;
         }
@@ -50,13 +49,13 @@ public class Censor implements Listener {
             if(!(event.isCancelled())) {
                 event.setCancelled(true);
                 
-                if (plugin.getBlacklist().getBoolean("Censor.Alert/log.To-console", true)){
+                if (plugin.getBlacklist().getBoolean("Censor.Alert/log.ToConsole", true)){
                     if (event.isCancelled()) {
                         plugin.log.info("[iSafe] " + p.getName() + "'s message contained the blacklisted word: " + word);
                     }
                 }
                 
-                if (plugin.getBlacklist().getBoolean("Censor.Alert/log.To-player", true)){
+                if (plugin.getBlacklist().getBoolean("Censor.Alert/log.ToPlayer", true)){
                     if (event.isCancelled()) {
                         p.sendMessage(plugin.blacklistCensorMsg(word));
                     }

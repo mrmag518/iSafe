@@ -29,84 +29,88 @@ public class Data {
         plugin = instance;
     }
     
-    public static List<String> placedblocks = new ArrayList<String>();
-    public static String[] placedblockslist = { "No defaults added." };
-    public static List<String> worlds = new ArrayList<String>();
-    public static String[] worldslist = { "world", "world_nether" };
+    
+    public static List<String> PlaceBlacklist = new ArrayList<String>();
+    public static String[] PlaceBlacklistList = { "No defaults added." };
+    public static List<String> PlaceBlacklistWorld = new ArrayList<String>();
+    public static String[] PlaceBlacklistWorldList = { "world", "world_nether" };
     
     
-    public static List<String> brokenblocks = new ArrayList<String>();
-    public static String[] brokenblockslist = { "No defaults added." };
-    public static List<String> Breakworlds = new ArrayList<String>();
-    public static String[] Breakworldslist = { "world", "world_nether" };
+    public static List<String> BreakBlacklist = new ArrayList<String>();
+    public static String[] BreakBlacklistList = { "No defaults added." };
+    public static List<String> BreakBlacklistWorld = new ArrayList<String>();
+    public static String[] BreakBlacklistWorldList = { "world", "world_nether" };
     
     
-    public static List<String> dropedblocks = new ArrayList<String>();
-    public static String[] dropedblockslist = { "No defaults added." };
-    public static List<String> Dropworlds = new ArrayList<String>();
-    public static String[] Dropworldslist = { "world", "world_nether" };
+    public static List<String> DropBlacklist = new ArrayList<String>();
+    public static String[] DropBlacklistList = { "No defaults added." };
+    public static List<String> DropBlacklistWorld = new ArrayList<String>();
+    public static String[] DropBlacklistWorldList = { "world", "world_nether" };
     
     
-    public static List<String> pickupedblocks = new ArrayList<String>();
-    public static String[] pickupedblockslist = { "No defaults added." };
-    public static List<String> Pickupworlds = new ArrayList<String>();
-    public static String[] Pickupworldslist = { "world", "world_nether" };
+    public static List<String> PickupBlacklist = new ArrayList<String>();
+    public static String[] PickupBlacklistList = { "No defaults added." };
+    public static List<String> PickupBlacklistWorld = new ArrayList<String>();
+    public static String[] PickupBlacklistWorldList = { "world", "world_nether" };
     
     
-    public static List<String> commands = new ArrayList<String>();
-    public static String[] commandslist = { "/nuke" };
-    public static List<String> cmdworlds = new ArrayList<String>();
-    public static String[] cmdworldlist = { "world", "world_nether" };
+    public static List<String> CmdBlacklist = new ArrayList<String>();
+    public static String[] CmdBlacklistList = { "/nuke" };
+    public static List<String> CmdBlacklistWorld = new ArrayList<String>();
+    public static String[] CmdBlacklistWorldList = { "world", "world_nether" };
     
     
-    public static List<String> mobspawnnatural = new ArrayList<String>();
-    public static String[] mobspawnnaturallist = { "No defaults added." };
-    public static List<String> worlds1 = new ArrayList<String>();
-    public static String[] worlds1list = { "world", "world_nether" };
+    public static List<String> NaturalMSBlacklist = new ArrayList<String>();
+    public static String[] NaturalMSBlacklistList = { "No defaults added." };
+    public static List<String> NaturalMSBlacklistWorld = new ArrayList<String>();
+    public static String[] NaturalMSBlacklistWorldList = { "world", "world_nether" };
     
     
-    public static List<String> mobspawnspawner = new ArrayList<String>();
-    public static String[] mobspawnspawnerlist = { "No defaults added." };
-    public static List<String> worlds2 = new ArrayList<String>();
-    public static String[] worlds2list = { "world", "world_nether" };
+    public static List<String> SpawnerMSBlacklist = new ArrayList<String>();
+    public static String[] SpawnerMSBlacklistList = { "No defaults added." };
+    public static List<String> SpawnerMSBlacklistWorld = new ArrayList<String>();
+    public static String[] SpawnerMSBlacklistWorldList = { "world", "world_nether" };
     
     
-    public static List<String> mobspawncustom = new ArrayList<String>();
-    public static String[] mobspawncustomlist = { "No defaults added." };
-    public static List<String> worlds3 = new ArrayList<String>();
-    public static String[] worlds3list = { "world", "world_nether" };
+    public static List<String> CustomMSBlacklist = new ArrayList<String>();
+    public static String[] CustomMSBlacklistList = { "No defaults added." };
+    public static List<String> CustomMSBlacklistWorld = new ArrayList<String>();
+    public static String[] CustomMSBlacklistWorldList = { "world", "world_nether" };
     
     
-    public static List<String> mobspawnegg = new ArrayList<String>();
-    public static String[] mobspawnegglist = { "No defaults added." };
-    public static List<String> worlds4 = new ArrayList<String>();
-    public static String[] worlds4list = { "world", "world_nether" };
+    public static List<String> EggMSBlacklist = new ArrayList<String>();
+    public static String[] EggMSBlacklistList = { "No defaults added." };
+    public static List<String> EggMSBlacklistWorld = new ArrayList<String>();
+    public static String[] EggMSBlacklistWorldList = { "world", "world_nether" };
     
     
-    public static List<String> mobspawnspawneregg = new ArrayList<String>();
-    public static String[] mobspawnspawneregglist = { "No defaults added." };
-    public static List<String> worlds5 = new ArrayList<String>();
-    public static String[] worlds5list = { "world", "world_nether" };
+    public static List<String> SpawnerEggMSBlacklist = new ArrayList<String>();
+    public static String[] SpawnerEggMSBlacklistList = { "creeper" };
+    public static List<String> SpawnerEggMSBlacklistWorld = new ArrayList<String>();
+    public static String[] SpawnerEggMSBlacklistWorldList = { "world", "world_nether" };
     
     
-    public static List<String> censoredWords = new ArrayList<String>();
-    public static String[] censoredWordsList = { "No defaults added." };
+    public static List<String> WordBlacklist = new ArrayList<String>();
+    public static String[] WordBlacklistList = { "No defaults added." };
     
     
-    public static List<String> dispensedBlock = new ArrayList<String>();
-    public static String[] dispensedBlockList = { "No defaults added." };
-    public static List<String> dispenseWorlds = new ArrayList<String>();
-    public static String[] dispenseWorldsList = { "world", "world_nether" };
+    public static List<String> DispenseBlacklist = new ArrayList<String>();
+    public static String[] DispenseBlacklistList = { "No defaults added." };
+    public static List<String> DispenseBlacklistWorld = new ArrayList<String>();
+    public static String[] DispenseBlacklistWorldList = { "world", "world_nether" };
     
-    public static List<String> lbEnabledWorlds = new ArrayList<String>();
-    public static String[] lbEnabledWorldList = { "world", "world_nether" };
-    public static List<String> wbEnabledWorlds = new ArrayList<String>();
-    public static String[] wbEnabledWorldList = { "world", "world_nether" };
     
-    public static List<String> interactBlacklistedBlocks = new ArrayList<String>();
-    public static String[] interactBlacklistedBlocksList = { "No defaults added." };
-    public static List<String> interactBlacklistedWorlds = new ArrayList<String>();
-    public static String[] interactBlacklistedWorldList = { "world", "world_nether" };
+    public static List<String> LavaBucketWorld = new ArrayList<String>();
+    public static String[] LavaBucketWorldList = { "world", "world_nether" };
+    public static List<String> WaterBucketWorld = new ArrayList<String>();
+    public static String[] WaterBucketWorldList = { "world", "world_nether" };
+    
+    
+    public static List<String> InteractBlacklist = new ArrayList<String>();
+    public static String[] InteractBlacklistList = { "No default added." };
+    public static List<String> InteractBlacklistWorld = new ArrayList<String>();
+    public static String[] InteractBlacklistWorldList = { "world", "world_nether" };
+    
     
     public static String getDate() {
         String date;

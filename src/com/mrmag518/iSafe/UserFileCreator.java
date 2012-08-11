@@ -24,13 +24,13 @@ public class UserFileCreator implements Listener {
     
     @EventHandler
     public void CreateUserFile(PlayerJoinEvent event) {
-        Player user = event.getPlayer();
-        File userFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + user.getName() + ".yml");
+        Player p = event.getPlayer();
+        File userFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + p.getName() + ".yml");
         
         if (!userFile.exists()) {
             
             // iSafe v3.0 convertion.
-            File oldFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + user.getName() + ".txt");
+            File oldFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + p.getName() + ".txt");
             if(oldFile.exists()) {
                 oldFile.delete();
                 plugin.log.info("[iSafe] Detected old userfile format, deleting .. ("+oldFile.getName()+")");
@@ -39,27 +39,26 @@ public class UserFileCreator implements Listener {
             try {
                 FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
                 uFile.options().header("Please remember you cannot modify anything in the user files."
-                        + "\nYou may be able to edit in the future.");
+                        + "\nYou may be able to edit in the future.\n");
                 
-                uFile.set("Username", user.getName());
-                uFile.set("DisplayName", user.getDisplayName());
+                uFile.set("Username", p.getName());
+                uFile.set("DisplayName", p.getDisplayName());
                 uFile.set("IPAddress", event.getPlayer().getAddress().getAddress().toString().replace("/", ""));
-                uFile.set("Gamemode", user.getGameMode().name().toLowerCase());
-                uFile.set("Level", user.getLevel());;
+                uFile.set("Gamemode", p.getGameMode().name().toLowerCase());
+                uFile.set("Level", p.getLevel());
                 uFile.save(userFile);
-                plugin.log.info("[iSafe] Generated user file for " + user.getName() + ".");
+                plugin.log.info("[iSafe] Generated user file for " + p.getName() + ".");
             } catch (Exception e) {
-                plugin.log.severe("[iSafe] Error generating the user file for: "+ user.getName() + ".");
+                plugin.log.severe("[iSafe] Error generating the user file for: "+ p.getName() + ".");
                 e.printStackTrace();
             }
         }
-        // We update the nodes when the player leaves instead :)
     }
     
     @EventHandler
     public void updateNodes(PlayerQuitEvent event) {
-        Player user = event.getPlayer();
-        File userFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + user.getName() + ".yml");
+        Player p = event.getPlayer();
+        File userFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + p.getName() + ".yml");
         
         if(userFile.exists()) {
              FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
@@ -67,9 +66,9 @@ public class UserFileCreator implements Listener {
              uFile.set("Gamemode", null);
              uFile.set("Level", null);
              
-             uFile.set("IPAddress", user.getAddress().getAddress().toString().replace("/", ""));
-             uFile.set("Gamemode", user.getGameMode().name().toLowerCase());
-             uFile.set("Level", user.getLevel());
+             uFile.set("IPAddress", p.getAddress().getAddress().toString().replace("/", ""));
+             uFile.set("Gamemode", p.getGameMode().name().toLowerCase());
+             uFile.set("Level", p.getLevel());
             try {
                 uFile.save(userFile);
             } catch (IOException ex) {
@@ -81,8 +80,8 @@ public class UserFileCreator implements Listener {
     //Need to check kick too ..
     @EventHandler
     public void updateNodesKick(PlayerKickEvent event) {
-        Player user = event.getPlayer();
-        File userFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + user.getName() + ".yml");
+        Player p = event.getPlayer();
+        File userFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + p.getName() + ".yml");
         
         if(userFile.exists()) {
              FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
@@ -90,9 +89,9 @@ public class UserFileCreator implements Listener {
              uFile.set("Gamemode", null);
              uFile.set("Level", null);
              
-             uFile.set("IPAddress", user.getAddress().getAddress().toString().replace("/", ""));
-             uFile.set("Gamemode", user.getGameMode().name().toLowerCase());
-             uFile.set("Level", user.getLevel());
+             uFile.set("IPAddress", p.getAddress().getAddress().toString().replace("/", ""));
+             uFile.set("Gamemode", p.getGameMode().name().toLowerCase());
+             uFile.set("Level", p.getLevel());
             try {
                 uFile.save(userFile);
             } catch (IOException ex) {

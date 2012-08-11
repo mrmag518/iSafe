@@ -23,10 +23,7 @@ import java.util.List;
 
 import com.mrmag518.iSafe.iSafe;
 
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -48,23 +45,19 @@ public class BreakBlacklist implements Listener {
             return;
         }
         
-        Player player = event.getPlayer();
+        Player p = event.getPlayer();
         Block b = event.getBlock();
-        //Server server = player.getServer();
-        
         int blockID = b.getTypeId();
-        String BlockNAME_Name = b.getType().name().toLowerCase();
-        
-        World world = player.getWorld();
-        //Location loc = player.getLocation();
+        String BlockNAME = b.getType().name().toLowerCase();
+        World world = p.getWorld();
         String worldname = world.getName(); 
         
         //Blacklist
         final List<Block> brokenblocks = new ArrayList<Block>();
         if (plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(blockID)
-                || plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(BlockNAME_Name.toLowerCase()))
+                || plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(BlockNAME.toLowerCase()))
         {
-            if(!plugin.hasBlacklistPermission(player, "iSafe.bypass.blacklist.break")) 
+            if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.break")) 
             {
                 if (!event.isCancelled()) 
                 {
@@ -73,13 +66,15 @@ public class BreakBlacklist implements Listener {
                     if (plugin.getBlacklist().getList("Break.EnabledWorlds", Breakworlds).contains(worldname))
                     {
                         if (plugin.getBlacklist().getBoolean("Break.Gamemode.PreventFor.Survival", true)) {
-                            if(player.getGameMode().equals(GameMode.SURVIVAL)) {
+                            if(p.getGameMode().equals(GameMode.SURVIVAL)) {
                                 if(!(b == null)) {
                                     event.setCancelled(true);
                                 }
                             }
-                        } else if (plugin.getBlacklist().getBoolean("Break.Gamemode.PreventFor.Creative", true)) {
-                            if(player.getGameMode().equals(GameMode.CREATIVE)) {
+                        }
+                        
+                        if (plugin.getBlacklist().getBoolean("Break.Gamemode.PreventFor.Creative", true)) {
+                            if(p.getGameMode().equals(GameMode.CREATIVE)) {
                                 if(!(b == null)) {
                                     event.setCancelled(true);
                                 }
@@ -88,25 +83,19 @@ public class BreakBlacklist implements Listener {
                         
                         if (plugin.getBlacklist().getBoolean("Break.KickPlayer", true)){
                             if (event.isCancelled()){
-                                player.kickPlayer(plugin.blacklistBreakKickMsg(b));
+                                p.kickPlayer(plugin.blacklistBreakKickMsg(b));
                             }    
                         }
                         
-                        if(plugin.getBlacklist().getBoolean("Break.Alert/log.To-player", true)) {
+                        if(plugin.getBlacklist().getBoolean("Break.Alert/log.ToPlayer", true)) {
                             if(event.isCancelled()) {
-                                player.sendMessage(plugin.blacklistBreakMsg(b));
+                                p.sendMessage(plugin.blacklistBreakMsg(b));
                             }
                         }
 
-                        if (plugin.getBlacklist().getBoolean("Break.Alert/log.To-console", true)){
+                        if (plugin.getBlacklist().getBoolean("Break.Alert/log.ToConsole", true)){
                             if (event.isCancelled()) {
-                                //AlertConsole(player, b, loc, worldname);
-                            }
-                        }
-
-                        if (plugin.getBlacklist().getBoolean("Break.Alert/log.To-server-chat", true)){
-                            if (event.isCancelled()) {
-                                //AlertServer(server, b, worldname, player);
+                                plugin.log.info("[iSafe]" + p.getName() + " was prevented from breaking the blacklisted block: " + BlockNAME);
                             }
                         }
                     }
@@ -116,7 +105,7 @@ public class BreakBlacklist implements Listener {
         
         if (plugin.getBlacklist().getBoolean("Break.TotallyDisableBlockBreak", true))
         {
-            if(!plugin.hasPermission(player, "iSafe.bypass.break")) {
+            if(!plugin.hasPermission(p, "iSafe.bypass.break")) {
                 event.setCancelled(true);
             }
         }

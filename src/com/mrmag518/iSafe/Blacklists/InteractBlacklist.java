@@ -50,13 +50,15 @@ public class InteractBlacklist implements Listener {
                     {
                         final List<String> worlds = plugin.getBlacklist().getStringList("Interact.Worlds");
                         
-                        if (plugin.getBlacklist().getList("Interact.Worlds", worlds).contains(worldname))
+                        if (plugin.getBlacklist().getList("Interact.EnabledWorlds", worlds).contains(worldname))
                         {
                             if (plugin.getBlacklist().getBoolean("Interact.Gamemode.PreventFor.Survival", true)) {
                                 if(p.getGameMode().equals(GameMode.SURVIVAL)) {
                                     event.setCancelled(true);
                                 }
-                            } else if (plugin.getBlacklist().getBoolean("Interact.Gamemode.PreventFor.Creative", true)) {
+                            }
+                            
+                            if (plugin.getBlacklist().getBoolean("Interact.Gamemode.PreventFor.Creative", true)) {
                                 if(p.getGameMode().equals(GameMode.CREATIVE)) {
                                     event.setCancelled(true);
                                 }
@@ -71,6 +73,12 @@ public class InteractBlacklist implements Listener {
                             if (plugin.getBlacklist().getBoolean("Interact.Alert/log.ToPlayer", true)){
                                 if (event.isCancelled()){
                                     p.sendMessage(plugin.blacklistInteractMsg(b));
+                                }
+                            }
+                            
+                            if (plugin.getBlacklist().getBoolean("Interact.Alert/log.ToConsole", true)){
+                                if (event.isCancelled()){
+                                    plugin.log.info("[iSafe]" + p.getName() + " was prevented from interacting with the blacklisted block: " + BlockNAME);
                                 }
                             }
                         }

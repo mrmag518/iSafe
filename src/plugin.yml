@@ -3,13 +3,13 @@ description: "An assortment of beneficial features."
 main: com.mrmag518.iSafe.iSafe
 name: iSafe
 load: STARTUP
-version: 'Alpha 3.0'
+version: '3.0 BETA'
 website: http://dev.bukkit.org/server-mods/blockthattnt/
 softdepend: [Vault]
 commands:
   iSafe:
     description: Main command for iSafe.
-    usage: /<command>
+    usage: /<command> [argument]
 permissions:
   # We do not need to input permissions defaulting to OP, except wildcards.
   # This is because bukkit already does this for us.

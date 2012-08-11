@@ -40,11 +40,9 @@ public class VehicleListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onVehicleEnter(VehicleEnterEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
-        
         Entity entity = event.getEntered();
         Vehicle vec = event.getVehicle();
         

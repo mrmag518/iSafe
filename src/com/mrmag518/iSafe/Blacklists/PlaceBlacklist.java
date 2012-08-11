@@ -51,7 +51,6 @@ public class PlaceBlacklist implements Listener {
         int blockID = event.getBlock().getTypeId();
         String BlockNAME = event.getBlock().getType().name().toLowerCase();
         World world = p.getWorld();
-        //Location loc = p.getLocation();
         String worldname = world.getName();
         
         //Blacklist
@@ -70,15 +69,13 @@ public class PlaceBlacklist implements Listener {
                     {
                         if (plugin.getBlacklist().getBoolean("Place.Gamemode.PreventFor.Survival", true)) {
                             if(p.getGameMode().equals(GameMode.SURVIVAL)) {
-                                if(!(block == null)) {
-                                    event.setCancelled(true);
-                                }
+                                event.setCancelled(true);
                             }
-                        } else if (plugin.getBlacklist().getBoolean("Place.Gamemode.PreventFor.Creative", true)) {
+                        } 
+                        
+                        if (plugin.getBlacklist().getBoolean("Place.Gamemode.PreventFor.Creative", true)) {
                             if(p.getGameMode().equals(GameMode.CREATIVE)) {
-                                if(!(block == null)) {
-                                    event.setCancelled(true);
-                                }
+                                event.setCancelled(true);
                             }
                         }
                         
@@ -88,13 +85,13 @@ public class PlaceBlacklist implements Listener {
                             }    
                         }
 
-                        if (plugin.getBlacklist().getBoolean("Place.Alert/log.To-console", true)){
+                        if (plugin.getBlacklist().getBoolean("Place.Alert/log.ToConsole", true)){
                             if (event.isCancelled()) {
-                                //AlertConsole(p, block, loc, worldname);
+                                plugin.log.info("[iSafe]" + p.getName() + " was prevented from placing the blacklisted block: " + BlockNAME);
                             }
                         }
 
-                        if (plugin.getBlacklist().getBoolean("Place.Alert/log.To-player", true)){
+                        if (plugin.getBlacklist().getBoolean("Place.Alert/log.ToPlayer", true)){
                             if (event.isCancelled()) {
                                 p.sendMessage(plugin.blacklistPlaceMsg(block));
                             }

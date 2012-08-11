@@ -50,7 +50,7 @@ public class PickupBlacklist implements Listener {
         World world = player.getWorld();
         
         int itemID = event.getItem().getItemStack().getTypeId();
-        String BlockNAME = event.getItem().getItemStack().getType().name().toLowerCase();
+        String ItemNAME = event.getItem().getItemStack().getType().name().toLowerCase();
         
         //Location loc = player.getLocation();
         String worldname = world.getName();
@@ -58,7 +58,7 @@ public class PickupBlacklist implements Listener {
         //Blacklist
         final List<Item> pickupedblocks = new ArrayList<Item>();
         if (plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(itemID)
-                || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(BlockNAME.toLowerCase()))
+                || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(ItemNAME.toLowerCase()))
         {
             if(!plugin.hasBlacklistPermission(player, "iSafe.bypass.blacklist.pickup")) 
             {
@@ -72,7 +72,9 @@ public class PickupBlacklist implements Listener {
                             if(player.getGameMode().equals(GameMode.SURVIVAL)) {
                                 event.setCancelled(true);
                             }
-                        } else if (plugin.getBlacklist().getBoolean("Pickup.Gamemode.PreventFor.Creative", true)) {
+                        }
+                        
+                        if (plugin.getBlacklist().getBoolean("Pickup.Gamemode.PreventFor.Creative", true)) {
                             if(player.getGameMode().equals(GameMode.CREATIVE)) {
                                 event.setCancelled(true);
                             }
@@ -82,7 +84,7 @@ public class PickupBlacklist implements Listener {
                         {
                             if (event.isCancelled())
                             {
-                                player.kickPlayer(plugin.blacklistPickupKickMsg(event.getItem()));
+                                player.kickPlayer(plugin.blacklistPickupKickMsg(ItemNAME));
                             }    
                         }
                     }

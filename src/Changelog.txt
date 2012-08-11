@@ -1,11 +1,11 @@
 Version 3.0
 Fixed:
-* Fixed players not being able to break block under water.
+* Fixed players not being able to break blocks under water.
 * Fixed a NPE sometimes appearing during file generations.
 * Fixed structures not growing in worlds.
 * Fixed duplication of TreeGrowth Redwood prevention.
 * Fixed another exploitation which made you able to break blocks in protected regions.
-* Fixed players not being teleported to spawn on void fall is damage was disabled.
+* Fixed players not being teleported to spawn on void fall if damage was disabled.
 * Fixed a compatibility issue related to sneak & sprint prevention.
 * Really fixed the errors appearing when entities enters vehicles.
 * Fixed prevention for vehicles.
@@ -13,7 +13,9 @@ Fixed:
 * Fixed break blacklist breaking block loggers.
 * Fixed prevention for gamemode change being opposite of what displayed.
 * Fixed censor listener having the command blacklist name.
-* 
+* Fixed players in creative mode being able to bypass blacklists.
+* Fixed break & drop blacklist using the same world database as the place blacklist.
+* Support for 1.3.1.
 
 Added:
 * Added permissions to use flint and steel.
@@ -31,14 +33,13 @@ Added:
 ** Choose between fixing hole with bedrock or glass.
 * Added Vault support! iSafe is no longer only using super perms.
 ** You can chose whether to use vault for permissions or super perms.
-* Added color support, you can customize the color for messages in the messages.yml file.
+* Added color support, you can customize the color for messages in the Messages.yml file.
 * Made it configurable to create user files.
 * Added the ability to kick the joiner if the same nick is already online.
 * Added permissions to create portals.
 * Added Interact blacklist.
 * Added 'ConfigVersion' to each configuration file. 
 ** This will help me to determine which version your configuration file is so it can modified to be up to date in further versions.
-* 
 
 Removed:
 * Removed instantbreak and superbreak command.
@@ -47,13 +48,12 @@ Removed:
 * Removed infinite itemtacks.
 * Removed useless fire spread code.
 * Removed World.Prevent-naturally-object-dispensing, this can now be altered in the dispense blacklist.
-* Removed forcedrop bookshelf as it now drops books.
+* Removed forcedrop bookshelf.
 * Why would anyone teleport a creeper to the spawn point if he falls down into the void? Removed..
 * Removed attk prevention.
 * Removed pointless permissions check.
 * Temporary removed alerts with the pickup blacklist untill I find a better fix for spam.
-* Removed combustin prevention for creatures that doesn't normally combust.
-* 
+* Removed combusting prevention for creatures that doesn't normally combust.
 
 Improvements:
 * Renamed permission node iSafe.* to iSafe.admin.
@@ -69,11 +69,8 @@ Improvements:
 * Improved the prevent gamemode changing feature.
 * Made blacklists & censor fully case insensitive.
 * Made some tweaks with the command blacklist.
-* 
-
-
-
-
+* Improved the console debuggers related to blacklists.
+* Blacklist cleanup.
 * Should improve performance.
 
 --------------------------------------------------------------------------------

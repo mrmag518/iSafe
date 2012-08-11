@@ -53,12 +53,15 @@ public class Commands implements CommandExecutor {
                 if(args.length == 0) {
                     sender.sendMessage(A + "---iSafe Commands---");
                     sender.sendMessage(G + "/iSafe reload" + GR + " Reload all the iSafe configuration files.");
-                    sender.sendMessage(G + "/iSafe ...");
+                    sender.sendMessage(G + "/iSafe info " + GR + " Returns information about iSafe.");
+                    sender.sendMessage(G + "/iSafe serverinfo " + GR + " Returns information about the server.");
                 } else if (args.length == 1) {
                     if(args[0].equalsIgnoreCase("reload")) {
                         return reload(sender);
                     } else if(args[0].equalsIgnoreCase("info")) {
                         return info(sender);
+                    } else if(args[0].equalsIgnoreCase("serverinfo")) {
+                        return serverinfo(sender);
                     }
                 }
             }

@@ -51,27 +51,28 @@ public class CommandBlacklist implements Listener {
         String command = event.getMessage().toLowerCase();
         String worldname = world.getName();
         String[] split = event.getMessage().split(" ");  
-        if (split.length < 1) return;
         String cmd = split[0].trim().substring(1).toLowerCase();
         
         final List<String> commands = new ArrayList<String>();
         
-        if (plugin.getBlacklist().getList("Command.Blacklist", commands).contains(cmd.toLowerCase())){
+        if (plugin.getBlacklist().getList("Command.Blacklist", commands).contains(cmd.toLowerCase()) 
+                || (plugin.getBlacklist().getList("Command.Blacklist", commands).contains(command.toLowerCase())))
+        {
             if (!event.isCancelled())
             {
                 final List<String> cmdworlds = plugin.getBlacklist().getStringList("Place.Worlds");
                 
-                if (plugin.getBlacklist().getList("Command.Worlds", cmdworlds).contains(worldname))
+                if (plugin.getBlacklist().getList("Command.EnabledWorlds", cmdworlds).contains(worldname))
                 {
                     event.setCancelled(true);
                     
-                    if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-console", true)){
+                    if (plugin.getBlacklist().getBoolean("Command.Alert/log.ToConsole", true)){
                         if (event.isCancelled()) {
-                            plugin.log.info("[iSafe] "+ player.getName() + " tried to do the blacklisted command: "+ command);
+                            plugin.log.info("[iSafe]" + player.getName() + " was prevented from doing the blacklisted command: " + command);
                         }
                     }
 
-                    if (plugin.getBlacklist().getBoolean("Command.Alert/log.To-player", true)){
+                    if (plugin.getBlacklist().getBoolean("Command.Alert/log.ToPlayer", true)){
                         if (event.isCancelled()) {
                             player.sendMessage(plugin.blacklistCommandMsg(cmd, worldname));
                         }
