@@ -18,9 +18,6 @@ package com.mrmag518.iSafe.Events.EntityEvents;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
-
 import java.util.List;
 
 import com.mrmag518.iSafe.*;
@@ -125,7 +122,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Teleport.DisableAllTeleportCauses", true))
         {
-            if(!(plugin.hasPermission(player, "iSafe.teleport"))) {
+            if(!(plugin.hasPermission(player, "iSafe.bypass.teleport"))) {
                 event.setTo(event.getFrom());
             }
         }
@@ -133,7 +130,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Teleport.Disable.CommandCause", true))
         {
             if (event.getCause() == TeleportCause.COMMAND) {
-                if(!(plugin.hasPermission(player, "iSafe.teleport.command"))) {
+                if(!(plugin.hasPermission(player, "iSafe.bypass.teleport.command"))) {
                     event.setTo(event.getFrom());
                 }
             }
@@ -142,7 +139,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Teleport.Disable.EnderpearlCause", true))
         {
             if (event.getCause() == TeleportCause.ENDER_PEARL) {
-                if(!(plugin.hasPermission(player, "iSafe.teleport.enderpearl"))) {
+                if(!(plugin.hasPermission(player, "iSafe.bypass.teleport.enderpearl"))) {
                     event.setTo(event.getFrom());
                 }
             }
@@ -151,7 +148,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Teleport.Disable.PluginCause", true))
         {
             if (event.getCause() == TeleportCause.PLUGIN) {
-                if(!(plugin.hasPermission(player, "iSafe.teleport.plugin"))) {
+                if(!(plugin.hasPermission(player, "iSafe.bypass.teleport.plugin"))) {
                     event.setTo(event.getFrom());
                 }
             }
@@ -160,7 +157,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Teleport.Disable.UnknownCause", true))
         {
             if (event.getCause() == TeleportCause.UNKNOWN) {
-                if(!(plugin.hasPermission(player, "iSafe.teleport.unknown"))) {
+                if(!(plugin.hasPermission(player, "iSafe.bypass.teleport.unknown"))) {
                     event.setTo(event.getFrom());
                 }
             }
@@ -169,7 +166,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Teleport.Disable.NetherportalCause", true))
         {
             if (event.getCause() == TeleportCause.NETHER_PORTAL) {
-                if(!(plugin.hasPermission(player, "iSafe.teleport.netherportal"))) {
+                if(!(plugin.hasPermission(player, "iSafe.bypass.teleport.netherportal"))) {
                     event.setTo(event.getFrom());
                 }
             }
@@ -178,16 +175,13 @@ public class PlayerListener implements Listener  {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
-        String msg = event.getMessage();
-        Player player = event.getPlayer();
-        World world = player.getWorld();
+        Player p = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Chat.ForcePermissionToChat", true)) {
-            if(!(plugin.hasPermission(player, "iSafe.use.chat"))) {
+            if(!(plugin.hasPermission(p, "iSafe.use.chat"))) {
                 event.setCancelled(true);
             }
         }
@@ -195,8 +189,7 @@ public class PlayerListener implements Listener  {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBedEnter(PlayerBedEnterEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         Player player = event.getPlayer();
@@ -216,7 +209,6 @@ public class PlayerListener implements Listener  {
             return;
         }
         Player p = event.getPlayer();
-        Server s = p.getServer();
         
         if(plugin.getConfig().getBoolean("Chat.EnableKickMessages", true))
         {

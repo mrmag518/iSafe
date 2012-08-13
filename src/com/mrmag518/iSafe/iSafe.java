@@ -57,7 +57,8 @@ public class iSafe extends JavaPlugin {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //Remember to change this on every version!
 
-    private String fileversion = "iSafe v3.0 BETA";
+    private String fileversion = "iSafe v3.01 BETA";
+    private Double ConfigVersion = 3.01;
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     private PlayerListener playerListener = null;
     private BlockListener blockListener = null;
@@ -509,9 +510,9 @@ public class iSafe extends JavaPlugin {
         config = getConfig();
         config.options().header(Data.setConfigHeader());
         
-        double ConfigVersion = 3.00;
         config.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
         if(config.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
+            // If there is anything to modify in the 'new' version, I need to fix that here.
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
             config.set("ConfigVersion", Double.valueOf(ConfigVersion));
         }
@@ -658,7 +659,6 @@ public class iSafe extends JavaPlugin {
         messages = getMessages();
         messages.options().header(Data.setMessageHeader());
         
-        double ConfigVersion = 3.00;
         messages.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
         if(messages.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
@@ -687,9 +687,6 @@ public class iSafe extends JavaPlugin {
         messages.addDefault("Blacklists.Drop.KickMessage", "&cKicked for attempting to drop &f%item%");
         messages.addDefault("Blacklists.Drop.DisallowedMessage", "&cYou do not have access to drop &7%item%");
         //----
-        messages.addDefault("Blacklists.Pickup.KickMessage", "&cKicked for attempting to pickup &f%item%");
-        messages.addDefault("Blacklists.Pickup.DisallowedMessage", "&cYou do not have access to pickup &7%item%");
-        //----
         messages.addDefault("Blacklists.Command.KickMessage", "&cKicked for attempting to do command &f%command%");
         messages.addDefault("Blacklists.Command.DisallowedMessage", "&cThe command %command% is disabled!");
 
@@ -699,9 +696,8 @@ public class iSafe extends JavaPlugin {
 
     private void loadISafeConfig() {
         iSafeConfig = getISafeConfig();
-        // Header.
+        iSafeConfig.options().header(Data.setISafeConfigHeader());
         
-        double ConfigVersion = 3.00;
         iSafeConfig.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
         if(iSafeConfig.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
@@ -722,7 +718,6 @@ public class iSafe extends JavaPlugin {
         creatureManager = getCreatureManager();
         creatureManager.options().header(Data.setCreatureManagerHeader());
         
-        double ConfigVersion = 3.00;
         creatureManager.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
         if(creatureManager.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
@@ -835,7 +830,6 @@ public class iSafe extends JavaPlugin {
         blacklist = getBlacklist();
         blacklist.options().header(Data.setBlacklistHeader());
         
-        double ConfigVersion = 3.00;
         blacklist.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
         if(blacklist.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");

@@ -1,3 +1,12 @@
+Version 3.01
+* Decreased the file size by removing the License.txt file from the project.
+* I thought I temporary removed pickup messages..
+* Forgot to set ISafeConfig.yml header.
+* New method for reading and managing the config version.
+* Updated Vault support.
+* Converted teleport permissions to use the bypass category.
+* Removed un-used variables.
+
 Version 3.0
 Fixed:
 * Fixed players not being able to break blocks under water.
