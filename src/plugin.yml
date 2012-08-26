@@ -3,7 +3,7 @@ description: "An assortment of beneficial features."
 main: com.mrmag518.iSafe.iSafe
 name: iSafe
 load: STARTUP
-version: '3.01 BETA'
+version: '3.1'
 website: http://dev.bukkit.org/server-mods/blockthattnt/
 softdepend: [Vault]
 commands:
@@ -34,6 +34,7 @@ permissions:
       iSafe.bypass.blacklist.break: true
       iSafe.bypass.blacklist.place: true
       iSafe.bypass.blacklist.drop: true
+      iSafe.bypass.blacklist.crafting: true
       iSafe.bypass.teleport: true
       iSafe.bypass.teleport.command: true
       iSafe.bypass.teleport.enderpearl: true

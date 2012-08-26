@@ -20,8 +20,6 @@ package com.mrmag518.iSafe.Blacklists;
 
 import com.mrmag518.iSafe.iSafe;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,14 +39,12 @@ public class Censor implements Listener {
             return;
         }
         Player p = event.getPlayer();
-        String word = event.getMessage().toLowerCase();
+        String sentence = event.getMessage().toLowerCase();
         
-        final List<String> censoredWords = new ArrayList<String>();
         
-        if (plugin.getBlacklist().getList("Censor.Words/Blacklist", censoredWords).contains(word.toLowerCase())) {
-            if(!(event.isCancelled())) {
+        for(String word : plugin.getBlacklist().getStringList("Censor.Words/Blacklist")) {
+            if(sentence.contains(word)) {
                 event.setCancelled(true);
-                
                 if (plugin.getBlacklist().getBoolean("Censor.Alert/log.ToConsole", true)){
                     if (event.isCancelled()) {
                         plugin.log.info("[iSafe] " + p.getName() + "'s message contained the blacklisted word: " + word);
@@ -70,3 +66,4 @@ public class Censor implements Listener {
         }
     }
 }
+

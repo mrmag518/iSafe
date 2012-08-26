@@ -18,9 +18,6 @@
 
 package com.mrmag518.iSafe.Blacklists;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.GameMode;
@@ -52,51 +49,40 @@ public class BreakBlacklist implements Listener {
         World world = p.getWorld();
         String worldname = world.getName(); 
         
-        //Blacklist
-        final List<Block> brokenblocks = new ArrayList<Block>();
-        if (plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(blockID)
-                || plugin.getBlacklist().getList("Break.Blacklist", brokenblocks).contains(BlockNAME.toLowerCase()))
+        if(plugin.getBlacklist().getList("Break.Blacklist").contains(blockID)
+            || plugin.getBlacklist().getList("Break.Blacklist").contains(BlockNAME.toLowerCase())) 
         {
             if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.break")) 
             {
-                if (!event.isCancelled()) 
+                if(plugin.getBlacklist().getList("Break.EnabledWorlds").contains(worldname)) 
                 {
-                    final List<String> Breakworlds = plugin.getBlacklist().getStringList("Break.Worlds");
-                
-                    if (plugin.getBlacklist().getList("Break.EnabledWorlds", Breakworlds).contains(worldname))
-                    {
-                        if (plugin.getBlacklist().getBoolean("Break.Gamemode.PreventFor.Survival", true)) {
-                            if(p.getGameMode().equals(GameMode.SURVIVAL)) {
-                                if(!(b == null)) {
-                                    event.setCancelled(true);
-                                }
-                            }
+                    if (plugin.getBlacklist().getBoolean("Break.Gamemode.PreventFor.Survival", true)) {
+                        if(p.getGameMode().equals(GameMode.SURVIVAL)) {
+                            event.setCancelled(true);
                         }
-                        
-                        if (plugin.getBlacklist().getBoolean("Break.Gamemode.PreventFor.Creative", true)) {
-                            if(p.getGameMode().equals(GameMode.CREATIVE)) {
-                                if(!(b == null)) {
-                                    event.setCancelled(true);
-                                }
-                            }
-                        }
-                        
-                        if (plugin.getBlacklist().getBoolean("Break.KickPlayer", true)){
-                            if (event.isCancelled()){
-                                p.kickPlayer(plugin.blacklistBreakKickMsg(b));
-                            }    
-                        }
-                        
-                        if(plugin.getBlacklist().getBoolean("Break.Alert/log.ToPlayer", true)) {
-                            if(event.isCancelled()) {
-                                p.sendMessage(plugin.blacklistBreakMsg(b));
-                            }
-                        }
+                    }
 
-                        if (plugin.getBlacklist().getBoolean("Break.Alert/log.ToConsole", true)){
-                            if (event.isCancelled()) {
-                                plugin.log.info("[iSafe]" + p.getName() + " was prevented from breaking the blacklisted block: " + BlockNAME);
-                            }
+                    if (plugin.getBlacklist().getBoolean("Break.Gamemode.PreventFor.Creative", true)) {
+                        if(p.getGameMode().equals(GameMode.CREATIVE)) {
+                            event.setCancelled(true);
+                        }
+                    }
+
+                    if (plugin.getBlacklist().getBoolean("Break.KickPlayer", true)){
+                        if (event.isCancelled()){
+                            p.kickPlayer(plugin.blacklistBreakKickMsg(b));
+                        }    
+                    }
+
+                    if(plugin.getBlacklist().getBoolean("Break.Alert/log.ToPlayer", true)) {
+                        if(event.isCancelled()) {
+                            p.sendMessage(plugin.blacklistBreakMsg(b));
+                        }
+                    }
+
+                    if (plugin.getBlacklist().getBoolean("Break.Alert/log.ToConsole", true)){
+                        if (event.isCancelled()) {
+                            plugin.log.info("[iSafe]" + p.getName() + " was prevented from breaking the blacklisted block: " + BlockNAME);
                         }
                     }
                 }

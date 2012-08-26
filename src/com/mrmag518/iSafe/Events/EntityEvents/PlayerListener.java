@@ -24,7 +24,6 @@ import com.mrmag518.iSafe.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,8 +43,7 @@ public class PlayerListener implements Listener  {
     
     @EventHandler
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         Player player = event.getPlayer();
@@ -53,9 +51,7 @@ public class PlayerListener implements Listener  {
         String worldname = world.getName();
         
         if(plugin.getConfig().getBoolean("Buckets.Lava.Prevent")) {
-            final List<String> lbworlds = plugin.getConfig().getStringList("Buckets.Lava.CheckedWorlds");
-            
-            if (plugin.getConfig().getList("Buckets.Lava.CheckedWorlds", lbworlds).contains(worldname)) {
+            if (plugin.getConfig().getList("Buckets.Lava.CheckedWorlds").contains(worldname)) {
                 if(!(plugin.hasPermission(player, "iSafe.use.lavabuckets"))) {
                     event.setCancelled(true);
                 }
@@ -63,9 +59,7 @@ public class PlayerListener implements Listener  {
         }
         
         if(plugin.getConfig().getBoolean("Buckets.Water.Prevent")) {
-            final List<String> lbworlds = plugin.getConfig().getStringList("Buckets.Water.CheckedWorlds");
-            
-            if (plugin.getConfig().getList("Buckets.Water.CheckedWorlds", lbworlds).contains(worldname)) {
+            if (plugin.getConfig().getList("Buckets.Water.CheckedWorlds").contains(worldname)) {
                 if(!(plugin.hasPermission(player, "iSafe.use.waterbuckets"))) {
                     event.setCancelled(true);
                 }
@@ -75,8 +69,7 @@ public class PlayerListener implements Listener  {
     
     @EventHandler
     public void PreventSprinting(PlayerMoveEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         Player player = event.getPlayer();
@@ -114,8 +107,7 @@ public class PlayerListener implements Listener  {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         Player player = event.getPlayer();
@@ -204,8 +196,7 @@ public class PlayerListener implements Listener  {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerKick(PlayerKickEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         Player p = event.getPlayer();
@@ -221,8 +212,7 @@ public class PlayerListener implements Listener  {
     
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerFish(PlayerFishEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         Player player = event.getPlayer();
@@ -262,8 +252,7 @@ public class PlayerListener implements Listener  {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         Player p = event.getPlayer();
@@ -275,8 +264,7 @@ public class PlayerListener implements Listener  {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         Player p = event.getPlayer();

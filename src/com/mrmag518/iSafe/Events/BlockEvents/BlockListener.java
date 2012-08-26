@@ -55,8 +55,7 @@ public class BlockListener implements Listener {
     
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         Block b = event.getBlock();
@@ -64,12 +63,25 @@ public class BlockListener implements Listener {
         Location loc = p.getLocation();
         byte level = p.getLocation().getBlock().getLightLevel();
         
+        // Test
+        // *facepalm*.. This is how easy we could have done it with the blacklists.
+        // Note to self: May consider using this kind of method instead.
+        /*
+        int id = b.getTypeId();
+        
+        if(plugin.getConfig().getString("Test.Blacklist").contains(String.valueOf(id) + ",")) {
+            event.setCancelled(true);
+            p.sendMessage(ChatColor.GREEN + "Success! Cannot break '" + id + "'");
+            p.sendMessage(ChatColor.GREEN + plugin.getConfig().getString("Test.Blacklist"));
+        }*/
+         
+        
         
         if(plugin.getConfig().getBoolean("AntiCheat/Sucurity.ForceLightLevel(Fullbright)", true)) {
             if(level <= 1 && !b.isLiquid() && !loc.getBlock().isLiquid()) {
                 if(!(plugin.hasPermission(p, "iSafe.bypass.fullbright"))) {
                     event.setCancelled(true);
-                    p.sendMessage(ChatColor.YELLOW + "Place a torch!");
+                    p.sendMessage(ChatColor.YELLOW + "Place a torch! (light source)");
                 }
             }
         }
@@ -77,12 +89,10 @@ public class BlockListener implements Listener {
     
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockIgnite(BlockIgniteEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         IgniteCause cause = event.getCause();
-        Player player = event.getPlayer();
         
         if(cause == IgniteCause.SPREAD) {
             if(plugin.getConfig().getBoolean("Fire.DisableFireSpread", true)) {
@@ -144,8 +154,7 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         
@@ -156,8 +165,7 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPistonRetract(BlockPistonRetractEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         
@@ -168,8 +176,7 @@ public class BlockListener implements Listener {
     
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBurn(BlockBurnEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         
@@ -180,8 +187,7 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onLeavesDecay(LeavesDecayEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         
@@ -192,8 +198,7 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPhysics(BlockPhysicsEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         Block b = event.getBlock();
@@ -212,8 +217,7 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFade(BlockFadeEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         Block block = event.getBlock();
@@ -241,8 +245,7 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockSpread(BlockSpreadEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         

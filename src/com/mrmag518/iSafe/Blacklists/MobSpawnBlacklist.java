@@ -1,11 +1,8 @@
 package com.mrmag518.iSafe.Blacklists;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.mrmag518.iSafe.iSafe;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -26,7 +23,7 @@ public class MobSpawnBlacklist implements Listener {
         }
         
         int entityID = event.getEntity().getEntityId();
-        String name = event.getEntity().getType().getName().toLowerCase();
+        String eName = event.getEntity().getType().getName().toLowerCase();
         World world = event.getEntity().getWorld();
         Location loc = event.getEntity().getLocation();
         String worldname = world.getName();
@@ -34,35 +31,23 @@ public class MobSpawnBlacklist implements Listener {
         /**
          * Spawn reason: Natural.
          */
-        final List<Entity> naturalSpawnedMobs = new ArrayList<Entity>();
-        if (plugin.getCreatureManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(entityID)
-                || plugin.getCreatureManager().getList("MobSpawn.Natural.Blacklist", naturalSpawnedMobs).contains(name.toLowerCase()))
+        
+        if (event.getSpawnReason() == SpawnReason.NATURAL)
         {
-            if (!event.isCancelled())
+            if(plugin.getCreatureManager().getList("MobSpawn.Natural.Blacklist").contains(entityID)
+                || plugin.getCreatureManager().getList("MobSpawn.Natural.Blacklist").contains(eName.toLowerCase())) 
             {
-                final List<String> worlds1 = plugin.getCreatureManager().getStringList("MobSpawn.Natural.Worlds");
-                if (plugin.getCreatureManager().getList("MobSpawn.Natural.EnabledWorlds", worlds1).contains(worldname))
+                if(plugin.getCreatureManager().getList("MobSpawn.Natural.EnabledWorlds").contains(worldname)) 
                 {
-                    if (event.getSpawnReason() == SpawnReason.NATURAL)
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                    if (plugin.getCreatureManager().getBoolean("MobSpawn.Natural.Debug.ToConsole", true))
                     {
-                        event.setCancelled(true);
-                        event.getEntity().remove();
-                    } else {
-                        event.setCancelled(false);
+                        int x = (int) loc.getX();
+                        int y = (int) loc.getY();
+                        int z = (int) loc.getZ();
+                        plugin.log.info("[iSafe]" + " A(n) " + eName + " was cancelled its spawn, for the spawn reason: Natural; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                     }
-                } else {
-                    event.setCancelled(false);
-                }
-            }
-            
-            if (plugin.getCreatureManager().getBoolean("MobSpawn.Natural.Debug.ToConsole", true))
-            {
-                int x = (int) loc.getX();
-                int y = (int) loc.getY();
-                int z = (int) loc.getZ();
-                if (event.isCancelled()) 
-                {
-                    plugin.log.info("[iSafe]" + " A(n) " + name + "was cancelled its spawn, for the spawn reason: Natural; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }
@@ -70,35 +55,22 @@ public class MobSpawnBlacklist implements Listener {
         /**
          * Spawn reason: Spawner.
          */
-        final List<Entity> spawnerSpawnedMobs = new ArrayList<Entity>();
-        if (plugin.getCreatureManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(entityID)
-                || plugin.getCreatureManager().getList("MobSpawn.Spawner.Blacklist", spawnerSpawnedMobs).contains(name.toLowerCase()))
+        if (event.getSpawnReason() == SpawnReason.SPAWNER)
         {
-            if (!event.isCancelled())
+            if(plugin.getCreatureManager().getList("MobSpawn.Spawner.Blacklist").contains(entityID)
+                || plugin.getCreatureManager().getList("MobSpawn.Spawner.Blacklist").contains(eName.toLowerCase())) 
             {
-                final List<String> worlds2 = plugin.getCreatureManager().getStringList("MobSpawn.Spawner.Worlds");
-                if (plugin.getCreatureManager().getList("MobSpawn.Spawner.EnabledWorlds", worlds2).contains(worldname))
+                if(plugin.getCreatureManager().getList("MobSpawn.Spawner.EnabledWorlds").contains(worldname)) 
                 {
-                    if (event.getSpawnReason() == SpawnReason.SPAWNER)
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                    if (plugin.getCreatureManager().getBoolean("MobSpawn.Spawner.Debug.ToConsole", true))
                     {
-                        event.setCancelled(true);
-                        event.getEntity().remove();
-                    } else {
-                        event.setCancelled(false);
+                        int x = (int) loc.getX();
+                        int y = (int) loc.getY();
+                        int z = (int) loc.getZ();
+                        plugin.log.info("[iSafe]" + " A(n) " + eName + " was cancelled its spawn, for the spawn reason: Spawner; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                     }
-                } else {
-                    event.setCancelled(false);
-                }
-            }
-            
-            if (plugin.getCreatureManager().getBoolean("MobSpawn.Spawner.Debug.ToConsole", true))
-            {
-                int x = (int) loc.getX();
-                int y = (int) loc.getY();
-                int z = (int) loc.getZ();
-                if (event.isCancelled()) 
-                {
-                    plugin.log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Spawner; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }
@@ -106,71 +78,22 @@ public class MobSpawnBlacklist implements Listener {
         /**
          * Spawn reason: Custom.
          */
-        final List<Entity> customSpawnedMobs = new ArrayList<Entity>();
-        if (plugin.getCreatureManager().getList("MobSpawn.Spawner.Blacklist", customSpawnedMobs).contains(entityID)
-                || plugin.getCreatureManager().getList("MobSpawn.Custom.Blacklist", customSpawnedMobs).contains(name.toLowerCase()))
+        if (event.getSpawnReason() == SpawnReason.CUSTOM)
         {
-            if (!event.isCancelled())
+            if(plugin.getCreatureManager().getList("MobSpawn.Custom.Blacklist").contains(entityID)
+                || plugin.getCreatureManager().getList("MobSpawn.Custom.Blacklist").contains(eName.toLowerCase())) 
             {
-                final List<String> worlds3 = plugin.getCreatureManager().getStringList("MobSpawn.Custom.Worlds");
-                if (plugin.getCreatureManager().getList("MobSpawn.Custom.EnabledWorlds", worlds3).contains(worldname))
+                if(plugin.getCreatureManager().getList("MobSpawn.Custom.EnabledWorlds").contains(worldname)) 
                 {
-                    if (event.getSpawnReason() == SpawnReason.CUSTOM)
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                    if (plugin.getCreatureManager().getBoolean("MobSpawn.Custom.Debug.ToConsole", true))
                     {
-                        event.setCancelled(true);
-                        event.getEntity().remove();
-                    } else {
-                        event.setCancelled(false);
+                        int x = (int) loc.getX();
+                        int y = (int) loc.getY();
+                        int z = (int) loc.getZ();
+                        plugin.log.info("[iSafe]" + " A(n) " + eName + " was cancelled its spawn, for the spawn reason: Custom; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                     }
-                } else {
-                    event.setCancelled(false);
-                }
-            }
-            
-            if (plugin.getCreatureManager().getBoolean("MobSpawn.Custom.Debug.ToConsole", true))
-            {
-                int x = (int) loc.getX();
-                int y = (int) loc.getY();
-                int z = (int) loc.getZ();
-                if (event.isCancelled()) 
-                {
-                    plugin.log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Custom; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
-                }
-            }
-        }
-        
-        /**
-         * Spawn reason: Egg.
-         */
-        final List<Entity> eggSpawnedMobs = new ArrayList<Entity>();
-        if (plugin.getCreatureManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(entityID)
-                || plugin.getCreatureManager().getList("MobSpawn.Egg.Blacklist", eggSpawnedMobs).contains(name.toLowerCase()))
-        {
-            if (!event.isCancelled())
-            {
-                final List<String> worlds4 = plugin.getCreatureManager().getStringList("MobSpawn.Egg.Worlds");
-                if (plugin.getCreatureManager().getList("MobSpawn.Egg.EnabledWorlds", worlds4).contains(worldname))
-                {
-                    if (event.getSpawnReason() == SpawnReason.EGG)
-                    {
-                        event.setCancelled(true);
-                        event.getEntity().remove();
-                    } else {
-                        event.setCancelled(false);
-                    }
-                } else {
-                    event.setCancelled(false);
-                }
-            }
-            
-            if (plugin.getCreatureManager().getBoolean("MobSpawn.Egg.Debug.ToConsole", true))
-            {
-                int x = (int) loc.getX();
-                int y = (int) loc.getY();
-                int z = (int) loc.getZ();
-                if (event.isCancelled()) 
-                {
-                    plugin.log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Egg; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                 }
             }
         }
@@ -178,35 +101,68 @@ public class MobSpawnBlacklist implements Listener {
         /**
          * Spawn reason: SpawnerEgg.
          */
-        final List<Entity> spawnereggSpawnedMobs = new ArrayList<Entity>();
-        if (plugin.getCreatureManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(entityID)
-                || plugin.getCreatureManager().getList("MobSpawn.SpawnerEgg.Blacklist", spawnereggSpawnedMobs).contains(name.toLowerCase()))
+        if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
         {
-            if (!event.isCancelled())
+            if(plugin.getCreatureManager().getList("MobSpawn.SpawnerEgg.Blacklist").contains(entityID)
+                || plugin.getCreatureManager().getList("MobSpawn.SpawnerEgg.Blacklist").contains(eName.toLowerCase())) 
             {
-                final List<String> worlds5 = plugin.getCreatureManager().getStringList("MobSpawn.SpawnerEgg.Worlds");
-                if (plugin.getCreatureManager().getList("MobSpawn.SpawnerEgg.EnabledWorlds", worlds5).contains(worldname))
+                if(plugin.getCreatureManager().getList("MobSpawn.SpawnerEgg.EnabledWorlds").contains(worldname)) 
                 {
-                    if (event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                    if (plugin.getCreatureManager().getBoolean("MobSpawn.SpawnerEgg.Debug.ToConsole", true))
                     {
-                        event.setCancelled(true);
-                        event.getEntity().remove();
-                    } else {
-                        event.setCancelled(false);
+                        int x = (int) loc.getX();
+                        int y = (int) loc.getY();
+                        int z = (int) loc.getZ();
+                        plugin.log.info("[iSafe]" + " A(n) " + eName + " was cancelled its spawn, for the spawn reason: SpawnerEgg; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
                     }
-                } else {
-                    event.setCancelled(false);
                 }
             }
-            
-            if (plugin.getCreatureManager().getBoolean("MobSpawn.SpawnerEgg.Debug.ToConsole", true))
+        }
+        
+        /**
+         * Spawn reason: ChunkGen.
+         */
+        if (event.getSpawnReason() == SpawnReason.CHUNK_GEN)
+        {
+            if(plugin.getCreatureManager().getList("MobSpawn.ChunkGen.Blacklist").contains(entityID)
+                || plugin.getCreatureManager().getList("MobSpawn.ChunkGen.Blacklist").contains(eName.toLowerCase())) 
             {
-                int x = (int) loc.getX();
-                int y = (int) loc.getY();
-                int z = (int) loc.getZ();
-                if (event.isCancelled()) 
+                if(plugin.getCreatureManager().getList("MobSpawn.ChunkGen.EnabledWorlds").contains(worldname)) 
                 {
-                    plugin.log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: SpawnerEgg; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                    if (plugin.getCreatureManager().getBoolean("MobSpawn.ChunkGen.Debug.ToConsole", true))
+                    {
+                        int x = (int) loc.getX();
+                        int y = (int) loc.getY();
+                        int z = (int) loc.getZ();
+                        plugin.log.info("[iSafe]" + " A(n) " + eName + " was cancelled its spawn, for the spawn reason: ChunkGen; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    }
+                }
+            }
+        }
+        
+        /**
+         * Spawn reason: Breeding.
+         */
+        if (event.getSpawnReason() == SpawnReason.BREEDING)
+        {
+            if(plugin.getCreatureManager().getList("MobSpawn.Breeding.Blacklist").contains(entityID)
+                || plugin.getCreatureManager().getList("MobSpawn.Breeding.Blacklist").contains(eName.toLowerCase())) 
+            {
+                if(plugin.getCreatureManager().getList("MobSpawn.Breeding.EnabledWorlds").contains(worldname)) 
+                {
+                    event.setCancelled(true);
+                    event.getEntity().remove();
+                    if (plugin.getCreatureManager().getBoolean("MobSpawn.Breeding.Debug.ToConsole", true))
+                    {
+                        int x = (int) loc.getX();
+                        int y = (int) loc.getY();
+                        int z = (int) loc.getZ();
+                        plugin.log.info("[iSafe]" + " A(n) " + eName + " was cancelled its spawn, for the spawn reason: Breeding; at the location: "+ "X: "+ (x) + " Y: " + (y) + " Z: "+ (z));
+                    }
                 }
             }
         }

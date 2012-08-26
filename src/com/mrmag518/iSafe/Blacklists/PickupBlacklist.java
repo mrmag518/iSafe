@@ -46,47 +46,47 @@ public class PickupBlacklist implements Listener {
         }
         
         Player player = event.getPlayer();
-        //Server server = player.getServer();
         World world = player.getWorld();
-        
         int itemID = event.getItem().getItemStack().getTypeId();
         String ItemNAME = event.getItem().getItemStack().getType().name().toLowerCase();
-        
-        //Location loc = player.getLocation();
         String worldname = world.getName();
         
-        //Blacklist
-        final List<Item> pickupedblocks = new ArrayList<Item>();
-        if (plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(itemID)
-                || plugin.getBlacklist().getList("Pickup.Blacklist", pickupedblocks).contains(ItemNAME.toLowerCase()))
+        
+        // Can be used too, but need to support for block IDs too
+        // Also need to confirm if this is better.
+        
+        /*for(String name : plugin.getBlacklist().getStringList("Pickup.Blacklist")) {
+            if(ItemNAME.equalsIgnoreCase(name)) {
+                //blah
+            }
+        }*/
+        
+        
+        if(plugin.getBlacklist().getList("Pickup.Blacklist").contains(itemID)
+            || plugin.getBlacklist().getList("Pickup.Blacklist").contains(ItemNAME.toLowerCase())) 
         {
             if(!plugin.hasBlacklistPermission(player, "iSafe.bypass.blacklist.pickup")) 
             {
-                if (!event.isCancelled()) 
+                if(plugin.getBlacklist().getList("Pickup.EnabledWorlds").contains(worldname)) 
                 {
-                    final List<String> Pickupworlds = plugin.getBlacklist().getStringList("Pickup.Worlds");
-                    
-                    if (plugin.getBlacklist().getList("Pickup.EnabledWorlds", Pickupworlds).contains(worldname))
+                    if (plugin.getBlacklist().getBoolean("Pickup.Gamemode.PreventFor.Survival", true)) {
+                        if(player.getGameMode().equals(GameMode.SURVIVAL)) {
+                            event.setCancelled(true);
+                        }
+                    }
+
+                    if (plugin.getBlacklist().getBoolean("Pickup.Gamemode.PreventFor.Creative", true)) {
+                        if(player.getGameMode().equals(GameMode.CREATIVE)) {
+                            event.setCancelled(true);
+                        }
+                    }
+
+                    if (plugin.getBlacklist().getBoolean("Pickup.KickPlayer", true))
                     {
-                        if (plugin.getBlacklist().getBoolean("Pickup.Gamemode.PreventFor.Survival", true)) {
-                            if(player.getGameMode().equals(GameMode.SURVIVAL)) {
-                                event.setCancelled(true);
-                            }
-                        }
-                        
-                        if (plugin.getBlacklist().getBoolean("Pickup.Gamemode.PreventFor.Creative", true)) {
-                            if(player.getGameMode().equals(GameMode.CREATIVE)) {
-                                event.setCancelled(true);
-                            }
-                        }
-                        
-                        if (plugin.getBlacklist().getBoolean("Pickup.KickPlayer", true))
+                        if (event.isCancelled())
                         {
-                            if (event.isCancelled())
-                            {
-                                player.kickPlayer(plugin.blacklistPickupKickMsg(ItemNAME));
-                            }    
-                        }
+                            player.kickPlayer(plugin.blacklistPickupKickMsg(ItemNAME));
+                        }    
                     }
                 }
             }

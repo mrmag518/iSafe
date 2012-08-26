@@ -1,3 +1,28 @@
+Version 3.1
+* Fixed water buckets.
+* Removed Egg(chicken egg) mobspawn blacklist, really no need for it.
+* Updated info command.
+* Optimized the reload command.
+** It now uses a method the enable process uses.
+* Fixed 'StringIndexOutOfBoundsException' with the %command% variable.
+* Blacklist checks have been recoded.
+** Removed tons of useless checks and list creations.
+** This should improve performance.
+** No config nodes or permissions has been changed, don't worry.
+* Added permissions to the command blacklist.
+* Fixed the chat censor blacklist.
+* Fixed the command blacklist.
+* Fixed mobspawn blacklists.
+* Fixed interact blacklist having worlds in the blacklist, and the default "no defaults added." in the worlds list. (ups)
+* Added mobspawn blacklists for ChunkGen & Breeding.
+* Added crafting blacklist.
+** Blacklist items from being crafted by a player.
+* Fixed explosions causing tons of errors.
+* If explosion debug is enabled, and DisableAllExplosions is enabled, it will now log the proper explosion cause instead of "Unknown.".
+* DebugExplosions now debugs primed explosions too.
+* PrimedExplosions will not remove the entity anymore.
+* Supports 1.3.1-R2.0 / 1.3.2
+
 Version 3.01
 * Decreased the file size by removing the License.txt file from the project.
 * I thought I temporary removed pickup messages..

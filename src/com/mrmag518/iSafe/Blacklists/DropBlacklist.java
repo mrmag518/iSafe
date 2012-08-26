@@ -51,50 +51,44 @@ public class DropBlacklist implements Listener {
         String ItemNAME = event.getItemDrop().getItemStack().getType().name().toLowerCase();
         String worldname = world.getName();
         
-        final List<Item> dropedblocks = new ArrayList<Item>();
         
-        if (plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(itemID)
-                || plugin.getBlacklist().getList("Drop.Blacklist", dropedblocks).contains(ItemNAME.toLowerCase()))
+        if(plugin.getBlacklist().getList("Drop.Blacklist").contains(itemID)
+            || plugin.getBlacklist().getList("Drop.Blacklist").contains(ItemNAME.toLowerCase())) 
         {
             if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.drop")) 
             {
-                if (!event.isCancelled()) 
+                if(plugin.getBlacklist().getList("Drop.EnabledWorlds").contains(worldname)) 
                 {
-                    final List<String> Dropworlds = plugin.getBlacklist().getStringList("Drop.Worlds");
-                
-                    if (plugin.getBlacklist().getList("Drop.EnabledWorlds", Dropworlds).contains(worldname))
+                    if (plugin.getBlacklist().getBoolean("Drop.Gamemode.PreventFor.Survival", true)) {
+                        if(p.getGameMode().equals(GameMode.SURVIVAL)) {
+                            event.setCancelled(true);
+                        }
+                    }
+
+                    if (plugin.getBlacklist().getBoolean("Drop.Gamemode.PreventFor.Creative", true)) {
+                        if(p.getGameMode().equals(GameMode.CREATIVE)) {
+                            event.setCancelled(true);
+                        }
+                    }
+
+                    if (plugin.getBlacklist().getBoolean("Drop.KickPlayer", true))
                     {
-                        if (plugin.getBlacklist().getBoolean("Drop.Gamemode.PreventFor.Survival", true)) {
-                            if(p.getGameMode().equals(GameMode.SURVIVAL)) {
-                                event.setCancelled(true);
-                            }
-                        }
-                        
-                        if (plugin.getBlacklist().getBoolean("Drop.Gamemode.PreventFor.Creative", true)) {
-                            if(p.getGameMode().equals(GameMode.CREATIVE)) {
-                                event.setCancelled(true);
-                            }
-                        }
-                        
-                        if (plugin.getBlacklist().getBoolean("Drop.KickPlayer", true))
-                        {
-                            if (event.isCancelled()){
-                                p.kickPlayer(plugin.blacklistDropKickMsg(event.getItemDrop()));
-                            }    
-                        }
+                        if (event.isCancelled()){
+                            p.kickPlayer(plugin.blacklistDropKickMsg(event.getItemDrop()));
+                        }    
+                    }
 
-                        if (plugin.getBlacklist().getBoolean("Drop.Alert/log.ToConsole", true))
-                        {
-                            if (event.isCancelled()) {
-                                plugin.log.info("[iSafe]" + p.getName() + " was prevented from dropping the blacklisted item: " + ItemNAME);
-                            }
+                    if (plugin.getBlacklist().getBoolean("Drop.Alert/log.ToConsole", true))
+                    {
+                        if (event.isCancelled()) {
+                            plugin.log.info("[iSafe]" + p.getName() + " was prevented from dropping the blacklisted item: " + ItemNAME);
                         }
+                    }
 
-                        if (plugin.getBlacklist().getBoolean("Drop.Alert/log.ToPlayer", true))
-                        {
-                            if (event.isCancelled()) {
-                                p.sendMessage(plugin.blacklistDropMsg(ItemNAME));
-                            }
+                    if (plugin.getBlacklist().getBoolean("Drop.Alert/log.ToPlayer", true))
+                    {
+                        if (event.isCancelled()) {
+                            p.sendMessage(plugin.blacklistDropMsg(ItemNAME));
                         }
                     }
                 }

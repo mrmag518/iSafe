@@ -20,6 +20,8 @@ package com.mrmag518.iSafe;
 import com.mrmag518.iSafe.Events.BlockEvents.*;
 import com.mrmag518.iSafe.Events.EntityEvents.*;
 import com.mrmag518.iSafe.Events.WorldEvents.*;
+import com.mrmag518.iSafe.Blacklists.*;
+import com.mrmag518.iSafe.Commands.Commands;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,9 +32,6 @@ import java.io.File;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import com.mrmag518.iSafe.Blacklists.*;
-import com.mrmag518.iSafe.Commands.*;
 
 import net.milkbowl.vault.permission.Permission;
 
@@ -53,13 +52,29 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+
+/**
+ * Todo (v3.2):
+ * Add block 'blacklist'. (Which blocks are not going to be removed by an explosion)
+ * 
+ * Separate each blacklist into diff files. (Like, PlaceBlacklist.yml, BreakBlacklist.yml) This would be done
+ * inside a new directory called 'blacklists'.
+ * 
+ * When working with the separation for the blacklists, try to add better multi-world support.
+ * 
+ * Add blacklisting of more events.
+ * 
+ * All blacklists goes into one class. (why??) Look at the BlockListener class, at BlockBreakEvent.
+ * 
+ * @author magnus
+ **/
+
 public class iSafe extends JavaPlugin {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    //Remember to change this on every version!
-
-    private String fileversion = "iSafe v3.01 BETA";
-    private Double ConfigVersion = 3.01;
+    private String fileversion = "iSafe v3.1";
+    private Double ConfigVersion = 3.1;
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
     private PlayerListener playerListener = null;
     private BlockListener blockListener = null;
     private EntityListener entityListener = null;
@@ -80,6 +95,7 @@ public class iSafe extends JavaPlugin {
     private Censor censor = null;
     private DispenseBlacklist dispenseBlacklist = null;
     private InteractBlacklist interactBlacklist = null;
+    private CraftBlacklist craftBlacklist = null;
     
     public String version = null;
     public String newVersion = null;
@@ -101,7 +117,7 @@ public class iSafe extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        fileManagement();
+        fileLoadManagement();
     }
 
     @Override
@@ -148,9 +164,8 @@ public class iSafe extends JavaPlugin {
             }, 0, 432000);
         }
         getCommand("iSafe").setExecutor(new Commands(this));
+        
         checkMatch();
-
-        initVault();
 
         checkingUpdatePerms = false;
 
@@ -174,22 +189,6 @@ public class iSafe extends JavaPlugin {
 
     public boolean debugMode() {
         return getISafeConfig().getBoolean("DebugMode");
-    }
-    
-    public void initVault() {
-        if(iSafeConfig.getBoolean("UseVaultForPermissions", true)) {
-            if (getServer().getPluginManager().getPlugin("Vault") != null) {
-                verboseLog("Using Vault for permissions!");
-                setupPermissions();
-            } else {
-                log.severe("[iSafe] Vault.jar was NOT found in your plugins folder!");
-                log.severe("[iSafe] You HAVE to have Vault.jar in the plugins folder if you use Vault for permissions!");
-                log.warning("[iSafe] Settings UseVaultForPermissions in your iSafeConfig.yml to false ..");
-                getISafeConfig().set("UseVaultForPermissions", false);
-                saveISafeConfig();
-                reloadISafeConfig();
-            }
-        }
     }
 
     private void registerClasses() {
@@ -226,21 +225,22 @@ public class iSafe extends JavaPlugin {
         censor = new Censor(this);
         dispenseBlacklist = new DispenseBlacklist(this);
         interactBlacklist = new InteractBlacklist(this);
-
+        craftBlacklist = new CraftBlacklist(this);
+        
         debugLog("Registered classes.");
     }
-
-    private void fileManagement() {
+    
+    public void fileLoadManagement() {
         if (!(getDataFolder().exists())) {
             getDataFolder().mkdirs();
         }
-
-        File usersFolder = new File(getDataFolder(), "Users");
-        if (!(usersFolder.exists())) {
-            usersFolder.mkdir();
+        
+        File usersDir = new File(getDataFolder(), "Users");
+        if (!(usersDir.exists())) {
+            usersDir.mkdir();
         }
-
-        File exaFile = new File(usersFolder + File.separator + "_example.yml");
+        
+        File exaFile = new File(usersDir + File.separator + "_example.yml");
         if (!(exaFile.exists())) {
             try {
                 FileConfiguration exampFile = YamlConfiguration.loadConfiguration(exaFile);
@@ -256,15 +256,20 @@ public class iSafe extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-
+        
+        // Always load iSafeConfig first.
         reloadISafeConfig();
         loadISafeConfig();
         reloadISafeConfig();
-
+        
+        reloadMessages();
+        loadMessages();
+        reloadMessages();
+        
         reloadConfig();
         loadConfig();
         reloadConfig();
-
+        
         reloadBlacklist();
         loadBlacklist();
         reloadBlacklist();
@@ -272,12 +277,36 @@ public class iSafe extends JavaPlugin {
         reloadCreatureManager();
         loadCreatureManager();
         reloadCreatureManager();
-
-        reloadMessages();
-        loadMessages();
-        reloadMessages();
         
-        verboseLog("Loaded all files.");
+        // Check Vault.
+        getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+            @Override
+            public void run() {
+                setupVault();
+            }
+        }, 100);
+        
+        if(getConfig().getBoolean("Damage.EnablePermissions", true)) {
+            cancelDamagePerms = true;
+        } else {
+            cancelDamagePerms = false;
+        }
+    }
+    
+    private void setupVault() {
+        if(getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
+            if (getServer().getPluginManager().getPlugin("Vault") != null) {
+                verboseLog("Using Vault for permissions!");
+                setupPermissions();
+            } else {
+                log.severe("[iSafe] Vault.jar was NOT found in your plugins folder!");
+                log.severe("[iSafe] You need to have Vault.jar in the plugins folder if you're going to use Vault for permissions!");
+                log.warning("[iSafe] Settings UseVaultForPermissions in your iSafeConfig.yml to false ..");
+                getISafeConfig().set("UseVaultForPermissions", false);
+                saveISafeConfig();
+                reloadISafeConfig();
+            }
+        }
     }
     
     public void verboseLog(String string) {
@@ -359,7 +388,12 @@ public class iSafe extends JavaPlugin {
         }
     }
 
-    private String scanVariables(String configString, String playerName, String cmd, String blockName, String item, String world, String word) {
+    private String scanVariables(
+            String configString, String playerName, 
+            String cmd, String blockName, 
+            String item, String world, 
+            String word, String recipe) {
+        
         String result = configString;
         
         if(playerName != null) {
@@ -369,7 +403,7 @@ public class iSafe extends JavaPlugin {
         }
         if(cmd != null) {
             if(configString.contains("%command%")) {
-                result = result.replaceAll("%command%", cmd);
+                result = result.replace("%command%", cmd);
             }
         }
         if(blockName != null) {
@@ -390,6 +424,11 @@ public class iSafe extends JavaPlugin {
         if(word != null) {
             if(configString.contains("%word%")) {
                 result = result.replaceAll("%word%", word);
+            }
+        }
+        if(recipe != null) {
+            if(configString.contains("%recipe%")) {
+                result = result.replaceAll("%recipe%", recipe);
             }
         }
         
@@ -417,83 +456,83 @@ public class iSafe extends JavaPlugin {
     public void kickMessage(Player p) {
         String kickMsg = getMessages().getString("KickMessage");
         Server s = p.getServer();
-        s.broadcastMessage(scanVariables(kickMsg, p.getName(), null, null, null, p.getWorld().getName(), null));
+        s.broadcastMessage(scanVariables(kickMsg, p.getName(), null, null, null, p.getWorld().getName(), null, null));
     }
 
     public String sameNickPlaying(Player p) {
         String kickMsg = getMessages().getString("SameNickAlreadyPlaying");
-        return scanVariables(kickMsg, p.getName(), null, null, null, p.getWorld().getName(), null);
+        return scanVariables(kickMsg, p.getName(), null, null, null, p.getWorld().getName(), null, null);
     }
 
     public String denyNonOpsJoin() {
         String kickMsg = getMessages().getString("OnlyOpsCanJoin");
-        return scanVariables(kickMsg, null, null, null, null, null, null);
+        return scanVariables(kickMsg, null, null, null, null, null, null, null);
     }
 
     public String commandLogger(Player p, PlayerCommandPreprocessEvent event) {
         String logged = getMessages().getString("CommandLogger");
-        return scanVariables(logged, p.getName(), event.getMessage(), null, null, p.getWorld().getName(), null);
+        return scanVariables(logged, p.getName(), event.getMessage(), null, null, p.getWorld().getName(), null, null);
     }
     
     public String blacklistInteractKickMsg(Block b) {
         String kickMsg = getMessages().getString("Blacklists.Interact.KickMessage");
-        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
+        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null, null);
     }
     
     public String blacklistPlaceKickMsg(Block b) {
         String kickMsg = getMessages().getString("Blacklists.Place.KickMessage");
-        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
+        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null, null);
     }
     
     public String blacklistBreakKickMsg(Block b) {
         String kickMsg = getMessages().getString("Blacklists.Break.KickMessage");
-        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
+        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null, null);
     }
     
     public String blacklistCensorKickMsg(String word) {
         String kickMsg = getMessages().getString("Blacklists.Censor.KickMessage");
-        return scanVariables(kickMsg, null, null, null, null, null, word);
+        return scanVariables(kickMsg, null, null, null, null, null, word, null);
     }
     
     public String blacklistDropKickMsg(Item i) {
         String kickMsg = getMessages().getString("Blacklists.Drop.KickMessage");
-        return scanVariables(kickMsg, null, null, null, i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(), null);
+        return scanVariables(kickMsg, null, null, null, i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(), null, null);
     }
     
     public String blacklistPickupKickMsg(String item) {
         String kickMsg = getMessages().getString("Blacklists.Pickup.KickMessage");
-        return scanVariables(kickMsg, null, null, null, item, null, null);
+        return scanVariables(kickMsg, null, null, null, item, null, null, null);
     }
     
     public String blacklistCommandKickMsg(String cmd, String world) {
         String kickMsg = getMessages().getString("Blacklists.Command.KickMessage");
-        return scanVariables(kickMsg, null, cmd, null, null, world, null);
+        return scanVariables(kickMsg, null, cmd, null, null, world, null, null);
     }
     
     
     public String blacklistInteractMsg(Block b) {
         String disallowedMsg = getMessages().getString("Blacklists.Interact.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
+        return scanVariables(disallowedMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null, null);
     }
     
     public String blacklistPlaceMsg(Block b) {
         String disallowedMsg = getMessages().getString("Blacklists.Place.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
+        return scanVariables(disallowedMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null, null);
     }
     
     public String blacklistBreakMsg(Block b) {
         String disallowedMsg = getMessages().getString("Blacklists.Break.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null);
+        return scanVariables(disallowedMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null, null);
     }
     
     public String blacklistCensorMsg(String word) {
         String disallowedMsg = getMessages().getString("Blacklists.Censor.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, null, null, null, null, word);
+        return scanVariables(disallowedMsg, null, null, null, null, null, word, null);
     }
     
     public String blacklistDropMsg(String item) {
         String disallowedMsg = getMessages().getString("Blacklists.Drop.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, null, null, item, null, null);
+        return scanVariables(disallowedMsg, null, null, null, item, null, null, null);
     }
     
     /*public String blacklistPickupMsg(Item i) {
@@ -501,9 +540,14 @@ public class iSafe extends JavaPlugin {
         return scanVariables(disallowedMsg, null, null, null, i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(), null);
     }*/
     
+    public String blacklistCraftingMsg(String recipe) {
+        String disallowedMsg = getMessages().getString("Blacklists.Crafting.DisallowedMessage");
+        return scanVariables(disallowedMsg, null, null, null, null, null, null, recipe);
+    }
+    
     public String blacklistCommandMsg(String cmd, String world) {
         String disallowedMsg = getMessages().getString("Blacklists.Command.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, cmd, null, null, world, null);
+        return scanVariables(disallowedMsg, null, cmd, null, null, world, null, null);
     }
     
     private void loadConfig() {
@@ -512,7 +556,7 @@ public class iSafe extends JavaPlugin {
         
         config.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
         if(config.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
-            // If there is anything to modify in the 'new' version, I need to fix that here.
+            // If there is anything to modify in the 'new' version, fix that here.
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
             config.set("ConfigVersion", Double.valueOf(ConfigVersion));
         }
@@ -689,7 +733,9 @@ public class iSafe extends JavaPlugin {
         //----
         messages.addDefault("Blacklists.Command.KickMessage", "&cKicked for attempting to do command &f%command%");
         messages.addDefault("Blacklists.Command.DisallowedMessage", "&cThe command %command% is disabled!");
-
+        //----
+        messages.addDefault("Blacklists.Crafting.DisallowedMessage", "&cYou do not have access to craft &7%recipe%");
+        
         this.getMessages().options().copyDefaults(true);
         saveMessages();
     }
@@ -722,6 +768,14 @@ public class iSafe extends JavaPlugin {
         if(creatureManager.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
             creatureManager.set("ConfigVersion", Double.valueOf(ConfigVersion));
+            
+            /*
+             * Egg blacklist removal
+             */
+            if(creatureManager.contains("MobSpawn.Egg")) {
+                debugLog("Detected old MobSpawn blacklist section in creatureManager.yml, removing ..");
+                creatureManager.set("MobSpawn.Egg", null);
+            }
         }
         
         creatureManager.addDefault("Creatures.CreatureTarget.Disable-closest_player-target", false);
@@ -790,38 +844,45 @@ public class iSafe extends JavaPlugin {
         //Natural
         creatureManager.addDefault("MobSpawn.Natural.Debug.ToConsole", false);
         creatureManager.addDefault("MobSpawn.Natural.EnabledWorlds", Arrays.asList(Data.NaturalMSBlacklistWorldList));
-        Data.NaturalMSBlacklistWorld = creatureManager.getStringList("MobSpawn.Natural.Worlds");
+        Data.NaturalMSBlacklistWorld = creatureManager.getStringList("MobSpawn.Natural.EnabledWorlds");
         creatureManager.addDefault("MobSpawn.Natural.Blacklist", Arrays.asList(Data.NaturalMSBlacklistList));
         Data.NaturalMSBlacklist = creatureManager.getStringList("MobSpawn.Natural.Blacklist");
         
         //Spawner
         creatureManager.addDefault("MobSpawn.Spawner.Debug.ToConsole", false);
         creatureManager.addDefault("MobSpawn.Spawner.EnabledWorlds", Arrays.asList(Data.SpawnerMSBlacklistWorldList));
-        Data.SpawnerMSBlacklistWorld = creatureManager.getStringList("MobSpawn.Spawner.Worlds");
+        Data.SpawnerMSBlacklistWorld = creatureManager.getStringList("MobSpawn.Spawner.EnabledWorlds");
         creatureManager.addDefault("MobSpawn.Spawner.Blacklist", Arrays.asList(Data.SpawnerMSBlacklistList));
         Data.SpawnerMSBlacklist = creatureManager.getStringList("MobSpawn.Spawner.Blacklist");
         
         //Custom
         creatureManager.addDefault("MobSpawn.Custom.Debug.ToConsole", false);
         creatureManager.addDefault("MobSpawn.Custom.EnabledWorlds", Arrays.asList(Data.CustomMSBlacklistWorldList));
-        Data.CustomMSBlacklistWorld = creatureManager.getStringList("MobSpawn.Custom.Worlds");
+        Data.CustomMSBlacklistWorld = creatureManager.getStringList("MobSpawn.Custom.EnabledWorlds");
         creatureManager.addDefault("MobSpawn.Custom.Blacklist", Arrays.asList(Data.CustomMSBlacklistList));
         Data.CustomMSBlacklist = creatureManager.getStringList("MobSpawn.Custom.Blacklist");
-        
-        //Egg(Chicken egg)
-        creatureManager.addDefault("MobSpawn.Egg.Debug.ToConsole", false);
-        creatureManager.addDefault("MobSpawn.Egg.EnabledWorlds", Arrays.asList(Data.EggMSBlacklistWorldList));
-        Data.EggMSBlacklistWorld = creatureManager.getStringList("MobSpawn.Egg.Worlds");
-        creatureManager.addDefault("MobSpawn.Egg.Blacklist", Arrays.asList(Data.EggMSBlacklistList));
-        Data.EggMSBlacklist = creatureManager.getStringList("MobSpawn.Egg.Blacklist");
         
         //SpawnerEgg
         creatureManager.addDefault("MobSpawn.SpawnerEgg.Debug.ToConsole", false);
         creatureManager.addDefault("MobSpawn.SpawnerEgg.EnabledWorlds", Arrays.asList(Data.SpawnerEggMSBlacklistWorldList));
-        Data.SpawnerEggMSBlacklistWorld = creatureManager.getStringList("MobSpawn.SpawnerEgg.Worlds");
+        Data.SpawnerEggMSBlacklistWorld = creatureManager.getStringList("MobSpawn.SpawnerEgg.EnabledWorlds");
         creatureManager.addDefault("MobSpawn.SpawnerEgg.Blacklist", Arrays.asList(Data.SpawnerEggMSBlacklistList));
         Data.SpawnerEggMSBlacklist = creatureManager.getStringList("MobSpawn.SpawnerEgg.Blacklist");
 
+        //ChunkGen
+        creatureManager.addDefault("MobSpawn.ChunkGen.Debug.ToConsole", false);
+        creatureManager.addDefault("MobSpawn.ChunkGen.EnabledWorlds", Arrays.asList(Data.ChunkGenMSBlacklistWorldList));
+        Data.ChunkGenMSBlacklistWorld = creatureManager.getStringList("MobSpawn.ChunkGen.EnabledWorlds");
+        creatureManager.addDefault("MobSpawn.ChunkGen.Blacklist", Arrays.asList(Data.ChunkGenMSBlacklistList));
+        Data.ChunkGenMSBlacklist = creatureManager.getStringList("MobSpawn.ChunkGen.Blacklist");
+        
+        //Breeding
+        creatureManager.addDefault("MobSpawn.Breeding.Debug.ToConsole", false);
+        creatureManager.addDefault("MobSpawn.Breeding.EnabledWorlds", Arrays.asList(Data.BreedingMSBlacklistWorldList));
+        Data.BreedingMSBlacklistWorld = creatureManager.getStringList("MobSpawn.Breeding.EnabledWorlds");
+        creatureManager.addDefault("MobSpawn.Breeding.Blacklist", Arrays.asList(Data.BreedingMSBlacklistList));
+        Data.BreedingMSBlacklist = creatureManager.getStringList("MobSpawn.Breeding.Blacklist");
+        
         this.getCreatureManager().options().copyDefaults(true);
         saveCreatureManager();
     }
@@ -834,7 +895,17 @@ public class iSafe extends JavaPlugin {
         if(blacklist.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
             blacklist.set("ConfigVersion", Double.valueOf(ConfigVersion));
+            
+            // 3.1
+            if(blacklist.getStringList("Dispense.Worlds")!= null) {
+                blacklist.set("Dispense.Worlds", null);
+            }
         }
+        
+        /*
+         * TODO:
+         * Recode the other blacklists too.
+         */
         
         blacklist.addDefault("Place.TotallyDisableBlockPlace", false);
         blacklist.addDefault("Place.KickPlayer", false);
@@ -900,8 +971,8 @@ public class iSafe extends JavaPlugin {
         Data.WordBlacklist = blacklist.getStringList("Censor.Words/Blacklist");
         
         
-        blacklist.addDefault("Dispense.Worlds", Arrays.asList(Data.DispenseBlacklistWorldList));
-        Data.DispenseBlacklistWorld = blacklist.getStringList("Dispense.Worlds");
+        blacklist.addDefault("Dispense.EnabledWorlds", Arrays.asList(Data.DispenseBlacklistWorldList));
+        Data.DispenseBlacklistWorld = blacklist.getStringList("Dispense.EnabledWorlds");
         blacklist.addDefault("Dispense.Blacklist", Arrays.asList(Data.DispenseBlacklistList));
         Data.DispenseBlacklist = blacklist.getStringList("Dispense.Blacklist");
         
@@ -911,10 +982,20 @@ public class iSafe extends JavaPlugin {
         blacklist.addDefault("Interact.Alert/log.ToConsole", true);
         blacklist.addDefault("Interact.Gamemode.PreventFor.Survival", true);
         blacklist.addDefault("Interact.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Interact.EnabledWorlds", Arrays.asList(Data.InteractBlacklistList));
-        Data.InteractBlacklist = blacklist.getStringList("Interact.EnabledWorlds");
-        blacklist.addDefault("Interact.Blacklist", Arrays.asList(Data.InteractBlacklistWorldList));
-        Data.InteractBlacklistWorld = blacklist.getStringList("Interact.Blacklist");
+        blacklist.addDefault("Interact.EnabledWorlds", Arrays.asList(Data.InteractBlacklistWorldList));
+        Data.InteractBlacklistWorld = blacklist.getStringList("Interact.EnabledWorlds");
+        blacklist.addDefault("Interact.Blacklist", Arrays.asList(Data.InteractBlacklistList));
+        Data.InteractBlacklist = blacklist.getStringList("Interact.Blacklist");
+        
+        // Soon...
+        blacklist.addDefault("Crafting.Alert/log.ToPlayer", true);
+        blacklist.addDefault("Crafting.Alert/log.ToConsole", true);
+        blacklist.addDefault("Crafting.Gamemode.PreventFor.Survival", true);
+        blacklist.addDefault("Crafting.Gamemode.PreventFor.Creative", true);
+        blacklist.addDefault("Crafting.EnabledWorlds", Arrays.asList(Data.CraftBlacklistWorldList));
+        Data.CraftBlacklistWorld = blacklist.getStringList("Crafting.EnabledWorlds");
+        blacklist.addDefault("Crafting.Blacklist", Arrays.asList(Data.CraftBlacklistList));
+        Data.CraftBlacklist = blacklist.getStringList("Crafting.Blacklist");
 
         this.getBlacklist().options().copyDefaults(true);
         saveBlacklist();
@@ -1051,7 +1132,7 @@ public class iSafe extends JavaPlugin {
     private boolean setupPermissions() {
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
         perms = rsp.getProvider();
-        verboseLog("[iSafe] Hooked to permissions plugin: " + perms.getName());
+        log.info("[iSafe] Hooked to permissions plugin: " + perms.getName());
         return perms != null;
     }
 

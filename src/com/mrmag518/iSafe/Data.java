@@ -78,16 +78,22 @@ public class Data {
     public static String[] CustomMSBlacklistWorldList = { "world", "world_nether" };
     
     
-    public static List<String> EggMSBlacklist = new ArrayList<String>();
-    public static String[] EggMSBlacklistList = { "No defaults added." };
-    public static List<String> EggMSBlacklistWorld = new ArrayList<String>();
-    public static String[] EggMSBlacklistWorldList = { "world", "world_nether" };
-    
-    
     public static List<String> SpawnerEggMSBlacklist = new ArrayList<String>();
     public static String[] SpawnerEggMSBlacklistList = { "creeper" };
     public static List<String> SpawnerEggMSBlacklistWorld = new ArrayList<String>();
     public static String[] SpawnerEggMSBlacklistWorldList = { "world", "world_nether" };
+    
+    
+    public static List<String> ChunkGenMSBlacklist = new ArrayList<String>();
+    public static String[] ChunkGenMSBlacklistList = { "creeper" };
+    public static List<String> ChunkGenMSBlacklistWorld = new ArrayList<String>();
+    public static String[] ChunkGenMSBlacklistWorldList = { "world", "world_nether" };
+    
+    
+    public static List<String> BreedingMSBlacklist = new ArrayList<String>();
+    public static String[] BreedingMSBlacklistList = { "creeper" };
+    public static List<String> BreedingMSBlacklistWorld = new ArrayList<String>();
+    public static String[] BreedingMSBlacklistWorldList = { "world", "world_nether" };
     
     
     public static List<String> WordBlacklist = new ArrayList<String>();
@@ -110,6 +116,12 @@ public class Data {
     public static String[] InteractBlacklistList = { "No default added." };
     public static List<String> InteractBlacklistWorld = new ArrayList<String>();
     public static String[] InteractBlacklistWorldList = { "world", "world_nether" };
+    
+    
+    public static List<String> CraftBlacklist = new ArrayList<String>();
+    public static String[] CraftBlacklistList = { "No default added." };
+    public static List<String> CraftBlacklistWorld = new ArrayList<String>();
+    public static String[] CraftBlacklistWorldList = { "world", "world_nether" };
     
     
     public static String getDate() {

@@ -18,8 +18,6 @@ package com.mrmag518.iSafe.Events.EntityEvents;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 import com.mrmag518.iSafe.*;
 
 import org.bukkit.entity.*;
@@ -45,8 +43,7 @@ public class EntityListener implements Listener {
     
     @EventHandler
     public void managePortalCreation(EntityCreatePortalEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         
@@ -62,14 +59,17 @@ public class EntityListener implements Listener {
     
     @EventHandler
     public void onExplosionPrime(ExplosionPrimeEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         
         if(plugin.getConfig().getBoolean("Explosions.DisablePrimedExplosions", true))
         {
-            event.getEntity().remove();
+            if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
+                float radius = event.getRadius();
+                boolean fire = event.getFire();
+                plugin.log.info(plugin.DEBUG_PREFIX + "A PrimedExposion was prevented. | Radius: " + radius + " | Fire? " + fire);
+            }
             event.setCancelled(true);
         }
     }
@@ -79,107 +79,84 @@ public class EntityListener implements Listener {
         if (event.isCancelled()){
             return;
         }
-        
         Entity ent = event.getEntity();
         int x = (int) event.getLocation().getX();
         int y = (int) event.getLocation().getY();
         int z = (int) event.getLocation().getZ();
         String world = ent.getWorld().getName();
         
-        if(plugin.getConfig().getBoolean("Explosions.DisableAllExplosions", true))
-        {
-            int blocks = event.blockList().size();
-            event.blockList().clear();
-            if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true))
-            {
-                plugin.log.info("[iSafe](Debug)" + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
-                        + " Z: "+ z + " | Yield: "+ event.getYield()
-                        + " | Amount of blocks: " + blocks + " | World: "+ world + " | Caused by: Unknown.");
+        if(plugin.getConfig().getBoolean("Explosions.DisableAllExplosions", true)) {
+            if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
+                int blocks = event.blockList().size();
+                plugin.log.info(plugin.DEBUG_PREFIX + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
+                + " Z: "+ z + " | Yield: "+ event.getYield()
+                + " | Amount of blocks: " + blocks + " | World: "+ world + " | Caused by: " + ent.getType().name().toLowerCase());
             }
+            event.blockList().clear();
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.DisableCreeperExplosions", true))
-        {
-            int blocks = event.blockList().size();
-            if (ent instanceof Creeper) 
-            {
-                event.blockList().clear();
-                
-                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true))
-                {
-                plugin.log.info("[iSafe](Debug)" + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
-                        + " Z: "+ z + " | Yield: "+ event.getYield()
-                        + " | Amount of blocks: " + blocks + " | World: "+ world + " | Caused by: Creeper.");
+        if(plugin.getConfig().getBoolean("Explosions.DisableCreeperExplosions", true)){
+            if (ent instanceof Creeper) {
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
+                    int blocks = event.blockList().size();
+                    plugin.log.info(plugin.DEBUG_PREFIX + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
+                    + " Z: "+ z + " | Yield: "+ event.getYield()
+                    + " | Amount of blocks: " + blocks + " | World: "+ world + " | Caused by: " + ent.getType().name().toLowerCase());
                 }
+                event.blockList().clear();
                 return;
             }
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.DisableEnderdragonBlockDamage", true))
-        {
-            int blocks = event.blockList().size();
-            if (ent instanceof EnderDragon) 
-            {
-                event.blockList().clear();
-                
-                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true))
-                {
-                plugin.log.info("[iSafe](Debug)" + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
-                        + " Z: "+ z + " | Yield: "+ event.getYield()
-                        + " | Amount of blocks: " + blocks + " | World: "+ world + " | Caused by: EnderDragon.");
+        if(plugin.getConfig().getBoolean("Explosions.DisableEnderdragonBlockDamage", true)){
+            if (ent instanceof EnderDragon) {
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
+                    int blocks = event.blockList().size();
+                    plugin.log.info(plugin.DEBUG_PREFIX + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
+                    + " Z: "+ z + " | Yield: "+ event.getYield()
+                    + " | Amount of blocks: " + blocks + " | World: "+ world + " | Caused by: " + ent.getType().name().toLowerCase());
                 }
+                event.blockList().clear();
                 return;
             }
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.DisableTntExplosions", true))
-        {
-            int blocks = event.blockList().size();
-            if (ent instanceof TNTPrimed) 
-            {
-                event.blockList().clear();
-                
-                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true))
-                {
-                plugin.log.info("[iSafe](Debug)" + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
-                        + " Z: "+ z + " | Yield: "+ event.getYield()
-                        + " | Amount of blocks: " + blocks + " | World: "+ world + " | Caused by: TNT.");
+        if(plugin.getConfig().getBoolean("Explosions.DisableTntExplosions", true)){
+            if (ent instanceof TNTPrimed) {
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
+                    int blocks = event.blockList().size();
+                    plugin.log.info(plugin.DEBUG_PREFIX + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
+                    + " Z: "+ z + " | Yield: "+ event.getYield()
+                    + " | Amount of blocks: " + blocks + " | World: "+ world + " | Caused by: " + ent.getType().name().toLowerCase());
                 }
+                event.blockList().clear();
                 return;
             }
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.DisableFireballExplosions", true))
-        {
-            int blocks = event.blockList().size();
-            if (ent instanceof Fireball) 
-            {
-                event.blockList().clear();
-                
-                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true))
-                {
-                plugin.log.info("[iSafe](Debug)" + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
-                        + " Z: "+ z + " | Yield: "+ event.getYield()
-                        + " | Amount of blocks: " + blocks + " | World: "+ world + " | Caused by: Fireball.");
+        if(plugin.getConfig().getBoolean("Explosions.DisableFireballExplosions", true)){
+            if (ent instanceof Fireball) {
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
+                    int blocks = event.blockList().size();
+                    plugin.log.info(plugin.DEBUG_PREFIX + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
+                    + " Z: "+ z + " | Yield: "+ event.getYield()
+                    + " | Amount of blocks: " + blocks + " | World: "+ world + " | Caused by: " + ent.getType().name().toLowerCase());
                 }
+                event.blockList().clear();
                 return;
             }  
         }
         
-        if(plugin.getConfig().getBoolean("Explosions.DisableEnderCrystalExplosions", true))
-        {
-            int blocks = event.blockList().size();
-            if (ent instanceof EnderCrystal) 
-            {
-                event.blockList().clear();
-                
-                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true))
-                {
-                    plugin.log.info("[iSafe](Debug)" + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
-                            + " Z: "+ z + " | Yield: "+ event.getYield()
-                            + " | Amount of blocks: " + blocks + " | World: "+ world + " | Caused by: EnderCrystal.");
+        if(plugin.getConfig().getBoolean("Explosions.DisableEnderCrystalExplosions", true)){
+            if (ent instanceof EnderCrystal) {
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
+                    int blocks = event.blockList().size();
+                    plugin.log.info(plugin.DEBUG_PREFIX + " An explosion was prevented at the location: X: "+ x + " Y: "+ y 
+                    + " Z: "+ z + " | Yield: "+ event.getYield()
+                    + " | Amount of blocks: " + blocks + " | World: "+ world + " | Caused by: " + ent.getType().name().toLowerCase());
                 }
+                event.blockList().clear();
                 return;
             }  
         }
@@ -196,11 +173,9 @@ public class EntityListener implements Listener {
     
     @EventHandler
     public void EndermenGriefing(EntityChangeBlockEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
-        
         Entity entity = event.getEntity();
 
         if(plugin.getCreatureManager().getBoolean("Creatures.Endermen.PreventEndermenGriefing", true))

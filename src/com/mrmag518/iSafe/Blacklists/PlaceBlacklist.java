@@ -18,9 +18,6 @@
 
 package com.mrmag518.iSafe.Blacklists;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.GameMode;
@@ -53,48 +50,41 @@ public class PlaceBlacklist implements Listener {
         World world = p.getWorld();
         String worldname = world.getName();
         
-        //Blacklist
-        final List<Block> placedblocks = new ArrayList<Block>();
         
-        if (plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(blockID)
-                || plugin.getBlacklist().getList("Place.Blacklist", placedblocks).contains(BlockNAME.toLowerCase()))
+        if(plugin.getBlacklist().getList("Place.Blacklist").contains(blockID)
+            || plugin.getBlacklist().getList("Place.Blacklist").contains(BlockNAME.toLowerCase())) 
         {
             if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.place")) 
             {
-                if (!event.isCancelled()) 
+                if(plugin.getBlacklist().getList("Place.EnabledWorlds").contains(worldname)) 
                 {
-                    final List<String> worlds = plugin.getBlacklist().getStringList("Place.Worlds");
-                    
-                    if (plugin.getBlacklist().getList("Place.EnabledWorlds", worlds).contains(worldname))
-                    {
-                        if (plugin.getBlacklist().getBoolean("Place.Gamemode.PreventFor.Survival", true)) {
-                            if(p.getGameMode().equals(GameMode.SURVIVAL)) {
-                                event.setCancelled(true);
-                            }
-                        } 
-                        
-                        if (plugin.getBlacklist().getBoolean("Place.Gamemode.PreventFor.Creative", true)) {
-                            if(p.getGameMode().equals(GameMode.CREATIVE)) {
-                                event.setCancelled(true);
-                            }
+                    if (plugin.getBlacklist().getBoolean("Place.Gamemode.PreventFor.Survival", true)) {
+                        if(p.getGameMode().equals(GameMode.SURVIVAL)) {
+                            event.setCancelled(true);
                         }
-                        
-                        if (plugin.getBlacklist().getBoolean("Place.KickPlayer", true)){
-                            if (event.isCancelled()) {
-                                p.kickPlayer(plugin.blacklistPlaceKickMsg(block));
-                            }    
-                        }
+                    } 
 
-                        if (plugin.getBlacklist().getBoolean("Place.Alert/log.ToConsole", true)){
-                            if (event.isCancelled()) {
-                                plugin.log.info("[iSafe]" + p.getName() + " was prevented from placing the blacklisted block: " + BlockNAME);
-                            }
+                    if (plugin.getBlacklist().getBoolean("Place.Gamemode.PreventFor.Creative", true)) {
+                        if(p.getGameMode().equals(GameMode.CREATIVE)) {
+                            event.setCancelled(true);
                         }
+                    }
 
-                        if (plugin.getBlacklist().getBoolean("Place.Alert/log.ToPlayer", true)){
-                            if (event.isCancelled()) {
-                                p.sendMessage(plugin.blacklistPlaceMsg(block));
-                            }
+                    if (plugin.getBlacklist().getBoolean("Place.KickPlayer", true)){
+                        if (event.isCancelled()) {
+                            p.kickPlayer(plugin.blacklistPlaceKickMsg(block));
+                        }    
+                    }
+
+                    if (plugin.getBlacklist().getBoolean("Place.Alert/log.ToConsole", true)){
+                        if (event.isCancelled()) {
+                            plugin.log.info("[iSafe]" + p.getName() + " was prevented from placing the blacklisted block: " + BlockNAME);
+                        }
+                    }
+
+                    if (plugin.getBlacklist().getBoolean("Place.Alert/log.ToPlayer", true)){
+                        if (event.isCancelled()) {
+                            p.sendMessage(plugin.blacklistPlaceMsg(block));
                         }
                     }
                 }

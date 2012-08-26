@@ -71,29 +71,13 @@ public class Commands implements CommandExecutor {
     
     public boolean reload(CommandSender sender) {
         String v = plugin.getDescription().getVersion();
-        File userFolder = new File(plugin.getDataFolder(), "Users");
         sender.sendMessage(G + "Reloading all iSafe " + v + " files ..");
         
-        if(!plugin.getDataFolder().exists()) {
-            plugin.getDataFolder().mkdirs();
-        }
-        
-        if(!(userFolder.exists())) {
-            userFolder.mkdir();
-        }
-        
-        plugin.reloadBlacklist();
-        plugin.reloadConfig();
-        plugin.reloadCreatureManager();
-        plugin.reloadISafeConfig();
-        plugin.reloadMessages();
-        
-        plugin.initVault();
-        
-        if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
-            plugin.cancelDamagePerms = true;
-        } else {
-            plugin.cancelDamagePerms = false;
+        try{
+            plugin.fileLoadManagement();
+        }catch(Exception e) {
+            sender.sendMessage(ChatColor.RED + "An issue ocurred while reloading iSafe!");
+            e.printStackTrace();
         }
         
         sender.sendMessage(G + "Reloaded all iSafe " + v + " files.");
@@ -108,7 +92,7 @@ public class Commands implements CommandExecutor {
         sender.sendMessage(AQ + "Author: " + W + "mrmag518");
         sender.sendMessage(AQ + "Testers: " + W + "domingo15 and Gunnerrrrr");
         sender.sendMessage(AQ + "Version: " + W + pdf.getFullName());
-        sender.sendMessage(AQ + "Minecraft version: " + W + "1.2.5");
+        sender.sendMessage(AQ + "Minecraft version: " + W + "1.3.*");
         sender.sendMessage(AQ + "BukkitDev link: " + W + "http://dev.bukkit.org/server-mods/blockthattnt/");
         return true;
     }
