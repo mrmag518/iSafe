@@ -35,7 +35,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.milkbowl.vault.permission.Permission;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -71,8 +73,8 @@ import org.w3c.dom.NodeList;
 
 public class iSafe extends JavaPlugin {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    private String fileversion = "iSafe v3.1";
-    private Double ConfigVersion = 3.1;
+    private String fileversion = "iSafe v3.2";
+    private Double ConfigVersion = 3.2;
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     private PlayerListener playerListener = null;
@@ -217,7 +219,7 @@ public class iSafe extends JavaPlugin {
         }
 
         dropBlacklist = new DropBlacklist(this);
-        placeBlacklist = new PlaceBlacklist(this);
+        //placeBlacklist = new PlaceBlacklist(this);
         breakBlacklist = new BreakBlacklist(this);
         pickupBlacklist = new PickupBlacklist(this);
         commandBlacklist = new CommandBlacklist(this);
@@ -256,6 +258,14 @@ public class iSafe extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+        
+        
+        // v3.2 tests
+        File blacklistsDir = new File(getDataFolder(), "Blacklists");
+        if(!blacklistsDir.exists()) {
+            blacklistsDir.mkdir();
+        }
+        
         
         // Always load iSafeConfig first.
         reloadISafeConfig();
@@ -902,21 +912,26 @@ public class iSafe extends JavaPlugin {
             }
         }
         
-        /*
-         * TODO:
-         * Recode the other blacklists too.
-         */
-        
         blacklist.addDefault("Place.TotallyDisableBlockPlace", false);
         blacklist.addDefault("Place.KickPlayer", false);
         blacklist.addDefault("Place.Alert/log.ToConsole", true);
         blacklist.addDefault("Place.Alert/log.ToPlayer", true);
         blacklist.addDefault("Place.Gamemode.PreventFor.Survival", true);
         blacklist.addDefault("Place.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Place.EnabledWorlds", Arrays.asList(Data.PlaceBlacklistWorldList));
+        /*blacklist.addDefault("Place.EnabledWorlds", Arrays.asList(Data.PlaceBlacklistWorldList));
         Data.PlaceBlacklistWorld = blacklist.getStringList("Place.EnabledWorlds");
         blacklist.addDefault("Place.Blacklist", Arrays.asList(Data.PlaceBlacklistList));
-        Data.PlaceBlacklist = blacklist.getStringList("Place.Blacklist");
+        Data.PlaceBlacklist = blacklist.getStringList("Place.Blacklist");*/
+        
+        // Test
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            String placeBl = "Place." + worldname + ".Blacklist";
+            String state = "Place." + worldname + ".Enabled";
+            
+            blacklist.addDefault(placeBl, "46,19");
+            blacklist.addDefault(state, false);
+        }
         
         
         blacklist.addDefault("Break.TotallyDisableBlockBreak", false);

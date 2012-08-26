@@ -22,9 +22,11 @@ package com.mrmag518.iSafe.Events.BlockEvents;
 
 import com.mrmag518.iSafe.*;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,6 +52,33 @@ public class BlockListener implements Listener {
         }
         if(plugin.getConfig().getBoolean("Miscellaneous.DisableBlockGrow", true)) {
             event.setCancelled(true);
+        }
+    }
+    
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.isCancelled()){
+            return;
+        }
+        Block b = event.getBlock();
+        Player p = event.getPlayer();
+        int id = b.getTypeId();
+        
+        // Test
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            String pWorld = p.getWorld().getName();
+            String placeBl = "Place." + worldname + ".Blacklist";
+            
+            if(pWorld.equalsIgnoreCase(worldname)) {
+                String state = "Place." + pWorld + ".Enabled";
+                if(plugin.getBlacklist().getBoolean(state) == true) {
+                    if(plugin.getBlacklist().getString(placeBl).contains(id + ",")) {
+                        event.setCancelled(true);
+                        p.sendMessage(ChatColor.RED + "Cannot place " + id + " in world " + pWorld);
+                    }
+                }
+            }
         }
     }
     
