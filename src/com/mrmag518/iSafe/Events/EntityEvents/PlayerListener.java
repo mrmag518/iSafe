@@ -23,6 +23,7 @@ import com.mrmag518.iSafe.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -52,7 +53,9 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Buckets.Lava.Prevent")) {
             if (plugin.getConfig().getList("Buckets.Lava.CheckedWorlds").contains(worldname)) {
                 if(!(plugin.hasPermission(p, "iSafe.use.lavabuckets"))) {
-                    event.setCancelled(true);
+                    if(event.getBucket() == Material.LAVA_BUCKET) {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }
@@ -60,7 +63,9 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Buckets.Water.Prevent")) {
             if (plugin.getConfig().getList("Buckets.Water.CheckedWorlds").contains(worldname)) {
                 if(!(plugin.hasPermission(p, "iSafe.use.waterbuckets"))) {
-                    event.setCancelled(true);
+                    if(event.getBucket() == Material.WATER_BUCKET) {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }

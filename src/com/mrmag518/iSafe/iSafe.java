@@ -137,7 +137,8 @@ public class iSafe extends JavaPlugin {
                 public void run() {
                     try {
                         newVersion = updateCheck(currentVersion);
-                        if (newVersion > currentVersion) {
+                        
+                        if(newVersion > currentVersion) {
                             log.info(" ");
                             log.info("#######  iSafe UpdateChecker  #######");
                             log.info("A new update for iSafe was found! " + newVersion);

@@ -9,6 +9,7 @@ Version 3.2
 ** To keep things cleaner, blacklists related to blocks/items only supports their ID, not name.
 ** This update should improve the server's performance.
 * Added KickPlayer option, and bypass permissions to the chat blacklist.
+* Ah!! What the.. Sorry for bucket issues.. some wierd noob mistake I've done, ugh.
 * 
 
 Version 3.1
