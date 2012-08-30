@@ -30,34 +30,8 @@ public class Data {
     }
     
     
-    public static List<String> PlaceBlacklist = new ArrayList<String>();
-    public static String[] PlaceBlacklistList = { "No defaults added." };
-    public static List<String> PlaceBlacklistWorld = new ArrayList<String>();
-    public static String[] PlaceBlacklistWorldList = { "world", "world_nether" };
-    
-    
-    public static List<String> BreakBlacklist = new ArrayList<String>();
-    public static String[] BreakBlacklistList = { "No defaults added." };
-    public static List<String> BreakBlacklistWorld = new ArrayList<String>();
-    public static String[] BreakBlacklistWorldList = { "world", "world_nether" };
-    
-    
-    public static List<String> DropBlacklist = new ArrayList<String>();
-    public static String[] DropBlacklistList = { "No defaults added." };
-    public static List<String> DropBlacklistWorld = new ArrayList<String>();
-    public static String[] DropBlacklistWorldList = { "world", "world_nether" };
-    
-    
-    public static List<String> PickupBlacklist = new ArrayList<String>();
-    public static String[] PickupBlacklistList = { "No defaults added." };
-    public static List<String> PickupBlacklistWorld = new ArrayList<String>();
-    public static String[] PickupBlacklistWorldList = { "world", "world_nether" };
-    
-    
     public static List<String> CmdBlacklist = new ArrayList<String>();
     public static String[] CmdBlacklistList = { "/nuke" };
-    public static List<String> CmdBlacklistWorld = new ArrayList<String>();
-    public static String[] CmdBlacklistWorldList = { "world", "world_nether" };
     
     
     public static List<String> NaturalMSBlacklist = new ArrayList<String>();
@@ -108,20 +82,9 @@ public class Data {
     
     public static List<String> LavaBucketWorld = new ArrayList<String>();
     public static String[] LavaBucketWorldList = { "world", "world_nether" };
+    
     public static List<String> WaterBucketWorld = new ArrayList<String>();
     public static String[] WaterBucketWorldList = { "world", "world_nether" };
-    
-    
-    public static List<String> InteractBlacklist = new ArrayList<String>();
-    public static String[] InteractBlacklistList = { "No default added." };
-    public static List<String> InteractBlacklistWorld = new ArrayList<String>();
-    public static String[] InteractBlacklistWorldList = { "world", "world_nether" };
-    
-    
-    public static List<String> CraftBlacklist = new ArrayList<String>();
-    public static String[] CraftBlacklistList = { "No default added." };
-    public static List<String> CraftBlacklistWorld = new ArrayList<String>();
-    public static String[] CraftBlacklistWorldList = { "world", "world_nether" };
     
     
     public static String getDate() {

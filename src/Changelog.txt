@@ -1,4 +1,14 @@
 Version 3.2
+* Fixed loading issues with ISafeConfig.yml & Messages.yml.
+* blacklist.yml is now named blacklists.yml
+* Made censor case insensitive.
+* Improved/updated the update checker.
+* All blacklists have been completely recoded and revamped.
+** There's now a much greater and possibility full multi-world support for blacklists.
+** All blacklists except chat/censor & command blacklists now uses a much easier and understandable 'list' to choose disallowed blocks.
+** To keep things cleaner, blacklists related to blocks/items only supports their ID, not name.
+** This update should improve the server's performance.
+* Added KickPlayer option, and bypass permissions to the chat blacklist.
 * 
 
 Version 3.1

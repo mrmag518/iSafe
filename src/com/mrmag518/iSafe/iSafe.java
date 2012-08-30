@@ -46,6 +46,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -58,9 +59,6 @@ import org.w3c.dom.NodeList;
 /**
  * Todo (v3.2):
  * Add block 'blacklist'. (Which blocks are not going to be removed by an explosion)
- * 
- * Separate each blacklist into diff files. (Like, PlaceBlacklist.yml, BreakBlacklist.yml) This would be done
- * inside a new directory called 'blacklists'.
  * 
  * When working with the separation for the blacklists, try to add better multi-world support.
  * 
@@ -88,39 +86,29 @@ public class iSafe extends JavaPlugin {
     private DropListener dropListener = null;
     private UserFileCreator UFC = null;
     private SendUpdate sendUpdate = null;
-    private DropBlacklist dropBlacklist = null;
-    private PlaceBlacklist placeBlacklist = null;
-    private BreakBlacklist breakBlacklist = null;
-    private PickupBlacklist pickupBlacklist = null;
-    private CommandBlacklist commandBlacklist = null;
-    private MobSpawnBlacklist mobSpawnBlacklist = null;
-    private Censor censor = null;
-    private DispenseBlacklist dispenseBlacklist = null;
-    private InteractBlacklist interactBlacklist = null;
-    private CraftBlacklist craftBlacklist = null;
     
-    public String version = null;
-    public String newVersion = null;
+    private Blacklists blacklistClass = null;
+    
+    public double currentVersion;
+    public double newVersion;
+    
     public static iSafe plugin;
     public final Logger log = Logger.getLogger("Minecraft");
     public String DEBUG_PREFIX = "[iSafe DEBUG]" + " ";
     public static Permission perms = null;
+    
     private FileConfiguration iSafeConfig = null;
     private File iSafeConfigFile = null;
     private FileConfiguration messages = null;
     private File messagesFile = null;
     private FileConfiguration creatureManager = null;
     private File creatureManagerFile = null;
-    private FileConfiguration blacklist = null;
-    private File blacklistFile = null;
+    private FileConfiguration blacklists = null;
+    private File blacklistsFile = null;
     private FileConfiguration config;
+    
     public boolean checkingUpdatePerms = false;
     public boolean cancelDamagePerms = false;
-
-    @Override
-    public void onLoad() {
-        fileLoadManagement();
-    }
 
     @Override
     public void onDisable() {
@@ -134,9 +122,11 @@ public class iSafe extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        version = this.getDescription().getVersion();
+        fileLoadManagement();
+        
+        currentVersion = Double.valueOf(getDescription().getVersion());
         debugLog("Debug mode is enabled!");
-
+        
         registerClasses();
         PluginDescriptionFile pdffile = this.getDescription();
         if (getISafeConfig().getBoolean("CheckForUpdates", true)) {
@@ -146,14 +136,12 @@ public class iSafe extends JavaPlugin {
                 @Override
                 public void run() {
                     try {
-                        newVersion = updateCheck(version);
-                        String oldVersion = version;
-
-                        if (!newVersion.contains(oldVersion)) {
+                        newVersion = updateCheck(currentVersion);
+                        if (newVersion > currentVersion) {
                             log.info(" ");
                             log.info("#######  iSafe UpdateChecker  #######");
                             log.info("A new update for iSafe was found! " + newVersion);
-                            log.info("You are currently running iSafe v" + oldVersion);
+                            log.info("You are currently running iSafe v" + currentVersion);
                             log.info("You can find this new version at BukkitDev.");
                             log.info("http://dev.bukkit.org/server-mods/blockthattnt/");
                             log.info("#####################################");
@@ -170,6 +158,8 @@ public class iSafe extends JavaPlugin {
         checkMatch();
 
         checkingUpdatePerms = false;
+        
+        checkPlugins();
 
         try {
             Metrics metrics = new Metrics(this);
@@ -217,17 +207,8 @@ public class iSafe extends JavaPlugin {
             sendUpdate = null;
             debugLog("CheckForUpdates in the iSafeConfig.yml was disabled, therefor not registering the sendUpdate class.");
         }
-
-        dropBlacklist = new DropBlacklist(this);
-        //placeBlacklist = new PlaceBlacklist(this);
-        breakBlacklist = new BreakBlacklist(this);
-        pickupBlacklist = new PickupBlacklist(this);
-        commandBlacklist = new CommandBlacklist(this);
-        mobSpawnBlacklist = new MobSpawnBlacklist(this);
-        censor = new Censor(this);
-        dispenseBlacklist = new DispenseBlacklist(this);
-        interactBlacklist = new InteractBlacklist(this);
-        craftBlacklist = new CraftBlacklist(this);
+        
+        blacklistClass = new Blacklists(this);
         
         debugLog("Registered classes.");
     }
@@ -260,13 +241,6 @@ public class iSafe extends JavaPlugin {
         }
         
         
-        // v3.2 tests
-        File blacklistsDir = new File(getDataFolder(), "Blacklists");
-        if(!blacklistsDir.exists()) {
-            blacklistsDir.mkdir();
-        }
-        
-        
         // Always load iSafeConfig first.
         reloadISafeConfig();
         loadISafeConfig();
@@ -280,21 +254,20 @@ public class iSafe extends JavaPlugin {
         loadConfig();
         reloadConfig();
         
-        reloadBlacklist();
-        loadBlacklist();
-        reloadBlacklist();
-
-        reloadCreatureManager();
-        loadCreatureManager();
-        reloadCreatureManager();
-        
-        // Check Vault.
         getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
             @Override
             public void run() {
+                reloadCreatureManager();
+                loadCreatureManager();
+                reloadCreatureManager();
+                
+                reloadBlacklists();
+                loadBlacklists();
+                reloadBlacklists();
+                
                 setupVault();
             }
-        }, 100);
+        }, 40);
         
         if(getConfig().getBoolean("Damage.EnablePermissions", true)) {
             cancelDamagePerms = true;
@@ -316,6 +289,18 @@ public class iSafe extends JavaPlugin {
                 saveISafeConfig();
                 reloadISafeConfig();
             }
+        }
+    }
+    
+    private void checkPlugins() {
+        PluginManager pm = getServer().getPluginManager();
+        if(pm.getPlugin("EssentialsProtect") != null) {
+            debugLog("You are running EssentialsProtect, cool!");
+            debugLog("Have in mind that some of iSafe's and EssentialsProtect's features can 'collide'.");
+        }
+        if(pm.getPlugin("WorldGuard") != null) {
+            debugLog("You are running WorldGuard, cool!");
+            debugLog("Have in mind that some of iSafe's and WorldGuards's features can 'collide'.");
         }
     }
     
@@ -778,14 +763,6 @@ public class iSafe extends JavaPlugin {
         if(creatureManager.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
             creatureManager.set("ConfigVersion", Double.valueOf(ConfigVersion));
-            
-            /*
-             * Egg blacklist removal
-             */
-            if(creatureManager.contains("MobSpawn.Egg")) {
-                debugLog("Detected old MobSpawn blacklist section in creatureManager.yml, removing ..");
-                creatureManager.set("MobSpawn.Egg", null);
-            }
         }
         
         creatureManager.addDefault("Creatures.CreatureTarget.Disable-closest_player-target", false);
@@ -849,171 +826,204 @@ public class iSafe extends JavaPlugin {
         creatureManager.addDefault("Creatures.Damage.DisableSuffocationDamage", false);
         creatureManager.addDefault("Creatures.Damage.DisableSuicideDamage", false);
         creatureManager.addDefault("Creatures.Damage.DisableVoidDamage", false);
-
-        //MobSpawn blacklists.
-        //Natural
-        creatureManager.addDefault("MobSpawn.Natural.Debug.ToConsole", false);
-        creatureManager.addDefault("MobSpawn.Natural.EnabledWorlds", Arrays.asList(Data.NaturalMSBlacklistWorldList));
-        Data.NaturalMSBlacklistWorld = creatureManager.getStringList("MobSpawn.Natural.EnabledWorlds");
-        creatureManager.addDefault("MobSpawn.Natural.Blacklist", Arrays.asList(Data.NaturalMSBlacklistList));
-        Data.NaturalMSBlacklist = creatureManager.getStringList("MobSpawn.Natural.Blacklist");
         
-        //Spawner
-        creatureManager.addDefault("MobSpawn.Spawner.Debug.ToConsole", false);
-        creatureManager.addDefault("MobSpawn.Spawner.EnabledWorlds", Arrays.asList(Data.SpawnerMSBlacklistWorldList));
-        Data.SpawnerMSBlacklistWorld = creatureManager.getStringList("MobSpawn.Spawner.EnabledWorlds");
-        creatureManager.addDefault("MobSpawn.Spawner.Blacklist", Arrays.asList(Data.SpawnerMSBlacklistList));
-        Data.SpawnerMSBlacklist = creatureManager.getStringList("MobSpawn.Spawner.Blacklist");
+        String defCreatures = "50,53,63";
         
-        //Custom
-        creatureManager.addDefault("MobSpawn.Custom.Debug.ToConsole", false);
-        creatureManager.addDefault("MobSpawn.Custom.EnabledWorlds", Arrays.asList(Data.CustomMSBlacklistWorldList));
-        Data.CustomMSBlacklistWorld = creatureManager.getStringList("MobSpawn.Custom.EnabledWorlds");
-        creatureManager.addDefault("MobSpawn.Custom.Blacklist", Arrays.asList(Data.CustomMSBlacklistList));
-        Data.CustomMSBlacklist = creatureManager.getStringList("MobSpawn.Custom.Blacklist");
-        
-        //SpawnerEgg
-        creatureManager.addDefault("MobSpawn.SpawnerEgg.Debug.ToConsole", false);
-        creatureManager.addDefault("MobSpawn.SpawnerEgg.EnabledWorlds", Arrays.asList(Data.SpawnerEggMSBlacklistWorldList));
-        Data.SpawnerEggMSBlacklistWorld = creatureManager.getStringList("MobSpawn.SpawnerEgg.EnabledWorlds");
-        creatureManager.addDefault("MobSpawn.SpawnerEgg.Blacklist", Arrays.asList(Data.SpawnerEggMSBlacklistList));
-        Data.SpawnerEggMSBlacklist = creatureManager.getStringList("MobSpawn.SpawnerEgg.Blacklist");
-
-        //ChunkGen
-        creatureManager.addDefault("MobSpawn.ChunkGen.Debug.ToConsole", false);
-        creatureManager.addDefault("MobSpawn.ChunkGen.EnabledWorlds", Arrays.asList(Data.ChunkGenMSBlacklistWorldList));
-        Data.ChunkGenMSBlacklistWorld = creatureManager.getStringList("MobSpawn.ChunkGen.EnabledWorlds");
-        creatureManager.addDefault("MobSpawn.ChunkGen.Blacklist", Arrays.asList(Data.ChunkGenMSBlacklistList));
-        Data.ChunkGenMSBlacklist = creatureManager.getStringList("MobSpawn.ChunkGen.Blacklist");
-        
-        //Breeding
-        creatureManager.addDefault("MobSpawn.Breeding.Debug.ToConsole", false);
-        creatureManager.addDefault("MobSpawn.Breeding.EnabledWorlds", Arrays.asList(Data.BreedingMSBlacklistWorldList));
-        Data.BreedingMSBlacklistWorld = creatureManager.getStringList("MobSpawn.Breeding.EnabledWorlds");
-        creatureManager.addDefault("MobSpawn.Breeding.Blacklist", Arrays.asList(Data.BreedingMSBlacklistList));
-        Data.BreedingMSBlacklist = creatureManager.getStringList("MobSpawn.Breeding.Blacklist");
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            
+            String naturalBL = "MobSpawn." + worldname + ".Natural.Blacklist";
+            String spawnerBL = "MobSpawn." + worldname + ".Spawner.Blacklist";
+            String customBL = "MobSpawn." + worldname + ".Custom.Blacklist";
+            String spawnereggBL = "MobSpawn." + worldname + ".SpawnerEgg.Blacklist";
+            String chunkgenBL = "MobSpawn." + worldname + ".ChunkGen.Blacklist";
+            String breedingBL = "MobSpawn." + worldname + ".Breeding.Blacklist";
+            String state = "MobSpawn." + worldname + ".Enabled";
+            
+            creatureManager.addDefault(state, false);
+            creatureManager.addDefault("MobSpawn." + worldname + ".Natural.Debug.ToConsole", true);
+            creatureManager.addDefault(naturalBL, defCreatures);
+            
+            creatureManager.addDefault(state, false);
+            creatureManager.addDefault("MobSpawn." + worldname + ".Spawner.Debug.ToConsole", true);
+            creatureManager.addDefault(spawnerBL, defCreatures);
+            
+            creatureManager.addDefault(state, false);
+            creatureManager.addDefault("MobSpawn." + worldname + ".Custom.Debug.ToConsole", true);
+            creatureManager.addDefault(customBL, defCreatures);
+            
+            creatureManager.addDefault(state, false);
+            creatureManager.addDefault("MobSpawn." + worldname + ".SpawnerEgg.Debug.ToConsole", true);
+            creatureManager.addDefault(spawnereggBL, defCreatures);
+            
+            creatureManager.addDefault(state, false);
+            creatureManager.addDefault("MobSpawn." + worldname + ".ChunkGen.Debug.ToConsole", true);
+            creatureManager.addDefault(chunkgenBL, defCreatures);
+            
+            creatureManager.addDefault(state, false);
+            creatureManager.addDefault("MobSpawn." + worldname + ".Breeding.Debug.ToConsole", true);
+            creatureManager.addDefault(breedingBL, defCreatures);
+        }
         
         this.getCreatureManager().options().copyDefaults(true);
         saveCreatureManager();
     }
 
-    private void loadBlacklist() {
-        blacklist = getBlacklist();
-        blacklist.options().header(Data.setBlacklistHeader());
+    private void loadBlacklists() {
+        blacklists = getBlacklists();
+        blacklists.options().header(Data.setBlacklistHeader());
         
-        blacklist.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
-        if(blacklist.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
+        String defBlocks = "46,51,11,10";
+        String defInteract = "324,330";
+        
+        blacklists.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
+        if(blacklists.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
-            blacklist.set("ConfigVersion", Double.valueOf(ConfigVersion));
-            
-            // 3.1
-            if(blacklist.getStringList("Dispense.Worlds")!= null) {
-                blacklist.set("Dispense.Worlds", null);
-            }
+            blacklists.set("ConfigVersion", Double.valueOf(ConfigVersion));
         }
         
-        blacklist.addDefault("Place.TotallyDisableBlockPlace", false);
-        blacklist.addDefault("Place.KickPlayer", false);
-        blacklist.addDefault("Place.Alert/log.ToConsole", true);
-        blacklist.addDefault("Place.Alert/log.ToPlayer", true);
-        blacklist.addDefault("Place.Gamemode.PreventFor.Survival", true);
-        blacklist.addDefault("Place.Gamemode.PreventFor.Creative", true);
-        /*blacklist.addDefault("Place.EnabledWorlds", Arrays.asList(Data.PlaceBlacklistWorldList));
-        Data.PlaceBlacklistWorld = blacklist.getStringList("Place.EnabledWorlds");
-        blacklist.addDefault("Place.Blacklist", Arrays.asList(Data.PlaceBlacklistList));
-        Data.PlaceBlacklist = blacklist.getStringList("Place.Blacklist");*/
+        /*
+         * Try making the all the "for World world" into one, will probably improve performance, and cleanup some shit here.
+         */
         
-        // Test
         for(World world : Bukkit.getServer().getWorlds()) {
             String worldname = world.getName();
+            
             String placeBl = "Place." + worldname + ".Blacklist";
             String state = "Place." + worldname + ".Enabled";
             
-            blacklist.addDefault(placeBl, "46,19");
-            blacklist.addDefault(state, false);
+            blacklists.addDefault(state, false);
+            blacklists.addDefault("Place." + worldname + ".Gamemode.PreventFor.Survival", true);
+            blacklists.addDefault("Place." + worldname + ".Gamemode.PreventFor.Creative", true);
+            blacklists.addDefault("Place." + worldname + ".Alert/log.ToConsole", true);
+            blacklists.addDefault("Place." + worldname + ".Alert/log.ToPlayer", true);
+            blacklists.addDefault("Place." + worldname + ".KickPlayer", false);
+            blacklists.addDefault(placeBl, defBlocks);
         }
         
         
-        blacklist.addDefault("Break.TotallyDisableBlockBreak", false);
-        blacklist.addDefault("Break.KickPlayer", false);
-        blacklist.addDefault("Break.Alert/log.ToConsole", true);
-        blacklist.addDefault("Break.Alert/log.ToPlayer", true);
-        blacklist.addDefault("Break.Gamemode.PreventFor.Survival", true);
-        blacklist.addDefault("Break.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Break.EnabledWorlds", Arrays.asList(Data.BreakBlacklistWorldList));
-        Data.BreakBlacklistWorld = blacklist.getStringList("Break.EnabledWorlds");
-        blacklist.addDefault("Break.Blacklist", Arrays.asList(Data.BreakBlacklistList));
-        Data.BreakBlacklist = blacklist.getStringList("Break.Blacklist");
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            
+            String breakBL = "Break." + worldname + ".Blacklist";
+            String state = "Break." + worldname + ".Enabled";
+            
+            blacklists.addDefault(state, false);
+            blacklists.addDefault("Break." + worldname + ".Gamemode.PreventFor.Survival", true);
+            blacklists.addDefault("Break." + worldname + ".Gamemode.PreventFor.Creative", true);
+            blacklists.addDefault("Break." + worldname + ".Alert/log.ToConsole", true);
+            blacklists.addDefault("Break." + worldname + ".Alert/log.ToPlayer", true);
+            blacklists.addDefault("Break." + worldname + ".KickPlayer", false);
+            blacklists.addDefault(breakBL, defBlocks);
+        }
         
         
-        blacklist.addDefault("Drop.TotallyDisableBlockDrop", false);
-        blacklist.addDefault("Drop.KickPlayer", false);
-        blacklist.addDefault("Drop.Alert/log.ToConsole", true);
-        blacklist.addDefault("Drop.Alert/log.ToPlayer", true);
-        blacklist.addDefault("Drop.Gamemode.PreventFor.Survival", true);
-        blacklist.addDefault("Drop.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Drop.EnabledWorlds", Arrays.asList(Data.DropBlacklistWorldList));
-        Data.DropBlacklistWorld = blacklist.getStringList("Drop.EnabledWorlds");
-        blacklist.addDefault("Drop.Blacklist", Arrays.asList(Data.DropBlacklistList));
-        Data.DropBlacklist = blacklist.getStringList("Drop.Blacklist");
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            
+            String dropBL = "Drop." + worldname + ".Blacklist";
+            String state = "Drop." + worldname + ".Enabled";
+            
+            blacklists.addDefault(state, false);
+            blacklists.addDefault("Drop." + worldname + ".Gamemode.PreventFor.Survival", true);
+            blacklists.addDefault("Drop." + worldname + ".Gamemode.PreventFor.Creative", true);
+            blacklists.addDefault("Drop." + worldname + ".Alert/log.ToConsole", true);
+            blacklists.addDefault("Drop." + worldname + ".Alert/log.ToPlayer", true);
+            blacklists.addDefault("Drop." + worldname + ".KickPlayer", false);
+            blacklists.addDefault(dropBL, defBlocks);
+        }
         
         
-        blacklist.addDefault("Pickup.TotallyDisableBlockPickup", false);
-        blacklist.addDefault("Pickup.KickPlayer", false);
-        /*blacklist.addDefault("Pickup.Alert/log.To-console", true);
-        blacklist.addDefault("Pickup.Alert/log.To-player", true);*/
-        blacklist.addDefault("Pickup.Gamemode.PreventFor.Survival", true);
-        blacklist.addDefault("Pickup.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Pickup.EnabledWorlds", Arrays.asList(Data.PickupBlacklistWorldList));
-        Data.PickupBlacklistWorld = blacklist.getStringList("Pickup.EnabledWorlds");
-        blacklist.addDefault("Pickup.Blacklist", Arrays.asList(Data.PickupBlacklistList));
-        Data.PickupBlacklist = blacklist.getStringList("Pickup.Blacklist");
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            
+            String pickupBL = "Pickup." + worldname + ".Blacklist";
+            String state = "Pickup." + worldname + ".Enabled";
+            
+            blacklists.addDefault(state, false);
+            blacklists.addDefault("Pickup." + worldname + ".Gamemode.PreventFor.Survival", true);
+            blacklists.addDefault("Pickup." + worldname + ".Gamemode.PreventFor.Creative", true);
+            blacklists.addDefault("Pickup." + worldname + ".Alert/log.ToConsole", true);
+            //blacklists.addDefault("Pickup." + worldname + ".Alert/log.ToPlayer", true);
+            blacklists.addDefault("Pickup." + worldname + ".KickPlayer", false);
+            blacklists.addDefault(pickupBL, defBlocks);
+        }
+        
+        
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            
+            String cmdBL = "Command." + worldname + ".Blacklist";
+            String state = "Command." + worldname + ".Enabled";
+            
+            blacklists.addDefault(state, false);
+            blacklists.addDefault("Command." + worldname + ".Alert/log.ToConsole", true);
+            blacklists.addDefault("Command." + worldname + ".Alert/log.ToPlayer", true);
+            blacklists.addDefault("Command." + worldname + ".KickPlayer", false);
+            blacklists.addDefault(cmdBL, Arrays.asList(Data.CmdBlacklistList));
+            Data.CmdBlacklist = blacklists.getStringList(cmdBL);
+        }
+        
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            
+            String chatBL = "Chat." + worldname + ".Blacklist";
+            String state = "Chat." + worldname + ".Enabled";
+            
+            blacklists.addDefault(state, false);
+            blacklists.addDefault("Chat." + worldname + ".Alert/log.ToConsole", true);
+            blacklists.addDefault("Chat." + worldname + ".Alert/log.ToPlayer", true);
+            blacklists.addDefault("Chat." + worldname + ".KickPlayer", false);
+            blacklists.addDefault(chatBL, Arrays.asList(Data.WordBlacklistList));
+            Data.WordBlacklist = blacklists.getStringList(chatBL);
+        }
+        
+        
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            
+            String dispenseBL = "Dispense." + worldname + ".Blacklist";
+            String state = "Dispense." + worldname + ".Enabled";
+            
+            blacklists.addDefault(state, false);
+            blacklists.addDefault("Dispense." + worldname + ".Alert/log.ToConsole", true);
+            blacklists.addDefault(dispenseBL, defBlocks);
+        }
+        
+        
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            
+            String interactBL = "Interact." + worldname + ".Blacklist";
+            String state = "Interact." + worldname + ".Enabled";
+            
+            blacklists.addDefault(state, false);
+            blacklists.addDefault("Interact." + worldname + ".Gamemode.PreventFor.Survival", true);
+            blacklists.addDefault("Interact." + worldname + ".Gamemode.PreventFor.Creative", true);
+            blacklists.addDefault("Interact." + worldname + ".Alert/log.ToConsole", true);
+            blacklists.addDefault("Interact." + worldname + ".Alert/log.ToPlayer", true);
+            blacklists.addDefault("Interact." + worldname + ".KickPlayer", false);
+            blacklists.addDefault(interactBL, defInteract);
+        }
+        
+        
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            
+            String craftBL = "Crafting." + worldname + ".Blacklist";
+            String state = "Crafting." + worldname + ".Enabled";
+            
+            blacklists.addDefault(state, false);
+            blacklists.addDefault("Crafting." + worldname + ".Gamemode.PreventFor.Survival", true);
+            blacklists.addDefault("Crafting." + worldname + ".Gamemode.PreventFor.Creative", true);
+            blacklists.addDefault("Crafting." + worldname + ".Alert/log.ToConsole", true);
+            blacklists.addDefault("Crafting." + worldname + ".Alert/log.ToPlayer", true);
+            blacklists.addDefault("Crafting." + worldname + ".KickPlayer", false);
+            blacklists.addDefault(craftBL, defBlocks);
+        }
 
-        
-        blacklist.addDefault("Command.TotallyDisallowCommands", false);
-        blacklist.addDefault("Command.KickPlayer", false);
-        blacklist.addDefault("Command.Alert/log.ToConsole", true);
-        blacklist.addDefault("Command.Alert/log.ToPlayer", true);
-        blacklist.addDefault("Command.EnabledWorlds", Arrays.asList(Data.CmdBlacklistWorldList));
-        Data.CmdBlacklistWorld = blacklist.getStringList("Command.EnabledWorlds");
-        blacklist.addDefault("Command.Blacklist", Arrays.asList(Data.CmdBlacklistList));
-        Data.CmdBlacklist = blacklist.getStringList("Command.Blacklist");
-        
-        
-        blacklist.addDefault("Censor.Alert/log.ToConsole", false);
-        blacklist.addDefault("Censor.Alert/log.ToPlayer", true);
-        blacklist.addDefault("Censor.Words/Blacklist", Arrays.asList(Data.WordBlacklistList));
-        Data.WordBlacklist = blacklist.getStringList("Censor.Words/Blacklist");
-        
-        
-        blacklist.addDefault("Dispense.EnabledWorlds", Arrays.asList(Data.DispenseBlacklistWorldList));
-        Data.DispenseBlacklistWorld = blacklist.getStringList("Dispense.EnabledWorlds");
-        blacklist.addDefault("Dispense.Blacklist", Arrays.asList(Data.DispenseBlacklistList));
-        Data.DispenseBlacklist = blacklist.getStringList("Dispense.Blacklist");
-        
-        
-        blacklist.addDefault("Interact.KickPlayer", false);
-        blacklist.addDefault("Interact.Alert/log.ToPlayer", true);
-        blacklist.addDefault("Interact.Alert/log.ToConsole", true);
-        blacklist.addDefault("Interact.Gamemode.PreventFor.Survival", true);
-        blacklist.addDefault("Interact.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Interact.EnabledWorlds", Arrays.asList(Data.InteractBlacklistWorldList));
-        Data.InteractBlacklistWorld = blacklist.getStringList("Interact.EnabledWorlds");
-        blacklist.addDefault("Interact.Blacklist", Arrays.asList(Data.InteractBlacklistList));
-        Data.InteractBlacklist = blacklist.getStringList("Interact.Blacklist");
-        
-        // Soon...
-        blacklist.addDefault("Crafting.Alert/log.ToPlayer", true);
-        blacklist.addDefault("Crafting.Alert/log.ToConsole", true);
-        blacklist.addDefault("Crafting.Gamemode.PreventFor.Survival", true);
-        blacklist.addDefault("Crafting.Gamemode.PreventFor.Creative", true);
-        blacklist.addDefault("Crafting.EnabledWorlds", Arrays.asList(Data.CraftBlacklistWorldList));
-        Data.CraftBlacklistWorld = blacklist.getStringList("Crafting.EnabledWorlds");
-        blacklist.addDefault("Crafting.Blacklist", Arrays.asList(Data.CraftBlacklistList));
-        Data.CraftBlacklist = blacklist.getStringList("Crafting.Blacklist");
-
-        this.getBlacklist().options().copyDefaults(true);
-        saveBlacklist();
+        this.getBlacklists().options().copyDefaults(true);
+        saveBlacklists();
     }
 
     public void reloadISafeConfig() {
@@ -1032,7 +1042,7 @@ public class iSafe extends JavaPlugin {
 
     public FileConfiguration getISafeConfig() {
         if (iSafeConfig == null) {
-            reloadBlacklist();
+            reloadISafeConfig();
         }
         return iSafeConfig;
     }
@@ -1064,7 +1074,7 @@ public class iSafe extends JavaPlugin {
 
     public FileConfiguration getMessages() {
         if (messages == null) {
-            reloadBlacklist();
+            reloadMessages();
         }
         return messages;
     }
@@ -1080,39 +1090,39 @@ public class iSafe extends JavaPlugin {
         }
     }
 
-    public void reloadBlacklist() {
-        if (blacklistFile == null) {
-            blacklistFile = new File(getDataFolder(), "blacklist.yml");
+    public void reloadBlacklists() {
+        if (blacklistsFile == null) {
+            blacklistsFile = new File(getDataFolder(), "blacklists.yml");
         }
-        blacklist = YamlConfiguration.loadConfiguration(blacklistFile);
+        blacklists = YamlConfiguration.loadConfiguration(blacklistsFile);
 
         // Look for defaults in the jar
-        InputStream defConfigStream = getResource("blacklist.yml");
+        InputStream defConfigStream = getResource("blacklists.yml");
         if (defConfigStream != null) {
             YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-            blacklist.setDefaults(defConfig);
+            blacklists.setDefaults(defConfig);
         }
     }
 
-    public FileConfiguration getBlacklist() {
-        if (blacklist == null) {
-            reloadBlacklist();
+    public FileConfiguration getBlacklists() {
+        if (blacklists == null) {
+            reloadBlacklists();
         }
-        return blacklist;
+        return blacklists;
     }
 
-    public void saveBlacklist() {
-        if (blacklist == null || blacklistFile == null) {
+    public void saveBlacklists() {
+        if (blacklists == null || blacklistsFile == null) {
             return;
         }
         try {
-            blacklist.save(blacklistFile);
+            blacklists.save(blacklistsFile);
         } catch (IOException ex) {
-            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving blacklist to " + blacklistFile, ex);
+            Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Error saving blacklist to " + blacklistsFile, ex);
         }
     }
-
-    //MobsConfig re-do:
+    
+    
     public void reloadCreatureManager() {
         if (creatureManagerFile == null) {
             creatureManagerFile = new File(getDataFolder(), "creatureManager.yml");
@@ -1163,8 +1173,8 @@ public class iSafe extends JavaPlugin {
         }
     }
 
-    //Update checker
-    private String updateCheck(String currentVersion) throws Exception {
+    //Update checker (from MilkBowl's Vault, all credit to him)
+    public double updateCheck(double currentVersion) throws Exception {
         String pluginUrlString = "http://dev.bukkit.org/server-mods/blockthattnt/files.rss";
         try {
             URL url = new URL(pluginUrlString);
@@ -1173,14 +1183,14 @@ public class iSafe extends JavaPlugin {
             NodeList nodes = doc.getElementsByTagName("item");
             Node firstNode = nodes.item(0);
             if (firstNode.getNodeType() == 1) {
-                Element firstElement = (Element) firstNode;
+                Element firstElement = (Element)firstNode;
                 NodeList firstElementTagName = firstElement.getElementsByTagName("title");
                 Element firstNameElement = (Element) firstElementTagName.item(0);
                 NodeList firstNodes = firstNameElement.getChildNodes();
-                return firstNodes.item(0).getNodeValue();
+                return Double.valueOf(firstNodes.item(0).getNodeValue().replace("iSafe", "").replaceFirst(".", "").replace("v", "").trim());
             }
-        } catch (Exception ignored) {
-            //Ingored
+        }
+        catch (Exception localException) {
         }
         return currentVersion;
     }

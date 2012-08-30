@@ -18,7 +18,6 @@ package com.mrmag518.iSafe.Events.EntityEvents;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.List;
 
 import com.mrmag518.iSafe.*;
 
@@ -46,13 +45,13 @@ public class PlayerListener implements Listener  {
         if (event.isCancelled()){
             return;
         }
-        Player player = event.getPlayer();
-        World world = player.getWorld();
+        Player p = event.getPlayer();
+        World world = p.getWorld();
         String worldname = world.getName();
         
         if(plugin.getConfig().getBoolean("Buckets.Lava.Prevent")) {
             if (plugin.getConfig().getList("Buckets.Lava.CheckedWorlds").contains(worldname)) {
-                if(!(plugin.hasPermission(player, "iSafe.use.lavabuckets"))) {
+                if(!(plugin.hasPermission(p, "iSafe.use.lavabuckets"))) {
                     event.setCancelled(true);
                 }
             }
@@ -60,7 +59,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Buckets.Water.Prevent")) {
             if (plugin.getConfig().getList("Buckets.Water.CheckedWorlds").contains(worldname)) {
-                if(!(plugin.hasPermission(player, "iSafe.use.waterbuckets"))) {
+                if(!(plugin.hasPermission(p, "iSafe.use.waterbuckets"))) {
                     event.setCancelled(true);
                 }
             }

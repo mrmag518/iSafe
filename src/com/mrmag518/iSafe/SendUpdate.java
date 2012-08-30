@@ -23,10 +23,9 @@ public class SendUpdate implements Listener {
         if(plugin.hasPermission(p, "iSafe.admin") || p.isOp()) {
             plugin.checkingUpdatePerms = false;
             try {
-                String oldVersion = plugin.getDescription().getVersion();
-                if (!(plugin.newVersion.contains(oldVersion))) {
+                if (plugin.newVersion > plugin.currentVersion) {
                     p.sendMessage(ChatColor.GREEN + "A new version of iSafe is out! ("+ ChatColor.GOLD +  plugin.newVersion + ChatColor.GREEN + ")");
-                    p.sendMessage(ChatColor.GREEN + "Current iSafe version running: " + ChatColor.GOLD + "iSafe v" + oldVersion + ChatColor.GREEN + ".");
+                    p.sendMessage(ChatColor.GREEN + "Current iSafe version running: " + ChatColor.GOLD + "iSafe v" + plugin.currentVersion + ChatColor.GREEN + ".");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
