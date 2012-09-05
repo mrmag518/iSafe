@@ -18,15 +18,11 @@ package com.mrmag518.iSafe.Events.BlockEvents;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 import com.mrmag518.iSafe.*;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,16 +40,16 @@ public class BlockListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    @EventHandler
+    /*@EventHandler
     public void blockGrowManager(BlockGrowEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
-        if(plugin.getConfig().getBoolean("Miscellaneous.DisableBlockGrow", true)) {
+        
+        if(plugin.getConfig().getBoolean("Miscellaneous.DisableBlockGrow") == true) {
             event.setCancelled(true);
         }
-    }
+    }*/
     
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
@@ -64,21 +60,7 @@ public class BlockListener implements Listener {
         Player p = event.getPlayer();
         Location loc = p.getLocation();
         byte level = p.getLocation().getBlock().getLightLevel();
-        
-        // Test
-        // *facepalm*.. This is how easy we could have done it with the blacklists.
-        // Note to self: May consider using this kind of method instead.
-        /*
-        int id = b.getTypeId();
-        
-        if(plugin.getConfig().getString("Test.Blacklist").contains(String.valueOf(id) + ",")) {
-            event.setCancelled(true);
-            p.sendMessage(ChatColor.GREEN + "Success! Cannot break '" + id + "'");
-            p.sendMessage(ChatColor.GREEN + plugin.getConfig().getString("Test.Blacklist"));
-        }*/
-         
-        
-        
+
         if(plugin.getConfig().getBoolean("AntiCheat/Sucurity.ForceLightLevel(Fullbright)", true)) {
             if(level <= 1 && !b.isLiquid() && !loc.getBlock().isLiquid()) {
                 if(!(plugin.hasPermission(p, "iSafe.bypass.fullbright"))) {

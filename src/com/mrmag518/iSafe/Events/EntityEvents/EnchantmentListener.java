@@ -1,5 +1,3 @@
-package com.mrmag518.iSafe.Events.EntityEvents;
-
 /*
  * iSafe
  * Copyright (C) 2011-2012 mrmag518 <magnusaub@yahoo.no>
@@ -18,16 +16,18 @@ package com.mrmag518.iSafe.Events.EntityEvents;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+package com.mrmag518.iSafe.Events.EntityEvents;
 
 import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.inventory.ItemStack;
 
 
 public class EnchantmentListener implements Listener {
@@ -45,19 +45,26 @@ public class EnchantmentListener implements Listener {
         
         if(plugin.getConfig().getBoolean("Enchantment.PreventEnchantment", true))
         {
-            if(!(plugin.hasPermission(p, "iSafe.enchant"))) {
+            if(!(plugin.hasPermission(p, "iSafe.bypass.enchant"))) {
                 event.setCancelled(true);
-                event.getEnchanter().sendMessage(ChatColor.RED + "You do not ave access to enchant items.");
+                p.sendMessage(ChatColor.RED + "You do not have access to enchant items.");
+                return;
             }
         }
         
         if(plugin.getConfig().getBoolean("Enchantment.PreventCreativeModeEnchanting", true)) {
             if(p.getGameMode().equals(GameMode.CREATIVE)) {
-                if(!(plugin.hasPermission(p, "iSafe.enchant"))) {
+                if(!(plugin.hasPermission(p, "iSafe.bypass.enchant"))) {
                     event.setCancelled(true);
-                    event.getEnchanter().sendMessage(ChatColor.RED + "You do not have access to enchant items in creative mode.");
+                    p.sendMessage(ChatColor.RED + "You do not have access to enchant items in creative mode.");
+                    return;
                 }
             }
         }
+        
+        // TODO: Make an enchantment blacklist, were you can blacklist items and enchantments.
+        /*ItemStack itemstack = event.getItem();
+        Material item = itemstack.getType();
+        String name = item.name().toLowerCase();*/
     }
 }

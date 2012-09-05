@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import java.io.File;
 import java.net.URL;
 
+import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.milkbowl.vault.permission.Permission;
@@ -54,20 +55,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-
-/**
- * Todo (v3.2):
- * Add block 'blacklist'. (Which blocks are not going to be removed by an explosion)
- * 
- * When working with the separation for the blacklists, try to add better multi-world support.
- * 
- * Add blacklisting of more events.
- * 
- * All blacklists goes into one class. (why??) Look at the BlockListener class, at BlockBreakEvent.
- * 
- * @author magnus
- **/
 
 public class iSafe extends JavaPlugin {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -107,8 +94,16 @@ public class iSafe extends JavaPlugin {
     private File blacklistsFile = null;
     private FileConfiguration config;
     
+    /*public FileWriter logs;
+    public BufferedWriter logsFile;*/
+    
     public boolean checkingUpdatePerms = false;
     public boolean cancelDamagePerms = false;
+    public boolean checkingSpamPerms = false;
+    
+    private boolean isStartup = false;
+    
+    public HashMap<String, Integer> spamDB = new HashMap<String, Integer>();
 
     @Override
     public void onDisable() {
@@ -122,6 +117,8 @@ public class iSafe extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        isStartup = true;
+        
         fileLoadManagement();
         
         currentVersion = Double.valueOf(getDescription().getVersion());
@@ -142,7 +139,7 @@ public class iSafe extends JavaPlugin {
                             log.info(" ");
                             log.info("#######  iSafe UpdateChecker  #######");
                             log.info("A new update for iSafe was found! " + newVersion);
-                            log.info("You are currently running iSafe v" + currentVersion);
+                            log.info("You are currently running version: " + currentVersion);
                             log.info("You can find this new version at BukkitDev.");
                             log.info("http://dev.bukkit.org/server-mods/blockthattnt/");
                             log.info("#####################################");
@@ -152,13 +149,14 @@ public class iSafe extends JavaPlugin {
                         //Ignored
                     }
                 }
-            }, 0, 432000);
+            }, 0, 36000);
         }
         getCommand("iSafe").setExecutor(new Commands(this));
         
         checkMatch();
 
         checkingUpdatePerms = false;
+        checkingSpamPerms = false;
         
         checkPlugins();
 
@@ -174,6 +172,8 @@ public class iSafe extends JavaPlugin {
         } else {
             debugLog("Verbose logging is off.");
         }
+        
+        isStartup = false;
     }
 
     public boolean verboseLogging() {
@@ -255,26 +255,40 @@ public class iSafe extends JavaPlugin {
         loadConfig();
         reloadConfig();
         
-        getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
-            @Override
-            public void run() {
-                reloadCreatureManager();
-                loadCreatureManager();
-                reloadCreatureManager();
-                
-                reloadBlacklists();
-                loadBlacklists();
-                reloadBlacklists();
-                
-                setupVault();
-            }
-        }, 40);
+        if(isStartup == true) {
+            getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+                @Override
+                public void run() {
+                    reloadCreatureManager();
+                    loadCreatureManager();
+                    reloadCreatureManager();
+
+                    reloadBlacklists();
+                    loadBlacklists();
+                    reloadBlacklists();
+
+                    setupVault();
+                }
+            }, 40);
+        } else {
+            reloadCreatureManager();
+            loadCreatureManager();
+            reloadCreatureManager();
+
+            reloadBlacklists();
+            loadBlacklists();
+            reloadBlacklists();
+
+            setupVault();
+        }
         
         if(getConfig().getBoolean("Damage.EnablePermissions", true)) {
             cancelDamagePerms = true;
         } else {
             cancelDamagePerms = false;
         }
+        
+        // loadLogs();
     }
     
     private void setupVault() {
@@ -288,7 +302,6 @@ public class iSafe extends JavaPlugin {
                 log.warning("[iSafe] Settings UseVaultForPermissions in your iSafeConfig.yml to false ..");
                 getISafeConfig().set("UseVaultForPermissions", false);
                 saveISafeConfig();
-                reloadISafeConfig();
             }
         }
     }
@@ -345,14 +358,12 @@ public class iSafe extends JavaPlugin {
             if (perms.has(p, permission)) {
                 return true;
             } else {
-                noCmdPermission(p);
                 return false;
             }
         } else {
             if (p.hasPermission(permission)) {
                 return true;
             } else {
-                //Send no perm message in the blacklist instead.
                 return false;
             }
         }
@@ -363,8 +374,11 @@ public class iSafe extends JavaPlugin {
             if (perms.has(p, permission)) {
                 return true;
             } else {
-                if (checkingUpdatePerms == true) {
-                    //nothing
+                if (checkingUpdatePerms == true 
+                        || checkingSpamPerms == true) {
+                    // ------
+                    checkingUpdatePerms = false;
+                    checkingSpamPerms = false;
                 } else {
                     noPermission(p);
                 }
@@ -374,8 +388,11 @@ public class iSafe extends JavaPlugin {
             if (p.hasPermission(permission)) {
                 return true;
             } else {
-                if (checkingUpdatePerms == true) {
-                    //nothing
+                if (checkingUpdatePerms == true 
+                        || checkingSpamPerms == true) {
+                     // ------
+                    checkingUpdatePerms = false;
+                    checkingSpamPerms = false;
                 } else {
                     noPermission(p);
                 }
@@ -452,83 +469,131 @@ public class iSafe extends JavaPlugin {
     public void kickMessage(Player p) {
         String kickMsg = getMessages().getString("KickMessage");
         Server s = p.getServer();
-        s.broadcastMessage(scanVariables(kickMsg, p.getName(), null, null, null, p.getWorld().getName(), null, null));
+        s.broadcastMessage(scanVariables(kickMsg, p.getName(), 
+                null, null, 
+                null, p.getWorld().getName(),
+                null, null));
     }
 
     public String sameNickPlaying(Player p) {
         String kickMsg = getMessages().getString("SameNickAlreadyPlaying");
-        return scanVariables(kickMsg, p.getName(), null, null, null, p.getWorld().getName(), null, null);
+        return scanVariables(kickMsg, p.getName(), 
+                null, null, 
+                null, p.getWorld().getName(), 
+                null, null);
     }
 
     public String denyNonOpsJoin() {
         String kickMsg = getMessages().getString("OnlyOpsCanJoin");
-        return scanVariables(kickMsg, null, null, null, null, null, null, null);
+        return scanVariables(kickMsg, null, 
+                null, null, 
+                null, null, 
+                null, null);
     }
 
     public String commandLogger(Player p, PlayerCommandPreprocessEvent event) {
         String logged = getMessages().getString("CommandLogger");
-        return scanVariables(logged, p.getName(), event.getMessage(), null, null, p.getWorld().getName(), null, null);
+        return scanVariables(logged, p.getName(), event.getMessage(), 
+                null, null, 
+                p.getWorld().getName(), 
+                null, null);
     }
     
     public String blacklistInteractKickMsg(Block b) {
         String kickMsg = getMessages().getString("Blacklists.Interact.KickMessage");
-        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null, null);
+        return scanVariables(kickMsg, null, 
+                null, b.getType().name().toLowerCase(), 
+                null, b.getWorld().getName(), 
+                null, null);
     }
     
     public String blacklistPlaceKickMsg(Block b) {
         String kickMsg = getMessages().getString("Blacklists.Place.KickMessage");
-        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null, null);
+        return scanVariables(kickMsg, null, 
+                null, b.getType().name().toLowerCase(), 
+                null, b.getWorld().getName(), 
+                null, null);
     }
     
     public String blacklistBreakKickMsg(Block b) {
         String kickMsg = getMessages().getString("Blacklists.Break.KickMessage");
-        return scanVariables(kickMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null, null);
+        return scanVariables(kickMsg, null, 
+                null, b.getType().name().toLowerCase(), 
+                null, b.getWorld().getName(), 
+                null, null);
     }
     
     public String blacklistCensorKickMsg(String word) {
         String kickMsg = getMessages().getString("Blacklists.Censor.KickMessage");
-        return scanVariables(kickMsg, null, null, null, null, null, word, null);
+        return scanVariables(kickMsg, null, 
+                null, null, 
+                null, null, 
+                word, null);
     }
     
     public String blacklistDropKickMsg(Item i) {
         String kickMsg = getMessages().getString("Blacklists.Drop.KickMessage");
-        return scanVariables(kickMsg, null, null, null, i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(), null, null);
+        return scanVariables(kickMsg, null, 
+                null, null, 
+                i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(),
+                null, null);
     }
     
     public String blacklistPickupKickMsg(String item) {
         String kickMsg = getMessages().getString("Blacklists.Pickup.KickMessage");
-        return scanVariables(kickMsg, null, null, null, item, null, null, null);
+        return scanVariables(kickMsg, null,
+                null, null, 
+                item, null, 
+                null, null);
     }
     
     public String blacklistCommandKickMsg(String cmd, String world) {
         String kickMsg = getMessages().getString("Blacklists.Command.KickMessage");
-        return scanVariables(kickMsg, null, cmd, null, null, world, null, null);
+        return scanVariables(kickMsg, null, 
+                cmd, null,
+                null, world, 
+                null, null);
     }
     
     
     public String blacklistInteractMsg(Block b) {
         String disallowedMsg = getMessages().getString("Blacklists.Interact.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null, null);
+        return scanVariables(disallowedMsg, null, 
+                null, b.getType().name().toLowerCase(), 
+                null, b.getWorld().getName(), 
+                null, null);
     }
     
     public String blacklistPlaceMsg(Block b) {
         String disallowedMsg = getMessages().getString("Blacklists.Place.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null, null);
+        return scanVariables(disallowedMsg, null,
+                null, b.getType().name().toLowerCase(), 
+                null, b.getWorld().getName(), 
+                null, null);
     }
     
     public String blacklistBreakMsg(Block b) {
         String disallowedMsg = getMessages().getString("Blacklists.Break.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, null, b.getType().name().toLowerCase(), null, b.getWorld().getName(), null, null);
+        return scanVariables(disallowedMsg, null, 
+                null, b.getType().name().toLowerCase(), 
+                null, b.getWorld().getName(), 
+                null, null);
     }
     
-    public String blacklistCensorMsg(String word) {
+    public String blacklistCensorMsg(String word, World world) {
         String disallowedMsg = getMessages().getString("Blacklists.Censor.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, null, null, null, null, word, null);
+        return scanVariables(disallowedMsg, null, 
+                null, null, 
+                null, world.getName(), 
+                word, null);
     }
     
-    public String blacklistDropMsg(String item) {
+    public String blacklistDropMsg(String item, World world) {
         String disallowedMsg = getMessages().getString("Blacklists.Drop.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, null, null, item, null, null, null);
+        return scanVariables(disallowedMsg, null,
+                null, null, 
+                item, world.getName(), 
+                null, null);
     }
     
     /*public String blacklistPickupMsg(Item i) {
@@ -536,15 +601,49 @@ public class iSafe extends JavaPlugin {
         return scanVariables(disallowedMsg, null, null, null, i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(), null);
     }*/
     
-    public String blacklistCraftingMsg(String recipe) {
+    public String blacklistCraftingMsg(String recipe, World world) {
         String disallowedMsg = getMessages().getString("Blacklists.Crafting.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, null, null, null, null, null, recipe);
+        return scanVariables(disallowedMsg, null, 
+                null, null, 
+                null, world.getName(), 
+                null, recipe);
     }
     
     public String blacklistCommandMsg(String cmd, String world) {
         String disallowedMsg = getMessages().getString("Blacklists.Command.DisallowedMessage");
-        return scanVariables(disallowedMsg, null, cmd, null, null, world, null, null);
+        return scanVariables(disallowedMsg, null, 
+                cmd, null, 
+                null, world, 
+                null, null);
     }
+    
+    /*private void loadLogs() {
+        File LOG = new File(getDataFolder(), "iSafe.log");
+        
+        if(!LOG.exists()) {
+            try {
+                LOG.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(iSafe.class.getName()).log(Level.SEVERE, "An error ocurred while trying to create iSafe.log", ex);
+            }
+        }
+        
+        try{
+            logs = new FileWriter(getDataFolder() + File.separator + "iSafe.log");
+        }catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
+                
+        logsFile = new BufferedWriter(logs);
+        
+        try {
+            logsFile.write(Data.getDate() + ": 2 test \n");
+            logsFile.write(Data.getDate() + ": 89503 MRMAG518 IS PURE OWNAGE");
+            logsFile.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(iSafe.class.getName()).log(Level.SEVERE, "test", ex);
+        }
+    }*/
     
     private void loadConfig() {
         config = getConfig();
@@ -602,6 +701,7 @@ public class iSafe extends JavaPlugin {
 
         config.addDefault("AntiCheat/Sucurity.ForceLightLevel(Fullbright)", false);
         config.addDefault("AntiCheat/Sucurity.KickJoinerIfSameNickIsOnline", false);
+        config.addDefault("AntiCheat/Sucurity.SimpleAntiSpam", false);
 
         config.addDefault("Explosions.DisablePrimedExplosions", false);
         config.addDefault("Explosions.DisableAllExplosions", false);
@@ -699,6 +799,8 @@ public class iSafe extends JavaPlugin {
         messages = getMessages();
         messages.options().header(Data.setMessageHeader());
         
+        // Note to self; Do not create un-needed variables if not needed. Duh.
+        
         messages.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
         if(messages.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
@@ -711,6 +813,8 @@ public class iSafe extends JavaPlugin {
         messages.addDefault("SameNickAlreadyPlaying", "&cThe username &f%playername% &cis already online!");
         messages.addDefault("OnlyOpsCanJoin", "&cOnly OPs can join this server!");
         messages.addDefault("CommandLogger", "%playername% did or tried to do the command %command%");
+        messages.addDefault("SpamDetection", "&cDetected spam! Please calm down.");
+        
         //----
         messages.addDefault("Blacklists.Interact.KickMessage", "&cKicked for attempting to interact with &f%block%");
         messages.addDefault("Blacklists.Interact.DisallowedMessage", "&cYou do not have access to interact with &7%block% &cin world &7%world%");
@@ -725,12 +829,12 @@ public class iSafe extends JavaPlugin {
         messages.addDefault("Blacklists.Censor.DisallowedMessage", "&c%word% is censored!");
         //----
         messages.addDefault("Blacklists.Drop.KickMessage", "&cKicked for attempting to drop &f%item%");
-        messages.addDefault("Blacklists.Drop.DisallowedMessage", "&cYou do not have access to drop &7%item%");
+        messages.addDefault("Blacklists.Drop.DisallowedMessage", "&cYou do not have access to drop &7%item% in world %world%");
         //----
         messages.addDefault("Blacklists.Command.KickMessage", "&cKicked for attempting to do command &f%command%");
-        messages.addDefault("Blacklists.Command.DisallowedMessage", "&cThe command %command% is disabled!");
+        messages.addDefault("Blacklists.Command.DisallowedMessage", "&cThe command %command% is disabled in world %world%!");
         //----
-        messages.addDefault("Blacklists.Crafting.DisallowedMessage", "&cYou do not have access to craft &7%recipe%");
+        messages.addDefault("Blacklists.Crafting.DisallowedMessage", "&cYou do not have access to craft &7%recipe% &cin world %world%");
         
         this.getMessages().options().copyDefaults(true);
         saveMessages();
@@ -872,10 +976,11 @@ public class iSafe extends JavaPlugin {
 
     private void loadBlacklists() {
         blacklists = getBlacklists();
-        blacklists.options().header(Data.setBlacklistHeader());
+        blacklists.options().header(Data.setBlacklistsHeader());
         
-        String defBlocks = "46,51,11,10";
-        String defInteract = "324,330";
+        String defBlocks = "46,51,11,10,";
+        String defInteract = "324,330,";
+        String defPistonExtend = "56,120,";
         
         blacklists.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
         if(blacklists.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
@@ -884,7 +989,8 @@ public class iSafe extends JavaPlugin {
         }
         
         /*
-         * Try making the all the "for World world" into one, will probably improve performance, and cleanup some shit here.
+         * Try making the all the "for World world" into one, 
+         * will probably improve performance, and cleanup some shit here.
          */
         
         for(World world : Bukkit.getServer().getWorlds()) {
@@ -1021,6 +1127,19 @@ public class iSafe extends JavaPlugin {
             blacklists.addDefault("Crafting." + worldname + ".Alert/log.ToPlayer", true);
             blacklists.addDefault("Crafting." + worldname + ".KickPlayer", false);
             blacklists.addDefault(craftBL, defBlocks);
+        }
+        
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            
+            String pistonBL = "PistonExtend." + worldname + ".Blacklist";
+            String state = "PistonExtend." + worldname + ".Enabled";
+            String sticky = "PistonExtend." + worldname + ".CheckStickyPistons";
+            
+            blacklists.addDefault(state, false);
+            blacklists.addDefault(sticky, true);
+            blacklists.addDefault("PistonExtend." + worldname + ".Alert/log.ToConsole", true);
+            blacklists.addDefault(pistonBL, defPistonExtend);
         }
 
         this.getBlacklists().options().copyDefaults(true);

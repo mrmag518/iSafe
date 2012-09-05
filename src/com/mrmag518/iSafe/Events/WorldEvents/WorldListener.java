@@ -52,8 +52,7 @@ public class WorldListener implements Listener {
     
     @EventHandler(priority = EventPriority.NORMAL)
     public void onChunkUnload(ChunkUnloadEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         
@@ -73,8 +72,7 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onStructureGrow(StructureGrowEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()){
             return;
         }
         

@@ -32,6 +32,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
@@ -51,6 +52,20 @@ public class Blacklists implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
+    private void checkBlacklist(String path) {
+        if(path == null)return;
+        String value = plugin.getBlacklists().getString(path);
+        
+        if(value.equalsIgnoreCase("") || value.equalsIgnoreCase(" ")) {
+            return;
+        } else {
+            if(!value.endsWith(",")) {
+                plugin.getBlacklists().set(path, value + ",");
+                plugin.saveBlacklists();
+            }
+        }
+    }
+    
     @EventHandler
     public void BreakBlacklist(BlockBreakEvent event) {
         if (event.isCancelled()){
@@ -66,6 +81,8 @@ public class Blacklists implements Listener {
             String pWorld = p.getWorld().getName();
             String blacklist = "Break." + pWorld + ".Blacklist";
             String state = "Break." + pWorld + ".Enabled";
+            
+            checkBlacklist(blacklist);
             
             if(pWorld.equalsIgnoreCase(worldname)) 
             {
@@ -127,6 +144,8 @@ public class Blacklists implements Listener {
             String pWorld = p.getWorld().getName();
             String blacklist = "Place." + pWorld + ".Blacklist";
             String state = "Place." + pWorld + ".Enabled";
+            
+            checkBlacklist(blacklist);
             
             if(pWorld.equalsIgnoreCase(worldname)) 
             {
@@ -251,6 +270,8 @@ public class Blacklists implements Listener {
             String blacklist = "Crafting." + pWorld + ".Blacklist";
             String state = "Crafting." + pWorld + ".Enabled";
             
+            checkBlacklist(blacklist);
+            
             if(pWorld.equalsIgnoreCase(worldname)) 
             {
                 if(plugin.getBlacklists().getBoolean(state) == true) 
@@ -280,7 +301,7 @@ public class Blacklists implements Listener {
 
                             if (plugin.getBlacklists().getBoolean("Crafting." + pWorld + ".Alert/log.ToPlayer", true)){
                                 if (event.isCancelled()) {
-                                    p.sendMessage(plugin.blacklistCraftingMsg(name));
+                                    p.sendMessage(plugin.blacklistCraftingMsg(name, p.getWorld()));
                                 }
                             }
                         }
@@ -299,11 +320,14 @@ public class Blacklists implements Listener {
         int id = event.getItem().getTypeId();
         String name = event.getItem().getType().name().toLowerCase();
         
+        
         for(World world : Bukkit.getServer().getWorlds()) {
             String worldname = world.getName();
             String bWorld = b.getWorld().getName();
             String blacklist = "Dispense." + bWorld + ".Blacklist";
             String state = "Dispense." + bWorld + ".Enabled";
+            
+            checkBlacklist(blacklist);
             
             if(bWorld.equalsIgnoreCase(worldname)) 
             {
@@ -336,6 +360,8 @@ public class Blacklists implements Listener {
             String pWorld = p.getWorld().getName();
             String blacklist = "Drop." + pWorld + ".Blacklist";
             String state = "Drop." + pWorld + ".Enabled";
+            
+            checkBlacklist(blacklist);
             
             if(pWorld.equalsIgnoreCase(worldname)) 
             {
@@ -375,7 +401,7 @@ public class Blacklists implements Listener {
                             if (plugin.getBlacklists().getBoolean("Drop." + pWorld + ".Alert/log.ToPlayer", true))
                             {
                                 if (event.isCancelled()) {
-                                    p.sendMessage(plugin.blacklistDropMsg(name));
+                                    p.sendMessage(plugin.blacklistDropMsg(name, p.getWorld()));
                                 }
                             }
                         }
@@ -403,6 +429,8 @@ public class Blacklists implements Listener {
                 String pWorld = p.getWorld().getName();
                 String blacklist = "Interact." + pWorld + ".Blacklist";
                 String state = "Interact." + pWorld + ".Enabled";
+                
+                checkBlacklist(blacklist);
                 
                 if(pWorld.equalsIgnoreCase(worldname)) 
                 {
@@ -465,6 +493,8 @@ public class Blacklists implements Listener {
             String blacklist = "Pickup." + pWorld + ".Blacklist";
             String state = "Pickup." + pWorld + ".Enabled";
             
+            checkBlacklist(blacklist);
+            
             if(pWorld.equalsIgnoreCase(worldname)) 
             {
                 if(plugin.getBlacklists().getBoolean(state) == true) 
@@ -519,7 +549,7 @@ public class Blacklists implements Listener {
                 {
                     if(plugin.getBlacklists().getBoolean(state) == true) 
                     {
-                        if(sentence.startsWith(word.toLowerCase())) 
+                        if(sentence.contains(word.toLowerCase())) 
                         {
                             if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.chat")) 
                             {
@@ -532,7 +562,7 @@ public class Blacklists implements Listener {
 
                                 if (plugin.getBlacklists().getBoolean("Censor." + pWorld + ".Alert/log.ToPlayer", true)){
                                     if (event.isCancelled()) {
-                                        p.sendMessage(plugin.blacklistCensorMsg(word));
+                                        p.sendMessage(plugin.blacklistCensorMsg(word, p.getWorld()));
                                     }
                                 }
 
@@ -563,6 +593,7 @@ public class Blacklists implements Listener {
             String eWorld = le.getWorld().getName();
             String state = "MobSpawn." + eWorld + ".Enabled";
             
+            
             if(eWorld.equalsIgnoreCase(worldname)) 
             {
                 if(plugin.getBlacklists().getBoolean(state) == true) 
@@ -570,6 +601,7 @@ public class Blacklists implements Listener {
                     if(event.getSpawnReason() == SpawnReason.NATURAL)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".Natural.Blacklist";
+                        checkBlacklist(blacklist);
                         if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
@@ -583,6 +615,7 @@ public class Blacklists implements Listener {
                     if(event.getSpawnReason() == SpawnReason.SPAWNER)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".Spawner.Blacklist";
+                        checkBlacklist(blacklist);
                         if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
@@ -596,6 +629,7 @@ public class Blacklists implements Listener {
                     if(event.getSpawnReason() == SpawnReason.CUSTOM)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".Custom.Blacklist";
+                        checkBlacklist(blacklist);
                         if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
@@ -609,6 +643,7 @@ public class Blacklists implements Listener {
                     if(event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".SpawnerEgg.Blacklist";
+                        checkBlacklist(blacklist);
                         if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
@@ -622,6 +657,7 @@ public class Blacklists implements Listener {
                     if(event.getSpawnReason() == SpawnReason.CHUNK_GEN)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".ChunkGen.Blacklist";
+                        checkBlacklist(blacklist);
                         if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
@@ -635,12 +671,62 @@ public class Blacklists implements Listener {
                     if(event.getSpawnReason() == SpawnReason.BREEDING)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".Breeding.Blacklist";
+                        checkBlacklist(blacklist);
                         if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
                             if (plugin.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Breeding.Debug.ToConsole", true)){
                                 plugin.log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Breeding; In the world: " + eWorld);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    @EventHandler
+    public void pistonBlacklist(BlockPistonExtendEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        
+        for(World world : Bukkit.getServer().getWorlds()) {
+            String worldname = world.getName();
+            String pWorld = event.getBlock().getWorld().getName();
+            String blacklist = "PistonExtend." + pWorld + ".Blacklist";
+            String state = "PistonExtend." + pWorld + ".Enabled";
+            String sticky = "PistonExtend." + pWorld + ".CheckStickyPistons";
+            
+            checkBlacklist(blacklist);
+            
+            if(pWorld.equalsIgnoreCase(worldname)) 
+            {
+                if(plugin.getBlacklists().getBoolean(state) == true) 
+                {
+                    for(Block b : event.getBlocks()) 
+                    {
+                        int id = b.getTypeId();
+                        if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                        {
+                            if(event.isSticky()) {
+                                if(plugin.getBlacklists().getBoolean(sticky) == false) 
+                                {
+                                    return;
+                                } else {
+                                    event.setCancelled(true);
+                                }
+                            } else {
+                                event.setCancelled(true);
+                            }
+                            
+                            if (plugin.getBlacklists().getBoolean("PistonExtend." + pWorld + ".Alert/log.ToConsole", true)){
+                                if (event.isCancelled()) {
+                                    plugin.log.info("[iSafe] " + "A piston was prevented from extending, "
+                                            + "because it tried to extend the blacklisted block '" + b.getType().name().toLowerCase() 
+                                            + "' in the world '" + pWorld + "'. Sticky piston? " + event.isSticky());
+                                }
                             }
                         }
                     }

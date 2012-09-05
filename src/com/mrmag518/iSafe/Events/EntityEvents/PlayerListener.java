@@ -72,22 +72,25 @@ public class PlayerListener implements Listener  {
     }
     
     @EventHandler
-    public void PreventSprinting(PlayerMoveEvent event) {
+    public void onPlayerMove(PlayerMoveEvent event) {
         if (event.isCancelled()){
             return;
         }
-        Player player = event.getPlayer();
+        Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Movement.DisableSprinting", true))
-        {
-            if(!(plugin.hasPermission(player, "iSafe.bypass.sprint"))) {
-                event.setCancelled(true);
+        if(plugin.getConfig().getBoolean("Movement.DisableSprinting", true)){
+            if(p.isSprinting()) {
+                if(!(plugin.hasPermission(p, "iSafe.bypass.sprint"))) {
+                    event.setCancelled(true);
+                }
             }
         }
-        if(plugin.getConfig().getBoolean("Movement.DisableSneaking", true))
-        {
-            if(!(plugin.hasPermission(player, "iSafe.bypass.sneak"))) {
-                event.setCancelled(true);
+        
+        if(plugin.getConfig().getBoolean("Movement.DisableSneaking", true)){
+            if(p.isSneaking()) {
+                if(!(plugin.hasPermission(p, "iSafe.bypass.sneak"))) {
+                    event.setCancelled(true);
+                }
             }
         }
     }
@@ -177,7 +180,7 @@ public class PlayerListener implements Listener  {
         Player p = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Chat.ForcePermissionToChat", true)) {
-            if(!(plugin.hasPermission(p, "iSafe.use.chat"))) {
+            if(!plugin.hasPermission(p, "iSafe.use.chat")) {
                 event.setCancelled(true);
             }
         }
@@ -211,8 +214,6 @@ public class PlayerListener implements Listener  {
             event.setLeaveMessage(null);
         }
     }
-    
-    
     
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerFish(PlayerFishEvent event) {
@@ -295,5 +296,39 @@ public class PlayerListener implements Listener  {
                 p.setGameMode(GameMode.CREATIVE);
             }
         }
+    }
+    
+    @EventHandler
+    public void checkSpam(AsyncPlayerChatEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        Player p = event.getPlayer();
+        final String name = p.getName();
+        boolean enabled = plugin.getConfig().getBoolean("AntiCheat/Sucurity.SimpleAntiSpam.");
+        
+        if(enabled == false)return;
+        plugin.checkingSpamPerms = true;
+        if(plugin.hasPermission(p, "iSafe.bypass.spamcheck")) {
+            return;
+        }
+        
+        if(!plugin.spamDB.containsKey(name)) {
+            plugin.spamDB.put(name, 1);
+        } else {
+            plugin.spamDB.put(name, plugin.spamDB.get(name) + 1);
+        }
+        
+        if(plugin.spamDB.get(name) > 3) { // Make this configurable.
+            event.setCancelled(true);
+            p.sendMessage(plugin.colorize(plugin.getMessages().getString("SpamDetection")));
+        }
+        
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                plugin.spamDB.put(name, plugin.spamDB.get(name) - 1);
+            }
+        }, 20);
     }
 }

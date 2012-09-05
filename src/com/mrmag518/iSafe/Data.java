@@ -29,56 +29,11 @@ public class Data {
         plugin = instance;
     }
     
-    
     public static List<String> CmdBlacklist = new ArrayList<String>();
     public static String[] CmdBlacklistList = { "/nuke" };
     
-    
-    public static List<String> NaturalMSBlacklist = new ArrayList<String>();
-    public static String[] NaturalMSBlacklistList = { "No defaults added." };
-    public static List<String> NaturalMSBlacklistWorld = new ArrayList<String>();
-    public static String[] NaturalMSBlacklistWorldList = { "world", "world_nether" };
-    
-    
-    public static List<String> SpawnerMSBlacklist = new ArrayList<String>();
-    public static String[] SpawnerMSBlacklistList = { "No defaults added." };
-    public static List<String> SpawnerMSBlacklistWorld = new ArrayList<String>();
-    public static String[] SpawnerMSBlacklistWorldList = { "world", "world_nether" };
-    
-    
-    public static List<String> CustomMSBlacklist = new ArrayList<String>();
-    public static String[] CustomMSBlacklistList = { "No defaults added." };
-    public static List<String> CustomMSBlacklistWorld = new ArrayList<String>();
-    public static String[] CustomMSBlacklistWorldList = { "world", "world_nether" };
-    
-    
-    public static List<String> SpawnerEggMSBlacklist = new ArrayList<String>();
-    public static String[] SpawnerEggMSBlacklistList = { "creeper" };
-    public static List<String> SpawnerEggMSBlacklistWorld = new ArrayList<String>();
-    public static String[] SpawnerEggMSBlacklistWorldList = { "world", "world_nether" };
-    
-    
-    public static List<String> ChunkGenMSBlacklist = new ArrayList<String>();
-    public static String[] ChunkGenMSBlacklistList = { "creeper" };
-    public static List<String> ChunkGenMSBlacklistWorld = new ArrayList<String>();
-    public static String[] ChunkGenMSBlacklistWorldList = { "world", "world_nether" };
-    
-    
-    public static List<String> BreedingMSBlacklist = new ArrayList<String>();
-    public static String[] BreedingMSBlacklistList = { "creeper" };
-    public static List<String> BreedingMSBlacklistWorld = new ArrayList<String>();
-    public static String[] BreedingMSBlacklistWorldList = { "world", "world_nether" };
-    
-    
     public static List<String> WordBlacklist = new ArrayList<String>();
-    public static String[] WordBlacklistList = { "No defaults added." };
-    
-    
-    public static List<String> DispenseBlacklist = new ArrayList<String>();
-    public static String[] DispenseBlacklistList = { "No defaults added." };
-    public static List<String> DispenseBlacklistWorld = new ArrayList<String>();
-    public static String[] DispenseBlacklistWorldList = { "world", "world_nether" };
-    
+    public static String[] WordBlacklistList = { "penis", "vagina" };
     
     public static List<String> LavaBucketWorld = new ArrayList<String>();
     public static String[] LavaBucketWorldList = { "world", "world_nether" };
@@ -108,10 +63,16 @@ public class Data {
         return header;
     }
     
-    public static String setBlacklistHeader() {
-        String header = "This is the blacklist config on behalf of iSafe, read the iSafe wiki for assistance." 
-        + "\nRemember that the world listing is case sensetive."
+    public static String setBlacklistsHeader() {
+        String header = "This is the blacklist config on behalf of iSafe, read the iSafe wiki for assistance."
+        + "\n" 
         + "\nBlacklists related to creatures is found in the creatureManager.yml"
+        + "\n"
+        + "\nAll blacklists, except Chat and Command, does not support block, item or recipe names, you need to use the ID. "
+        + "\nExample: Instead of TNT, you use 46, which is the ID of TNT."
+        + "\nA list of IDs can be found here: http://www.minecraftwiki.net/wiki/Data_values"
+        + "\n"
+        + "\nBlacklists using the ',' as a separator needs to end with the separator too. If you ever forget this, iSafe will attempt to fix it, itself."
         + "\nThis file was last modified: " + getDate() + "\n";
         return header;
     }
@@ -146,4 +107,6 @@ public class Data {
         + "\nThis file was last modified: " + getDate() + "\n";
         return header;
     }
+    
+    
 }

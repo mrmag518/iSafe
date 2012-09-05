@@ -21,6 +21,7 @@ permissions:
       iSafe.canceltarget.*: true
       iSafe.use.*: true
       iSafe.forcedrop.*: true
+      iSafe.command.*: true
   # ------------------------
   iSafe.bypass.*:
     default: op
@@ -29,6 +30,8 @@ permissions:
       iSafe.bypass.croptrampling: true
       iSafe.bypass.hunger: true
       iSafe.bypass.fish: true
+      iSafe.bypass.spamcheck: true
+      iSafe.bypass.enchant: true
       iSafe.bypass.blacklist.interact: true
       iSafe.bypass.blacklist.pickup: true
       iSafe.bypass.blacklist.break: true
@@ -72,6 +75,13 @@ permissions:
       iSafe.forcedrop.mobspawner: true
       iSafe.forcedrop.ice: true
       iSafe.forcedrop.bedrock: true
+  iSafe.command.*:
+    default: op
+    children:
+      iSafe.command.reload: true
+      iSafe.command.info: true
+      iSafe.command.serverinfo: true
+      iSafe.command.resetfile: true
   # ------------------------
   iSafe.bypass.hunger:
     default: true

@@ -79,12 +79,13 @@ public class EntityListener implements Listener {
         if (event.isCancelled()){
             return;
         }
+        
         Entity ent = event.getEntity();
         int x = (int) event.getLocation().getX();
         int y = (int) event.getLocation().getY();
         int z = (int) event.getLocation().getZ();
         String world = ent.getWorld().getName();
-        
+
         if(plugin.getConfig().getBoolean("Explosions.DisableAllExplosions", true)) {
             if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
                 int blocks = event.blockList().size();
@@ -95,7 +96,7 @@ public class EntityListener implements Listener {
             event.blockList().clear();
             return;
         }
-        
+
         if(plugin.getConfig().getBoolean("Explosions.DisableCreeperExplosions", true)){
             if (ent instanceof Creeper) {
                 if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
@@ -108,7 +109,7 @@ public class EntityListener implements Listener {
                 return;
             }
         }
-        
+
         if(plugin.getConfig().getBoolean("Explosions.DisableEnderdragonBlockDamage", true)){
             if (ent instanceof EnderDragon) {
                 if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
@@ -121,7 +122,7 @@ public class EntityListener implements Listener {
                 return;
             }
         }
-        
+
         if(plugin.getConfig().getBoolean("Explosions.DisableTntExplosions", true)){
             if (ent instanceof TNTPrimed) {
                 if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
@@ -134,7 +135,7 @@ public class EntityListener implements Listener {
                 return;
             }
         }
-        
+
         if(plugin.getConfig().getBoolean("Explosions.DisableFireballExplosions", true)){
             if (ent instanceof Fireball) {
                 if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
@@ -147,7 +148,7 @@ public class EntityListener implements Listener {
                 return;
             }  
         }
-        
+
         if(plugin.getConfig().getBoolean("Explosions.DisableEnderCrystalExplosions", true)){
             if (ent instanceof EnderCrystal) {
                 if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
