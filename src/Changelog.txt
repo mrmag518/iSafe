@@ -1,3 +1,12 @@
+Version 3.21
+* Fixed fullbright notify sending out a permission notify.
+* Added varius settings to fullbright prevention.
+* Fixed grass not spreading.
+* Re-added block growth prevention.
+* Now using diamond inference for arraylists & hashmaps.
+* Fixed chat blacklist not listening to blacklist settings, resulting players being kicked no matter what.
+* 
+
 Version 3.2
 * Fixed loading issues with ISafeConfig.yml & Messages.yml.
 * blacklist.yml is now named blacklists.yml
@@ -28,7 +37,7 @@ Version 3.2
 * Fixed enchantment permissions to use the new bypass category.
 * Did a hacky "fix" for users using EssentialsProtect to handle explosions.
 ** The error some of you get is usally thrown out by EssProt, therefor this "fix" will probably not 'take action'.
-* Some users have noticed grass now growing. I found no issues in iSafe, but I have currently temporary removed the prevention for grass growth.
+* Some users have noticed grass not growing. I found no issues in iSafe, but I have currently temporary removed the prevention for grass growth.
 
 Version 3.1
 * Fixed water buckets.

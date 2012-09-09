@@ -19,8 +19,8 @@ package com.mrmag518.iSafe.Events.BlockEvents;
  */
 
 import com.mrmag518.iSafe.*;
-
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -40,7 +40,7 @@ public class BlockListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    /*@EventHandler
+    @EventHandler
     public void blockGrowManager(BlockGrowEvent event) {
         if (event.isCancelled()){
             return;
@@ -49,7 +49,7 @@ public class BlockListener implements Listener {
         if(plugin.getConfig().getBoolean("Miscellaneous.DisableBlockGrow") == true) {
             event.setCancelled(true);
         }
-    }*/
+    }
     
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
@@ -60,9 +60,20 @@ public class BlockListener implements Listener {
         Player p = event.getPlayer();
         Location loc = p.getLocation();
         byte level = p.getLocation().getBlock().getLightLevel();
-
+        
+        int detectionLvl = plugin.getConfig().getInt("AntiCheat/Security.LightLevel.MinimumLevelBeforeDetection");
+        boolean checkGMC = plugin.getConfig().getBoolean("AntiCheat/Security.LightLevel.CheckCreativeMode");
+        boolean checkNight = plugin.getConfig().getBoolean("AntiCheat/Security.LightLevel.CheckAtNight");
+        
         if(plugin.getConfig().getBoolean("AntiCheat/Sucurity.ForceLightLevel(Fullbright)", true)) {
-            if(level <= 1 && !b.isLiquid() && !loc.getBlock().isLiquid()) {
+            if(p.getWorld().getTime() > 17999 && checkNight == false) {
+                return;
+            }
+            if(p.getGameMode().equals(GameMode.CREATIVE) && checkGMC == false) {
+                return;
+            }
+            if(level <= detectionLvl && !b.isLiquid() && !loc.getBlock().isLiquid()) {
+                plugin.checkingFullbrightPerms = true;
                 if(!(plugin.hasPermission(p, "iSafe.bypass.fullbright"))) {
                     event.setCancelled(true);
                     p.sendMessage(ChatColor.YELLOW + "Place a torch! (light source)");
@@ -81,7 +92,6 @@ public class BlockListener implements Listener {
         if(cause == IgniteCause.SPREAD) {
             if(plugin.getConfig().getBoolean("Fire.DisableFireSpread", true)) {
                 event.setCancelled(true);
-                return;
             }
         } else if (cause == IgniteCause.FLINT_AND_STEEL) {
             if(plugin.getConfig().getBoolean("Fire.PreventFlintAndSteelUsage", true)) {

@@ -80,7 +80,10 @@ public class iSafe extends JavaPlugin {
     public double newVersion;
     
     public static iSafe plugin;
+    
+    @SuppressWarnings("NonConstantLogger")
     public final Logger log = Logger.getLogger("Minecraft");
+    
     public String DEBUG_PREFIX = "[iSafe DEBUG]" + " ";
     public static Permission perms = null;
     
@@ -100,10 +103,11 @@ public class iSafe extends JavaPlugin {
     public boolean checkingUpdatePerms = false;
     public boolean cancelDamagePerms = false;
     public boolean checkingSpamPerms = false;
+    public boolean checkingFullbrightPerms = false;
     
     private boolean isStartup = false;
     
-    public HashMap<String, Integer> spamDB = new HashMap<String, Integer>();
+    public HashMap<String, Integer> spamDB = new HashMap<>();
 
     @Override
     public void onDisable() {
@@ -154,9 +158,6 @@ public class iSafe extends JavaPlugin {
         getCommand("iSafe").setExecutor(new Commands(this));
         
         checkMatch();
-
-        checkingUpdatePerms = false;
-        checkingSpamPerms = false;
         
         checkPlugins();
 
@@ -330,11 +331,6 @@ public class iSafe extends JavaPlugin {
         }
     }
 
-    /**
-     * @param p
-     * @param permission
-     * @return 
-     */
     public boolean hasPermission(CommandSender p, String permission) {
         if (iSafeConfig.getBoolean("UseVaultForPermissions", true)) {
             if (perms.has(p, permission)) {
@@ -375,10 +371,12 @@ public class iSafe extends JavaPlugin {
                 return true;
             } else {
                 if (checkingUpdatePerms == true 
-                        || checkingSpamPerms == true) {
-                    // ------
+                        || checkingSpamPerms == true
+                        || checkingFullbrightPerms == true) 
+                {
                     checkingUpdatePerms = false;
                     checkingSpamPerms = false;
+                    checkingFullbrightPerms = false;
                 } else {
                     noPermission(p);
                 }
@@ -389,10 +387,12 @@ public class iSafe extends JavaPlugin {
                 return true;
             } else {
                 if (checkingUpdatePerms == true 
-                        || checkingSpamPerms == true) {
-                     // ------
+                        || checkingSpamPerms == true
+                        || checkingFullbrightPerms == true) 
+                {
                     checkingUpdatePerms = false;
                     checkingSpamPerms = false;
+                    checkingFullbrightPerms = false;
                 } else {
                     noPermission(p);
                 }
@@ -654,6 +654,10 @@ public class iSafe extends JavaPlugin {
             // If there is anything to modify in the 'new' version, fix that here.
             log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
             config.set("ConfigVersion", Double.valueOf(ConfigVersion));
+            
+            if(config.get("AntiCheat/Sucurity.ForceLightLevel(Fullbright)") != null) {
+                config.set("AntiCheat/Sucurity.ForceLightLevel(Fullbright)", null);
+            }
         }
         
         config.addDefault("Fire.DisableFireSpread", false);
@@ -691,6 +695,7 @@ public class iSafe extends JavaPlugin {
         config.addDefault("TreeGrowth.DisableFor.Jungle", false);
 
         config.addDefault("Miscellaneous.DisableBlockGrow", false);
+        config.addDefault("Miscellaneous.DisableBlockSpreading", false);
         config.addDefault("Miscellaneous.DisableLeavesDecay", false);
         config.addDefault("Miscellaneous.ForceBlocksToBeBuildable", false);
         config.addDefault("Miscellaneous.PreventExpBottleThrow", false);
@@ -699,7 +704,10 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Miscellaneous.OnlyLetOPsJoin", false);
         config.addDefault("Miscellaneous.DisableHunger", false);
 
-        config.addDefault("AntiCheat/Sucurity.ForceLightLevel(Fullbright)", false);
+        config.addDefault("AntiCheat/Security.LightLevel.PreventFullbright", false);
+        config.addDefault("AntiCheat/Security.LightLevel.MinimumLevelBeforeDetection", 1);
+        config.addDefault("AntiCheat/Security.LightLevel.CheckCreativeMode", false);
+        config.addDefault("AntiCheat/Security.LightLevel.CheckAtNight", true);
         config.addDefault("AntiCheat/Sucurity.KickJoinerIfSameNickIsOnline", false);
         config.addDefault("AntiCheat/Sucurity.SimpleAntiSpam", false);
 
@@ -1070,6 +1078,7 @@ public class iSafe extends JavaPlugin {
             blacklists.addDefault(cmdBL, Arrays.asList(Data.CmdBlacklistList));
             Data.CmdBlacklist = blacklists.getStringList(cmdBL);
         }
+        
         
         for(World world : Bukkit.getServer().getWorlds()) {
             String worldname = world.getName();

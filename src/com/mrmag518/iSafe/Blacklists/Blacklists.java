@@ -554,19 +554,19 @@ public class Blacklists implements Listener {
                             if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.chat")) 
                             {
                                 event.setCancelled(true);
-                                if (plugin.getBlacklists().getBoolean("Censor." + pWorld + ".Alert/log.ToConsole", true)){
+                                if (plugin.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToConsole", true)){
                                     if (event.isCancelled()) {
                                         plugin.log.info("[iSafe] " + p.getName() + "'s message contained the blacklisted word: " + word);
                                     }
                                 }
 
-                                if (plugin.getBlacklists().getBoolean("Censor." + pWorld + ".Alert/log.ToPlayer", true)){
+                                if (plugin.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToPlayer", true)){
                                     if (event.isCancelled()) {
                                         p.sendMessage(plugin.blacklistCensorMsg(word, p.getWorld()));
                                     }
                                 }
 
-                                if (plugin.getBlacklists().getBoolean("Censor." + pWorld + ".KickPlayer", true)){
+                                if (plugin.getBlacklists().getBoolean("Chat." + pWorld + ".KickPlayer", true)){
                                     if (event.isCancelled()) {
                                         p.kickPlayer(plugin.blacklistCensorKickMsg(word));
                                     }

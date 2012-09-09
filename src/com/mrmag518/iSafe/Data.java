@@ -29,16 +29,16 @@ public class Data {
         plugin = instance;
     }
     
-    public static List<String> CmdBlacklist = new ArrayList<String>();
+    public static List<String> CmdBlacklist = new ArrayList<>();
     public static String[] CmdBlacklistList = { "/nuke" };
     
-    public static List<String> WordBlacklist = new ArrayList<String>();
+    public static List<String> WordBlacklist = new ArrayList<>();
     public static String[] WordBlacklistList = { "penis", "vagina" };
     
-    public static List<String> LavaBucketWorld = new ArrayList<String>();
+    public static List<String> LavaBucketWorld = new ArrayList<>();
     public static String[] LavaBucketWorldList = { "world", "world_nether" };
     
-    public static List<String> WaterBucketWorld = new ArrayList<String>();
+    public static List<String> WaterBucketWorld = new ArrayList<>();
     public static String[] WaterBucketWorldList = { "world", "world_nether" };
     
     
@@ -107,6 +107,4 @@ public class Data {
         + "\nThis file was last modified: " + getDate() + "\n";
         return header;
     }
-    
-    
 }
