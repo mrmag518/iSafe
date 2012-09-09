@@ -5,7 +5,6 @@ Version 3.21
 * Re-added block growth prevention.
 * Now using diamond inference for arraylists & hashmaps.
 * Fixed chat blacklist not listening to blacklist settings, resulting players being kicked no matter what.
-* 
 
 Version 3.2
 * Fixed loading issues with ISafeConfig.yml & Messages.yml.

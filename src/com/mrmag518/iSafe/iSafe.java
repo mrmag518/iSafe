@@ -58,8 +58,8 @@ import org.w3c.dom.NodeList;
 
 public class iSafe extends JavaPlugin {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    private String fileversion = "iSafe v3.2";
-    private Double ConfigVersion = 3.2;
+    private String fileversion = "iSafe v3.21";
+    private Double ConfigVersion = 3.21;
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     private PlayerListener playerListener = null;
