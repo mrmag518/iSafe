@@ -20,6 +20,8 @@ package com.mrmag518.iSafe.Events.EntityEvents;
 
 
 import com.mrmag518.iSafe.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -39,7 +41,6 @@ public class PlayerListener implements Listener  {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
-    int message = 0;
     
     @EventHandler
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
@@ -305,12 +306,18 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         final String name = p.getName();
-        boolean enabled = plugin.getConfig().getBoolean("AntiCheat/Sucurity.SimpleAntiSpam.");
+        boolean enabled = plugin.getConfig().getBoolean("AntiCheat/Security.Spam.EnableSpamDetector");
+        boolean bypassPerms = plugin.getConfig().getBoolean("AntiCheat/Security.Spam.EnableBypassPermissions");
+        boolean normalMode = plugin.getConfig().getBoolean("AntiCheat/Security.Spam.UseNormalMode");
         
-        if(enabled == false)return;
-        plugin.checkingSpamPerms = true;
-        if(plugin.hasPermission(p, "iSafe.bypass.spamcheck")) {
+        if(enabled == false) {
             return;
+        }
+        if(bypassPerms == true) {
+            plugin.checkingSpamPerms = true;
+            if(plugin.hasPermission(p, "iSafe.bypass.spamcheck")) {
+                return;
+            }
         }
         
         if(!plugin.spamDB.containsKey(name)) {
@@ -319,16 +326,20 @@ public class PlayerListener implements Listener  {
             plugin.spamDB.put(name, plugin.spamDB.get(name) + 1);
         }
         
-        if(plugin.spamDB.get(name) > 3) { // Make this configurable.
+        int maxLines = plugin.getConfig().getInt("AntiCheat/Security.Spam.MaxLinesPerSecond");
+        
+        if(plugin.spamDB.get(name) > maxLines) {
             event.setCancelled(true);
             p.sendMessage(plugin.colorize(plugin.getMessages().getString("SpamDetection")));
         }
         
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                plugin.spamDB.put(name, plugin.spamDB.get(name) - 1);
-            }
-        }, 20);
+        if(normalMode == true) {
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    plugin.spamDB.put(name, plugin.spamDB.get(name) + - 1);
+                }
+            }, 20);
+        }
     }
 }

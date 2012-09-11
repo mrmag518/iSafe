@@ -76,7 +76,7 @@ public class BlockListener implements Listener {
                 plugin.checkingFullbrightPerms = true;
                 if(!(plugin.hasPermission(p, "iSafe.bypass.fullbright"))) {
                     event.setCancelled(true);
-                    p.sendMessage(ChatColor.YELLOW + "Place a torch! (light source)");
+                    p.sendMessage(plugin.colorize(plugin.getMessages().getString("FullbrightDetection")));
                 }
             }
         }

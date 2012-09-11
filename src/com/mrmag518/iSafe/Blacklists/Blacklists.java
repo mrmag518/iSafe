@@ -53,7 +53,9 @@ public class Blacklists implements Listener {
     }
     
     private void checkBlacklist(String path) {
-        if(path == null)return;
+        if(path == null) {
+            return;
+        }
         String value = plugin.getBlacklists().getString(path);
         
         if(value.equalsIgnoreCase("") || value.equalsIgnoreCase(" ")) {
@@ -217,7 +219,7 @@ public class Blacklists implements Listener {
                             if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.command")) 
                             {
                                 event.setCancelled(true);
-                                System.out.println("6 " + line + " pWorld: " + pWorld + " worldname: " + worldname);
+                                
                                 if (plugin.getBlacklists().getBoolean("Command." + pWorld + ".Alert/log.ToConsole", true)){
                                     if (event.isCancelled()) {
                                         plugin.log.info("[iSafe] " + p.getName() + " was prevented from doing the "

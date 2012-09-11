@@ -57,9 +57,19 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class iSafe extends JavaPlugin {
+    
+    
+    /**
+     * Todo:
+     * Start working on gamemode 'protection'.
+     * More bug hunting...
+     * Commands to toggle the enable state of specific worlds in the blacklist.
+     */
+    
+    
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    private String fileversion = "iSafe v3.21";
-    private Double ConfigVersion = 3.21;
+    private String fileversion = "iSafe v3.22";
+    private Double ConfigVersion = 3.22;
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     private PlayerListener playerListener = null;
@@ -79,12 +89,10 @@ public class iSafe extends JavaPlugin {
     public double currentVersion;
     public double newVersion;
     
-    public static iSafe plugin;
-    
     @SuppressWarnings("NonConstantLogger")
     public final Logger log = Logger.getLogger("Minecraft");
     
-    public String DEBUG_PREFIX = "[iSafe DEBUG]" + " ";
+    public final String DEBUG_PREFIX = "[iSafe DEBUG]" + " ";
     public static Permission perms = null;
     
     private FileConfiguration iSafeConfig = null;
@@ -96,9 +104,6 @@ public class iSafe extends JavaPlugin {
     private FileConfiguration blacklists = null;
     private File blacklistsFile = null;
     private FileConfiguration config;
-    
-    /*public FileWriter logs;
-    public BufferedWriter logsFile;*/
     
     public boolean checkingUpdatePerms = false;
     public boolean cancelDamagePerms = false;
@@ -133,7 +138,6 @@ public class iSafe extends JavaPlugin {
         if (getISafeConfig().getBoolean("CheckForUpdates", true)) {
             //Update checker - From MilkBowl.
             this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
-
                 @Override
                 public void run() {
                     try {
@@ -176,6 +180,31 @@ public class iSafe extends JavaPlugin {
         
         isStartup = false;
     }
+    
+    protected final void startSpamTask() {
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                for(Player p : Bukkit.getServer().getOnlinePlayers()) {
+                    String name = p.getName();
+                    if(spamDB.containsKey(name)) {
+                        if(spamDB.get(name).intValue() > 0) {
+                            spamDB.put(name, spamDB.get(name) + - 1);
+                        }
+                    }
+                }
+            }
+        }, 0, 20);
+    }
+    
+    /*private void cleanup() {
+        spamDB.clear();
+        isStartup = false;
+        checkingFullbrightPerms = false;
+        checkingSpamPerms = false;
+        checkingUpdatePerms = false;
+        cancelDamagePerms = false;
+    }*/
 
     public boolean verboseLogging() {
         return getISafeConfig().getBoolean("VerboseLogging");
@@ -289,7 +318,16 @@ public class iSafe extends JavaPlugin {
             cancelDamagePerms = false;
         }
         
-        // loadLogs();
+        boolean beastMode = getConfig().getBoolean("AntiCheat/Security.Spam.UseBeastMode(This mode uses a more advanced procedure)");
+        boolean normalMode = getConfig().getBoolean("AntiCheat/Security.Spam.UseNormalMode");
+        
+        if(beastMode == true) {
+            if(normalMode == true) {
+                getConfig().set("AntiCheat/Security.Spam.UseNormalMode", false);
+                saveConfig();
+            }
+            startSpamTask();
+        }
     }
     
     private void setupVault() {
@@ -311,11 +349,15 @@ public class iSafe extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         if(pm.getPlugin("EssentialsProtect") != null) {
             debugLog("You are running EssentialsProtect, cool!");
-            debugLog("Have in mind that some of iSafe's and EssentialsProtect's features can 'collide'.");
+            debugLog("Have in mind that some of iSafe's and EssentialsProtect's actions can 'collide'.");
         }
         if(pm.getPlugin("WorldGuard") != null) {
             debugLog("You are running WorldGuard, cool!");
-            debugLog("Have in mind that some of iSafe's and WorldGuards's features can 'collide'.");
+            debugLog("Have in mind that some of iSafe's and WorldGuards's actions can 'collide'.");
+        }
+        if(pm.getPlugin("PlotMe") != null) {
+            debugLog("You are running PlotMe, cool!");
+            debugLog("Have in mind that some of iSafe's and PlotMe's actions can 'collide'.");
         }
     }
     
@@ -617,34 +659,6 @@ public class iSafe extends JavaPlugin {
                 null, null);
     }
     
-    /*private void loadLogs() {
-        File LOG = new File(getDataFolder(), "iSafe.log");
-        
-        if(!LOG.exists()) {
-            try {
-                LOG.createNewFile();
-            } catch (IOException ex) {
-                Logger.getLogger(iSafe.class.getName()).log(Level.SEVERE, "An error ocurred while trying to create iSafe.log", ex);
-            }
-        }
-        
-        try{
-            logs = new FileWriter(getDataFolder() + File.separator + "iSafe.log");
-        }catch(IOException ioe) {
-            ioe.printStackTrace();
-        }
-                
-        logsFile = new BufferedWriter(logs);
-        
-        try {
-            logsFile.write(Data.getDate() + ": 2 test \n");
-            logsFile.write(Data.getDate() + ": 89503 MRMAG518 IS PURE OWNAGE");
-            logsFile.flush();
-        } catch (IOException ex) {
-            Logger.getLogger(iSafe.class.getName()).log(Level.SEVERE, "test", ex);
-        }
-    }*/
-    
     private void loadConfig() {
         config = getConfig();
         config.options().header(Data.setConfigHeader());
@@ -657,6 +671,10 @@ public class iSafe extends JavaPlugin {
             
             if(config.get("AntiCheat/Sucurity.ForceLightLevel(Fullbright)") != null) {
                 config.set("AntiCheat/Sucurity.ForceLightLevel(Fullbright)", null);
+            }
+            
+            if(config.get("AntiCheat/Sucurity.SimpleAntiSpam") != null) {
+                config.set("AntiCheat/Sucurity.SimpleAntiSpam", null);
             }
         }
         
@@ -708,8 +726,12 @@ public class iSafe extends JavaPlugin {
         config.addDefault("AntiCheat/Security.LightLevel.MinimumLevelBeforeDetection", 1);
         config.addDefault("AntiCheat/Security.LightLevel.CheckCreativeMode", false);
         config.addDefault("AntiCheat/Security.LightLevel.CheckAtNight", true);
-        config.addDefault("AntiCheat/Sucurity.KickJoinerIfSameNickIsOnline", false);
-        config.addDefault("AntiCheat/Sucurity.SimpleAntiSpam", false);
+        config.addDefault("AntiCheat/Security.KickJoinerIfSameNickIsOnline", false);
+        config.addDefault("AntiCheat/Security.Spam.EnableSpamDetector", false);
+        config.addDefault("AntiCheat/Security.Spam.MaxLinesPerSecond", 2);
+        config.addDefault("AntiCheat/Security.Spam.EnableBypassPermissions", true);
+        config.addDefault("AntiCheat/Security.Spam.UseNormalMode", true);
+        config.addDefault("AntiCheat/Security.Spam.UseBeastMode", false);
 
         config.addDefault("Explosions.DisablePrimedExplosions", false);
         config.addDefault("Explosions.DisableAllExplosions", false);
@@ -822,6 +844,7 @@ public class iSafe extends JavaPlugin {
         messages.addDefault("OnlyOpsCanJoin", "&cOnly OPs can join this server!");
         messages.addDefault("CommandLogger", "%playername% did or tried to do the command %command%");
         messages.addDefault("SpamDetection", "&cDetected spam! Please calm down.");
+        messages.addDefault("FullbrightDetection", "&ePlace a torch! (light source)");
         
         //----
         messages.addDefault("Blacklists.Interact.KickMessage", "&cKicked for attempting to interact with &f%block%");

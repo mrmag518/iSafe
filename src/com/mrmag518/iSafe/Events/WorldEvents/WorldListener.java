@@ -43,6 +43,10 @@ public class WorldListener implements Listener {
     
     @EventHandler
     public void portalManagement(PortalCreateEvent event) {
+        if (event.isCancelled()){
+            return;
+        }
+        
         if(plugin.getConfig().getBoolean("World.DisablePortalGeneration", true)) {
             if(event.getReason() == CreateReason.OBC_DESTINATION) {
                 event.setCancelled(true);

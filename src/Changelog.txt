@@ -1,3 +1,16 @@
+Version 3.22
+* Made the date format files uses, more 'file friendly'.
+* Removed old debug code in the command blacklist. (ups)
+* Made fullbright detection message editable.
+* Added various settings to the spam detector.
+* Fixed typos in the Security config section. (-.-')
+* Improved the spam detection significantly, it's now in decent function.
+* Added two different spam detection modes.
+** Normal mode. This check executes a new 1sec delayed scheduled task everytime a player executes a new sentence.
+** Beast mode. This check executes at server start, or when isafe is reloaded. It executes a new 1sec repeating scheduled task. Everytime it executes it checks the spam database for every online player.
+** I'm not entirely sure which of them who takes up most resources, but I would say normal mode uses most.
+** I recommend using beast mode if you want a more logical 'punishment'. Just for an example, let's say Jens joins your server, and starts spamming with a rate at 1 sentence each 500ms, that's 2 sentences per second, that makes 1 more spam level added to the database each 500ms, the beastmode countdown only clears out one level each second. If Jens spammed for 10 seconds, he would need to wait 20 seconds to chat again.
+
 Version 3.21
 * Fixed fullbright notify sending out a permission notify.
 * Added varius settings to fullbright prevention.

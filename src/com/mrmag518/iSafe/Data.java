@@ -23,12 +23,6 @@ import java.util.Calendar;
 import java.util.List;
 
 public class Data {
-    public static iSafe plugin;
-    public Data(iSafe instance)
-    {
-        plugin = instance;
-    }
-    
     public static List<String> CmdBlacklist = new ArrayList<>();
     public static String[] CmdBlacklistList = { "/nuke" };
     
@@ -41,7 +35,6 @@ public class Data {
     public static List<String> WaterBucketWorld = new ArrayList<>();
     public static String[] WaterBucketWorldList = { "world", "world_nether" };
     
-    
     public static String getDate() {
         String date;
         Calendar calendar = Calendar.getInstance();
@@ -51,7 +44,7 @@ public class Data {
         date += calendar.get(Calendar.DAY_OF_MONTH) + "/";
         date += calendar.get(Calendar.YEAR) + " ";
         date += calendar.get(Calendar.HOUR_OF_DAY) + ":";
-        date += calendar.get(Calendar.MINUTE) + ".";
+        date += calendar.get(Calendar.MINUTE) + ":";
         date += calendar.get(Calendar.SECOND) + "";
         return date;
     }
