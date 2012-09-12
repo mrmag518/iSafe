@@ -1,3 +1,8 @@
+Version 3.23
+* Added UseDetailedSearchMode option to Chat blacklist.
+** This mode converts the whole sentence into one piece of word (removing all spaces). The censor will then check that 'word' for any censored words.
+* 
+
 Version 3.22
 * Made the date format files uses, more 'file friendly'.
 * Removed old debug code in the command blacklist. (ups)

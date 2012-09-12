@@ -544,6 +544,7 @@ public class Blacklists implements Listener {
             String pWorld = p.getWorld().getName();
             String blacklist = "Chat." + pWorld + ".Blacklist";
             String state = "Chat." + pWorld + ".Enabled";
+            boolean useDetailedSearchMode = plugin.getBlacklists().getBoolean("Chat." + pWorld + ".UseDetailedSearchMode");
             
             for(String word : plugin.getBlacklists().getStringList(blacklist)) 
             {
@@ -551,7 +552,13 @@ public class Blacklists implements Listener {
                 {
                     if(plugin.getBlacklists().getBoolean(state) == true) 
                     {
-                        if(sentence.contains(word.toLowerCase())) 
+                        String result;
+                        if(useDetailedSearchMode == true) {
+                            result = sentence.replaceAll(" ", "");
+                        } else {
+                            result = sentence;
+                        }
+                        if(result.contains(word.toLowerCase())) 
                         {
                             if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.chat")) 
                             {

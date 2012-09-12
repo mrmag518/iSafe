@@ -1113,6 +1113,8 @@ public class iSafe extends JavaPlugin {
             blacklists.addDefault("Chat." + worldname + ".Alert/log.ToConsole", true);
             blacklists.addDefault("Chat." + worldname + ".Alert/log.ToPlayer", true);
             blacklists.addDefault("Chat." + worldname + ".KickPlayer", false);
+            // test
+            blacklists.addDefault("Chat." + worldname + ".UseDetailedSearchMode", false);
             blacklists.addDefault(chatBL, Arrays.asList(Data.WordBlacklistList));
             Data.WordBlacklist = blacklists.getStringList(chatBL);
         }
