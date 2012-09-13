@@ -322,7 +322,6 @@ public class Blacklists implements Listener {
         int id = event.getItem().getTypeId();
         String name = event.getItem().getType().name().toLowerCase();
         
-        
         for(World world : Bukkit.getServer().getWorlds()) {
             String worldname = world.getName();
             String bWorld = b.getWorld().getName();
@@ -545,6 +544,8 @@ public class Blacklists implements Listener {
             String blacklist = "Chat." + pWorld + ".Blacklist";
             String state = "Chat." + pWorld + ".Enabled";
             boolean useDetailedSearchMode = plugin.getBlacklists().getBoolean("Chat." + pWorld + ".UseDetailedSearchMode");
+            // Test
+            String whitelist = "Chat." + pWorld + ".Whitelist";
             
             for(String word : plugin.getBlacklists().getStringList(blacklist)) 
             {
@@ -560,25 +561,40 @@ public class Blacklists implements Listener {
                         }
                         if(result.contains(word.toLowerCase())) 
                         {
-                            if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.chat")) 
-                            {
-                                event.setCancelled(true);
-                                if (plugin.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToConsole", true)){
-                                    if (event.isCancelled()) {
-                                        plugin.log.info("[iSafe] " + p.getName() + "'s message contained the blacklisted word: " + word);
+                            boolean shallCancel = false;
+                            for(String wWord : plugin.getBlacklists().getStringList(whitelist)) {
+                                if(useDetailedSearchMode == true) {
+                                    if(sentence.contains(wWord.toLowerCase())) { // Must use sentence, not result.
+                                        return;
+                                    } else {
+                                        shallCancel = true;
+                                    }
+                                } else {
+                                    if(result.contains(wWord.toLowerCase())) {
+                                        return;
+                                    } else {
+                                        shallCancel = true;
                                     }
                                 }
-
-                                if (plugin.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToPlayer", true)){
-                                    if (event.isCancelled()) {
-                                        p.sendMessage(plugin.blacklistCensorMsg(word, p.getWorld()));
-                                    }
+                            }
+                            if(shallCancel == true) {
+                                event.setCancelled(shallCancel);
+                            }
+                            if (plugin.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToConsole", true)){
+                                if (event.isCancelled()) {
+                                    plugin.log.info("[iSafe] " + p.getName() + "'s message contained the blacklisted word: " + word);
                                 }
+                            }
 
-                                if (plugin.getBlacklists().getBoolean("Chat." + pWorld + ".KickPlayer", true)){
-                                    if (event.isCancelled()) {
-                                        p.kickPlayer(plugin.blacklistCensorKickMsg(word));
-                                    }
+                            if (plugin.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToPlayer", true)){
+                                if (event.isCancelled()) {
+                                    p.sendMessage(plugin.blacklistCensorMsg(word, p.getWorld()));
+                                }
+                            }
+
+                            if (plugin.getBlacklists().getBoolean("Chat." + pWorld + ".KickPlayer", true)){
+                                if (event.isCancelled()) {
+                                    p.kickPlayer(plugin.blacklistCensorKickMsg(word));
                                 }
                             }
                         }

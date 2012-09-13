@@ -1,6 +1,10 @@
 Version 3.23
 * Added UseDetailedSearchMode option to Chat blacklist.
-** This mode converts the whole sentence into one piece of word (removing all spaces). The censor will then check that 'word' for any censored words.
+** This mode converts the whole sentence into one piece of word (removing all spaces). The censor will then check that string for any censored words.
+* Added 'Whitelist' to the Chat blacklist.
+** Let's say you have banned "penis" and have detailed search mode enabled. If Jens now tries to say 'pen is' he will be prevented. But if you writte 'pen is' in the whitelist list, he will be able to, but not 'penis'.
+** This check have higher priority than the censor itself.
+* Fixed possible message duplications in the Chat blacklist.
 * 
 
 Version 3.22

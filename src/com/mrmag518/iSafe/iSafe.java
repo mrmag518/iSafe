@@ -89,7 +89,6 @@ public class iSafe extends JavaPlugin {
     public double currentVersion;
     public double newVersion;
     
-    @SuppressWarnings("NonConstantLogger")
     public final Logger log = Logger.getLogger("Minecraft");
     
     public final String DEBUG_PREFIX = "[iSafe DEBUG]" + " ";
@@ -128,12 +127,13 @@ public class iSafe extends JavaPlugin {
     public void onEnable() {
         isStartup = true;
         
-        fileLoadManagement();
-        
         currentVersion = Double.valueOf(getDescription().getVersion());
         debugLog("Debug mode is enabled!");
         
+        fileLoadManagement();
+        
         registerClasses();
+        
         PluginDescriptionFile pdffile = this.getDescription();
         if (getISafeConfig().getBoolean("CheckForUpdates", true)) {
             //Update checker - From MilkBowl.
@@ -159,6 +159,7 @@ public class iSafe extends JavaPlugin {
                 }
             }, 0, 36000);
         }
+        
         getCommand("iSafe").setExecutor(new Commands(this));
         
         checkMatch();
@@ -1107,16 +1108,18 @@ public class iSafe extends JavaPlugin {
             String worldname = world.getName();
             
             String chatBL = "Chat." + worldname + ".Blacklist";
+            String whitelist = "Chat." + worldname + ".Whitelist";
             String state = "Chat." + worldname + ".Enabled";
             
             blacklists.addDefault(state, false);
             blacklists.addDefault("Chat." + worldname + ".Alert/log.ToConsole", true);
             blacklists.addDefault("Chat." + worldname + ".Alert/log.ToPlayer", true);
             blacklists.addDefault("Chat." + worldname + ".KickPlayer", false);
-            // test
             blacklists.addDefault("Chat." + worldname + ".UseDetailedSearchMode", false);
             blacklists.addDefault(chatBL, Arrays.asList(Data.WordBlacklistList));
             Data.WordBlacklist = blacklists.getStringList(chatBL);
+            blacklists.addDefault(whitelist, Arrays.asList(Data.WordWhitelistList));
+            Data.WordWhitelist = blacklists.getStringList(whitelist);
         }
         
         
