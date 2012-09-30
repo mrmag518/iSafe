@@ -28,7 +28,7 @@ public class Data {
     
     public static List<String> WordBlacklist = new ArrayList<>();
     public static String[] WordBlacklistList = { "penis", "vagina" };
-    // Test
+    
     public static List<String> WordWhitelist = new ArrayList<>();
     public static String[] WordWhitelistList = { "competition", "pen is" };
     

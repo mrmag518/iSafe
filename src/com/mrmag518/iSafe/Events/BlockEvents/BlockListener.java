@@ -19,7 +19,6 @@ package com.mrmag518.iSafe.Events.BlockEvents;
  */
 
 import com.mrmag518.iSafe.*;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -65,7 +64,7 @@ public class BlockListener implements Listener {
         boolean checkGMC = plugin.getConfig().getBoolean("AntiCheat/Security.LightLevel.CheckCreativeMode");
         boolean checkNight = plugin.getConfig().getBoolean("AntiCheat/Security.LightLevel.CheckAtNight");
         
-        if(plugin.getConfig().getBoolean("AntiCheat/Sucurity.ForceLightLevel(Fullbright)", true)) {
+        if(plugin.getConfig().getBoolean("AntiCheat/Security.LightLevel.PreventFullbright") == true) {
             if(p.getWorld().getTime() > 17999 && checkNight == false) {
                 return;
             }

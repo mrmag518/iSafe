@@ -3,7 +3,7 @@ description: "An assortment of beneficial features."
 main: com.mrmag518.iSafe.iSafe
 name: iSafe
 load: STARTUP
-version: '3.22'
+version: '3.23'
 website: http://dev.bukkit.org/server-mods/blockthattnt/
 softdepend: [Vault]
 commands:
@@ -75,6 +75,7 @@ permissions:
       iSafe.forcedrop.mobspawner: true
       iSafe.forcedrop.ice: true
       iSafe.forcedrop.bedrock: true
+  # ------------------------
   iSafe.command.*:
     default: op
     children:

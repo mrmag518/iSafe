@@ -20,8 +20,6 @@ package com.mrmag518.iSafe.Events.EntityEvents;
 
 
 import com.mrmag518.iSafe.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;

@@ -30,8 +30,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.File;
 import java.net.URL;
-
 import java.util.HashMap;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.milkbowl.vault.permission.Permission;
@@ -64,12 +64,17 @@ public class iSafe extends JavaPlugin {
      * Start working on gamemode 'protection'.
      * More bug hunting...
      * Commands to toggle the enable state of specific worlds in the blacklist.
+     * Add adverture mode to anything related to gamemode.
+     * Fix sapling problem, if iSafe.
+     * Add group thing to blacklists.
+     * Add support for ids like, 120:1337
+     * 
      */
     
     
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    private String fileversion = "iSafe v3.22";
-    private Double ConfigVersion = 3.22;
+    private String fileversion = "iSafe v3.23";
+    private Double ConfigVersion = 3.23;
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     private PlayerListener playerListener = null;
@@ -128,16 +133,16 @@ public class iSafe extends JavaPlugin {
         isStartup = true;
         
         currentVersion = Double.valueOf(getDescription().getVersion());
-        debugLog("Debug mode is enabled!");
         
         fileLoadManagement();
+        debugLog("Debug mode is enabled!");
         
         registerClasses();
         
         PluginDescriptionFile pdffile = this.getDescription();
         if (getISafeConfig().getBoolean("CheckForUpdates", true)) {
             //Update checker - From MilkBowl.
-            this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+            getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -205,6 +210,11 @@ public class iSafe extends JavaPlugin {
         checkingSpamPerms = false;
         checkingUpdatePerms = false;
         cancelDamagePerms = false;
+        Data.CmdBlacklist.clear();
+        Data.LavaBucketWorld.clear();
+        Data.WaterBucketWorld.clear();
+        Data.WordBlacklist.clear();
+        Data.WordWhitelist.clear();
     }*/
 
     public boolean verboseLogging() {
@@ -319,7 +329,7 @@ public class iSafe extends JavaPlugin {
             cancelDamagePerms = false;
         }
         
-        boolean beastMode = getConfig().getBoolean("AntiCheat/Security.Spam.UseBeastMode(This mode uses a more advanced procedure)");
+        boolean beastMode = getConfig().getBoolean("AntiCheat/Security.Spam.UseBeastMode");
         boolean normalMode = getConfig().getBoolean("AntiCheat/Security.Spam.UseNormalMode");
         
         if(beastMode == true) {
@@ -1108,7 +1118,7 @@ public class iSafe extends JavaPlugin {
             String worldname = world.getName();
             
             String chatBL = "Chat." + worldname + ".Blacklist";
-            String whitelist = "Chat." + worldname + ".Whitelist";
+            String chatWL = "Chat." + worldname + ".Whitelist";
             String state = "Chat." + worldname + ".Enabled";
             
             blacklists.addDefault(state, false);
@@ -1118,8 +1128,8 @@ public class iSafe extends JavaPlugin {
             blacklists.addDefault("Chat." + worldname + ".UseDetailedSearchMode", false);
             blacklists.addDefault(chatBL, Arrays.asList(Data.WordBlacklistList));
             Data.WordBlacklist = blacklists.getStringList(chatBL);
-            blacklists.addDefault(whitelist, Arrays.asList(Data.WordWhitelistList));
-            Data.WordWhitelist = blacklists.getStringList(whitelist);
+            blacklists.addDefault(chatWL, Arrays.asList(Data.WordWhitelistList));
+            Data.WordWhitelist = blacklists.getStringList(chatWL);
         }
         
         

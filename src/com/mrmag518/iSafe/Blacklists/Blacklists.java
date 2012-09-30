@@ -544,7 +544,6 @@ public class Blacklists implements Listener {
             String blacklist = "Chat." + pWorld + ".Blacklist";
             String state = "Chat." + pWorld + ".Enabled";
             boolean useDetailedSearchMode = plugin.getBlacklists().getBoolean("Chat." + pWorld + ".UseDetailedSearchMode");
-            // Test
             String whitelist = "Chat." + pWorld + ".Whitelist";
             
             for(String word : plugin.getBlacklists().getStringList(blacklist)) 

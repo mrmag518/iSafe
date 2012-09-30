@@ -5,6 +5,7 @@ Version 3.23
 ** Let's say you have banned "penis" and have detailed search mode enabled. If Jens now tries to say 'pen is' he will be prevented. But if you writte 'pen is' in the whitelist list, he will be able to, but not 'penis'.
 ** This check have higher priority than the censor itself.
 * Fixed possible message duplications in the Chat blacklist.
+* Fixed fullbright prevention always being enabled.
 * 
 
 Version 3.22
