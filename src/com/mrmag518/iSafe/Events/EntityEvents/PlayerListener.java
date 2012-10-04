@@ -21,6 +21,7 @@ package com.mrmag518.iSafe.Events.EntityEvents;
 
 import com.mrmag518.iSafe.*;
 
+import com.mrmag518.iSafe.Files.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -116,11 +117,11 @@ public class PlayerListener implements Listener  {
         if (event.isCancelled()){
             return;
         }
-        Player player = event.getPlayer();
+        Player p = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Teleport.DisableAllTeleportCauses", true))
         {
-            if(!(plugin.hasPermission(player, "iSafe.bypass.teleport"))) {
+            if(!(plugin.hasPermission(p, "iSafe.bypass.teleport"))) {
                 event.setTo(event.getFrom());
             }
         }
@@ -128,7 +129,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Teleport.Disable.CommandCause", true))
         {
             if (event.getCause() == TeleportCause.COMMAND) {
-                if(!(plugin.hasPermission(player, "iSafe.bypass.teleport.command"))) {
+                if(!(plugin.hasPermission(p, "iSafe.bypass.teleport.command"))) {
                     event.setTo(event.getFrom());
                 }
             }
@@ -137,7 +138,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Teleport.Disable.EnderpearlCause", true))
         {
             if (event.getCause() == TeleportCause.ENDER_PEARL) {
-                if(!(plugin.hasPermission(player, "iSafe.bypass.teleport.enderpearl"))) {
+                if(!(plugin.hasPermission(p, "iSafe.bypass.teleport.enderpearl"))) {
                     event.setTo(event.getFrom());
                 }
             }
@@ -146,7 +147,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Teleport.Disable.PluginCause", true))
         {
             if (event.getCause() == TeleportCause.PLUGIN) {
-                if(!(plugin.hasPermission(player, "iSafe.bypass.teleport.plugin"))) {
+                if(!(plugin.hasPermission(p, "iSafe.bypass.teleport.plugin"))) {
                     event.setTo(event.getFrom());
                 }
             }
@@ -155,7 +156,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Teleport.Disable.UnknownCause", true))
         {
             if (event.getCause() == TeleportCause.UNKNOWN) {
-                if(!(plugin.hasPermission(player, "iSafe.bypass.teleport.unknown"))) {
+                if(!(plugin.hasPermission(p, "iSafe.bypass.teleport.unknown"))) {
                     event.setTo(event.getFrom());
                 }
             }
@@ -164,7 +165,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Teleport.Disable.NetherportalCause", true))
         {
             if (event.getCause() == TeleportCause.NETHER_PORTAL) {
-                if(!(plugin.hasPermission(player, "iSafe.bypass.teleport.netherportal"))) {
+                if(!(plugin.hasPermission(p, "iSafe.bypass.teleport.netherportal"))) {
                     event.setTo(event.getFrom());
                 }
             }
@@ -190,11 +191,11 @@ public class PlayerListener implements Listener  {
         if (event.isCancelled()){
             return;
         }
-        Player player = event.getPlayer();
+        Player p = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Miscellaneous.ForcePermissionsToUseBed", true))
         {
-            if(!(plugin.hasPermission(player, "iSafe.use.bed"))) {
+            if(!(plugin.hasPermission(p, "iSafe.use.bed"))) {
                 event.setCancelled(true);
             }
         }
@@ -219,11 +220,11 @@ public class PlayerListener implements Listener  {
         if (event.isCancelled()){
             return;
         }
-        Player player = event.getPlayer();
+        Player p = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Miscellaneous.ForcePermissionsToFish", true))
         {
-            if(!(plugin.hasPermission(player, "iSafe.bypass.fish"))) {
+            if(!(plugin.hasPermission(p, "iSafe.bypass.fish"))) {
                 event.setCancelled(true);
             }
         }
@@ -328,7 +329,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.spamDB.get(name) > maxLines) {
             event.setCancelled(true);
-            p.sendMessage(plugin.colorize(plugin.getMessages().getString("SpamDetection")));
+            p.sendMessage(plugin.colorize(Messages.getMessages().getString("SpamDetection")));
         }
         
         if(normalMode == true) {

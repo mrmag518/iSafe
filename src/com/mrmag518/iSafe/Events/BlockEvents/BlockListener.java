@@ -19,6 +19,7 @@ package com.mrmag518.iSafe.Events.BlockEvents;
  */
 
 import com.mrmag518.iSafe.*;
+import com.mrmag518.iSafe.Files.Messages;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -75,7 +76,7 @@ public class BlockListener implements Listener {
                 plugin.checkingFullbrightPerms = true;
                 if(!(plugin.hasPermission(p, "iSafe.bypass.fullbright"))) {
                     event.setCancelled(true);
-                    p.sendMessage(plugin.colorize(plugin.getMessages().getString("FullbrightDetection")));
+                    p.sendMessage(plugin.colorize(Messages.getMessages().getString("FullbrightDetection")));
                 }
             }
         }

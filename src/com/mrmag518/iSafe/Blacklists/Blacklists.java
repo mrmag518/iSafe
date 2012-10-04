@@ -65,6 +65,9 @@ public class Blacklists implements Listener {
                 plugin.getBlacklists().set(path, value + ",");
                 plugin.saveBlacklists();
             }
+            if(value.contains(":")) {
+                plugin.log.warning("[iSafe] Blacklists doesn't support sub-IDs yet! (' : ')");
+            }
         }
     }
     

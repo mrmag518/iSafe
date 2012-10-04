@@ -1,3 +1,13 @@
+Version 3.3
+* Some tweaks to permissions handling.
+* Removed unnecessary damage & combust code.
+* Added more debug output.
+* Changed to a more lightweight metrics system.
+* Made it optional to track anonymous usage statistics.
+* Fixed a couple small issues in the _example.yml user file.
+* Started separating file management into separate classes.
+* 
+
 Version 3.23
 * Added UseDetailedSearchMode option to Chat blacklist.
 ** This mode converts the whole sentence into one piece of word (removing all spaces). The censor will then check that string for any censored words.
@@ -6,7 +16,6 @@ Version 3.23
 ** This check have higher priority than the censor itself.
 * Fixed possible message duplications in the Chat blacklist.
 * Fixed fullbright prevention always being enabled.
-* 
 
 Version 3.22
 * Made the date format files uses, more 'file friendly'.

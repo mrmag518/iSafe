@@ -220,7 +220,6 @@ public class EntityListener implements Listener {
         if(plugin.getConfig().getBoolean("Damage.DisableVillagerDamage", true)){
             if(entity instanceof Villager) 
             {
-                event.setDamage(0);
                 event.setCancelled(true);
             }
         }
@@ -228,7 +227,6 @@ public class EntityListener implements Listener {
         if(plugin.getConfig().getBoolean("Damage.DisablePlayerDamage", true)){
             if(entity instanceof Player) 
             {
-                event.setDamage(0);
                 event.setCancelled(true);
             }
         }
@@ -237,7 +235,6 @@ public class EntityListener implements Listener {
             if(event.getCause() == DamageCause.BLOCK_EXPLOSION) {
                 if (entity instanceof Player) {
                     event.setCancelled(true);
-                    event.setDamage(0);
                 }
             }
         }
@@ -248,11 +245,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.fire")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -262,7 +257,6 @@ public class EntityListener implements Listener {
             if(event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
                     event.setCancelled(true);
-                    event.setDamage(0);
                 }
             }
         }
@@ -273,11 +267,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.contact")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -286,7 +278,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableContactDamage", true)){
             if(event.getCause().equals(DamageCause.CONTACT)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -298,11 +289,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.custom")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -311,7 +300,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableCustomDamage", true)){
             if(event.getCause().equals(DamageCause.CUSTOM)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -323,11 +311,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.drowning")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -336,7 +322,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableDrowningDamage", true)){
             if(event.getCause().equals(DamageCause.DROWNING)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -348,11 +333,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.entityattack")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -361,7 +344,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableEntityAttackDamage", true)){
             if(event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -373,11 +355,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.fall")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -386,7 +366,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableFallDamage", true)){
             if(event.getCause().equals(DamageCause.FALL)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -398,11 +377,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.lava")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -411,7 +388,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableLavaDamage", true)){
             if(event.getCause().equals(DamageCause.LAVA)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -423,11 +399,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.lightning")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -436,7 +410,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableLightningDamage", true)){
             if(event.getCause().equals(DamageCause.LIGHTNING)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -448,11 +421,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.magic")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -461,7 +432,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableMagicDamage", true)){
             if(event.getCause().equals(DamageCause.MAGIC)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -473,11 +443,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.poison")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -486,7 +454,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisablePoisonDamage", true)){
             if(event.getCause().equals(DamageCause.POISON)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -498,11 +465,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.projectile")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -511,7 +476,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableProjectileDamage", true)){
             if(event.getCause().equals(DamageCause.PROJECTILE)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -523,11 +487,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.starvation")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -536,7 +498,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableStarvationDamage", true)){
             if(event.getCause().equals(DamageCause.STARVATION)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -548,11 +509,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.suffocation")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -561,7 +520,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableSuffocationDamage", true)){
             if(event.getCause().equals(DamageCause.SUFFOCATION)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -573,11 +531,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.suicide")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -586,7 +542,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableSuicideDamage", true)){
             if(event.getCause().equals(DamageCause.SUICIDE)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -598,11 +553,9 @@ public class EntityListener implements Listener {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
                         if(plugin.hasPermission(player, "iSafe.canceldamage.void")) {
-                            event.setDamage(0);
                             event.setCancelled(true);
                         }
                     } else {
-                        event.setDamage(0);
                         event.setCancelled(true);
                     }
                 }
@@ -611,7 +564,6 @@ public class EntityListener implements Listener {
         if(plugin.getCreatureManager().getBoolean("Creatures.Damage.DisableVoidDamage", true)){
             if(event.getCause().equals(DamageCause.VOID)) {
                 if (entity instanceof Creature || entity instanceof Animals) {
-                    event.setDamage(0);
                     event.setCancelled(true);
                 }
             }
@@ -861,34 +813,29 @@ public class EntityListener implements Listener {
         Entity entity = event.getEntity();
         
         if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.DisableFor-allCreatures", true)){
-            event.setDuration(0);
             event.setCancelled(true);
         }
         
         if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.DisableFor.Giant", true)) {
             if(entity instanceof Giant) {
-                event.setDuration(0);
                 event.setCancelled(true);
             }
         }
         
         if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.DisableFor.PigZombie", true)) {
             if(entity instanceof PigZombie) {
-                event.setDuration(0);
                 event.setCancelled(true);
             }
         }
         
         if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.DisableFor.Skeleton", true)) {
             if(entity instanceof Skeleton) {
-                event.setDuration(0);
                 event.setCancelled(true);
             }
         }
         
         if(plugin.getCreatureManager().getBoolean("Creatures.Combusting.DisableFor.Zombie", true)) {
             if(entity instanceof Zombie) {
-                event.setDuration(0);
                 event.setCancelled(true);
             }
         }
