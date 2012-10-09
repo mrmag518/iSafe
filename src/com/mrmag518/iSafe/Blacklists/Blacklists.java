@@ -18,6 +18,10 @@
 
 package com.mrmag518.iSafe.Blacklists;
 
+import com.mrmag518.iSafe.Files.BlacklistsF;
+import com.mrmag518.iSafe.Files.CreatureManager;
+import com.mrmag518.iSafe.Files.Messages;
+import com.mrmag518.iSafe.Util.Log;
 import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.Bukkit;
@@ -56,17 +60,17 @@ public class Blacklists implements Listener {
         if(path == null) {
             return;
         }
-        String value = plugin.getBlacklists().getString(path);
+        String value = BlacklistsF.getBlacklists().getString(path);
         
         if(value.equalsIgnoreCase("") || value.equalsIgnoreCase(" ")) {
             return;
         } else {
             if(!value.endsWith(",")) {
-                plugin.getBlacklists().set(path, value + ",");
-                plugin.saveBlacklists();
+                BlacklistsF.getBlacklists().set(path, value + ",");
+                BlacklistsF.saveBlacklists();
             }
             if(value.contains(":")) {
-                plugin.log.warning("[iSafe] Blacklists doesn't support sub-IDs yet! (' : ')");
+                Log.warning("[iSafe] Blacklists doesn't support sub-IDs yet! (' : ')");
             }
         }
     }
@@ -91,39 +95,45 @@ public class Blacklists implements Listener {
             
             if(pWorld.equalsIgnoreCase(worldname)) 
             {
-                if(plugin.getBlacklists().getBoolean(state) == true) 
+                if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
                     {
                         if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.break")) 
                         {
-                            if (plugin.getBlacklists().getBoolean("Break." + pWorld + ".Gamemode.PreventFor.Survival", true)) {
+                            if (BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                 if(p.getGameMode().equals(GameMode.SURVIVAL)) {
                                     event.setCancelled(true);
                                 }
                             }
 
-                            if (plugin.getBlacklists().getBoolean("Break." + pWorld + ".Gamemode.PreventFor.Creative", true)) {
+                            if (BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Gamemode.PreventFor.Creative") == true) {
                                 if(p.getGameMode().equals(GameMode.CREATIVE)) {
                                     event.setCancelled(true);
                                 }
                             }
-
-                            if (plugin.getBlacklists().getBoolean("Break." + pWorld + ".KickPlayer", true)){
-                                if (event.isCancelled()){
-                                    p.kickPlayer(plugin.blacklistBreakKickMsg(b));
-                                }    
-                            }
-
-                            if(plugin.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToPlayer", true)) {
-                                if(event.isCancelled()) {
-                                    p.sendMessage(plugin.blacklistBreakMsg(b));
+                            
+                            if (BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Gamemode.PreventFor.Adventure") == true) {
+                                if(p.getGameMode().equals(GameMode.ADVENTURE)) {
+                                    event.setCancelled(true);
                                 }
                             }
 
-                            if (plugin.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToConsole", true)){
+                            if (BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".KickPlayer") == true){
+                                if (event.isCancelled()){
+                                    p.kickPlayer(Messages.blacklistBreakKickMsg(b));
+                                }    
+                            }
+
+                            if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToPlayer") == true) {
+                                if(event.isCancelled()) {
+                                    p.sendMessage(Messages.blacklistBreakMsg(b));
+                                }
+                            }
+
+                            if (BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToConsole") == true){
                                 if (event.isCancelled()) {
-                                    plugin.log.info("[iSafe] " + p.getName() + " was prevented from breaking the "
+                                    Log.info("[iSafe] " + p.getName() + " was prevented from breaking the "
                                             + "blacklisted block '" + name + "' in the world '" + pWorld + "'.");
                                 }
                             }
@@ -154,40 +164,46 @@ public class Blacklists implements Listener {
             
             if(pWorld.equalsIgnoreCase(worldname)) 
             {
-                if(plugin.getBlacklists().getBoolean(state) == true) 
+                if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
                     {
                         if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.place")) 
                         {
-                            if (plugin.getBlacklists().getBoolean("Place." + pWorld + ".Gamemode.PreventFor.Survival", true)) {
+                            if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                 if(p.getGameMode().equals(GameMode.SURVIVAL)) {
                                     event.setCancelled(true);
                                 }
                             } 
 
-                            if (plugin.getBlacklists().getBoolean("Place." + pWorld + ".Gamemode.PreventFor.Creative", true)) {
+                            if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Gamemode.PreventFor.Creative") == true) {
                                 if(p.getGameMode().equals(GameMode.CREATIVE)) {
                                     event.setCancelled(true);
                                 }
                             }
+                            
+                            if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Gamemode.PreventFor.Adventure") == true) {
+                                if(p.getGameMode().equals(GameMode.ADVENTURE)) {
+                                    event.setCancelled(true);
+                                }
+                            }
 
-                            if (plugin.getBlacklists().getBoolean("Place." + pWorld + ".KickPlayer", true)){
+                            if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".KickPlayer") == true){
                                 if (event.isCancelled()) {
-                                    p.kickPlayer(plugin.blacklistPlaceKickMsg(b));
+                                    p.kickPlayer(Messages.blacklistPlaceKickMsg(b));
                                 }    
                             }
 
-                            if (plugin.getBlacklists().getBoolean("Place." + pWorld + ".Alert/log.ToConsole", true)){
+                            if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Alert/log.ToConsole") == true){
                                 if (event.isCancelled()) {
-                                    plugin.log.info("[iSafe] " + p.getName() + " was prevented from placing the "
+                                    Log.info("[iSafe] " + p.getName() + " was prevented from placing the "
                                             + "blacklisted block '" + name + "' in the world '" + pWorld + "'.");
                                 }
                             }
 
-                            if (plugin.getBlacklists().getBoolean("Place." + pWorld + ".Alert/log.ToPlayer", true)){
+                            if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Alert/log.ToPlayer") == true){
                                 if (event.isCancelled()) {
-                                    p.sendMessage(plugin.blacklistPlaceMsg(b));
+                                    p.sendMessage(Messages.blacklistPlaceMsg(b));
                                 }
                             }
                         }
@@ -211,34 +227,50 @@ public class Blacklists implements Listener {
             String blacklist = "Command." + pWorld + ".Blacklist";
             String state = "Command." + pWorld + ".Enabled";
             
-            for(String command : plugin.getBlacklists().getStringList(blacklist)) 
+            for(String command : BlacklistsF.getBlacklists().getStringList(blacklist)) 
             {
                 if(pWorld.equalsIgnoreCase(worldname)) 
                 {
-                    if(plugin.getBlacklists().getBoolean(state) == true) 
+                    if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                     {
                         if(line.startsWith(command.toLowerCase())) 
                         {
                             if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.command")) 
                             {
-                                event.setCancelled(true);
+                                if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
+                                    if(p.getGameMode().equals(GameMode.SURVIVAL)) {
+                                        event.setCancelled(true);
+                                    }
+                                }
                                 
-                                if (plugin.getBlacklists().getBoolean("Command." + pWorld + ".Alert/log.ToConsole", true)){
+                                if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Gamemode.PreventFor.Creative") == true) {
+                                    if(p.getGameMode().equals(GameMode.CREATIVE)) {
+                                        event.setCancelled(true);
+                                    }
+                                }
+                                
+                                if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Gamemode.PreventFor.Adventure") == true) {
+                                    if(p.getGameMode().equals(GameMode.ADVENTURE)) {
+                                        event.setCancelled(true);
+                                    }
+                                }
+                                
+                                if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Alert/log.ToConsole") == true){
                                     if (event.isCancelled()) {
-                                        plugin.log.info("[iSafe] " + p.getName() + " was prevented from doing the "
+                                        Log.info("[iSafe] " + p.getName() + " was prevented from doing the "
                                                     + "blacklisted command '" + command + "' in the world '" + pWorld + "'.");
                                     }
                                 }
 
-                                if (plugin.getBlacklists().getBoolean("Command." + pWorld + ".Alert/log.ToPlayer", true)){
+                                if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Alert/log.ToPlayer") == true){
                                     if (event.isCancelled()) {
-                                        p.sendMessage(plugin.blacklistCommandMsg(command, worldname));
+                                        p.sendMessage(Messages.blacklistCommandMsg(command, worldname));
                                     }
                                 }
 
-                                if (plugin.getBlacklists().getBoolean("Command." + pWorld + ".KickPlayer", true)){
+                                if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".KickPlayer") == true){
                                     if (event.isCancelled()) {
-                                        p.sendMessage(plugin.blacklistCommandKickMsg(command, worldname));
+                                        p.sendMessage(Messages.blacklistCommandKickMsg(command, worldname));
                                     }
                                 }
                             }
@@ -262,10 +294,10 @@ public class Blacklists implements Listener {
         
         // Check if the HumanEntity is a Player. (of course he is ..)
         if(he instanceof Player) {
-            plugin.debugLog("[CraftBlacklist]" + he.getName() + " is a Player.");
+            Log.debug("[CraftBlacklist]" + he.getName() + " is a Player.");
             p = (Player)he;
         } else {
-            plugin.debugLog("[CraftBlacklist]" + he.getName() + " is not a Player. say wut?!");
+            Log.debug("[CraftBlacklist]" + he.getName() + " is not a Player. say wut?!");
             return;
         }
         
@@ -279,34 +311,46 @@ public class Blacklists implements Listener {
             
             if(pWorld.equalsIgnoreCase(worldname)) 
             {
-                if(plugin.getBlacklists().getBoolean(state) == true) 
+                if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
                     {
                         if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.crafting")) 
                         {
-                           if (plugin.getBlacklists().getBoolean("Crafting." + pWorld + ".Gamemode.PreventFor.Survival", true)) {
+                           if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                 if(he.getGameMode().equals(GameMode.SURVIVAL)) {
                                     event.setCancelled(true);
                                 }
                             } 
 
-                            if (plugin.getBlacklists().getBoolean("Crafting." + pWorld + ".Gamemode.PreventFor.Creative", true)) {
+                            if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Gamemode.PreventFor.Creative") == true) {
                                 if(he.getGameMode().equals(GameMode.CREATIVE)) {
                                     event.setCancelled(true);
                                 }
                             }
+                            
+                            if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Gamemode.PreventFor.Adventure") == true) {
+                                if(p.getGameMode().equals(GameMode.ADVENTURE)) {
+                                    event.setCancelled(true);
+                                }
+                            }
 
-                            if (plugin.getBlacklists().getBoolean("Crafting." + pWorld + ".Alert/log.ToConsole", true)){
+                            if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Alert/log.ToConsole") == true){
                                 if (event.isCancelled()) {
-                                    plugin.log.info("[iSafe] " + p.getName() + " was prevented from crafting the "
+                                    Log.info("[iSafe] " + p.getName() + " was prevented from crafting the "
                                                 + "blacklisted recipe '" + name + "' in the world '" + pWorld + "'.");
                                 }
                             }
 
-                            if (plugin.getBlacklists().getBoolean("Crafting." + pWorld + ".Alert/log.ToPlayer", true)){
+                            if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Alert/log.ToPlayer") == true){
                                 if (event.isCancelled()) {
-                                    p.sendMessage(plugin.blacklistCraftingMsg(name, p.getWorld()));
+                                    p.sendMessage(Messages.blacklistCraftingMsg(name, p.getWorld()));
+                                }
+                            }
+                            
+                            if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".KickPlayer") == true) {
+                                if(event.isCancelled()) {
+                                    p.kickPlayer(Messages.blacklistCraftingKickMsg(name));
                                 }
                             }
                         }
@@ -335,13 +379,13 @@ public class Blacklists implements Listener {
             
             if(bWorld.equalsIgnoreCase(worldname)) 
             {
-                if(plugin.getBlacklists().getBoolean(state) == true) 
+                if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
                     {
                         event.setCancelled(true);
-                        if(plugin.getBlacklists().getBoolean("Dispense." + bWorld + ".Alert/log-to.Console", true)) {
-                            plugin.log.info("[iSafe] " + " The block '" + name + "' was prevented from being dispensed"
+                        if(BlacklistsF.getBlacklists().getBoolean("Dispense." + bWorld + ".Alert/log-to.Console") == true) {
+                            Log.info("[iSafe] " + " The block '" + name + "' was prevented from being dispensed"
                                     + " in the world '" + bWorld + "'.");
                         }
                     }
@@ -369,43 +413,49 @@ public class Blacklists implements Listener {
             
             if(pWorld.equalsIgnoreCase(worldname)) 
             {
-                if(plugin.getBlacklists().getBoolean(state) == true) 
+                if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
                     {
                         if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.drop")) 
                         {
-                            if (plugin.getBlacklists().getBoolean("Drop." + pWorld + ".Gamemode.PreventFor.Survival", true)) {
+                            if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                 if(p.getGameMode().equals(GameMode.SURVIVAL)) {
                                     event.setCancelled(true);
                                 }
                             }
 
-                            if (plugin.getBlacklists().getBoolean("Drop." + pWorld + ".Gamemode.PreventFor.Creative", true)) {
+                            if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Gamemode.PreventFor.Creative") == true) {
                                 if(p.getGameMode().equals(GameMode.CREATIVE)) {
                                     event.setCancelled(true);
                                 }
                             }
+                            
+                            if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Gamemode.PreventFor.Adventure") == true) {
+                                if(p.getGameMode().equals(GameMode.ADVENTURE)) {
+                                    event.setCancelled(true);
+                                }
+                            }
 
-                            if (plugin.getBlacklists().getBoolean("Drop." + pWorld + ".KickPlayer", true))
+                            if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".KickPlayer") == true)
                             {
                                 if (event.isCancelled()){
-                                    p.kickPlayer(plugin.blacklistDropKickMsg(event.getItemDrop()));
+                                    p.kickPlayer(Messages.blacklistDropKickMsg(event.getItemDrop()));
                                 }    
                             }
 
-                            if (plugin.getBlacklists().getBoolean("Drop." + pWorld + ".Alert/log.ToConsole", true))
+                            if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Alert/log.ToConsole") == true)
                             {
                                 if (event.isCancelled()) {
-                                    plugin.log.info("[iSafe] " + p.getName() + " was prevented from droping the "
+                                    Log.info("[iSafe] " + p.getName() + " was prevented from droping the "
                                                 + "blacklisted item '" + name + "' in the world '" + pWorld + "'.");
                                 }
                             }
 
-                            if (plugin.getBlacklists().getBoolean("Drop." + pWorld + ".Alert/log.ToPlayer", true))
+                            if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Alert/log.ToPlayer") == true)
                             {
                                 if (event.isCancelled()) {
-                                    p.sendMessage(plugin.blacklistDropMsg(name, p.getWorld()));
+                                    p.sendMessage(Messages.blacklistDropMsg(name, p.getWorld()));
                                 }
                             }
                         }
@@ -438,39 +488,45 @@ public class Blacklists implements Listener {
                 
                 if(pWorld.equalsIgnoreCase(worldname)) 
                 {
-                    if(plugin.getBlacklists().getBoolean(state) == true) 
+                    if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                     {
-                        if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                        if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
                         {
                             if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.interact"))
                             {
-                                if (plugin.getBlacklists().getBoolean("Interact." + pWorld + ".Gamemode.PreventFor.Survival", true)) {
+                                if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                     if(p.getGameMode().equals(GameMode.SURVIVAL)) {
                                         event.setCancelled(true);
                                     }
                                 }
 
-                                if (plugin.getBlacklists().getBoolean("Interact." + pWorld + ".Gamemode.PreventFor.Creative", true)) {
+                                if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Gamemode.PreventFor.Creative") == true) {
                                     if(p.getGameMode().equals(GameMode.CREATIVE)) {
                                         event.setCancelled(true);
                                     }
                                 }
-
-                                if (plugin.getBlacklists().getBoolean("Interact." + pWorld + ".KickPlayer", true)){
-                                    if (event.isCancelled()){
-                                        p.kickPlayer(plugin.blacklistInteractKickMsg(b));
+                                
+                                if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Gamemode.PreventFor.Adventure") == true) {
+                                    if(p.getGameMode().equals(GameMode.ADVENTURE)) {
+                                        event.setCancelled(true);
                                     }
                                 }
 
-                                if (plugin.getBlacklists().getBoolean("Interact." + pWorld + ".Alert/log.ToPlayer", true)){
+                                if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".KickPlayer") == true){
                                     if (event.isCancelled()){
-                                        p.sendMessage(plugin.blacklistInteractMsg(b));
+                                        p.kickPlayer(Messages.blacklistInteractKickMsg(b));
                                     }
                                 }
 
-                                if (plugin.getBlacklists().getBoolean("Interact." + pWorld + ".Alert/log.ToConsole", true)){
+                                if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Alert/log.ToPlayer") == true){
                                     if (event.isCancelled()){
-                                        plugin.log.info("[iSafe] " + p.getName() + " was prevented from interacting with the "
+                                        p.sendMessage(Messages.blacklistInteractMsg(b));
+                                    }
+                                }
+
+                                if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Alert/log.ToConsole") == true){
+                                    if (event.isCancelled()){
+                                        Log.info("[iSafe] " + p.getName() + " was prevented from interacting with the "
                                                 + "blacklisted block '" + name + "' in the world '" + pWorld + "'.");
                                     }
                                 }
@@ -501,29 +557,35 @@ public class Blacklists implements Listener {
             
             if(pWorld.equalsIgnoreCase(worldname)) 
             {
-                if(plugin.getBlacklists().getBoolean(state) == true) 
+                if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
                     {
                         if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.pickup")) 
                         {
-                            if (plugin.getBlacklists().getBoolean("Pickup." + pWorld + ".Gamemode.PreventFor.Survival", true)) {
+                            if (BlacklistsF.getBlacklists().getBoolean("Pickup." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                 if(p.getGameMode().equals(GameMode.SURVIVAL)) {
                                     event.setCancelled(true);
                                 }
                             }
 
-                            if (plugin.getBlacklists().getBoolean("Pickup." + pWorld + ".Gamemode.PreventFor.Creative", true)) {
+                            if (BlacklistsF.getBlacklists().getBoolean("Pickup." + pWorld + ".Gamemode.PreventFor.Creative") == true) {
                                 if(p.getGameMode().equals(GameMode.CREATIVE)) {
                                     event.setCancelled(true);
                                 }
                             }
+                            
+                            if (BlacklistsF.getBlacklists().getBoolean("Pickup." + pWorld + ".Gamemode.PreventFor.Adventure") == true) {
+                                if(p.getGameMode().equals(GameMode.ADVENTURE)) {
+                                    event.setCancelled(true);
+                                }
+                            }
 
-                            if (plugin.getBlacklists().getBoolean("Pickup." + pWorld + ".KickPlayer", true))
+                            if (BlacklistsF.getBlacklists().getBoolean("Pickup." + pWorld + ".KickPlayer") == true)
                             {
                                 if (event.isCancelled())
                                 {
-                                    p.kickPlayer(plugin.blacklistPickupKickMsg(name));
+                                    p.kickPlayer(Messages.blacklistPickupKickMsg(name));
                                 }    
                             }
                         }
@@ -546,14 +608,14 @@ public class Blacklists implements Listener {
             String pWorld = p.getWorld().getName();
             String blacklist = "Chat." + pWorld + ".Blacklist";
             String state = "Chat." + pWorld + ".Enabled";
-            boolean useDetailedSearchMode = plugin.getBlacklists().getBoolean("Chat." + pWorld + ".UseDetailedSearchMode");
+            boolean useDetailedSearchMode = BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".UseDetailedSearchMode");
             String whitelist = "Chat." + pWorld + ".Whitelist";
             
-            for(String word : plugin.getBlacklists().getStringList(blacklist)) 
+            for(String word : BlacklistsF.getBlacklists().getStringList(blacklist)) 
             {
                 if(pWorld.equalsIgnoreCase(worldname)) 
                 {
-                    if(plugin.getBlacklists().getBoolean(state) == true) 
+                    if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                     {
                         String result;
                         if(useDetailedSearchMode == true) {
@@ -564,7 +626,7 @@ public class Blacklists implements Listener {
                         if(result.contains(word.toLowerCase())) 
                         {
                             boolean shallCancel = false;
-                            for(String wWord : plugin.getBlacklists().getStringList(whitelist)) {
+                            for(String wWord : BlacklistsF.getBlacklists().getStringList(whitelist)) {
                                 if(useDetailedSearchMode == true) {
                                     if(sentence.contains(wWord.toLowerCase())) { // Must use sentence, not result.
                                         return;
@@ -582,21 +644,21 @@ public class Blacklists implements Listener {
                             if(shallCancel == true) {
                                 event.setCancelled(shallCancel);
                             }
-                            if (plugin.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToConsole", true)){
+                            if (BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToConsole") == true){
                                 if (event.isCancelled()) {
-                                    plugin.log.info("[iSafe] " + p.getName() + "'s message contained the blacklisted word: " + word);
+                                    Log.info("[iSafe] " + p.getName() + "'s message contained the blacklisted word: " + word);
                                 }
                             }
 
-                            if (plugin.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToPlayer", true)){
+                            if (BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToPlayer") == true){
                                 if (event.isCancelled()) {
-                                    p.sendMessage(plugin.blacklistCensorMsg(word, p.getWorld()));
+                                    p.sendMessage(Messages.blacklistCensorMsg(word, p.getWorld()));
                                 }
                             }
 
-                            if (plugin.getBlacklists().getBoolean("Chat." + pWorld + ".KickPlayer", true)){
+                            if (BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".KickPlayer") == true){
                                 if (event.isCancelled()) {
-                                    p.kickPlayer(plugin.blacklistCensorKickMsg(word));
+                                    p.kickPlayer(Messages.blacklistCensorKickMsg(word));
                                 }
                             }
                         }
@@ -623,18 +685,18 @@ public class Blacklists implements Listener {
             
             if(eWorld.equalsIgnoreCase(worldname)) 
             {
-                if(plugin.getBlacklists().getBoolean(state) == true) 
+                if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
                     if(event.getSpawnReason() == SpawnReason.NATURAL)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".Natural.Blacklist";
                         checkBlacklist(blacklist);
-                        if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                        if(CreatureManager.getCreatureManager().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
-                            if (plugin.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Natural.Debug.ToConsole", true)){
-                                plugin.log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Natural; In the world: " + eWorld);
+                            if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Natural.Debug.ToConsole") == true){
+                                Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Natural; In the world: " + eWorld);
                             }
                         }
                     }
@@ -643,12 +705,12 @@ public class Blacklists implements Listener {
                     {
                         String blacklist = "MobSpawn." + eWorld + ".Spawner.Blacklist";
                         checkBlacklist(blacklist);
-                        if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                        if(CreatureManager.getCreatureManager().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
-                            if (plugin.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Spawner.Debug.ToConsole", true)){
-                                plugin.log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Spawner; In the world: " + eWorld);
+                            if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Spawner.Debug.ToConsole") == true){
+                                Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Spawner; In the world: " + eWorld);
                             }
                         }
                     }
@@ -657,12 +719,12 @@ public class Blacklists implements Listener {
                     {
                         String blacklist = "MobSpawn." + eWorld + ".Custom.Blacklist";
                         checkBlacklist(blacklist);
-                        if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                        if(CreatureManager.getCreatureManager().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
-                            if (plugin.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Custom.Debug.ToConsole", true)){
-                                plugin.log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Custom; In the world: " + eWorld);
+                            if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Custom.Debug.ToConsole") == true){
+                                Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Custom; In the world: " + eWorld);
                             }
                         }
                     }
@@ -671,12 +733,12 @@ public class Blacklists implements Listener {
                     {
                         String blacklist = "MobSpawn." + eWorld + ".SpawnerEgg.Blacklist";
                         checkBlacklist(blacklist);
-                        if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                        if(CreatureManager.getCreatureManager().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
-                            if (plugin.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".SpawnerEgg.Debug.ToConsole", true)){
-                                plugin.log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: SpawnerEgg; In the world: " + eWorld);
+                            if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".SpawnerEgg.Debug.ToConsole") == true){
+                                Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: SpawnerEgg; In the world: " + eWorld);
                             }
                         }
                     }
@@ -685,12 +747,12 @@ public class Blacklists implements Listener {
                     {
                         String blacklist = "MobSpawn." + eWorld + ".ChunkGen.Blacklist";
                         checkBlacklist(blacklist);
-                        if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                        if(CreatureManager.getCreatureManager().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
-                            if (plugin.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".ChunkGen.Debug.ToConsole", true)){
-                                plugin.log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: ChunkGen; In the world: " + eWorld);
+                            if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".ChunkGen.Debug.ToConsole") == true){
+                                Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: ChunkGen; In the world: " + eWorld);
                             }
                         }
                     }
@@ -699,12 +761,12 @@ public class Blacklists implements Listener {
                     {
                         String blacklist = "MobSpawn." + eWorld + ".Breeding.Blacklist";
                         checkBlacklist(blacklist);
-                        if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                        if(CreatureManager.getCreatureManager().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
-                            if (plugin.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Breeding.Debug.ToConsole", true)){
-                                plugin.log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Breeding; In the world: " + eWorld);
+                            if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Breeding.Debug.ToConsole") == true){
+                                Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Breeding; In the world: " + eWorld);
                             }
                         }
                     }
@@ -730,15 +792,15 @@ public class Blacklists implements Listener {
             
             if(pWorld.equalsIgnoreCase(worldname)) 
             {
-                if(plugin.getBlacklists().getBoolean(state) == true) 
+                if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
                     for(Block b : event.getBlocks()) 
                     {
                         int id = b.getTypeId();
-                        if(plugin.getBlacklists().getString(blacklist).contains(id + ",")) 
+                        if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
                         {
                             if(event.isSticky()) {
-                                if(plugin.getBlacklists().getBoolean(sticky) == false) 
+                                if(BlacklistsF.getBlacklists().getBoolean(sticky) == false) 
                                 {
                                     return;
                                 } else {
@@ -748,9 +810,9 @@ public class Blacklists implements Listener {
                                 event.setCancelled(true);
                             }
                             
-                            if (plugin.getBlacklists().getBoolean("PistonExtend." + pWorld + ".Alert/log.ToConsole", true)){
+                            if (BlacklistsF.getBlacklists().getBoolean("PistonExtend." + pWorld + ".Alert/log.ToConsole") == true){
                                 if (event.isCancelled()) {
-                                    plugin.log.info("[iSafe] " + "A piston was prevented from extending, "
+                                    Log.info("[iSafe] " + "A piston was prevented from extending, "
                                             + "because it tried to extend the blacklisted block '" + b.getType().name().toLowerCase() 
                                             + "' in the world '" + pWorld + "'. Sticky piston? " + event.isSticky());
                                 }

@@ -22,6 +22,7 @@ package com.mrmag518.iSafe.Events.WorldEvents;
 
 import com.mrmag518.iSafe.*;
 
+import com.mrmag518.iSafe.Files.Messages;
 import org.bukkit.TreeType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -89,7 +90,7 @@ public class WorldListener implements Listener {
                 Player p = event.getPlayer();
                 if(!p.hasPermission("iSafe.use.bonemeal")) {
                     event.setCancelled(true);
-                    plugin.noPermission(p);
+                    Messages.noPermission(p);
                 }
             }
         }

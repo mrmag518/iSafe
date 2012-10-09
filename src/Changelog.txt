@@ -1,11 +1,18 @@
 Version 3.3
 * Some tweaks to permissions handling.
-* Removed unnecessary damage & combust code.
-* Added more debug output.
+* Added a lot more debug output.
 * Changed to a more lightweight metrics system.
 * Made it optional to track anonymous usage statistics.
 * Fixed a couple small issues in the _example.yml user file.
-* Started separating file management into separate classes.
+* Separated file management from the main class to separate classes.
+* Fixed MobSpawn blacklists not working at all.
+* Added utility classes, for more less code 'chaos'.
+* Changed debug prefix. (Just for the looks)
+* Removed tons of unnecessary code.
+* Fixed the Crafting blacklist having the "KickPlayer" option, but it's code not existing. (Simple forgot to code it.. ups)
+* Added Adventure Gamemode support for each blacklist.
+* Added gamemode support for command blacklists.
+* Improved coordinate variables in the explosion debuggers.
 * 
 
 Version 3.23

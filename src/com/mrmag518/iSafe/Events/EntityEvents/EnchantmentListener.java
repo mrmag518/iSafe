@@ -22,16 +22,13 @@ import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.enchantment.EnchantItemEvent;
-import org.bukkit.inventory.ItemStack;
 
 
 public class EnchantmentListener implements Listener {
-    
     public static iSafe plugin;
     public EnchantmentListener(iSafe instance)
     {
@@ -45,7 +42,7 @@ public class EnchantmentListener implements Listener {
         
         if(plugin.getConfig().getBoolean("Enchantment.PreventEnchantment", true))
         {
-            if(!(plugin.hasPermission(p, "iSafe.bypass.enchant"))) {
+            if(!plugin.hasPermission(p, "iSafe.bypass.enchant")) {
                 event.setCancelled(true);
                 p.sendMessage(ChatColor.RED + "You do not have access to enchant items.");
                 return;
@@ -54,7 +51,7 @@ public class EnchantmentListener implements Listener {
         
         if(plugin.getConfig().getBoolean("Enchantment.PreventCreativeModeEnchanting", true)) {
             if(p.getGameMode().equals(GameMode.CREATIVE)) {
-                if(!(plugin.hasPermission(p, "iSafe.bypass.enchant"))) {
+                if(!plugin.hasPermission(p, "iSafe.bypass.enchant")) {
                     event.setCancelled(true);
                     p.sendMessage(ChatColor.RED + "You do not have access to enchant items in creative mode.");
                     return;

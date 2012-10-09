@@ -1,5 +1,6 @@
 package com.mrmag518.iSafe;
 
+import com.mrmag518.iSafe.Util.Log;
 import java.io.File;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class UserFileCreator implements Listener {
             File oldFile = new File(plugin.getDataFolder() + File.separator + "Users" + File.separator + p.getName() + ".txt");
             if(oldFile.exists()) {
                 oldFile.delete();
-                plugin.log.info("[iSafe] Detected old userfile format, deleting .. ("+oldFile.getName()+")");
+                Log.info("[iSafe] Detected old userfile format, deleting .. ("+oldFile.getName()+")");
             }
             
             try {
@@ -47,9 +48,9 @@ public class UserFileCreator implements Listener {
                 uFile.set("Gamemode", p.getGameMode().name().toLowerCase());
                 uFile.set("Level", p.getLevel());
                 uFile.save(userFile);
-                plugin.log.info("[iSafe] Generated user file for " + p.getName() + ".");
+                Log.info("[iSafe] Generated user file for " + p.getName() + ".");
             } catch (Exception e) {
-                plugin.log.severe("[iSafe] Error generating the user file for: "+ p.getName() + ".");
+                Log.severe("[iSafe] Error generating the user file for: "+ p.getName() + ".");
                 e.printStackTrace();
             }
         }
@@ -62,10 +63,6 @@ public class UserFileCreator implements Listener {
         
         if(userFile.exists()) {
              FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
-             uFile.set("IPAddress", null);
-             uFile.set("Gamemode", null);
-             uFile.set("Level", null);
-             
              uFile.set("IPAddress", p.getAddress().getAddress().toString().replace("/", ""));
              uFile.set("Gamemode", p.getGameMode().name().toLowerCase());
              uFile.set("Level", p.getLevel());
@@ -85,10 +82,6 @@ public class UserFileCreator implements Listener {
         
         if(userFile.exists()) {
              FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
-             uFile.set("IPAddress", null);
-             uFile.set("Gamemode", null);
-             uFile.set("Level", null);
-             
              uFile.set("IPAddress", p.getAddress().getAddress().toString().replace("/", ""));
              uFile.set("Gamemode", p.getGameMode().name().toLowerCase());
              uFile.set("Level", p.getLevel());

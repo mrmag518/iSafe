@@ -20,8 +20,9 @@ package com.mrmag518.iSafe.Events.EntityEvents;
 
 
 import com.mrmag518.iSafe.*;
-
 import com.mrmag518.iSafe.Files.Messages;
+import com.mrmag518.iSafe.Util.Log;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -52,7 +53,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Buckets.Lava.Prevent")) {
             if (plugin.getConfig().getList("Buckets.Lava.CheckedWorlds").contains(worldname)) {
-                if(!(plugin.hasPermission(p, "iSafe.use.lavabuckets"))) {
+                if(!plugin.hasPermission(p, "iSafe.use.lavabuckets")) {
                     if(event.getBucket() == Material.LAVA_BUCKET) {
                         event.setCancelled(true);
                     }
@@ -62,7 +63,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Buckets.Water.Prevent")) {
             if (plugin.getConfig().getList("Buckets.Water.CheckedWorlds").contains(worldname)) {
-                if(!(plugin.hasPermission(p, "iSafe.use.waterbuckets"))) {
+                if(!plugin.hasPermission(p, "iSafe.use.waterbuckets")) {
                     if(event.getBucket() == Material.WATER_BUCKET) {
                         event.setCancelled(true);
                     }
@@ -80,7 +81,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Movement.DisableSprinting", true)){
             if(p.isSprinting()) {
-                if(!(plugin.hasPermission(p, "iSafe.bypass.sprint"))) {
+                if(!plugin.hasPermission(p, "iSafe.bypass.sprint")) {
                     event.setCancelled(true);
                 }
             }
@@ -88,7 +89,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Movement.DisableSneaking", true)){
             if(p.isSneaking()) {
-                if(!(plugin.hasPermission(p, "iSafe.bypass.sneak"))) {
+                if(!plugin.hasPermission(p, "iSafe.bypass.sneak")) {
                     event.setCancelled(true);
                 }
             }
@@ -210,7 +211,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Chat.EnableKickMessages", true))
         {
-            plugin.kickMessage(p);
+            Messages.kickMessage(p);
             event.setLeaveMessage(null);
         }
     }
@@ -224,7 +225,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Miscellaneous.ForcePermissionsToFish", true))
         {
-            if(!(plugin.hasPermission(p, "iSafe.bypass.fish"))) {
+            if(!plugin.hasPermission(p, "iSafe.bypass.fish")) {
                 event.setCancelled(true);
             }
         }
@@ -237,7 +238,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("AntiCheat/Sucurity.KickJoinerIfSameNickIsOnline", true)){
             for(Player onlinePl : Bukkit.getServer().getOnlinePlayers()) {
                 if(joiner.getName().equalsIgnoreCase(onlinePl.getName())) {
-                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, plugin.sameNickPlaying(joiner));
+                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Messages.sameNickPlaying(joiner));
                 }
             }
         }
@@ -250,7 +251,7 @@ public class PlayerListener implements Listener  {
         if(plugin.getConfig().getBoolean("Miscellaneous.OnlyLetOPsJoin", true))
         {
             if(!joiner.isOp()) {
-                joiner.kickPlayer(plugin.denyNonOpsJoin());
+                joiner.kickPlayer(Messages.denyNonOpsJoin());
             }
         }
     }
@@ -263,7 +264,7 @@ public class PlayerListener implements Listener  {
         Player p = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Chat.LogCommands", true)) {
-            plugin.log.info("[iSafe] " + plugin.commandLogger(p, event));
+            Log.info(Messages.commandLogger(p, event));
         }
     }
 
@@ -329,7 +330,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.spamDB.get(name) > maxLines) {
             event.setCancelled(true);
-            p.sendMessage(plugin.colorize(Messages.getMessages().getString("SpamDetection")));
+            p.sendMessage(Messages.colorize(Messages.getMessages().getString("SpamDetection")));
         }
         
         if(normalMode == true) {
