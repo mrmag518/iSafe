@@ -25,6 +25,7 @@ import com.mrmag518.iSafe.Blacklists.Blacklists;
 import com.mrmag518.iSafe.Commands.Commands;
 import com.mrmag518.iSafe.Files.*;
 import com.mrmag518.iSafe.Util.Log;
+import com.mrmag518.iSafe.Util.iSafeExtension;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -163,6 +164,8 @@ public class iSafe extends JavaPlugin {
                 // Failed to submit the stats :-(
             }
         }
+        
+        iSafeExtension.hook();
         
         Log.verbose("v" + pdffile.getVersion() + " enabled.");
         
