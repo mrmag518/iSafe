@@ -13,6 +13,7 @@ Version 3.3
 * Added Adventure Gamemode support for each blacklist.
 * Added gamemode support for command blacklists.
 * Improved coordinate variables in the explosion debuggers.
+* Started on working with extension management. Extensions will be added sometime later.
 * 
 
 Version 3.23

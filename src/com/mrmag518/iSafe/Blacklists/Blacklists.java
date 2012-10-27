@@ -118,11 +118,19 @@ public class Blacklists implements Listener {
                                     event.setCancelled(true);
                                 }
                             }
-
+                            
+                            if (event.isCancelled()){
+                                // todo: do all configuration options here, much more convenient.
+                            }
+                            
                             if (BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".KickPlayer") == true){
                                 if (event.isCancelled()){
                                     p.kickPlayer(Messages.blacklistBreakKickMsg(b));
-                                }    
+                                }
+                            }
+                            
+                            if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Economy.Enabled") == true) {
+                                // todo: add this feature.
                             }
 
                             if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToPlayer") == true) {
