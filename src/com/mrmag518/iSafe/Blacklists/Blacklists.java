@@ -119,30 +119,22 @@ public class Blacklists implements Listener {
                                 }
                             }
                             
-                            if (event.isCancelled()){
-                                // todo: do all configuration options here, much more convenient.
-                            }
-                            
-                            if (BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".KickPlayer") == true){
-                                if (event.isCancelled()){
+                            if (event.isCancelled()) 
+                            {
+                                if (BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".KickPlayer") == true){
                                     p.kickPlayer(Messages.blacklistBreakKickMsg(b));
                                 }
-                            }
-                            
-                            if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Economy.Enabled") == true) {
-                                // todo: add this feature.
-                            }
-
-                            if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToPlayer") == true) {
-                                if(event.isCancelled()) {
+                                
+                                if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Economy.Enabled") == true) {
+                                    // todo: add this feature.
+                                }
+                                
+                                if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToPlayer") == true) {
                                     p.sendMessage(Messages.blacklistBreakMsg(b));
                                 }
-                            }
-
-                            if (BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToConsole") == true){
-                                if (event.isCancelled()) {
-                                    Log.info("[iSafe] " + p.getName() + " was prevented from breaking the "
-                                            + "blacklisted block '" + name + "' in the world '" + pWorld + "'.");
+                                
+                                if (BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToConsole") == true){
+                                    Log.info("[iSafe] " + p.getName() + " was prevented from breaking the " + "blacklisted block '" + name + "' in the world '" + pWorld + "'.");
                                 }
                             }
                         }
@@ -195,23 +187,19 @@ public class Blacklists implements Listener {
                                     event.setCancelled(true);
                                 }
                             }
-
-                            if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".KickPlayer") == true){
-                                if (event.isCancelled()) {
+                            
+                            if (event.isCancelled()) 
+                            {
+                                if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".KickPlayer") == true) {
                                     p.kickPlayer(Messages.blacklistPlaceKickMsg(b));
-                                }    
-                            }
-
-                            if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Alert/log.ToConsole") == true){
-                                if (event.isCancelled()) {
-                                    Log.info("[iSafe] " + p.getName() + " was prevented from placing the "
-                                            + "blacklisted block '" + name + "' in the world '" + pWorld + "'.");
                                 }
-                            }
-
-                            if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Alert/log.ToPlayer") == true){
-                                if (event.isCancelled()) {
+                                
+                                if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Alert/log.ToPlayer") == true){
                                     p.sendMessage(Messages.blacklistPlaceMsg(b));
+                                }
+                                
+                                if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Alert/log.ToConsole") == true){
+                                    Log.info("[iSafe] " + p.getName() + " was prevented from placing the " + "blacklisted block '" + name + "' in the world '" + pWorld + "'.");
                                 }
                             }
                         }
@@ -263,22 +251,18 @@ public class Blacklists implements Listener {
                                     }
                                 }
                                 
-                                if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Alert/log.ToConsole") == true){
-                                    if (event.isCancelled()) {
-                                        Log.info("[iSafe] " + p.getName() + " was prevented from doing the "
-                                                    + "blacklisted command '" + command + "' in the world '" + pWorld + "'.");
+                                if (event.isCancelled()) 
+                                {
+                                    if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".KickPlayer") == true){
+                                        p.kickPlayer(Messages.blacklistCommandKickMsg(command, worldname));
                                     }
-                                }
-
-                                if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Alert/log.ToPlayer") == true){
-                                    if (event.isCancelled()) {
+                                    
+                                    if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Alert/log.ToPlayer") == true){
                                         p.sendMessage(Messages.blacklistCommandMsg(command, worldname));
                                     }
-                                }
-
-                                if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".KickPlayer") == true){
-                                    if (event.isCancelled()) {
-                                        p.sendMessage(Messages.blacklistCommandKickMsg(command, worldname));
+                                    
+                                    if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Alert/log.ToConsole") == true){
+                                        Log.info("[iSafe] " + p.getName() + " was prevented from doing the " + "blacklisted command '" + command + "' in the world '" + pWorld + "'.");
                                     }
                                 }
                             }
@@ -342,23 +326,19 @@ public class Blacklists implements Listener {
                                     event.setCancelled(true);
                                 }
                             }
-
-                            if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Alert/log.ToConsole") == true){
-                                if (event.isCancelled()) {
-                                    Log.info("[iSafe] " + p.getName() + " was prevented from crafting the "
-                                                + "blacklisted recipe '" + name + "' in the world '" + pWorld + "'.");
+                            
+                            if (event.isCancelled()) 
+                            {
+                                if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".KickPlayer") == true) {
+                                    p.kickPlayer(Messages.blacklistCraftingKickMsg(name));
                                 }
-                            }
-
-                            if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Alert/log.ToPlayer") == true){
-                                if (event.isCancelled()) {
+                                
+                                if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Alert/log.ToPlayer") == true){
                                     p.sendMessage(Messages.blacklistCraftingMsg(name, p.getWorld()));
                                 }
-                            }
-                            
-                            if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".KickPlayer") == true) {
-                                if(event.isCancelled()) {
-                                    p.kickPlayer(Messages.blacklistCraftingKickMsg(name));
+                                
+                                if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Alert/log.ToConsole") == true){
+                                    Log.info("[iSafe] " + p.getName() + " was prevented from crafting the " + "blacklisted recipe '" + name + "' in the world '" + pWorld + "'.");
                                 }
                             }
                         }
@@ -393,8 +373,7 @@ public class Blacklists implements Listener {
                     {
                         event.setCancelled(true);
                         if(BlacklistsF.getBlacklists().getBoolean("Dispense." + bWorld + ".Alert/log-to.Console") == true) {
-                            Log.info("[iSafe] " + " The block '" + name + "' was prevented from being dispensed"
-                                    + " in the world '" + bWorld + "'.");
+                            Log.info("[iSafe] " + " The block '" + name + "' was prevented from being dispensed" + " in the world '" + bWorld + "'.");
                         }
                     }
                 }
@@ -444,26 +423,19 @@ public class Blacklists implements Listener {
                                     event.setCancelled(true);
                                 }
                             }
-
-                            if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".KickPlayer") == true)
+                            
+                            if (event.isCancelled()) 
                             {
-                                if (event.isCancelled()){
+                                if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".KickPlayer") == true) {
                                     p.kickPlayer(Messages.blacklistDropKickMsg(event.getItemDrop()));
-                                }    
-                            }
-
-                            if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Alert/log.ToConsole") == true)
-                            {
-                                if (event.isCancelled()) {
-                                    Log.info("[iSafe] " + p.getName() + " was prevented from droping the "
-                                                + "blacklisted item '" + name + "' in the world '" + pWorld + "'.");
                                 }
-                            }
-
-                            if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Alert/log.ToPlayer") == true)
-                            {
-                                if (event.isCancelled()) {
+                                
+                                if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Alert/log.ToPlayer") == true) {
                                     p.sendMessage(Messages.blacklistDropMsg(name, p.getWorld()));
+                                }
+                                
+                                if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Alert/log.ToConsole") == true) {
+                                    Log.info("[iSafe] " + p.getName() + " was prevented from droping the " + "blacklisted item '" + name + "' in the world '" + pWorld + "'.");
                                 }
                             }
                         }
@@ -519,23 +491,19 @@ public class Blacklists implements Listener {
                                         event.setCancelled(true);
                                     }
                                 }
-
-                                if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".KickPlayer") == true){
-                                    if (event.isCancelled()){
+                                
+                                if (event.isCancelled()) 
+                                {
+                                    if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".KickPlayer") == true) {
                                         p.kickPlayer(Messages.blacklistInteractKickMsg(b));
                                     }
-                                }
-
-                                if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Alert/log.ToPlayer") == true){
-                                    if (event.isCancelled()){
+                                    
+                                    if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Alert/log.ToPlayer") == true) {
                                         p.sendMessage(Messages.blacklistInteractMsg(b));
                                     }
-                                }
-
-                                if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Alert/log.ToConsole") == true){
-                                    if (event.isCancelled()){
-                                        Log.info("[iSafe] " + p.getName() + " was prevented from interacting with the "
-                                                + "blacklisted block '" + name + "' in the world '" + pWorld + "'.");
+                                    
+                                    if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Alert/log.ToConsole") == true) {
+                                        Log.info("[iSafe] " + p.getName() + " was prevented from interacting with the " + "blacklisted block '" + name + "' in the world '" + pWorld + "'.");
                                     }
                                 }
                             }
@@ -588,13 +556,12 @@ public class Blacklists implements Listener {
                                     event.setCancelled(true);
                                 }
                             }
-
-                            if (BlacklistsF.getBlacklists().getBoolean("Pickup." + pWorld + ".KickPlayer") == true)
+                            
+                            if (event.isCancelled())
                             {
-                                if (event.isCancelled())
-                                {
+                                if (BlacklistsF.getBlacklists().getBoolean("Pickup." + pWorld + ".KickPlayer") == true) {
                                     p.kickPlayer(Messages.blacklistPickupKickMsg(name));
-                                }    
+                                }
                             }
                         }
                     }
@@ -649,24 +616,23 @@ public class Blacklists implements Listener {
                                     }
                                 }
                             }
+                            
                             if(shallCancel == true) {
                                 event.setCancelled(shallCancel);
                             }
-                            if (BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToConsole") == true){
-                                if (event.isCancelled()) {
-                                    Log.info("[iSafe] " + p.getName() + "'s message contained the blacklisted word: " + word);
+                            
+                            if (event.isCancelled()) 
+                            {
+                                if (BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".KickPlayer") == true) {
+                                    p.kickPlayer(Messages.blacklistCensorKickMsg(word));
                                 }
-                            }
-
-                            if (BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToPlayer") == true){
-                                if (event.isCancelled()) {
+                                
+                                if (BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToPlayer") == true) {
                                     p.sendMessage(Messages.blacklistCensorMsg(word, p.getWorld()));
                                 }
-                            }
-
-                            if (BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".KickPlayer") == true){
-                                if (event.isCancelled()) {
-                                    p.kickPlayer(Messages.blacklistCensorKickMsg(word));
+                                
+                                if (BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToConsole") == true) {
+                                    Log.info("[iSafe] " + p.getName() + "'s message contained the blacklisted word: " + word);
                                 }
                             }
                         }
@@ -818,10 +784,10 @@ public class Blacklists implements Listener {
                                 event.setCancelled(true);
                             }
                             
-                            if (BlacklistsF.getBlacklists().getBoolean("PistonExtend." + pWorld + ".Alert/log.ToConsole") == true){
-                                if (event.isCancelled()) {
-                                    Log.info("[iSafe] " + "A piston was prevented from extending, "
-                                            + "because it tried to extend the blacklisted block '" + b.getType().name().toLowerCase() 
+                            if (event.isCancelled()) 
+                            {
+                                if (BlacklistsF.getBlacklists().getBoolean("PistonExtend." + pWorld + ".Alert/log.ToConsole") == true) {
+                                     Log.info("[iSafe] " + "A piston was prevented from extending, because it tried to extend the blacklisted block '" + b.getType().name().toLowerCase() 
                                             + "' in the world '" + pWorld + "'. Sticky piston? " + event.isSticky());
                                 }
                             }

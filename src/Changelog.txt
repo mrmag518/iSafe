@@ -14,7 +14,10 @@ Version 3.3
 * Added gamemode support for command blacklists.
 * Improved coordinate variables in the explosion debuggers.
 * Started on working with extension management. Extensions will be added sometime later.
-* 
+* Minor performance improvements related to blacklists.
+* Corrected the order events will ocurr in, for blacklists.
+* Fixed command blacklists not kicking the player.
+*  
 
 Version 3.23
 * Added UseDetailedSearchMode option to Chat blacklist.
