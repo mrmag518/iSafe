@@ -75,6 +75,12 @@ public class BlacklistsF {
             blacklists.addDefault("Break." + worldname + ".Alert/log.ToConsole", true);
             blacklists.addDefault("Break." + worldname + ".Alert/log.ToPlayer", true);
             blacklists.addDefault("Break." + worldname + ".KickPlayer", false);
+            
+            // Test
+            blacklists.addDefault("Break." + worldname + ".Economy.Enabled", false);
+            blacklists.addDefault("Break." + worldname + ".Economy.WithdrawAmount", 10);
+            blacklists.addDefault("Break." + worldname + ".Economy.AllowNegativeResult", false);
+            
             blacklists.addDefault(breakBL, defBlocks);
         }
 

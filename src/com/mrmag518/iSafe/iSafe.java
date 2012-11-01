@@ -34,6 +34,7 @@ import java.net.URL;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import net.milkbowl.vault.economy.Economy;
 
 import net.milkbowl.vault.permission.Permission;
 
@@ -87,7 +88,9 @@ public class iSafe extends JavaPlugin {
     
     public double currentVersion;
     public double newVersion;
+    
     public static Permission perms = null;
+    public static Economy economy = null;
     
     public FileConfiguration config;
     
@@ -152,8 +155,6 @@ public class iSafe extends JavaPlugin {
         getCommand("iSafe").setExecutor(new Commands(this));
 
         checkMatch();
-
-        checkPlugins();
         
         if(iSafeConfig.getISafeConfig().getBoolean("TrackUsageStatistics") == true) {
             try {
@@ -165,7 +166,7 @@ public class iSafe extends JavaPlugin {
             }
         }
         
-        iSafeExtension.hook();
+        //iSafeExtension.hook();
         
         Log.verbose("v" + pdffile.getVersion() + " enabled.");
         
@@ -178,7 +179,6 @@ public class iSafe extends JavaPlugin {
         Log.debug("Running every 20th game tick. (1sec)");
         Log.debug("Note: If the server has lag, the time for each spam loop may go out of sync.");
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-
             @Override
             public void run() {
                 for (Player p : Bukkit.getServer().getOnlinePlayers()) {
@@ -317,21 +317,10 @@ public class iSafe extends JavaPlugin {
                 iSafeConfig.saveISafeConfig();
             }
         }
-    }
-
-    private void checkPlugins() {
-        PluginManager pm = getServer().getPluginManager();
-        if (pm.getPlugin("EssentialsProtect") != null) {
-            Log.debug("You are running EssentialsProtect, cool!");
-            Log.debug("Have in mind that some of iSafe's and EssentialsProtect's actions can 'collide'.");
-        }
-        if (pm.getPlugin("WorldGuard") != null) {
-            Log.debug("You are running WorldGuard, cool!");
-            Log.debug("Have in mind that some of iSafe's and WorldGuards's actions can 'collide'.");
-        }
-        if (pm.getPlugin("PlotMe") != null) {
-            Log.debug("You are running PlotMe, cool!");
-            Log.debug("Have in mind that some of iSafe's and PlotMe's actions can 'collide'.");
+        
+        if (getServer().getPluginManager().getPlugin("Vault") != null) {
+            setupEconomy();
+            Log.verbose("Hooked to economy plugin '" + economy.getName() + "'.");
         }
     }
 
@@ -580,6 +569,14 @@ public class iSafe extends JavaPlugin {
         perms = rsp.getProvider();
         Log.info("Hooked to permissions plugin: " + perms.getName());
         return perms != null;
+    }
+    
+    private boolean setupEconomy() {
+        RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        if (economyProvider != null) {
+            economy = economyProvider.getProvider();
+        }
+        return (economy != null);
     }
 
     private void checkMatch() {

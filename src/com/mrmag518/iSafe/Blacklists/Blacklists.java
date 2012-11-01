@@ -21,6 +21,7 @@ package com.mrmag518.iSafe.Blacklists;
 import com.mrmag518.iSafe.Files.BlacklistsF;
 import com.mrmag518.iSafe.Files.CreatureManager;
 import com.mrmag518.iSafe.Files.Messages;
+import com.mrmag518.iSafe.Util.Eco;
 import com.mrmag518.iSafe.Util.Log;
 import com.mrmag518.iSafe.iSafe;
 
@@ -125,8 +126,11 @@ public class Blacklists implements Listener {
                                     p.kickPlayer(Messages.blacklistBreakKickMsg(b));
                                 }
                                 
+                                // Test
+                                Log.info(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Economy.Enabled") + "") ;
                                 if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Economy.Enabled") == true) {
-                                    // todo: add this feature.
+                                    int amount = BlacklistsF.getBlacklists().getInt("Break." + pWorld + ".Economy.WithdrawAmount");
+                                    Eco.takeMoney(p.getName(), pWorld, blacklist, amount);
                                 }
                                 
                                 if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToPlayer") == true) {
@@ -739,6 +743,7 @@ public class Blacklists implements Listener {
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
+                            
                             if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Breeding.Debug.ToConsole") == true){
                                 Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Breeding; In the world: " + eWorld);
                             }
