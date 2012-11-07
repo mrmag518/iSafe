@@ -126,11 +126,13 @@ public class Blacklists implements Listener {
                                     p.kickPlayer(Messages.blacklistBreakKickMsg(b));
                                 }
                                 
-                                // Test
-                                Log.info(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Economy.Enabled") + "") ;
                                 if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Economy.Enabled") == true) {
                                     int amount = BlacklistsF.getBlacklists().getInt("Break." + pWorld + ".Economy.WithdrawAmount");
-                                    Eco.takeMoney(p.getName(), pWorld, blacklist, amount);
+                                    Eco.takeMoney(p.getName(), pWorld, "Break", amount);
+                                    
+                                    if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Economy.NotifyPlayer") == true) {
+                                        Eco.sendEcoNotify(p, "Break", amount);
+                                    }
                                 }
                                 
                                 if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToPlayer") == true) {
@@ -198,6 +200,19 @@ public class Blacklists implements Listener {
                                     p.kickPlayer(Messages.blacklistPlaceKickMsg(b));
                                 }
                                 
+                                if(BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Economy.Enabled") == true) {
+                                    int amount = BlacklistsF.getBlacklists().getInt("Place." + pWorld + ".Economy.WithdrawAmount");
+                                    Eco.takeMoney(p.getName(), pWorld, "Place", amount);
+                                    
+                                    if(BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Economy.NotifyPlayer") == true) {
+                                        Eco.sendEcoNotify(p, "Place", amount);
+                                    }
+                                }
+                                
+                                if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToPlayer") == true) {
+                                    p.sendMessage(Messages.blacklistBreakMsg(b));
+                                }
+                                
                                 if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Alert/log.ToPlayer") == true){
                                     p.sendMessage(Messages.blacklistPlaceMsg(b));
                                 }
@@ -260,6 +275,15 @@ public class Blacklists implements Listener {
                                     if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".KickPlayer") == true){
                                         p.kickPlayer(Messages.blacklistCommandKickMsg(command, worldname));
                                     }
+                                    
+                                    if(BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Economy.Enabled") == true) {
+                                    int amount = BlacklistsF.getBlacklists().getInt("Command." + pWorld + ".Economy.WithdrawAmount");
+                                    Eco.takeMoney(p.getName(), pWorld, "Command", amount);
+                                    
+                                    if(BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Economy.NotifyPlayer") == true) {
+                                        Eco.sendEcoNotify(p, "Command", amount);
+                                    }
+                                }
                                     
                                     if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Alert/log.ToPlayer") == true){
                                         p.sendMessage(Messages.blacklistCommandMsg(command, worldname));
@@ -335,6 +359,15 @@ public class Blacklists implements Listener {
                             {
                                 if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".KickPlayer") == true) {
                                     p.kickPlayer(Messages.blacklistCraftingKickMsg(name));
+                                }
+                                
+                                if(BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Economy.Enabled") == true) {
+                                    int amount = BlacklistsF.getBlacklists().getInt("Crafting." + pWorld + ".Economy.WithdrawAmount");
+                                    Eco.takeMoney(p.getName(), pWorld, "Crafting", amount);
+                                    
+                                    if(BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Economy.NotifyPlayer") == true) {
+                                        Eco.sendEcoNotify(p, "Crafting", amount);
+                                    }
                                 }
                                 
                                 if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Alert/log.ToPlayer") == true){
@@ -434,6 +467,15 @@ public class Blacklists implements Listener {
                                     p.kickPlayer(Messages.blacklistDropKickMsg(event.getItemDrop()));
                                 }
                                 
+                                if(BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Economy.Enabled") == true) {
+                                    int amount = BlacklistsF.getBlacklists().getInt("Drop." + pWorld + ".Economy.WithdrawAmount");
+                                    Eco.takeMoney(p.getName(), pWorld, "Drop", amount);
+                                    
+                                    if(BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Economy.NotifyPlayer") == true) {
+                                        Eco.sendEcoNotify(p, "Drop", amount);
+                                    }
+                                }
+                                
                                 if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Alert/log.ToPlayer") == true) {
                                     p.sendMessage(Messages.blacklistDropMsg(name, p.getWorld()));
                                 }
@@ -500,6 +542,15 @@ public class Blacklists implements Listener {
                                 {
                                     if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".KickPlayer") == true) {
                                         p.kickPlayer(Messages.blacklistInteractKickMsg(b));
+                                    }
+                                    
+                                    if(BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Economy.Enabled") == true) {
+                                        int amount = BlacklistsF.getBlacklists().getInt("Interact." + pWorld + ".Economy.WithdrawAmount");
+                                        Eco.takeMoney(p.getName(), pWorld, "Interact", amount);
+
+                                        if(BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Economy.NotifyPlayer") == true) {
+                                            Eco.sendEcoNotify(p, "Interact", amount);
+                                        }
                                     }
                                     
                                     if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Alert/log.ToPlayer") == true) {
@@ -629,6 +680,15 @@ public class Blacklists implements Listener {
                             {
                                 if (BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".KickPlayer") == true) {
                                     p.kickPlayer(Messages.blacklistCensorKickMsg(word));
+                                }
+                                
+                                if(BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".Economy.Enabled") == true) {
+                                    int amount = BlacklistsF.getBlacklists().getInt("Chat." + pWorld + ".Economy.WithdrawAmount");
+                                    Eco.takeMoney(p.getName(), pWorld, "Chat", amount);
+                                    
+                                    if(BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".Economy.NotifyPlayer") == true) {
+                                        Eco.sendEcoNotify(p, "Censor", amount);
+                                    }
                                 }
                                 
                                 if (BlacklistsF.getBlacklists().getBoolean("Chat." + pWorld + ".Alert/log.ToPlayer") == true) {

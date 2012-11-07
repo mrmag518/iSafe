@@ -52,26 +52,33 @@ public class Messages {
         messages.addDefault("SpamDetection", "&cDetected spam! Please calm down.");
         messages.addDefault("FullbrightDetection", "&ePlace a torch! (light source)");
         
-        messages.addDefault("Blacklists.Interact.KickMessage", "&cKicked for attempting to interact with &f%block%");
-        messages.addDefault("Blacklists.Interact.DisallowedMessage", "&cYou do not have access to interact with &7%block% &cin world &7%world%");
+        messages.addDefault("Blacklists.Break.KickMessage", "&cKicked for attempting to break &f%block%");
+        messages.addDefault("Blacklists.Break.DisallowedMessage", "&cYou do not have access to break &7%block% &cin world &7%world%");
+        messages.addDefault("Blacklists.Break.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to break an illegal block.");
         
         messages.addDefault("Blacklists.Place.KickMessage" , "&cKicked for attempting to place &f%block%");
         messages.addDefault("Blacklists.Place.DisallowedMessage", "&cYou do not have access to place &7%block% &cin world &7%world%");
-        
-        messages.addDefault("Blacklists.Break.KickMessage", "&cKicked for attempting to break &f%block%");
-        messages.addDefault("Blacklists.Break.DisallowedMessage", "&cYou do not have access to break &7%block% &cin world &7%world%");
-        
-        messages.addDefault("Blacklists.Censor.KickMessage", "&cKicked for attempting to send a message contaning &7%word%");
-        messages.addDefault("Blacklists.Censor.DisallowedMessage", "&c%word% is censored!");
-        
-        messages.addDefault("Blacklists.Drop.KickMessage", "&cKicked for attempting to drop &f%item%");
-        messages.addDefault("Blacklists.Drop.DisallowedMessage", "&cYou do not have access to drop &7%item% in world %world%");
+        messages.addDefault("Blacklists.Place.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to place an illegal block.");
         
         messages.addDefault("Blacklists.Command.KickMessage", "&cKicked for attempting to do command &f%command%");
         messages.addDefault("Blacklists.Command.DisallowedMessage", "&cThe command %command% is disabled in world %world%!");
+        messages.addDefault("Blacklists.Command.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you tried to do an illegal command.");
         
         messages.addDefault("Blacklists.Crafting.KickMessage", "&cKicked for attempting to craft &f%recipe%");
         messages.addDefault("Blacklists.Crafting.DisallowedMessage", "&cYou do not have access to craft &7%recipe% &cin world %world%");
+        messages.addDefault("Blacklists.Crafting.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you tried to craft an illegal recipe.");
+        
+        messages.addDefault("Blacklists.Drop.KickMessage", "&cKicked for attempting to drop &f%item%");
+        messages.addDefault("Blacklists.Drop.DisallowedMessage", "&cYou do not have access to drop &7%item% in world %world%");
+        messages.addDefault("Blacklists.Drop.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to drop an illegal block.");
+        
+        messages.addDefault("Blacklists.Interact.KickMessage", "&cKicked for attempting to interact with &f%block%");
+        messages.addDefault("Blacklists.Interact.DisallowedMessage", "&cYou do not have access to interact with &7%block% &cin world &7%world%");
+        messages.addDefault("Blacklists.Interact.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you interacted with an illegal block.");
+        
+        messages.addDefault("Blacklists.Censor.KickMessage", "&cKicked for attempting to send a message contaning &7%word%");
+        messages.addDefault("Blacklists.Censor.DisallowedMessage", "&c%word% is censored!");
+        messages.addDefault("Blacklists.Censor.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to say an illegal word.");
         
         getMessages().options().copyDefaults(true);
         saveMessages();
@@ -163,7 +170,15 @@ public class Messages {
         }
         return s.replaceAll("&([0-9a-f])", "\u00A7$1");
     }
-
+    
+    /*public static void sendNoPermissionNotify(Player player) {
+        player.sendMessage(colorize(getMessages().getString("Permissions.DefaultNoPermission")));
+    }
+    
+    public static void sendNoPermissionNotify(CommandSender sender) {
+        sender.sendMessage(colorize(getMessages().getString("Permissions.NoCmdPermission")));
+    }*/
+    
     public static void noPermission(Player p) {
         String no_permission = getMessages().getString("Permissions.DefaultNoPermission");
         p.sendMessage(colorize(no_permission));
@@ -174,7 +189,7 @@ public class Messages {
         sender.sendMessage(colorize(no_permission));
     }
 
-    public static void kickMessage(Player p) {
+    public static void sendKickMessage(Player p) {
         String kickMsg = getMessages().getString("KickMessage");
         Server s = p.getServer();
         s.broadcastMessage(scanVariables(kickMsg, p.getName(),
@@ -310,11 +325,6 @@ public class Messages {
                 item, world.getName(),
                 null, null);
     }
-
-    /*public String blacklistPickupMsg(Item i) {
-    String disallowedMsg = getMessages().getString("Blacklists.Pickup.DisallowedMessage");
-    return scanVariables(disallowedMsg, null, null, null, i.getItemStack().getType().name().toLowerCase(), i.getWorld().getName(), null);
-    }*/
     
     public static String blacklistCraftingMsg(String recipe, World world) {
         String disallowedMsg = getMessages().getString("Blacklists.Crafting.DisallowedMessage");

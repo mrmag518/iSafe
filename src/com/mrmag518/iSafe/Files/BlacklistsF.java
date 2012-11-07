@@ -58,6 +58,10 @@ public class BlacklistsF {
             blacklists.addDefault("Place." + worldname + ".Alert/log.ToConsole", true);
             blacklists.addDefault("Place." + worldname + ".Alert/log.ToPlayer", true);
             blacklists.addDefault("Place." + worldname + ".KickPlayer", false);
+            blacklists.addDefault("Place." + worldname + ".Economy.Enabled", false);
+            blacklists.addDefault("Place." + worldname + ".Economy.WithdrawAmount", 10);
+            blacklists.addDefault("Place." + worldname + ".Economy.AllowNegativeResult", false);
+            blacklists.addDefault("Place." + worldname + ".Economy.NotifyPlayer", true);
             blacklists.addDefault(placeBl, defBlocks);
         }
 
@@ -75,11 +79,10 @@ public class BlacklistsF {
             blacklists.addDefault("Break." + worldname + ".Alert/log.ToConsole", true);
             blacklists.addDefault("Break." + worldname + ".Alert/log.ToPlayer", true);
             blacklists.addDefault("Break." + worldname + ".KickPlayer", false);
-            
-            // Test
             blacklists.addDefault("Break." + worldname + ".Economy.Enabled", false);
             blacklists.addDefault("Break." + worldname + ".Economy.WithdrawAmount", 10);
             blacklists.addDefault("Break." + worldname + ".Economy.AllowNegativeResult", false);
+            blacklists.addDefault("Break." + worldname + ".Economy.NotifyPlayer", true);
             
             blacklists.addDefault(breakBL, defBlocks);
         }
@@ -98,6 +101,10 @@ public class BlacklistsF {
             blacklists.addDefault("Drop." + worldname + ".Alert/log.ToConsole", true);
             blacklists.addDefault("Drop." + worldname + ".Alert/log.ToPlayer", true);
             blacklists.addDefault("Drop." + worldname + ".KickPlayer", false);
+            blacklists.addDefault("Drop." + worldname + ".Economy.Enabled", false);
+            blacklists.addDefault("Drop." + worldname + ".Economy.WithdrawAmount", 10);
+            blacklists.addDefault("Drop." + worldname + ".Economy.AllowNegativeResult", false);
+            blacklists.addDefault("Drop." + worldname + ".Economy.NotifyPlayer", true);
             blacklists.addDefault(dropBL, defBlocks);
         }
 
@@ -132,6 +139,10 @@ public class BlacklistsF {
             blacklists.addDefault("Command." + worldname + ".Alert/log.ToConsole", true);
             blacklists.addDefault("Command." + worldname + ".Alert/log.ToPlayer", true);
             blacklists.addDefault("Command." + worldname + ".KickPlayer", false);
+            blacklists.addDefault("Command." + worldname + ".Economy.Enabled", false);
+            blacklists.addDefault("Command." + worldname + ".Economy.WithdrawAmount", 10);
+            blacklists.addDefault("Command." + worldname + ".Economy.AllowNegativeResult", false);
+            blacklists.addDefault("Command." + worldname + ".Economy.NotifyPlayer", true);
             blacklists.addDefault(cmdBL, Arrays.asList(Data.CmdBlacklistList));
             Data.CmdBlacklist = blacklists.getStringList(cmdBL);
         }
@@ -148,6 +159,10 @@ public class BlacklistsF {
             blacklists.addDefault("Chat." + worldname + ".Alert/log.ToConsole", true);
             blacklists.addDefault("Chat." + worldname + ".Alert/log.ToPlayer", true);
             blacklists.addDefault("Chat." + worldname + ".KickPlayer", false);
+            blacklists.addDefault("Chat." + worldname + ".Economy.Enabled", false);
+            blacklists.addDefault("Chat." + worldname + ".Economy.WithdrawAmount", 10);
+            blacklists.addDefault("Chat." + worldname + ".Economy.AllowNegativeResult", false);
+            blacklists.addDefault("Chat." + worldname + ".Economy.NotifyPlayer", true);
             blacklists.addDefault("Chat." + worldname + ".UseDetailedSearchMode", false);
             blacklists.addDefault(chatBL, Arrays.asList(Data.WordBlacklistList));
             Data.WordBlacklist = blacklists.getStringList(chatBL);
@@ -181,6 +196,10 @@ public class BlacklistsF {
             blacklists.addDefault("Interact." + worldname + ".Alert/log.ToConsole", true);
             blacklists.addDefault("Interact." + worldname + ".Alert/log.ToPlayer", true);
             blacklists.addDefault("Interact." + worldname + ".KickPlayer", false);
+            blacklists.addDefault("Interact." + worldname + ".Economy.Enabled", false);
+            blacklists.addDefault("Interact." + worldname + ".Economy.WithdrawAmount", 10);
+            blacklists.addDefault("Interact." + worldname + ".Economy.AllowNegativeResult", false);
+            blacklists.addDefault("Interact." + worldname + ".Economy.NotifyPlayer", true);
             blacklists.addDefault(interactBL, defInteract);
         }
 
@@ -198,6 +217,10 @@ public class BlacklistsF {
             blacklists.addDefault("Crafting." + worldname + ".Alert/log.ToConsole", true);
             blacklists.addDefault("Crafting." + worldname + ".Alert/log.ToPlayer", true);
             blacklists.addDefault("Crafting." + worldname + ".KickPlayer", false);
+            blacklists.addDefault("Crafting." + worldname + ".Economy.Enabled", false);
+            blacklists.addDefault("Crafting." + worldname + ".Economy.WithdrawAmount", 10);
+            blacklists.addDefault("Crafting." + worldname + ".Economy.AllowNegativeResult", false);
+            blacklists.addDefault("Crafting." + worldname + ".Economy.NotifyPlayer", true);
             blacklists.addDefault(craftBL, defBlocks);
         }
 

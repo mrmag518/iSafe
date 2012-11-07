@@ -20,6 +20,7 @@ package com.mrmag518.iSafe.Events.BlockEvents;
 
 import com.mrmag518.iSafe.*;
 import com.mrmag518.iSafe.Files.Messages;
+import com.mrmag518.iSafe.Util.Log;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,6 +31,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffectType;
 
 
 public class BlockListener implements Listener {
@@ -250,6 +254,30 @@ public class BlockListener implements Listener {
         if(event.getSource().getType() == Material.FIRE) {
             if(plugin.getConfig().getBoolean("Fire.DisableFireSpread", true)) {
                 event.setCancelled(true);
+            }
+        }
+    }
+    
+    @EventHandler
+    public void invisibilityManager(BlockDispenseEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        
+        if(plugin.getConfig().getBoolean("AntiCheat/Security.Invisibility.DisablePotionDispensing") != true) {
+            return;
+        }
+        
+        ItemStack stack = event.getItem();
+        Material type = stack.getType();
+        
+        if(type == Material.POTION) {
+            Potion potion = Potion.fromItemStack(stack);
+            PotionEffectType effect = potion.getType().getEffectType();
+
+            if(effect == PotionEffectType.INVISIBILITY) {
+                event.setCancelled(true);
+                Log.debug("An invisibility potion were prevented from dispensing!");
             }
         }
     }

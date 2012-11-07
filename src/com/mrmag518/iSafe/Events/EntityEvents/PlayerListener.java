@@ -31,8 +31,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffectType;
 
 public class PlayerListener implements Listener  {
     public static iSafe plugin;
@@ -66,6 +70,50 @@ public class PlayerListener implements Listener  {
                 if(!plugin.hasPermission(p, "iSafe.use.waterbuckets")) {
                     if(event.getBucket() == Material.WATER_BUCKET) {
                         event.setCancelled(true);
+                    }
+                }
+            }
+        }
+    }
+    
+    @EventHandler
+    public void invisibilityManager(PlayerInteractEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        
+        if(plugin.getConfig().getBoolean("AntiCheat/Security.Invisibility.DisablePotionUsage") != true) {
+            return;
+        }
+        
+        Action action = event.getAction();
+        
+        if(action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+            Player p = event.getPlayer();
+            
+            if(p.getItemInHand().getTypeId() == 373) {
+                int data = p.getItemInHand().getDurability();
+                if(data == 8193 || data == 8206 || data == 16318 || data == 16382) {
+                    if(!plugin.hasPermission(p, "iSafe.bypass.potion.invisibility")) {
+                        event.setCancelled(true);
+                        p.setItemInHand(new ItemStack(Material.GLASS_BOTTLE));
+                        return;
+                    }
+                }
+            }
+            
+            ItemStack hand = p.getItemInHand();
+            Material type = hand.getType();
+            
+            if(type == Material.POTION) {
+                Potion potion = Potion.fromItemStack(hand);
+                PotionEffectType effect = potion.getType().getEffectType();
+                
+                if(effect == PotionEffectType.INVISIBILITY) {
+                    if(!plugin.hasPermission(p, "iSafe.bypass.potion.invisibility")) {
+                        event.setCancelled(true);
+                        p.setItemInHand(new ItemStack(Material.GLASS_BOTTLE));
+                        return;
                     }
                 }
             }
@@ -211,7 +259,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Chat.EnableKickMessages", true))
         {
-            Messages.kickMessage(p);
+            Messages.sendKickMessage(p);
             event.setLeaveMessage(null);
         }
     }

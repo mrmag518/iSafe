@@ -25,7 +25,6 @@ import com.mrmag518.iSafe.Blacklists.Blacklists;
 import com.mrmag518.iSafe.Commands.Commands;
 import com.mrmag518.iSafe.Files.*;
 import com.mrmag518.iSafe.Util.Log;
-import com.mrmag518.iSafe.Util.iSafeExtension;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -44,7 +43,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -407,14 +405,6 @@ public class iSafe extends JavaPlugin {
             // If there is anything to modify in the 'new' version, fix that here.
             Log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
             config.set("ConfigVersion", Double.valueOf(ConfigVersion));
-
-            if (config.get("AntiCheat/Sucurity.ForceLightLevel(Fullbright)") != null) {
-                config.set("AntiCheat/Sucurity.ForceLightLevel(Fullbright)", null);
-            }
-
-            if (config.get("AntiCheat/Sucurity.SimpleAntiSpam") != null) {
-                config.set("AntiCheat/Sucurity.SimpleAntiSpam", null);
-            }
         }
 
         config.addDefault("Fire.DisableFireSpread", false);
@@ -471,6 +461,8 @@ public class iSafe extends JavaPlugin {
         config.addDefault("AntiCheat/Security.Spam.EnableBypassPermissions", true);
         config.addDefault("AntiCheat/Security.Spam.UseNormalMode", true);
         config.addDefault("AntiCheat/Security.Spam.UseBeastMode", false);
+        config.addDefault("AntiCheat/Security.Invisibility.DisablePotionUsage", false);
+        config.addDefault("AntiCheat/Security.Invisibility.DisablePotionDispensing", false);
 
         config.addDefault("Explosions.DisablePrimedExplosions", false);
         config.addDefault("Explosions.DisableAllExplosions", false);
@@ -479,6 +471,7 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Explosions.DisableTntExplosions", false);
         config.addDefault("Explosions.DisableFireballExplosions", false);
         config.addDefault("Explosions.DisableEnderCrystalExplosions", false);
+        config.addDefault("Explosions.DisableWitherBossExplosions", false);
         config.addDefault("Explosions.DebugExplosions", false);
 
         config.addDefault("Flow.DisableWaterFlow", false);

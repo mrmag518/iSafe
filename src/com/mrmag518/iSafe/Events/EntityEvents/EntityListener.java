@@ -99,9 +99,9 @@ public class EntityListener implements Listener {
             return;
         }
 
-        if(plugin.getConfig().getBoolean("Explosions.DisableCreeperExplosions", true)){
+        if(plugin.getConfig().getBoolean("Explosions.DisableCreeperExplosions", true)) {
             if (ent instanceof Creeper) {
-                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)) {
                     int blocks = event.blockList().size();
                     Log.debug("An explosion was prevented at the location: X: "+ x + " Y: "+ y + " Z: "+ z + " | Yield: "+ event.getYield()
                     + " | Amount of blocks: " + blocks + " | World: "+ worldname + " | Caused by: " + ent.getType().name().toLowerCase());
@@ -111,9 +111,9 @@ public class EntityListener implements Listener {
             }
         }
 
-        if(plugin.getConfig().getBoolean("Explosions.DisableEnderdragonBlockDamage", true)){
+        if(plugin.getConfig().getBoolean("Explosions.DisableEnderdragonBlockDamage", true)) {
             if (ent instanceof EnderDragon) {
-                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)) {
                     int blocks = event.blockList().size();
                     Log.debug("An explosion was prevented at the location: X: "+ x + " Y: "+ y + " Z: "+ z + " | Yield: "+ event.getYield()
                     + " | Amount of blocks: " + blocks + " | World: "+ worldname + " | Caused by: " + ent.getType().name().toLowerCase());
@@ -123,7 +123,7 @@ public class EntityListener implements Listener {
             }
         }
 
-        if(plugin.getConfig().getBoolean("Explosions.DisableTntExplosions", true)){
+        if(plugin.getConfig().getBoolean("Explosions.DisableTntExplosions", true)) {
             if (ent instanceof TNTPrimed) {
                 if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
                     int blocks = event.blockList().size();
@@ -135,9 +135,9 @@ public class EntityListener implements Listener {
             }
         }
 
-        if(plugin.getConfig().getBoolean("Explosions.DisableFireballExplosions", true)){
+        if(plugin.getConfig().getBoolean("Explosions.DisableFireballExplosions", true)) {
             if (ent instanceof Fireball) {
-                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)) {
                     int blocks = event.blockList().size();
                     Log.debug("An explosion was prevented at the location: X: "+ x + " Y: "+ y + " Z: "+ z + " | Yield: "+ event.getYield()
                     + " | Amount of blocks: " + blocks + " | World: "+ worldname + " | Caused by: " + ent.getType().name().toLowerCase());
@@ -147,9 +147,9 @@ public class EntityListener implements Listener {
             }  
         }
 
-        if(plugin.getConfig().getBoolean("Explosions.DisableEnderCrystalExplosions", true)){
+        if(plugin.getConfig().getBoolean("Explosions.DisableEnderCrystalExplosions", true)) {
             if (ent instanceof EnderCrystal) {
-                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)){
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)) {
                     int blocks = event.blockList().size();
                     Log.debug("An explosion was prevented at the location: X: "+ x + " Y: "+ y + " Z: "+ z + " | Yield: "+ event.getYield()
                     + " | Amount of blocks: " + blocks + " | World: "+ worldname + " | Caused by: " + ent.getType().name().toLowerCase());
@@ -157,6 +157,18 @@ public class EntityListener implements Listener {
                 event.blockList().clear();
                 return;
             }  
+        }
+        
+        if(plugin.getConfig().getBoolean("Explosions.DisableWitherBossExplosions", true)) {
+            if (ent instanceof Wither) {
+                if(plugin.getConfig().getBoolean("Explosions.DebugExplosions", true)) {
+                    int blocks = event.blockList().size();
+                    Log.debug("An explosion was prevented at the location: X: "+ x + " Y: "+ y + " Z: "+ z + " | Yield: "+ event.getYield()
+                    + " | Amount of blocks: " + blocks + " | World: "+ worldname + " | Caused by: " + ent.getType().name().toLowerCase());
+                }
+                event.blockList().clear();
+                return;
+            }
         }
     }
     
@@ -175,10 +187,9 @@ public class EntityListener implements Listener {
             return;
         }
         Entity entity = event.getEntity();
-
-        if(CreatureManager.getCreatureManager().getBoolean("Creatures.Endermen.PreventEndermenGriefing", true))
-        {
-            if (entity instanceof Enderman) {
+        
+        if (entity instanceof Enderman) {
+            if(CreatureManager.getCreatureManager().getBoolean("Creatures.Endermen.PreventEndermenGriefing") == true) {
                 event.setCancelled(true);
             }
         }

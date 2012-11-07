@@ -18,6 +18,14 @@ Version 3.3
 * Corrected the order events will ocurr in, for blacklists.
 * Fixed command blacklists not kicking the player.
 * Removed unnecessary plugin check.
+* Added prevention for invisibility potions
+** New permission, 'iSafe.use.potion.invisibility'.
+* Added prevention for Wither Boss explosions.
+* Added economy support for blacklists. (Requires Vault)
+** You can define the amount of money that should be withdrawed from the player.
+** You can disallow negative results. (If the player has 10$, and 20$ would be taken away, he would end up with -10$, this is what you can disallow)
+** You can choose whether iSafe shall notify the player about his loss, and customize the notify message.
+** And of course you can choose whether this should be enabled or not.
 * 
 
 Version 3.23
