@@ -3,7 +3,7 @@ description: "An assortment of beneficial features."
 main: com.mrmag518.iSafe.iSafe
 name: iSafe
 load: STARTUP
-version: '3.0'
+version: '3.3'
 website: http://dev.bukkit.org/server-mods/blockthattnt/
 softdepend: [Vault]
 commands:
