@@ -322,19 +322,19 @@ public class iSafe extends JavaPlugin {
         }
     }
 
-    public boolean hasPermission(CommandSender p, String permission) {
+    public boolean hasPermission(CommandSender sender, String permission) {
         if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
-            if (perms.has(p, permission)) {
+            if (perms.has(sender, permission)) {
                 return true;
             } else {
-                Messages.noCmdPermission(p);
+                Messages.sendNoPermissionNotify(sender);
                 return false;
             }
         } else {
-            if (p.hasPermission(permission)) {
+            if (sender.hasPermission(permission)) {
                 return true;
             } else {
-                Messages.noCmdPermission(p);
+                Messages.sendNoPermissionNotify(sender);
                 return false;
             }
         }
@@ -364,7 +364,7 @@ public class iSafe extends JavaPlugin {
                 if(shallOutputNoPerm() == false) {
                     // ignore.
                 } else {
-                    Messages.noPermission(p);
+                    Messages.sendNoPermissionNotify(p);
                 }
                 return false;
             }
@@ -375,7 +375,7 @@ public class iSafe extends JavaPlugin {
                 if(shallOutputNoPerm() == false) {
                     // ignore.
                 } else {
-                    Messages.noPermission(p);
+                    Messages.sendNoPermissionNotify(p);
                 }
                 return false;
             }

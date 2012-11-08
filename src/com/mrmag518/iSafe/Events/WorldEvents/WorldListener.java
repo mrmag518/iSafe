@@ -90,7 +90,6 @@ public class WorldListener implements Listener {
                 Player p = event.getPlayer();
                 if(!p.hasPermission("iSafe.use.bonemeal")) {
                     event.setCancelled(true);
-                    Messages.noPermission(p);
                 }
             }
         }

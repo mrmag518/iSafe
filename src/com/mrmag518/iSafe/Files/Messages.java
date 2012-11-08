@@ -171,15 +171,15 @@ public class Messages {
         return s.replaceAll("&([0-9a-f])", "\u00A7$1");
     }
     
-    /*public static void sendNoPermissionNotify(Player player) {
+    public static void sendNoPermissionNotify(Player player) {
         player.sendMessage(colorize(getMessages().getString("Permissions.DefaultNoPermission")));
     }
     
     public static void sendNoPermissionNotify(CommandSender sender) {
         sender.sendMessage(colorize(getMessages().getString("Permissions.NoCmdPermission")));
-    }*/
+    }
     
-    public static void noPermission(Player p) {
+    /*public static void noPermission(Player p) {
         String no_permission = getMessages().getString("Permissions.DefaultNoPermission");
         p.sendMessage(colorize(no_permission));
     }
@@ -187,7 +187,7 @@ public class Messages {
     public static void noCmdPermission(CommandSender sender) {
         String no_permission = getMessages().getString("Permissions.NoCmdPermission");
         sender.sendMessage(colorize(no_permission));
-    }
+    }*/
 
     public static void sendKickMessage(Player p) {
         String kickMsg = getMessages().getString("KickMessage");

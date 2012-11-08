@@ -1,3 +1,8 @@
+Version 3.4
+* Fixed a permissions notify duplication.
+* Fixed invisibility potion prevention not fully working.
+* 
+
 Version 3.3
 * Some tweaks to permissions handling.
 * Added a lot more debug output.
@@ -26,7 +31,7 @@ Version 3.3
 ** You can disallow negative results. (If the player has 10$, and 20$ would be taken away, he would end up with -10$, this is what you can disallow)
 ** You can choose whether iSafe shall notify the player about his loss, and customize the notify message.
 ** And of course you can choose whether this should be enabled or not.
-* 
+* Supports 1.4.2
 
 Version 3.23
 * Added UseDetailedSearchMode option to Chat blacklist.

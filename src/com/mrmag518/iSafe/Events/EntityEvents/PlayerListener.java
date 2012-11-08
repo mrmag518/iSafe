@@ -97,7 +97,6 @@ public class PlayerListener implements Listener  {
                     if(!plugin.hasPermission(p, "iSafe.bypass.potion.invisibility")) {
                         event.setCancelled(true);
                         p.setItemInHand(new ItemStack(Material.GLASS_BOTTLE));
-                        return;
                     }
                 }
             }
@@ -113,7 +112,6 @@ public class PlayerListener implements Listener  {
                     if(!plugin.hasPermission(p, "iSafe.bypass.potion.invisibility")) {
                         event.setCancelled(true);
                         p.setItemInHand(new ItemStack(Material.GLASS_BOTTLE));
-                        return;
                     }
                 }
             }
