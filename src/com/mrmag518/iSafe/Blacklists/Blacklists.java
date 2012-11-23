@@ -70,9 +70,9 @@ public class Blacklists implements Listener {
                 BlacklistsF.getBlacklists().set(path, value + ",");
                 BlacklistsF.saveBlacklists();
             }
-            if(value.contains(":")) {
+            /*if(value.contains(":")) {
                 Log.warning("[iSafe] Blacklists doesn't support sub-IDs yet! (' : ')");
-            }
+            }*/
         }
     }
     
@@ -98,7 +98,7 @@ public class Blacklists implements Listener {
             {
                 if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
                     {
                         if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.break")) 
                         {
@@ -172,7 +172,7 @@ public class Blacklists implements Listener {
             {
                 if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
                     {
                         if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.place")) 
                         {
@@ -333,7 +333,7 @@ public class Blacklists implements Listener {
             {
                 if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + rec.getResult().getData().getData() + ","))
                     {
                         if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.crafting")) 
                         {
@@ -406,7 +406,7 @@ public class Blacklists implements Listener {
             {
                 if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
                     {
                         event.setCancelled(true);
                         if(BlacklistsF.getBlacklists().getBoolean("Dispense." + bWorld + ".Alert/log-to.Console") == true) {
@@ -439,7 +439,7 @@ public class Blacklists implements Listener {
             {
                 if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + event.getItemDrop().getItemStack().getData().getData() + ","))
                     {
                         if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.drop")) 
                         {
@@ -516,7 +516,7 @@ public class Blacklists implements Listener {
                 {
                     if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                     {
-                        if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
+                        if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
                         {
                             if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.interact"))
                             {
@@ -590,7 +590,7 @@ public class Blacklists implements Listener {
             {
                 if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) 
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + event.getItem().getItemStack().getData().getData() + ","))
                     {
                         if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.pickup")) 
                         {

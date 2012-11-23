@@ -58,12 +58,13 @@ public class iSafe extends JavaPlugin {
      * Start working on gamemode 'protection'.
      * More bug hunting...
      * Commands to toggle the enable state of specific worlds in the blacklist.
-     * Add adverture mode to anything related to gamemode.
      * Add group thing to blacklists.
-     * Add support for ids like, 120:1337
-     * PvP handling.
+     * PvP handling. (as extension)
      * mORE utility classes.
-     * Eco support for blacklists. (New category: Penalties, put kick option here too)
+     * Potion management.
+     * Move all Events classes to the a new EventManagers package.
+     * Reorganize the config files?
+     * Move the config file out of this class to it's own.
      * 
      */
     
@@ -473,7 +474,7 @@ public class iSafe extends JavaPlugin {
         config.addDefault("Explosions.DisableEnderCrystalExplosions", false);
         config.addDefault("Explosions.DisableWitherBossExplosions", false);
         config.addDefault("Explosions.DebugExplosions", false);
-
+        
         config.addDefault("Flow.DisableWaterFlow", false);
         config.addDefault("Flow.DisableLavaFlow", false);
         config.addDefault("Flow.DisableAirFlow", false);

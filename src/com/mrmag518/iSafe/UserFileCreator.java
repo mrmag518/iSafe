@@ -63,6 +63,7 @@ public class UserFileCreator implements Listener {
         
         if(userFile.exists()) {
              FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
+             uFile.set("DisplayName", p.getDisplayName());
              uFile.set("IPAddress", p.getAddress().getAddress().toString().replace("/", ""));
              uFile.set("Gamemode", p.getGameMode().name().toLowerCase());
              uFile.set("Level", p.getLevel());
@@ -82,6 +83,7 @@ public class UserFileCreator implements Listener {
         
         if(userFile.exists()) {
              FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
+             uFile.set("DisplayName", p.getDisplayName());
              uFile.set("IPAddress", p.getAddress().getAddress().toString().replace("/", ""));
              uFile.set("Gamemode", p.getGameMode().name().toLowerCase());
              uFile.set("Level", p.getLevel());

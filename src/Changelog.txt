@@ -1,7 +1,14 @@
 Version 3.4
 * Fixed a permissions notify duplication.
 * Fixed invisibility potion prevention not fully working.
+* Added support for sub-IDs for blacklists.
+** For an example, instead of blocking all kind of wool you can now block certain wool color(s) instead. Like '5:13' for red, instead of just '5'.
+* Fixed user files not updating the displayname of the player.
+* Removed the resetFile command. Was never actually used.
 * 
+
+
+* Supports 1.4.5-R0.2
 
 Version 3.3
 * Some tweaks to permissions handling.
