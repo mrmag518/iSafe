@@ -31,7 +31,7 @@ public class Messages {
     private static final iSafe plugin = (iSafe) Bukkit.getPluginManager().getPlugin("iSafe");
     private static File datafolder = plugin.getDataFolder();
     
-    public static void loadMessages() {
+    public static void load() {
         messages = getMessages();
         messages.options().header(Data.setMessageHeader());
 
@@ -81,10 +81,10 @@ public class Messages {
         messages.addDefault("Blacklists.Censor.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to say an illegal word.");
         
         getMessages().options().copyDefaults(true);
-        saveMessages();
+        save();
     }
     
-    public static void reloadMessages() {
+    public static void reload() {
         if (messagesFile == null) {
             messagesFile = new File(datafolder, "Messages.yml");
         }
@@ -100,12 +100,12 @@ public class Messages {
 
     public static FileConfiguration getMessages() {
         if (messages == null) {
-            reloadMessages();
+            reload();
         }
         return messages;
     }
 
-    public static void saveMessages() {
+    public static void save() {
         if (messages == null || messagesFile == null) {
             return;
         }
@@ -179,15 +179,6 @@ public class Messages {
         sender.sendMessage(colorize(getMessages().getString("Permissions.NoCmdPermission")));
     }
     
-    /*public static void noPermission(Player p) {
-        String no_permission = getMessages().getString("Permissions.DefaultNoPermission");
-        p.sendMessage(colorize(no_permission));
-    }
-
-    public static void noCmdPermission(CommandSender sender) {
-        String no_permission = getMessages().getString("Permissions.NoCmdPermission");
-        sender.sendMessage(colorize(no_permission));
-    }*/
 
     public static void sendKickMessage(Player p) {
         String kickMsg = getMessages().getString("KickMessage");

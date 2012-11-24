@@ -22,6 +22,7 @@ import com.mrmag518.iSafe.*;
 
 import com.mrmag518.iSafe.Files.CreatureManager;
 import com.mrmag518.iSafe.Util.Log;
+import com.mrmag518.iSafe.Util.PermHandler;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.*;
@@ -52,7 +53,7 @@ public class EntityListener implements Listener {
         if(plugin.getConfig().getBoolean("World.EnablePortalCreationPerms")) {
             if(event.getEntity() instanceof Player) {
                 Player p = (Player)event.getEntity();
-                if(!(plugin.hasPermission(p, "iSafe.createportal"))) {
+                if(!(PermHandler.hasPermission(p, "iSafe.createportal"))) {
                     event.setCancelled(true);
                 }
             }
@@ -252,7 +253,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.fire")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.fire")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -274,7 +275,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.contact")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.contact")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -296,7 +297,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.custom")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.custom")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -318,7 +319,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.drowning")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.drowning")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -340,7 +341,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.entityattack")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.entityattack")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -362,7 +363,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.fall")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.fall")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -384,7 +385,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.lava")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.lava")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -406,7 +407,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.lightning")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.lightning")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -428,7 +429,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.magic")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.magic")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -450,7 +451,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.poison")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.poison")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -472,7 +473,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.projectile")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.projectile")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -494,7 +495,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.starvation")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.starvation")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -516,7 +517,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.suffocation")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.suffocation")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -538,7 +539,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.suicide")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.suicide")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -560,7 +561,7 @@ public class EntityListener implements Listener {
                 if (entity instanceof Player) {
                     if(plugin.getConfig().getBoolean("Damage.EnablePermissions", true)) {
                         Player player = (Player)entity;
-                        if(plugin.hasPermission(player, "iSafe.canceldamage.void")) {
+                        if(PermHandler.hasPermission(player, "iSafe.canceldamage.void")) {
                             event.setCancelled(true);
                         }
                     } else {
@@ -587,7 +588,7 @@ public class EntityListener implements Listener {
         if(plugin.getConfig().getBoolean("Miscellaneous.DisableHunger", true)){
             if(event.getEntity() instanceof Player) {
                 Player p = (Player)event.getEntity();
-                if(plugin.hasPermission(p, "iSafe.bypass.hunger")) {
+                if(PermHandler.hasPermission(p, "iSafe.bypass.hunger")) {
                     event.setCancelled(true);
                     event.setFoodLevel(20);
                 }
@@ -631,7 +632,7 @@ public class EntityListener implements Listener {
             if(event.getReason() == TargetReason.CLOSEST_PLAYER) {
                 if(event.getEntity() instanceof Player) {
                     Player target = (Player)event.getTarget();
-                    if(plugin.hasPermission(target, "iSafe.canceltarget.closestplayer")) {
+                    if(PermHandler.hasPermission(target, "iSafe.canceltarget.closestplayer")) {
                         event.setCancelled(true);
                     }
                 }
@@ -643,7 +644,7 @@ public class EntityListener implements Listener {
             {
                 if(event.getEntity() instanceof Player) {
                     Player target = (Player)event.getTarget();
-                    if(plugin.hasPermission(target, "iSafe.canceltarget.custom")) {
+                    if(PermHandler.hasPermission(target, "iSafe.canceltarget.custom")) {
                         event.setCancelled(true);
                     }
                 }
@@ -655,7 +656,7 @@ public class EntityListener implements Listener {
             {
                 if(event.getEntity() instanceof Player) {
                     Player target = (Player)event.getTarget();
-                    if(plugin.hasPermission(target, "iSafe.canceltarget.forgot")) {
+                    if(PermHandler.hasPermission(target, "iSafe.canceltarget.forgot")) {
                         event.setCancelled(true);
                     }
                 }
@@ -666,7 +667,7 @@ public class EntityListener implements Listener {
             if(event.getReason() == TargetReason.OWNER_ATTACKED_TARGET) {
                 if(event.getEntity() instanceof Player) {
                     Player target = (Player)event.getTarget();
-                    if(plugin.hasPermission(target, "iSafe.canceltarget.ownerattacked")) {
+                    if(PermHandler.hasPermission(target, "iSafe.canceltarget.ownerattacked")) {
                         event.setCancelled(true);
                     }
                 }
@@ -677,7 +678,7 @@ public class EntityListener implements Listener {
             if(event.getReason() == TargetReason.PIG_ZOMBIE_TARGET) {
                 if(event.getEntity() instanceof Player) {
                     Player target = (Player)event.getTarget();
-                    if(plugin.hasPermission(target, "iSafe.canceltarget.pigzombie")) {
+                    if(PermHandler.hasPermission(target, "iSafe.canceltarget.pigzombie")) {
                         event.setCancelled(true);
                     }
                 }
@@ -688,7 +689,7 @@ public class EntityListener implements Listener {
             if(event.getReason() == TargetReason.RANDOM_TARGET) {
                 if(event.getEntity() instanceof Player) {
                     Player target = (Player)event.getTarget();
-                    if(plugin.hasPermission(target, "iSafe.canceltarget.random")) {
+                    if(PermHandler.hasPermission(target, "iSafe.canceltarget.random")) {
                         event.setCancelled(true);
                     }
                 }
@@ -699,7 +700,7 @@ public class EntityListener implements Listener {
             if(event.getReason() == TargetReason.TARGET_ATTACKED_ENTITY) {
                 if(event.getEntity() instanceof Player) {
                     Player target = (Player)event.getTarget();
-                    if(plugin.hasPermission(target, "iSafe.canceltarget.targetattackedentity")) {
+                    if(PermHandler.hasPermission(target, "iSafe.canceltarget.targetattackedentity")) {
                         event.setCancelled(true);
                     }
                 }
@@ -710,7 +711,7 @@ public class EntityListener implements Listener {
             if(event.getReason() == TargetReason.TARGET_ATTACKED_OWNER) {
                 if(event.getEntity() instanceof Player) {
                     Player target = (Player)event.getTarget();
-                    if(plugin.hasPermission(target, "iSafe.canceltarget.targetattackedowner")) {
+                    if(PermHandler.hasPermission(target, "iSafe.canceltarget.targetattackedowner")) {
                         event.setCancelled(true);
                     }
                 }
@@ -721,7 +722,7 @@ public class EntityListener implements Listener {
             if(event.getReason() == TargetReason.TARGET_DIED) {
                 if(event.getEntity() instanceof Player) {
                     Player target = (Player)event.getTarget();
-                    if(plugin.hasPermission(target, "iSafe.canceltarget.targetdied")) {
+                    if(PermHandler.hasPermission(target, "iSafe.canceltarget.targetdied")) {
                         event.setCancelled(true);
                     }
                 }
@@ -748,7 +749,7 @@ public class EntityListener implements Listener {
             if(entity instanceof LivingEntity) {
                 if(entity instanceof Player && !(entity instanceof Creature)) {
                     Player p = (Player)entity;
-                    if(!(plugin.hasPermission(p, "iSafe.bypass.croptrampling"))) {
+                    if(!(PermHandler.hasPermission(p, "iSafe.bypass.croptrampling"))) {
                         event.setCancelled(true);
                     }
                 }

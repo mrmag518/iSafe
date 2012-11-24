@@ -18,6 +18,7 @@
 
 package com.mrmag518.iSafe.Events.EntityEvents;
 
+import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.ChatColor;
@@ -42,7 +43,7 @@ public class EnchantmentListener implements Listener {
         
         if(plugin.getConfig().getBoolean("Enchantment.PreventEnchantment", true))
         {
-            if(!plugin.hasPermission(p, "iSafe.bypass.enchant")) {
+            if(!PermHandler.hasPermission(p, "iSafe.bypass.enchant")) {
                 event.setCancelled(true);
                 p.sendMessage(ChatColor.RED + "You do not have access to enchant items.");
                 return;
@@ -51,7 +52,7 @@ public class EnchantmentListener implements Listener {
         
         if(plugin.getConfig().getBoolean("Enchantment.PreventCreativeModeEnchanting", true)) {
             if(p.getGameMode().equals(GameMode.CREATIVE)) {
-                if(!plugin.hasPermission(p, "iSafe.bypass.enchant")) {
+                if(!PermHandler.hasPermission(p, "iSafe.bypass.enchant")) {
                     event.setCancelled(true);
                     p.sendMessage(ChatColor.RED + "You do not have access to enchant items in creative mode.");
                     return;

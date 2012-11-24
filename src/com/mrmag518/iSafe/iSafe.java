@@ -38,7 +38,6 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -255,9 +254,9 @@ public class iSafe extends JavaPlugin {
         iSafeConfig.loadISafeConfig();
         iSafeConfig.reloadISafeConfig();
 
-        Messages.reloadMessages();
-        Messages.loadMessages();
-        Messages.reloadMessages();
+        Messages.reload();
+        Messages.load();
+        Messages.reload();
 
         reloadConfig();
         loadConfig();
@@ -265,28 +264,27 @@ public class iSafe extends JavaPlugin {
 
         if (isStartup == true) {
             getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
-
                 @Override
                 public void run() {
-                    CreatureManager.reloadCreatureManager();
-                    CreatureManager.loadCreatureManager();
-                    CreatureManager.reloadCreatureManager();
+                    CreatureManager.reload();
+                    CreatureManager.load();
+                    CreatureManager.reload();
 
-                    BlacklistsF.reloadBlacklists();
-                    BlacklistsF.loadBlacklists();
-                    BlacklistsF.reloadBlacklists();
+                    BlacklistsF.reload();
+                    BlacklistsF.load();
+                    BlacklistsF.reload();
 
                     setupVault();
                 }
             }, 40);
         } else {
-            CreatureManager.reloadCreatureManager();
-            CreatureManager.loadCreatureManager();
-            CreatureManager.reloadCreatureManager();
+            CreatureManager.reload();
+            CreatureManager.load();
+            CreatureManager.reload();
 
-            BlacklistsF.reloadBlacklists();
-            BlacklistsF.loadBlacklists();
-            BlacklistsF.reloadBlacklists();
+            BlacklistsF.reload();
+            BlacklistsF.load();
+            BlacklistsF.reload();
 
             setupVault();
         }
@@ -320,80 +318,6 @@ public class iSafe extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("Vault") != null) {
             setupEconomy();
             Log.verbose("Hooked to economy plugin '" + economy.getName() + "'.");
-        }
-    }
-
-    public boolean hasPermission(CommandSender sender, String permission) {
-        if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
-            if (perms.has(sender, permission)) {
-                return true;
-            } else {
-                Messages.sendNoPermissionNotify(sender);
-                return false;
-            }
-        } else {
-            if (sender.hasPermission(permission)) {
-                return true;
-            } else {
-                Messages.sendNoPermissionNotify(sender);
-                return false;
-            }
-        }
-    }
-
-    public boolean hasBlacklistPermission(Player p, String permission) {
-        if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
-            if (perms.has(p, permission)) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (p.hasPermission(permission)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-    public boolean hasPermission(Player p, String permission) {
-        if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
-            if (perms.has(p, permission)) {
-                return true;
-            } else {
-                if(shallOutputNoPerm() == false) {
-                    // ignore.
-                } else {
-                    Messages.sendNoPermissionNotify(p);
-                }
-                return false;
-            }
-        } else {
-            if (p.hasPermission(permission)) {
-                return true;
-            } else {
-                if(shallOutputNoPerm() == false) {
-                    // ignore.
-                } else {
-                    Messages.sendNoPermissionNotify(p);
-                }
-                return false;
-            }
-        }
-    }
-    
-    private boolean shallOutputNoPerm() {
-        if(checkingUpdatePerms == true
-            || checkingSpamPerms == true
-            || checkingFullbrightPerms == true) 
-        {
-            checkingUpdatePerms = false;
-            checkingSpamPerms = false;
-            checkingFullbrightPerms = false;
-            return false;
-        } else {
-            return true;
         }
     }
 

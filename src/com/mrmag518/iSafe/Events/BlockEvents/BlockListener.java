@@ -21,6 +21,7 @@ package com.mrmag518.iSafe.Events.BlockEvents;
 import com.mrmag518.iSafe.*;
 import com.mrmag518.iSafe.Files.Messages;
 import com.mrmag518.iSafe.Util.Log;
+import com.mrmag518.iSafe.Util.PermHandler;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -78,7 +79,7 @@ public class BlockListener implements Listener {
             }
             if(level <= detectionLvl && !b.isLiquid() && !loc.getBlock().isLiquid()) {
                 plugin.checkingFullbrightPerms = true;
-                if(!(plugin.hasPermission(p, "iSafe.bypass.fullbright"))) {
+                if(!(PermHandler.hasPermission(p, "iSafe.bypass.fullbright"))) {
                     event.setCancelled(true);
                     p.sendMessage(Messages.colorize(Messages.getMessages().getString("FullbrightDetection")));
                 }
@@ -100,7 +101,7 @@ public class BlockListener implements Listener {
         } else if (cause == IgniteCause.FLINT_AND_STEEL) {
             if(plugin.getConfig().getBoolean("Fire.PreventFlintAndSteelUsage", true)) {
                 Player p = event.getPlayer();
-                if(!(plugin.hasPermission(p, "iSafe.use.flintandsteel"))) {
+                if(!(PermHandler.hasPermission(p, "iSafe.use.flintandsteel"))) {
                     event.setCancelled(true);
                 }
             }

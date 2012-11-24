@@ -5,6 +5,7 @@ Version 3.4
 ** For an example, instead of blocking all kind of wool you can now block certain wool color(s) instead. Like '5:13' for red, instead of just '5'.
 * Fixed user files not updating the displayname of the player.
 * Removed the resetFile command. Was never actually used.
+* Improved permissions handling.
 * 
 
 

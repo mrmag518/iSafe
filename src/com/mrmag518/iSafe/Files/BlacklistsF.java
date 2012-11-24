@@ -26,7 +26,7 @@ public class BlacklistsF {
     private static final iSafe plugin = (iSafe) Bukkit.getPluginManager().getPlugin("iSafe");
     private static File datafolder = plugin.getDataFolder();
     
-    public static void loadBlacklists() {
+    public static void load() {
         blacklists = getBlacklists();
         blacklists.options().header(Data.setBlacklistsHeader());
 
@@ -238,10 +238,10 @@ public class BlacklistsF {
         }
 
         getBlacklists().options().copyDefaults(true);
-        saveBlacklists();
+        save();
     }
 
-    public static void reloadBlacklists() {
+    public static void reload() {
         if (blacklistsFile == null) {
             blacklistsFile = new File(datafolder, "blacklists.yml");
         }
@@ -257,12 +257,12 @@ public class BlacklistsF {
 
     public static FileConfiguration getBlacklists() {
         if (blacklists == null) {
-            reloadBlacklists();
+            reload();
         }
         return blacklists;
     }
 
-    public static void saveBlacklists() {
+    public static void save() {
         if (blacklists == null || blacklistsFile == null) {
             return;
         }

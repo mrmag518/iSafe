@@ -1,5 +1,6 @@
 package com.mrmag518.iSafe.Commands;
 
+import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
 import java.io.File;
 import org.bukkit.ChatColor;
@@ -28,18 +29,17 @@ public class Commands implements CommandExecutor {
                     sender.sendMessage(G + "/iSafe reload" + GR + " Reloads all the iSafe configuration files.");
                     sender.sendMessage(G + "/iSafe info " + GR + " Returns information about iSafe.");
                     sender.sendMessage(G + "/iSafe serverinfo " + GR + " Returns information about the server.");
-                    sender.sendMessage(G + "/iSafe resetfile <filename> " + GR + " Reset the specified file to it's default settings.");
                 } else if (args.length >= 1) {
                     if(args[0].equalsIgnoreCase("reload")) {
-                        if(plugin.hasPermission(sender, "iSafe.command.reload")) {
+                        if(PermHandler.hasPermission(sender, "iSafe.command.reload")) {
                             return reload(sender);
                         }
                     } else if(args[0].equalsIgnoreCase("info")) {
-                        if(plugin.hasPermission(sender, "iSafe.command.info")) {
+                        if(PermHandler.hasPermission(sender, "iSafe.command.info")) {
                             return info(sender);
                         }
                     } else if(args[0].equalsIgnoreCase("serverinfo")) {
-                        if(plugin.hasPermission(sender, "iSafe.command.serverinfo")) {
+                        if(PermHandler.hasPermission(sender, "iSafe.command.serverinfo")) {
                             return serverinfo(sender);
                         }
                     }
@@ -50,7 +50,6 @@ public class Commands implements CommandExecutor {
                     sender.sendMessage(G + "/iSafe reload" + GR + " Reload all the iSafe configuration files.");
                     sender.sendMessage(G + "/iSafe info " + GR + " Returns information about iSafe.");
                     sender.sendMessage(G + "/iSafe serverinfo " + GR + " Returns information about the server.");
-                    sender.sendMessage(G + "/iSafe resetfile <filename> " + GR + " Reset the specified file to it's default settings.");
                 } else {
                     if (args.length >= 1) {
                         if(args[0].equalsIgnoreCase("reload")) {

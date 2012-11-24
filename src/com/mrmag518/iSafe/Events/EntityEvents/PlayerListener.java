@@ -22,6 +22,7 @@ package com.mrmag518.iSafe.Events.EntityEvents;
 import com.mrmag518.iSafe.*;
 import com.mrmag518.iSafe.Files.Messages;
 import com.mrmag518.iSafe.Util.Log;
+import com.mrmag518.iSafe.Util.PermHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -57,7 +58,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Buckets.Lava.Prevent")) {
             if (plugin.getConfig().getList("Buckets.Lava.CheckedWorlds").contains(worldname)) {
-                if(!plugin.hasPermission(p, "iSafe.use.lavabuckets")) {
+                if(!PermHandler.hasPermission(p, "iSafe.use.lavabuckets")) {
                     if(event.getBucket() == Material.LAVA_BUCKET) {
                         event.setCancelled(true);
                     }
@@ -67,7 +68,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Buckets.Water.Prevent")) {
             if (plugin.getConfig().getList("Buckets.Water.CheckedWorlds").contains(worldname)) {
-                if(!plugin.hasPermission(p, "iSafe.use.waterbuckets")) {
+                if(!PermHandler.hasPermission(p, "iSafe.use.waterbuckets")) {
                     if(event.getBucket() == Material.WATER_BUCKET) {
                         event.setCancelled(true);
                     }
@@ -94,7 +95,7 @@ public class PlayerListener implements Listener  {
             if(p.getItemInHand().getTypeId() == 373) {
                 int data = p.getItemInHand().getDurability();
                 if(data == 8193 || data == 8206 || data == 16318 || data == 16382) {
-                    if(!plugin.hasPermission(p, "iSafe.bypass.potion.invisibility")) {
+                    if(!PermHandler.hasPermission(p, "iSafe.bypass.potion.invisibility")) {
                         event.setCancelled(true);
                         p.setItemInHand(new ItemStack(Material.GLASS_BOTTLE));
                     }
@@ -109,7 +110,7 @@ public class PlayerListener implements Listener  {
                 PotionEffectType effect = potion.getType().getEffectType();
                 
                 if(effect == PotionEffectType.INVISIBILITY) {
-                    if(!plugin.hasPermission(p, "iSafe.bypass.potion.invisibility")) {
+                    if(!PermHandler.hasPermission(p, "iSafe.bypass.potion.invisibility")) {
                         event.setCancelled(true);
                         p.setItemInHand(new ItemStack(Material.GLASS_BOTTLE));
                     }
@@ -127,7 +128,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Movement.DisableSprinting", true)){
             if(p.isSprinting()) {
-                if(!plugin.hasPermission(p, "iSafe.bypass.sprint")) {
+                if(!PermHandler.hasPermission(p, "iSafe.bypass.sprint")) {
                     event.setCancelled(true);
                 }
             }
@@ -135,7 +136,7 @@ public class PlayerListener implements Listener  {
         
         if(plugin.getConfig().getBoolean("Movement.DisableSneaking", true)){
             if(p.isSneaking()) {
-                if(!plugin.hasPermission(p, "iSafe.bypass.sneak")) {
+                if(!PermHandler.hasPermission(p, "iSafe.bypass.sneak")) {
                     event.setCancelled(true);
                 }
             }
@@ -166,53 +167,47 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Teleport.DisableAllTeleportCauses", true))
-        {
-            if(!(plugin.hasPermission(p, "iSafe.bypass.teleport"))) {
+        if(plugin.getConfig().getBoolean("Teleport.DisableAllTeleportCauses", true)){
+            if(!(PermHandler.hasPermission(p, "iSafe.bypass.teleport"))) {
                 event.setTo(event.getFrom());
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Disable.CommandCause", true))
-        {
+        if(plugin.getConfig().getBoolean("Teleport.Disable.CommandCause", true)){
             if (event.getCause() == TeleportCause.COMMAND) {
-                if(!(plugin.hasPermission(p, "iSafe.bypass.teleport.command"))) {
+                if(!(PermHandler.hasPermission(p, "iSafe.bypass.teleport.command"))) {
                     event.setTo(event.getFrom());
                 }
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Disable.EnderpearlCause", true))
-        {
+        if(plugin.getConfig().getBoolean("Teleport.Disable.EnderpearlCause", true)){
             if (event.getCause() == TeleportCause.ENDER_PEARL) {
-                if(!(plugin.hasPermission(p, "iSafe.bypass.teleport.enderpearl"))) {
+                if(!(PermHandler.hasPermission(p, "iSafe.bypass.teleport.enderpearl"))) {
                     event.setTo(event.getFrom());
                 }
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Disable.PluginCause", true))
-        {
+        if(plugin.getConfig().getBoolean("Teleport.Disable.PluginCause", true)){
             if (event.getCause() == TeleportCause.PLUGIN) {
-                if(!(plugin.hasPermission(p, "iSafe.bypass.teleport.plugin"))) {
+                if(!(PermHandler.hasPermission(p, "iSafe.bypass.teleport.plugin"))) {
                     event.setTo(event.getFrom());
                 }
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Disable.UnknownCause", true))
-        {
+        if(plugin.getConfig().getBoolean("Teleport.Disable.UnknownCause", true)){
             if (event.getCause() == TeleportCause.UNKNOWN) {
-                if(!(plugin.hasPermission(p, "iSafe.bypass.teleport.unknown"))) {
+                if(!(PermHandler.hasPermission(p, "iSafe.bypass.teleport.unknown"))) {
                     event.setTo(event.getFrom());
                 }
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Disable.NetherportalCause", true))
-        {
+        if(plugin.getConfig().getBoolean("Teleport.Disable.NetherportalCause", true)){
             if (event.getCause() == TeleportCause.NETHER_PORTAL) {
-                if(!(plugin.hasPermission(p, "iSafe.bypass.teleport.netherportal"))) {
+                if(!(PermHandler.hasPermission(p, "iSafe.bypass.teleport.netherportal"))) {
                     event.setTo(event.getFrom());
                 }
             }
@@ -227,7 +222,7 @@ public class PlayerListener implements Listener  {
         Player p = event.getPlayer();
         
         if(plugin.getConfig().getBoolean("Chat.ForcePermissionToChat", true)) {
-            if(!plugin.hasPermission(p, "iSafe.use.chat")) {
+            if(!PermHandler.hasPermission(p, "iSafe.use.chat")) {
                 event.setCancelled(true);
             }
         }
@@ -240,9 +235,8 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Miscellaneous.ForcePermissionsToUseBed", true))
-        {
-            if(!(plugin.hasPermission(p, "iSafe.use.bed"))) {
+        if(plugin.getConfig().getBoolean("Miscellaneous.ForcePermissionsToUseBed", true)){
+            if(!(PermHandler.hasPermission(p, "iSafe.use.bed"))) {
                 event.setCancelled(true);
             }
         }
@@ -255,8 +249,7 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Chat.EnableKickMessages", true))
-        {
+        if(plugin.getConfig().getBoolean("Chat.EnableKickMessages", true)){
             Messages.sendKickMessage(p);
             event.setLeaveMessage(null);
         }
@@ -269,9 +262,8 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Miscellaneous.ForcePermissionsToFish", true))
-        {
-            if(!plugin.hasPermission(p, "iSafe.bypass.fish")) {
+        if(plugin.getConfig().getBoolean("Miscellaneous.ForcePermissionsToFish", true)){
+            if(!PermHandler.hasPermission(p, "iSafe.bypass.fish")) {
                 event.setCancelled(true);
             }
         }
@@ -294,8 +286,7 @@ public class PlayerListener implements Listener  {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player joiner = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Miscellaneous.OnlyLetOPsJoin", true))
-        {
+        if(plugin.getConfig().getBoolean("Miscellaneous.OnlyLetOPsJoin", true)) {
             if(!joiner.isOp()) {
                 joiner.kickPlayer(Messages.denyNonOpsJoin());
             }
@@ -321,24 +312,19 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Gamemode.DisableGamemodeChange", true))
-        {
+        if(plugin.getConfig().getBoolean("Gamemode.DisableGamemodeChange", true)){
             event.setCancelled(true); 
         }
         
-        if(plugin.getConfig().getBoolean("Gamemode.DisableCreativeToSurvivalChange", true))
-        {
-            if (event.getNewGameMode().equals(GameMode.SURVIVAL)) 
-            {
+        if(plugin.getConfig().getBoolean("Gamemode.DisableCreativeToSurvivalChange", true)){
+            if(event.getNewGameMode().equals(GameMode.SURVIVAL)) {
                 event.setCancelled(true);
                 p.setGameMode(GameMode.SURVIVAL);
             }
         }
         
-        if(plugin.getConfig().getBoolean("Gamemode.DisableSurvivalToCreativeChange", true))
-        {
-            if (event.getNewGameMode().equals(GameMode.CREATIVE)) 
-            {
+        if(plugin.getConfig().getBoolean("Gamemode.DisableSurvivalToCreativeChange", true)){
+            if(event.getNewGameMode().equals(GameMode.CREATIVE)) {
                 event.setCancelled(true);
                 p.setGameMode(GameMode.CREATIVE);
             }
@@ -361,7 +347,7 @@ public class PlayerListener implements Listener  {
         }
         if(bypassPerms == true) {
             plugin.checkingSpamPerms = true;
-            if(plugin.hasPermission(p, "iSafe.bypass.spamcheck")) {
+            if(PermHandler.hasPermission(p, "iSafe.bypass.spamcheck")) {
                 return;
             }
         }

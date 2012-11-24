@@ -20,6 +20,7 @@ package com.mrmag518.iSafe.Events.BlockEvents;
 
 
 
+import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.Material;
@@ -51,7 +52,7 @@ public class DropListener implements Listener {
         if (plugin.getConfig().getBoolean("ForceDrop.Glass", true)){
             if (block.getTypeId() == 20) {
                 if(!(event.isCancelled())) {
-                    if(plugin.hasPermission(p, "iSafe.forcedrop.glass")) {
+                    if(PermHandler.hasPermission(p, "iSafe.forcedrop.glass")) {
                         ItemStack glass = new ItemStack(event.getBlock().getType(), 1);
                         event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), glass);
                         block.setType(Material.AIR);
@@ -63,7 +64,7 @@ public class DropListener implements Listener {
         if (plugin.getConfig().getBoolean("ForceDrop.MobSpawner", true)){
             if (block.getTypeId() == 52) {
                 if(!(event.isCancelled())) {
-                    if(plugin.hasPermission(p, "iSafe.forcedrop.mobspawner")) {
+                    if(PermHandler.hasPermission(p, "iSafe.forcedrop.mobspawner")) {
                         ItemStack mobspawner = new ItemStack(event.getBlock().getType(), 1);
                         event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), mobspawner);
                         block.setType(Material.AIR);
@@ -75,7 +76,7 @@ public class DropListener implements Listener {
         if (plugin.getConfig().getBoolean("ForceDrop.Ice", true)){
             if (block.getTypeId() == 79) {
                 if(!(event.isCancelled())) {
-                    if(plugin.hasPermission(p, "iSafe.forcedrop.ice")) {
+                    if(PermHandler.hasPermission(p, "iSafe.forcedrop.ice")) {
                         ItemStack ice = new ItemStack(event.getBlock().getType(), 1);
                         event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), ice);
                         block.setType(Material.AIR);
@@ -88,7 +89,7 @@ public class DropListener implements Listener {
         if (plugin.getConfig().getBoolean("ForceDrop.Bedrock", true)){
             if (block.getTypeId() == 7) {
                 if(!(event.isCancelled())) {
-                    if(plugin.hasPermission(p, "iSafe.forcedrop.bedrock")) {
+                    if(PermHandler.hasPermission(p, "iSafe.forcedrop.bedrock")) {
                         ItemStack bedrock = new ItemStack(event.getBlock().getType(), 1);
                         event.getPlayer().getWorld().dropItemNaturally(event.getBlock().getLocation(), bedrock);
                         block.setType(Material.AIR);

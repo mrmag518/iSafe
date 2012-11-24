@@ -25,7 +25,7 @@ public class CreatureManager {
     private static final iSafe plugin = (iSafe) Bukkit.getPluginManager().getPlugin("iSafe");
     private static File datafolder = plugin.getDataFolder();
     
-    public static void loadCreatureManager() {
+    public static void load() {
         creatureManager = getCreatureManager();
         creatureManager.options().header(Data.setCreatureManagerHeader());
 
@@ -136,10 +136,10 @@ public class CreatureManager {
         }
 
         getCreatureManager().options().copyDefaults(true);
-        saveCreatureManager();
+        save();
     }
     
-    public static void reloadCreatureManager() {
+    public static void reload() {
         if (creatureManagerFile == null) {
             creatureManagerFile = new File(datafolder, "creatureManager.yml");
         }
@@ -154,12 +154,12 @@ public class CreatureManager {
 
     public static FileConfiguration getCreatureManager() {
         if (creatureManager == null) {
-            reloadCreatureManager();
+            reload();
         }
         return creatureManager;
     }
 
-    public static void saveCreatureManager() {
+    public static void save() {
         if (creatureManager == null || creatureManagerFile == null) {
             return;
         }

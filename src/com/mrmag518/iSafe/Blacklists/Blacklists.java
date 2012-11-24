@@ -23,6 +23,7 @@ import com.mrmag518.iSafe.Files.CreatureManager;
 import com.mrmag518.iSafe.Files.Messages;
 import com.mrmag518.iSafe.Util.Eco;
 import com.mrmag518.iSafe.Util.Log;
+import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.Bukkit;
@@ -68,7 +69,7 @@ public class Blacklists implements Listener {
         } else {
             if(!value.endsWith(",")) {
                 BlacklistsF.getBlacklists().set(path, value + ",");
-                BlacklistsF.saveBlacklists();
+                BlacklistsF.save();
             }
             /*if(value.contains(":")) {
                 Log.warning("[iSafe] Blacklists doesn't support sub-IDs yet! (' : ')");
@@ -100,7 +101,7 @@ public class Blacklists implements Listener {
                 {
                     if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
                     {
-                        if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.break")) 
+                        if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.break")) 
                         {
                             if (BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                 if(p.getGameMode().equals(GameMode.SURVIVAL)) {
@@ -174,7 +175,7 @@ public class Blacklists implements Listener {
                 {
                     if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
                     {
-                        if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.place")) 
+                        if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.place")) 
                         {
                             if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                 if(p.getGameMode().equals(GameMode.SURVIVAL)) {
@@ -250,7 +251,7 @@ public class Blacklists implements Listener {
                     {
                         if(line.startsWith(command.toLowerCase())) 
                         {
-                            if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.command")) 
+                            if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.command")) 
                             {
                                 if (BlacklistsF.getBlacklists().getBoolean("Command." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                     if(p.getGameMode().equals(GameMode.SURVIVAL)) {
@@ -335,7 +336,7 @@ public class Blacklists implements Listener {
                 {
                     if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + rec.getResult().getData().getData() + ","))
                     {
-                        if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.crafting")) 
+                        if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.crafting")) 
                         {
                            if (BlacklistsF.getBlacklists().getBoolean("Crafting." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                 if(he.getGameMode().equals(GameMode.SURVIVAL)) {
@@ -441,7 +442,7 @@ public class Blacklists implements Listener {
                 {
                     if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + event.getItemDrop().getItemStack().getData().getData() + ","))
                     {
-                        if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.drop")) 
+                        if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.drop")) 
                         {
                             if (BlacklistsF.getBlacklists().getBoolean("Drop." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                 if(p.getGameMode().equals(GameMode.SURVIVAL)) {
@@ -518,7 +519,7 @@ public class Blacklists implements Listener {
                     {
                         if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
                         {
-                            if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.interact"))
+                            if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.interact"))
                             {
                                 if (BlacklistsF.getBlacklists().getBoolean("Interact." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                     if(p.getGameMode().equals(GameMode.SURVIVAL)) {
@@ -592,7 +593,7 @@ public class Blacklists implements Listener {
                 {
                     if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + event.getItem().getItemStack().getData().getData() + ","))
                     {
-                        if(!plugin.hasBlacklistPermission(p, "iSafe.bypass.blacklist.pickup")) 
+                        if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.pickup")) 
                         {
                             if (BlacklistsF.getBlacklists().getBoolean("Pickup." + pWorld + ".Gamemode.PreventFor.Survival") == true) {
                                 if(p.getGameMode().equals(GameMode.SURVIVAL)) {

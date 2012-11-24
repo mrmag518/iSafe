@@ -1,5 +1,6 @@
 package com.mrmag518.iSafe;
 
+import com.mrmag518.iSafe.Util.PermHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +21,7 @@ public class SendUpdate implements Listener {
     public void sendUpdate(PlayerJoinEvent event) {
         plugin.checkingUpdatePerms = true;
         Player p = event.getPlayer();
-        if(plugin.hasPermission(p, "iSafe.admin") || p.isOp()) {
+        if(PermHandler.hasPermission(p, "iSafe.admin") || p.isOp()) {
             try {
                 if (plugin.newVersion > plugin.currentVersion) {
                     p.sendMessage(ChatColor.GREEN + "A new version of iSafe is out! ("+ ChatColor.WHITE +  plugin.newVersion + ChatColor.GREEN + ")");
