@@ -2,7 +2,6 @@ package com.mrmag518.iSafe.Commands;
 
 import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
-import java.io.File;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -89,7 +88,7 @@ public class Commands implements CommandExecutor {
         sender.sendMessage(AQ + "Author: " + W + "mrmag518");
         sender.sendMessage(AQ + "Testers: " + W + "domingo15 and Gunnerrrrr");
         sender.sendMessage(AQ + "Version: " + W + pdf.getFullName());
-        sender.sendMessage(AQ + "Minecraft version: " + W + "1.3.*");
+        sender.sendMessage(AQ + "Minecraft version: " + W + plugin.MCVersion);
         sender.sendMessage(AQ + "BukkitDev link: " + W + "http://dev.bukkit.org/server-mods/blockthattnt/");
         return true;
     }

@@ -21,6 +21,7 @@ package com.mrmag518.iSafe.Events.EntityEvents;
 
 
 import com.mrmag518.iSafe.*;
+import com.mrmag518.iSafe.Files.Config;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -42,8 +43,7 @@ public class InventoryListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Furnace.DisableFurnaceUsage", true))
-        {
+        if(Config.getConfig().getBoolean("Furnace.DisableFurnaceUsage") == true) {
             event.setBurnTime(0);
             event.setCancelled(true);
         }
@@ -56,8 +56,7 @@ public class InventoryListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Furnace.DisableFurnaceUsage", true))
-        {
+        if(plugin.getConfig().getBoolean("Furnace.DisableFurnaceUsage") == true) {
             event.setCancelled(true);
         }
     }

@@ -20,14 +20,23 @@ package com.mrmag518.iSafe.Events.EntityEvents;
 
 
 import com.mrmag518.iSafe.*;
+import com.mrmag518.iSafe.Files.Config;
 import com.mrmag518.iSafe.Files.Messages;
+import com.mrmag518.iSafe.Files.iSafeConfig;
 import com.mrmag518.iSafe.Util.Log;
 import com.mrmag518.iSafe.Util.PermHandler;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -56,8 +65,8 @@ public class PlayerListener implements Listener  {
         World world = p.getWorld();
         String worldname = world.getName();
         
-        if(plugin.getConfig().getBoolean("Buckets.Lava.Prevent")) {
-            if (plugin.getConfig().getList("Buckets.Lava.CheckedWorlds").contains(worldname)) {
+        if(Config.getConfig().getBoolean("Buckets.Lava.Prevent")) {
+            if (Config.getConfig().getList("Buckets.Lava.CheckedWorlds").contains(worldname)) {
                 if(!PermHandler.hasPermission(p, "iSafe.use.lavabuckets")) {
                     if(event.getBucket() == Material.LAVA_BUCKET) {
                         event.setCancelled(true);
@@ -66,8 +75,8 @@ public class PlayerListener implements Listener  {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Buckets.Water.Prevent")) {
-            if (plugin.getConfig().getList("Buckets.Water.CheckedWorlds").contains(worldname)) {
+        if(Config.getConfig().getBoolean("Buckets.Water.Prevent")) {
+            if (Config.getConfig().getList("Buckets.Water.CheckedWorlds").contains(worldname)) {
                 if(!PermHandler.hasPermission(p, "iSafe.use.waterbuckets")) {
                     if(event.getBucket() == Material.WATER_BUCKET) {
                         event.setCancelled(true);
@@ -83,7 +92,7 @@ public class PlayerListener implements Listener  {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("AntiCheat/Security.Invisibility.DisablePotionUsage") != true) {
+        if(Config.getConfig().getBoolean("AntiCheat/Security.Invisibility.DisablePotionUsage") != true) {
             return;
         }
         
@@ -126,7 +135,7 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Movement.DisableSprinting", true)){
+        if(Config.getConfig().getBoolean("Movement.DisableSprinting") == true){
             if(p.isSprinting()) {
                 if(!PermHandler.hasPermission(p, "iSafe.bypass.sprint")) {
                     event.setCancelled(true);
@@ -134,7 +143,7 @@ public class PlayerListener implements Listener  {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Movement.DisableSneaking", true)){
+        if(Config.getConfig().getBoolean("Movement.DisableSneaking") == true){
             if(p.isSneaking()) {
                 if(!PermHandler.hasPermission(p, "iSafe.bypass.sneak")) {
                     event.setCancelled(true);
@@ -147,13 +156,13 @@ public class PlayerListener implements Listener  {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Gamemode.SwitchToSurvivalOnQuit", true)) {
+        if(Config.getConfig().getBoolean("Gamemode.SwitchToSurvivalOnQuit") == true) {
             if(p.getGameMode().equals(GameMode.CREATIVE)) {
                 p.setGameMode(GameMode.SURVIVAL);
             }
         }
         
-        if(plugin.getConfig().getBoolean("Gamemode.SwitchToCreativeOnQuit", true)) {
+        if(Config.getConfig().getBoolean("Gamemode.SwitchToCreativeOnQuit") == true) {
             if(p.getGameMode().equals(GameMode.SURVIVAL)) {
                 p.setGameMode(GameMode.CREATIVE);
             }
@@ -167,13 +176,13 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Teleport.DisableAllTeleportCauses", true)){
+        if(Config.getConfig().getBoolean("Teleport.DisableAllTeleportCauses") == true){
             if(!(PermHandler.hasPermission(p, "iSafe.bypass.teleport"))) {
                 event.setTo(event.getFrom());
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Disable.CommandCause", true)){
+        if(Config.getConfig().getBoolean("Teleport.Disable.CommandCause") == true){
             if (event.getCause() == TeleportCause.COMMAND) {
                 if(!(PermHandler.hasPermission(p, "iSafe.bypass.teleport.command"))) {
                     event.setTo(event.getFrom());
@@ -181,7 +190,7 @@ public class PlayerListener implements Listener  {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Disable.EnderpearlCause", true)){
+        if(Config.getConfig().getBoolean("Teleport.Disable.EnderpearlCause") == true){
             if (event.getCause() == TeleportCause.ENDER_PEARL) {
                 if(!(PermHandler.hasPermission(p, "iSafe.bypass.teleport.enderpearl"))) {
                     event.setTo(event.getFrom());
@@ -189,7 +198,7 @@ public class PlayerListener implements Listener  {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Disable.PluginCause", true)){
+        if(Config.getConfig().getBoolean("Teleport.Disable.PluginCause") == true){
             if (event.getCause() == TeleportCause.PLUGIN) {
                 if(!(PermHandler.hasPermission(p, "iSafe.bypass.teleport.plugin"))) {
                     event.setTo(event.getFrom());
@@ -197,7 +206,7 @@ public class PlayerListener implements Listener  {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Disable.UnknownCause", true)){
+        if(Config.getConfig().getBoolean("Teleport.Disable.UnknownCause") == true){
             if (event.getCause() == TeleportCause.UNKNOWN) {
                 if(!(PermHandler.hasPermission(p, "iSafe.bypass.teleport.unknown"))) {
                     event.setTo(event.getFrom());
@@ -205,7 +214,7 @@ public class PlayerListener implements Listener  {
             }
         }
         
-        if(plugin.getConfig().getBoolean("Teleport.Disable.NetherportalCause", true)){
+        if(Config.getConfig().getBoolean("Teleport.Disable.NetherportalCause") == true){
             if (event.getCause() == TeleportCause.NETHER_PORTAL) {
                 if(!(PermHandler.hasPermission(p, "iSafe.bypass.teleport.netherportal"))) {
                     event.setTo(event.getFrom());
@@ -221,7 +230,7 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Chat.ForcePermissionToChat", true)) {
+        if(Config.getConfig().getBoolean("Chat.ForcePermissionToChat") == true) {
             if(!PermHandler.hasPermission(p, "iSafe.use.chat")) {
                 event.setCancelled(true);
             }
@@ -235,7 +244,7 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Miscellaneous.ForcePermissionsToUseBed", true)){
+        if(Config.getConfig().getBoolean("Miscellaneous.ForcePermissionsToUseBed") == true){
             if(!(PermHandler.hasPermission(p, "iSafe.use.bed"))) {
                 event.setCancelled(true);
             }
@@ -249,7 +258,7 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Chat.EnableKickMessages", true)){
+        if(Config.getConfig().getBoolean("Chat.EnableKickMessages") == true){
             Messages.sendKickMessage(p);
             event.setLeaveMessage(null);
         }
@@ -262,7 +271,7 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Miscellaneous.ForcePermissionsToFish", true)){
+        if(Config.getConfig().getBoolean("Miscellaneous.ForcePermissionsToFish") == true){
             if(!PermHandler.hasPermission(p, "iSafe.bypass.fish")) {
                 event.setCancelled(true);
             }
@@ -273,7 +282,7 @@ public class PlayerListener implements Listener  {
     public void loginManagement(PlayerLoginEvent event) {
         Player joiner = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("AntiCheat/Sucurity.KickJoinerIfSameNickIsOnline", true)){
+        if(Config.getConfig().getBoolean("AntiCheat/Sucurity.KickJoinerIfSameNickIsOnline") == true){
             for(Player onlinePl : Bukkit.getServer().getOnlinePlayers()) {
                 if(joiner.getName().equalsIgnoreCase(onlinePl.getName())) {
                     event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Messages.sameNickPlaying(joiner));
@@ -284,14 +293,15 @@ public class PlayerListener implements Listener  {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Player joiner = event.getPlayer();
+        Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Miscellaneous.OnlyLetOPsJoin", true)) {
-            if(!joiner.isOp()) {
-                joiner.kickPlayer(Messages.denyNonOpsJoin());
+        if(Config.getConfig().getBoolean("Miscellaneous.OnlyLetOPsJoin") == true) {
+            if(!p.isOp()) {
+                p.kickPlayer(Messages.denyNonOpsJoin());
             }
         }
     }
+        
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
@@ -300,7 +310,7 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Chat.LogCommands", true)) {
+        if(Config.getConfig().getBoolean("Chat.LogCommands") == true) {
             Log.info(Messages.commandLogger(p, event));
         }
     }
@@ -312,18 +322,18 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         
-        if(plugin.getConfig().getBoolean("Gamemode.DisableGamemodeChange", true)){
+        if(Config.getConfig().getBoolean("Gamemode.DisableGamemodeChange") == true){
             event.setCancelled(true); 
         }
         
-        if(plugin.getConfig().getBoolean("Gamemode.DisableCreativeToSurvivalChange", true)){
+        if(Config.getConfig().getBoolean("Gamemode.DisableCreativeToSurvivalChange") == true){
             if(event.getNewGameMode().equals(GameMode.SURVIVAL)) {
                 event.setCancelled(true);
                 p.setGameMode(GameMode.SURVIVAL);
             }
         }
         
-        if(plugin.getConfig().getBoolean("Gamemode.DisableSurvivalToCreativeChange", true)){
+        if(Config.getConfig().getBoolean("Gamemode.DisableSurvivalToCreativeChange") == true){
             if(event.getNewGameMode().equals(GameMode.CREATIVE)) {
                 event.setCancelled(true);
                 p.setGameMode(GameMode.CREATIVE);
@@ -338,9 +348,9 @@ public class PlayerListener implements Listener  {
         }
         Player p = event.getPlayer();
         final String name = p.getName();
-        boolean enabled = plugin.getConfig().getBoolean("AntiCheat/Security.Spam.EnableSpamDetector");
-        boolean bypassPerms = plugin.getConfig().getBoolean("AntiCheat/Security.Spam.EnableBypassPermissions");
-        boolean normalMode = plugin.getConfig().getBoolean("AntiCheat/Security.Spam.UseNormalMode");
+        boolean enabled = Config.getConfig().getBoolean("AntiCheat/Security.Spam.EnableSpamDetector");
+        boolean bypassPerms = Config.getConfig().getBoolean("AntiCheat/Security.Spam.EnableBypassPermissions");
+        boolean normalMode = Config.getConfig().getBoolean("AntiCheat/Security.Spam.UseNormalMode");
         
         if(enabled == false) {
             return;
@@ -358,7 +368,7 @@ public class PlayerListener implements Listener  {
             plugin.spamDB.put(name, plugin.spamDB.get(name) + 1);
         }
         
-        int maxLines = plugin.getConfig().getInt("AntiCheat/Security.Spam.MaxLinesPerSecond");
+        int maxLines = Config.getConfig().getInt("AntiCheat/Security.Spam.MaxLinesPerSecond");
         
         if(plugin.spamDB.get(name) > maxLines) {
             event.setCancelled(true);

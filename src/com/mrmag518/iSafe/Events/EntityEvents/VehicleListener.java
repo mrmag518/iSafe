@@ -21,6 +21,7 @@ package com.mrmag518.iSafe.Events.EntityEvents;
 
 
 import com.mrmag518.iSafe.*;
+import com.mrmag518.iSafe.Files.Config;
 import com.mrmag518.iSafe.Util.PermHandler;
 
 import org.bukkit.entity.Entity;
@@ -48,7 +49,7 @@ public class VehicleListener implements Listener {
         Vehicle vec = event.getVehicle();
         
         if(vec.getEntityId() == 40) {
-            if(plugin.getConfig().getBoolean("Vehicle.DisableEnterMinecarts", true)) {
+            if(Config.getConfig().getBoolean("Vehicle.DisableEnterMinecarts", true)) {
                 if(entity instanceof Player) {
                     Player p = (Player)entity;
                     if(!PermHandler.hasPermission(p, "iSafe.use.minecarts")) {
@@ -58,7 +59,7 @@ public class VehicleListener implements Listener {
                 }
             }
         } else if(vec.getEntityId() == 41) {
-            if(plugin.getConfig().getBoolean("Vehicle.DisableEnterBoats", true)) {
+            if(Config.getConfig().getBoolean("Vehicle.DisableEnterBoats", true)) {
                 if(entity instanceof Player) {
                     Player p = (Player)entity;
                     if(!PermHandler.hasPermission(p, "iSafe.use.boats")) {

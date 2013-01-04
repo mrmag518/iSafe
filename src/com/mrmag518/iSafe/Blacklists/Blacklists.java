@@ -25,6 +25,8 @@ import com.mrmag518.iSafe.Util.Eco;
 import com.mrmag518.iSafe.Util.Log;
 import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -67,13 +69,14 @@ public class Blacklists implements Listener {
         if(value.equalsIgnoreCase("") || value.equalsIgnoreCase(" ")) {
             return;
         } else {
-            if(!value.endsWith(",")) {
+            /*if(!value.endsWith(",")) {
                 BlacklistsF.getBlacklists().set(path, value + ",");
                 BlacklistsF.save();
-            }
-            /*if(value.contains(":")) {
-                Log.warning("[iSafe] Blacklists doesn't support sub-IDs yet! (' : ')");
+                Log.debug("Blacklist path '" + path + "' did not end with a comma. Added a comma for you.");
             }*/
+            if(value.contains(":")) {
+                
+            }
         }
     }
     
@@ -99,7 +102,7 @@ public class Blacklists implements Listener {
             {
                 if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) //|| BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
                     {
                         if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.break")) 
                         {
@@ -173,7 +176,7 @@ public class Blacklists implements Listener {
             {
                 if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains("," + id + ",")) //|| BlacklistsF.getBlacklists().getString(blacklist).contains("," + id + ":" + b.getData() + ","))
                     {
                         if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.place")) 
                         {
@@ -208,10 +211,6 @@ public class Blacklists implements Listener {
                                     if(BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Economy.NotifyPlayer") == true) {
                                         Eco.sendEcoNotify(p, "Place", amount);
                                     }
-                                }
-                                
-                                if(BlacklistsF.getBlacklists().getBoolean("Break." + pWorld + ".Alert/log.ToPlayer") == true) {
-                                    p.sendMessage(Messages.blacklistBreakMsg(b));
                                 }
                                 
                                 if (BlacklistsF.getBlacklists().getBoolean("Place." + pWorld + ".Alert/log.ToPlayer") == true){
@@ -334,7 +333,7 @@ public class Blacklists implements Listener {
             {
                 if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + rec.getResult().getData().getData() + ","))
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) //|| BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + rec.getResult().getData().getData() + ","))
                     {
                         if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.crafting")) 
                         {
@@ -407,7 +406,7 @@ public class Blacklists implements Listener {
             {
                 if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) //|| BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
                     {
                         event.setCancelled(true);
                         if(BlacklistsF.getBlacklists().getBoolean("Dispense." + bWorld + ".Alert/log-to.Console") == true) {
@@ -440,7 +439,7 @@ public class Blacklists implements Listener {
             {
                 if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + event.getItemDrop().getItemStack().getData().getData() + ","))
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) //|| BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + event.getItemDrop().getItemStack().getData().getData() + ","))
                     {
                         if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.drop")) 
                         {
@@ -517,7 +516,7 @@ public class Blacklists implements Listener {
                 {
                     if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                     {
-                        if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
+                        if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) //|| BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
                         {
                             if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.interact"))
                             {
@@ -591,7 +590,7 @@ public class Blacklists implements Listener {
             {
                 if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
                 {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",") || BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + event.getItem().getItemStack().getData().getData() + ","))
+                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) //|| BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + event.getItem().getItemStack().getData().getData() + ","))
                     {
                         if(!PermHandler.hasBlacklistPermission(p, "iSafe.bypass.blacklist.pickup")) 
                         {

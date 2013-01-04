@@ -2,11 +2,13 @@ package com.mrmag518.iSafe.Files;
 
 import com.mrmag518.iSafe.Util.Data;
 import com.mrmag518.iSafe.iSafe;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,7 +24,7 @@ public class iSafeConfig {
     private static final iSafe plugin = (iSafe) Bukkit.getPluginManager().getPlugin("iSafe");
     private static File datafolder = plugin.getDataFolder();
     
-    public static void loadISafeConfig() {
+    public static void load() {
         iSafeConfig = getISafeConfig();
         iSafeConfig.options().header(Data.setISafeConfigHeader());
 
@@ -43,7 +45,7 @@ public class iSafeConfig {
         saveISafeConfig();
     }
     
-    public static void reloadISafeConfig() {
+    public static void reload() {
         if (iSafeConfigFile == null) {
             iSafeConfigFile = new File(datafolder, "iSafeConfig.yml");
         }
@@ -59,7 +61,7 @@ public class iSafeConfig {
 
     public static FileConfiguration getISafeConfig() {
         if (iSafeConfig == null) {
-            reloadISafeConfig();
+            reload();
         }
         return iSafeConfig;
     }

@@ -1,6 +1,7 @@
-package com.mrmag518.iSafe;
+package com.mrmag518.iSafe.Util;
 
 import com.mrmag518.iSafe.Util.PermHandler;
+import com.mrmag518.iSafe.iSafe;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

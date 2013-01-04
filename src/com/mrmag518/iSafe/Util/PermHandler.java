@@ -16,17 +16,15 @@ public class PermHandler {
         if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
             if (iSafe.perms.has(sender, permission)) {
                 return true;
-            } else {
-                Messages.sendNoPermissionNotify(sender);
-                return false;
-            }
+            } 
+            Messages.sendNoPermissionNotify(sender);
+            return false;
         } else {
             if (sender.hasPermission(permission)) {
                 return true;
-            } else {
-                Messages.sendNoPermissionNotify(sender);
-                return false;
-            }
+            } 
+            Messages.sendNoPermissionNotify(sender);
+            return false;
         }
     }
 
@@ -34,15 +32,13 @@ public class PermHandler {
         if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
             if (iSafe.perms.has(p, permission)) {
                 return true;
-            } else {
-                return false;
             }
+            return false;
         } else {
             if (p.hasPermission(permission)) {
                 return true;
-            } else {
-                return false;
             }
+            return false;
         }
     }
 
@@ -50,25 +46,23 @@ public class PermHandler {
         if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
             if (iSafe.perms.has(p, permission)) {
                 return true;
+            } 
+            if(shallOutputNoPerm() == false) {
+                // ignore.
             } else {
-                if(shallOutputNoPerm() == false) {
-                    // ignore.
-                } else {
-                    Messages.sendNoPermissionNotify(p);
-                }
-                return false;
+                Messages.sendNoPermissionNotify(p);
             }
+            return false;
         } else {
             if (p.hasPermission(permission)) {
                 return true;
-            } else {
-                if(shallOutputNoPerm() == false) {
-                    // ignore.
-                } else {
-                    Messages.sendNoPermissionNotify(p);
-                }
-                return false;
             }
+            if(shallOutputNoPerm() == false) {
+                // ignore.
+            } else {
+                Messages.sendNoPermissionNotify(p);
+            }
+            return false;
         }
     }
     
@@ -82,8 +76,7 @@ public class PermHandler {
             checkingFullbrightPerms = false;
             
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 }

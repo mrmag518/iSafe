@@ -6,10 +6,36 @@ Version 3.4
 * Fixed user files not updating the displayname of the player.
 * Removed the resetFile command. Was never actually used.
 * Improved permissions handling.
-* 
-
-
-* Supports 1.4.5-R0.2
+* Improved thread safety.
+* Fixed place blacklist notifying about break prevention.
+* Updated support for schedulers.
+* Updated metrics to the latest revision.
+* Moved main config to a separate class & package.
+* Lots of code cleanup.
+* Improved the UserFile update process.
+* User files will now update whenever the player joins too.
+* Renamed "Level" to "ExpLevel" in user files.
+** Will convert automatically.
+* User files will now start to be actually used for something.
+* Brand a new AntiCheat/Security feature, IPManagement!
+** Uses the UserFiles feature. UserFiles needs to be enabled in order for this to work.
+** Can lock IP Addresses to the users, if a user with the same name logs on with a different IP, he will be kicked.
+** Can manage how many accounts that can be created on one ip.
+** Can manage how many IPs one account can access the server through.
+** Currently quite small features, but will expand quite much with the time coming. (Adding commands, multi IPLocks, etc etc)
+** UserFiles no longer updates the IP of a player on join/quit, obviously. (Will be added an exception of this later)
+* Added new node to userFiles. (IsBanned)
+* Added more strings/messages to the Messages.yml config.
+* Moved user files directory from 'iSafe/Users' to 'iSafe/UserFiles/Users'.
+** This is for more organization.
+** Files existing inside the old Users directory will be automatically moved over to the new location.
+** The move process time is depending on how many user files you got. 10,000 would take about 5 seconds.
+* Added an IPLog.yml file.
+** This is mostly an utility/database file for iSafe to use. It can be edited thought.
+** The isafe reload command is supported.
+** Will be editable in the feature. (To cooporate with IPManagement for exceptions, etc etc)
+* UserFiles now updates their header in the udate process too.
+* Supports 1.4.6
 
 Version 3.3
 * Some tweaks to permissions handling.

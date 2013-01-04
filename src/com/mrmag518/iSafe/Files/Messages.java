@@ -51,6 +51,9 @@ public class Messages {
         messages.addDefault("CommandLogger", "%playername% did or tried to do the command %command%");
         messages.addDefault("SpamDetection", "&cDetected spam! Please calm down.");
         messages.addDefault("FullbrightDetection", "&ePlace a torch! (light source)");
+        messages.addDefault("LockIpKickMessage", "&cYour IP &f'%ip%'&c, does not match the IP in this user's userfile.");
+        messages.addDefault("ToManyAccountsOnThisIPkickMsg", "&cReached max accounts for this IP address! (Max: %max%)");
+        messages.addDefault("ToManyIPsOnThisAccKickMsg", "&cReached max IPs for this player name! (Max: %max%)");
         
         messages.addDefault("Blacklists.Break.KickMessage", "&cKicked for attempting to break &f%block%");
         messages.addDefault("Blacklists.Break.DisallowedMessage", "&cYou do not have access to break &7%block% &cin world &7%world%");

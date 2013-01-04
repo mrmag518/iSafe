@@ -17,6 +17,8 @@
  */
 package com.mrmag518.iSafe;
 
+import com.mrmag518.iSafe.Util.SendUpdate;
+import com.mrmag518.iSafe.Util.UserFileCreator;
 import com.mrmag518.iSafe.Util.Data;
 import com.mrmag518.iSafe.Events.BlockEvents.*;
 import com.mrmag518.iSafe.Events.EntityEvents.*;
@@ -27,14 +29,15 @@ import com.mrmag518.iSafe.Files.*;
 import com.mrmag518.iSafe.Util.Log;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import net.milkbowl.vault.economy.Economy;
 
+import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
@@ -44,14 +47,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class iSafe extends JavaPlugin {
-
+    
     /**
      * Note to self:
      * Start working on gamemode 'protection'.
@@ -63,13 +65,14 @@ public class iSafe extends JavaPlugin {
      * Potion management.
      * Move all Events classes to the a new EventManagers package.
      * Reorganize the config files?
-     * Move the config file out of this class to it's own.
+     * Move the config.yml file out of this class to it's own.
      * 
      */
     
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    private String fileversion = "iSafe v3.3";
-    public static final Double ConfigVersion = 3.3;
+    private final String fileversion = "iSafe v3.4";
+    public static final Double ConfigVersion = 3.4;
+    public final String MCVersion = "1.4.5";
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     private PlayerListener playerListener = null;
     private BlockListener blockListener = null;
@@ -83,6 +86,7 @@ public class iSafe extends JavaPlugin {
     private UserFileCreator UFC = null;
     private SendUpdate sendUpdate = null;
     private Blacklists blacklistClass = null;
+    private IPManagement IPM = null;
     
     public double currentVersion;
     public double newVersion;
@@ -90,15 +94,13 @@ public class iSafe extends JavaPlugin {
     public static Permission perms = null;
     public static Economy economy = null;
     
-    public FileConfiguration config;
-    
     public boolean checkingUpdatePerms = false;
     public boolean cancelDamagePerms = false;
     public boolean checkingSpamPerms = false;
     public boolean checkingFullbrightPerms = false;
     private boolean isStartup = false;
     public HashMap<String, Integer> spamDB = new HashMap<>();
-
+    
     @Override
     public void onDisable() {
         PluginDescriptionFile pdffile = getDescription();
@@ -109,18 +111,18 @@ public class iSafe extends JavaPlugin {
     public void onEnable() {
         isStartup = true;
         Log.debug("iSafe startup initialized.");
-
+        
         currentVersion = Double.valueOf(getDescription().getVersion());
-
+        
         fileLoadManagement();
         Log.debug("Debug mode is enabled!");
-
+        
         registerClasses();
-
+        
         PluginDescriptionFile pdffile = getDescription();
         if (iSafeConfig.getISafeConfig().getBoolean("CheckForUpdates") == true) {
             //Update checker - From MilkBowl.
-            getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable() {
+            getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 
                 @Override
                 public void run() {
@@ -149,9 +151,9 @@ public class iSafe extends JavaPlugin {
         } else {
             Log.debug("CheckForUpdates is false in the iSafeConfig.yml, will not check for iSafe updates!");
         }
-
+        
         getCommand("iSafe").setExecutor(new Commands(this));
-
+        
         checkMatch();
         
         if(iSafeConfig.getISafeConfig().getBoolean("TrackUsageStatistics") == true) {
@@ -172,7 +174,7 @@ public class iSafe extends JavaPlugin {
         isStartup = false;
     }
 
-    protected final void startSpamTask() {
+    private void startSpamTask() {
         Log.debug("Starting spam task ..");
         Log.debug("Running every 20th game tick. (1sec)");
         Log.debug("Note: If the server has lag, the time for each spam loop may go out of sync.");
@@ -201,38 +203,49 @@ public class iSafe extends JavaPlugin {
         inventoryListener = new InventoryListener(this);
         enchantmentListener = new EnchantmentListener(this);
         dropListener = new DropListener(this);
-
+        IPM = new IPManagement(this);
+        
         if (iSafeConfig.getISafeConfig().getBoolean("CreateUserFiles") == true) {
             UFC = new UserFileCreator(this);
         } else {
             UFC = null;
             Log.debug("CreateUserFiles in the iSafeConfig.yml was disabled, therefor not register the UserFileCreator class.");
         }
-
+        
         if (iSafeConfig.getISafeConfig().getBoolean("CheckForUpdates") == true) {
             sendUpdate = new SendUpdate(this);
         } else {
             sendUpdate = null;
             Log.debug("CheckForUpdates in the iSafeConfig.yml was disabled, therefor not registering the sendUpdate class.");
         }
-
+        
         blacklistClass = new Blacklists(this);
-
+        
         Log.debug("Registered event classes.");
     }
 
     public void fileLoadManagement() {
-        if (!(getDataFolder().exists())) {
+        if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
+        
+        iSafeConfig.reload();
+        iSafeConfig.load();
+        iSafeConfig.reload();
 
-        File usersDir = new File(getDataFolder(), "Users");
-        if (!(usersDir.exists())) {
-            usersDir.mkdir();
-        }
+        Messages.reload();
+        Messages.load();
+        Messages.reload();
 
-        File exaFile = new File(usersDir + File.separator + "_example.yml");
-        if (!(exaFile.exists())) {
+        Config.reload();
+        Config.load();
+        Config.reload();
+        
+        File UserFiles = new File("plugins/iSafe/UserFiles/Users");
+        UserFiles.mkdirs();
+        
+        File exaFile = new File(UserFiles + File.separator + "_example.yml");
+        if(!exaFile.exists()) {
             try {
                 FileConfiguration exampFile = YamlConfiguration.loadConfiguration(exaFile);
                 exampFile.options().header(Data.setExFileHeader());
@@ -247,25 +260,23 @@ public class iSafe extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-
-
-        // Always load iSafeConfig first.
-        iSafeConfig.reloadISafeConfig();
-        iSafeConfig.loadISafeConfig();
-        iSafeConfig.reloadISafeConfig();
-
-        Messages.reload();
-        Messages.load();
-        Messages.reload();
-
-        reloadConfig();
-        loadConfig();
-        reloadConfig();
-
+        
+        moveUserFiles();
+        
+        IPManagement.checkIPLogger();
+        
         if (isStartup == true) {
-            getServer().getScheduler().scheduleAsyncDelayedTask(this, new Runnable() {
+            getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
                 @Override
                 public void run() {
+                    
+                    /*try {
+                        // Test
+                        manageWorlds();
+                    } catch (IOException ex) {
+                        Logger.getLogger(iSafe.class.getName()).log(Level.SEVERE, "Could not run the manageWorlds() method.", ex);
+                    }*/
+                    
                     CreatureManager.reload();
                     CreatureManager.load();
                     CreatureManager.reload();
@@ -278,28 +289,111 @@ public class iSafe extends JavaPlugin {
                 }
             }, 40);
         } else {
+            
+            /*try {
+                // Test
+                manageWorlds();
+            } catch (IOException ex) {
+                Logger.getLogger(iSafe.class.getName()).log(Level.SEVERE, "Could not run the manageWorlds() method.", ex);
+            }*/
+            
             CreatureManager.reload();
             CreatureManager.load();
             CreatureManager.reload();
-
+            
             BlacklistsF.reload();
             BlacklistsF.load();
             BlacklistsF.reload();
-
+            
             setupVault();
         }
-
+        
         boolean beastMode = getConfig().getBoolean("AntiCheat/Security.Spam.UseBeastMode");
         boolean normalMode = getConfig().getBoolean("AntiCheat/Security.Spam.UseNormalMode");
-
+        
         if (beastMode == true) {
             if (normalMode == true) {
                 getConfig().set("AntiCheat/Security.Spam.UseNormalMode", false);
-                saveConfig();
+                Config.save();
             }
             startSpamTask();
         }
     }
+    
+    private void moveUserFiles() {
+        File oldDir = new File(getDataFolder() + File.separator + "Users");
+        
+        if(!oldDir.exists()) {
+            return;
+        }
+        
+        Log.info("Moving all user files inside 'plugins/iSafe/Users' to 'plugins/iSafe/UserFiles/Users' ..");
+        
+        for(File oldFile : oldDir.listFiles()) {
+            try {
+                File newFile = new File("plugins/iSafe/UserFiles/Users/" + oldFile.getName());
+                
+                FileOutputStream outStream;
+                try (FileInputStream inStream = new FileInputStream(oldFile)) {
+                    outStream = new FileOutputStream(newFile);
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = inStream.read(buffer)) > 0) {
+                        outStream.write(buffer, 0, length);
+                    }
+                }
+                outStream.close();
+                oldFile.delete();
+                
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }
+        oldDir.delete();
+        
+        Log.info("Done!");
+    }
+    
+    /*private void manageWorlds() throws IOException {
+        for(World world : getServer().getWorlds()) {
+            String worldname = world.getName();
+            
+            if(worldname == null) {
+                Log.debug("Could not load worldname: " + worldname + ", because it is null.");
+                return;
+            }
+            
+            File worldDir = new File("plugins/iSafe/worlds/" + worldname);
+            
+            if(!worldDir.exists()) {
+                worldDir.mkdirs();
+            }
+        }
+        
+        for(World world : getServer().getWorlds()) {
+            String worldname = world.getName();
+            
+            if(worldname == null) {
+                Log.debug("Could not load worldname: " + worldname + ", because it is null.");
+                return;
+            }
+            
+            File worldDir = new File("plugins/iSafe/worlds/" + worldname);
+            File configFile = new File(worldDir + "/config.yml");
+            File blacklistsFile = new File(worldDir + "/blacklists.yml");
+            File CMFile = new File(worldDir + "/creatureManager.yml");
+            
+            if(!configFile.exists()) {
+                configFile.createNewFile();
+            }
+            if(!blacklistsFile.exists()) {
+                blacklistsFile.createNewFile();
+            }
+            if(!CMFile.exists()) {
+                CMFile.createNewFile();
+            }
+        }
+    }*/
 
     private void setupVault() {
         if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
@@ -321,167 +415,6 @@ public class iSafe extends JavaPlugin {
         }
     }
 
-    private void loadConfig() {
-        config = getConfig();
-        config.options().header(Data.setConfigHeader());
-
-        config.addDefault("ConfigVersion", Double.valueOf(ConfigVersion));
-        if (config.getDouble("ConfigVersion") != Double.valueOf(ConfigVersion)) {
-            // If there is anything to modify in the 'new' version, fix that here.
-            Log.warning("[iSafe] ConfigVersion was modified! Setting config version to right value ..");
-            config.set("ConfigVersion", Double.valueOf(ConfigVersion));
-        }
-
-        config.addDefault("Fire.DisableFireSpread", false);
-        config.addDefault("Fire.PreventFlintAndSteelUsage", false);
-        config.addDefault("Fire.DisableLavaIgnition", false);
-        config.addDefault("Fire.DisableFireballIgnition", false);
-        config.addDefault("Fire.DisableLightningIgnition", false);
-        config.addDefault("Fire.PreventBlockBurn", false);
-
-        config.addDefault("Enchantment.PreventEnchantment", false);
-        config.addDefault("Enchantment.PreventCreativeModeEnchanting", false);
-
-        config.addDefault("Furnace.DisableFurnaceUsage", false);
-
-        config.addDefault("Weather.DisableLightningStrike", false);
-        config.addDefault("Weather.DisableThunder", false);
-        config.addDefault("Weather.DisableStorm", false);
-
-        config.addDefault("World.PreventChunkUnload", false);
-        config.addDefault("World.MakeISafeLoadChunks", false);
-        config.addDefault("World.DisableStructureGrowth", false);
-        config.addDefault("World.PreventBonemealUsage", false);
-        config.addDefault("World.DisablePortalGeneration", false);
-        config.addDefault("World.DisableExpDrop", false);
-        config.addDefault("World.DisableItemSpawn", false);
-        config.addDefault("World.EnablePortalCreationPerms", false);
-
-        config.addDefault("TreeGrowth.DisableFor.BigTree", false);
-        config.addDefault("TreeGrowth.DisableFor.Birch", false);
-        config.addDefault("TreeGrowth.DisableFor.BrownMushroom", false);
-        config.addDefault("TreeGrowth.DisableFor.Redwood", false);
-        config.addDefault("TreeGrowth.DisableFor.RedMushroom", false);
-        config.addDefault("TreeGrowth.DisableFor.TallRedwood", false);
-        config.addDefault("TreeGrowth.DisableFor.Tree", false);
-        config.addDefault("TreeGrowth.DisableFor.Jungle", false);
-
-        config.addDefault("Miscellaneous.DisableBlockGrow", false);
-        config.addDefault("Miscellaneous.DisableBlockSpreading", false);
-        config.addDefault("Miscellaneous.DisableLeavesDecay", false);
-        config.addDefault("Miscellaneous.ForceBlocksToBeBuildable", false);
-        config.addDefault("Miscellaneous.PreventExpBottleThrow", false);
-        config.addDefault("Miscellaneous.ForcePermissionsToUseBed", false);
-        config.addDefault("Miscellaneous.ForcePermissionsToFish", false);
-        config.addDefault("Miscellaneous.OnlyLetOPsJoin", false);
-        config.addDefault("Miscellaneous.DisableHunger", false);
-
-        config.addDefault("AntiCheat/Security.LightLevel.PreventFullbright", false);
-        config.addDefault("AntiCheat/Security.LightLevel.MinimumLevelBeforeDetection", 1);
-        config.addDefault("AntiCheat/Security.LightLevel.CheckCreativeMode", false);
-        config.addDefault("AntiCheat/Security.LightLevel.CheckAtNight", true);
-        config.addDefault("AntiCheat/Security.KickJoinerIfSameNickIsOnline", false);
-        config.addDefault("AntiCheat/Security.Spam.EnableSpamDetector", false);
-        config.addDefault("AntiCheat/Security.Spam.MaxLinesPerSecond", 2);
-        config.addDefault("AntiCheat/Security.Spam.EnableBypassPermissions", true);
-        config.addDefault("AntiCheat/Security.Spam.UseNormalMode", true);
-        config.addDefault("AntiCheat/Security.Spam.UseBeastMode", false);
-        config.addDefault("AntiCheat/Security.Invisibility.DisablePotionUsage", false);
-        config.addDefault("AntiCheat/Security.Invisibility.DisablePotionDispensing", false);
-
-        config.addDefault("Explosions.DisablePrimedExplosions", false);
-        config.addDefault("Explosions.DisableAllExplosions", false);
-        config.addDefault("Explosions.DisableCreeperExplosions", false);
-        config.addDefault("Explosions.DisableEnderdragonBlockDamage", false);
-        config.addDefault("Explosions.DisableTntExplosions", false);
-        config.addDefault("Explosions.DisableFireballExplosions", false);
-        config.addDefault("Explosions.DisableEnderCrystalExplosions", false);
-        config.addDefault("Explosions.DisableWitherBossExplosions", false);
-        config.addDefault("Explosions.DebugExplosions", false);
-        
-        config.addDefault("Flow.DisableWaterFlow", false);
-        config.addDefault("Flow.DisableLavaFlow", false);
-        config.addDefault("Flow.DisableAirFlow", false);
-
-        config.addDefault("Pistons.DisablePistonExtend", false);
-        config.addDefault("Pistons.DisablePistonRetract", false);
-
-        config.addDefault("BlockPhysics.DisableSandPhysics", false);
-        config.addDefault("BlockPhysics.DisableGravelPhysics", false);
-
-        config.addDefault("BlockFade.DisableIceMelting", false);
-        config.addDefault("BlockFade.DisableSnowMelting", false);
-
-        config.addDefault("ForceDrop.Glass", false);
-        config.addDefault("ForceDrop.MobSpawner", false);
-        config.addDefault("ForceDrop.Ice", false);
-        config.addDefault("ForceDrop.Bedrock", false);
-
-        config.addDefault("Buckets.Lava.Prevent", false);
-        config.addDefault("Buckets.Lava.CheckedWorlds", Arrays.asList(Data.LavaBucketWorldList));
-        Data.LavaBucketWorld = config.getStringList("Buckets.Lava.CheckedWorlds");
-        config.addDefault("Buckets.Water.Prevent", false);
-        config.addDefault("Buckets.Water.CheckedWorlds", Arrays.asList(Data.WaterBucketWorldList));
-        Data.WaterBucketWorld = config.getStringList("Buckets.Water.CheckedWorlds");
-
-        config.addDefault("Movement.DisableSprinting", false);
-        config.addDefault("Movement.DisableSneaking", false);
-        config.addDefault("Movement.PreventCropTrampling", false);
-
-        config.addDefault("Gamemode.SwitchToSurvivalOnQuit", false);
-        config.addDefault("Gamemode.SwitchToCreativeOnQuit", false);
-        config.addDefault("Gamemode.DisableGamemodeChange", false);
-        config.addDefault("Gamemode.DisableSurvivalToCreativeChange", false);
-        config.addDefault("Gamemode.DisableCreativeToSurvivalChange", false);
-
-        config.addDefault("Teleport.DisableAllTeleportCauses", false);
-        config.addDefault("Teleport.Disable.CommandCause", false);
-        config.addDefault("Teleport.Disable.EnderpearlCause", false);
-        config.addDefault("Teleport.Disable.PluginCause", false);
-        config.addDefault("Teleport.Disable.UnknownCause", false);
-        config.addDefault("Teleport.Disable.NetherportalCause", false);
-        config.addDefault("Teleport.Disable.CommandCause", false);
-
-        config.addDefault("Chat.ForcePermissionToChat", false);
-        config.addDefault("Chat.EnableKickMessages", true);
-        config.addDefault("Chat.LogCommands", true);
-
-        config.addDefault("VoidFall.TeleportPlayerToSpawn", false);
-        config.addDefault("VoidFall.TeleportPlayerBackAndFixHole", true);
-        config.addDefault("VoidFall.FixHoleWithGlass", true);
-        config.addDefault("VoidFall.FixHoleWithBedrock", false);
-
-        config.addDefault("Damage.EnablePermissions", false);
-        config.addDefault("Damage.DisableVillagerDamage", false);
-        config.addDefault("Damage.DisablePlayerDamage", false);
-        config.addDefault("Damage.DisableExplosionDamage", false);
-        config.addDefault("Damage.DisableFireDamage", false);
-        config.addDefault("Damage.DisableContactDamage", false);
-        config.addDefault("Damage.DisableCustomDamage", false);
-        config.addDefault("Damage.DisableDrowningDamage", false);
-        config.addDefault("Damage.DisableEntityAttackDamage", false);
-        config.addDefault("Damage.DisableFallDamage", false);
-        config.addDefault("Damage.DisableLavaDamage", false);
-        config.addDefault("Damage.DisableLightningDamage", false);
-        config.addDefault("Damage.DisableMagicDamage", false);
-        config.addDefault("Damage.DisablePoisonDamage", false);
-        config.addDefault("Damage.DisableProjectileDamage", false);
-        config.addDefault("Damage.DisableStarvationDamage", false);
-        config.addDefault("Damage.DisableSuffocationDamage", false);
-        config.addDefault("Damage.DisableSuicideDamage", false);
-        config.addDefault("Damage.DisableVoidDamage", false);
-
-        config.addDefault("HealthRegen.DisableHealthRegeneration", false);
-        config.addDefault("HealthRegen.DisableCustomHealthRegen", false);
-        config.addDefault("HealthRegen.DisableEatingHealthRegen", false);
-        config.addDefault("HealthRegen.DisableNaturalHealthRegen", false);
-        config.addDefault("HealthRegen.DisableSatiatedHealthRegen", false);
-        config.addDefault("HealthRegen.DisableMagicHealthRegen", false);
-
-        getConfig().options().copyDefaults(true);
-        saveConfig();
-    }
-
     private boolean setupPermissions() {
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
         perms = rsp.getProvider();
@@ -499,7 +432,7 @@ public class iSafe extends JavaPlugin {
 
     private void checkMatch() {
         PluginDescriptionFile pdffile = getDescription();
-        if (!(pdffile.getFullName().equals(fileversion))) {
+        if (!pdffile.getFullName().equals(fileversion)) {
             Log.warning("-----  iSafe vMatchConflict  -----");
             Log.warning("The version in the pdffile is not the same as the file.");
             Log.warning("pdffile version: " + pdffile.getFullName());
