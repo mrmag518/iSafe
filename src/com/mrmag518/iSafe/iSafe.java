@@ -60,19 +60,16 @@ public class iSafe extends JavaPlugin {
      * More bug hunting...
      * Commands to toggle the enable state of specific worlds in the blacklist.
      * Add group thing to blacklists.
-     * PvP handling. (as extension)
-     * mORE utility classes.
      * Potion management.
      * Move all Events classes to the a new EventManagers package.
      * Reorganize the config files?
-     * Move the config.yml file out of this class to it's own.
-     * 
+     * Extend IPManagement and UserFiles features & support.
      */
     
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     private final String fileversion = "iSafe v3.4";
     public static final Double ConfigVersion = 3.4;
-    public final String MCVersion = "1.4.5";
+    public final String MCVersion = "1.4.6";
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     private PlayerListener playerListener = null;
     private BlockListener blockListener = null;
