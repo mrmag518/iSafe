@@ -1,3 +1,9 @@
+Version 3.41
+* Added prevention for fireworks usage.
+** New permission, iSafe.use.fireworks
+** If you want to disable fireworks usage from dispensers too, you can do this from the blacklist file.
+* 
+
 Version 3.4
 * Fixed a permissions notify duplication.
 * Fixed invisibility potion prevention not fully working.
@@ -15,7 +21,7 @@ Version 3.4
 * Renamed "Level" to "ExpLevel" in user files.
 ** Will convert automatically.
 * User files will now start to be actually used for something.
-* Brand a new AntiCheat/Security feature, IPManagement!
+* Brand new AntiCheat/Security feature, IPManagement!
 ** Uses the UserFiles feature. UserFiles needs to be enabled in order for this to work.
 ** Can lock IP Addresses to the users, if a user with the same name logs on with a different IP, he will be kicked.
 ** Can manage how many accounts that can be created on one ip.

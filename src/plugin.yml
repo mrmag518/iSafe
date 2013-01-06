@@ -67,6 +67,7 @@ permissions:
       iSafe.use.chat: true
       iSafe.use.minecarts: true
       iSafe.use.boats: true
+      iSafe.use.fireworks: true
       iSafe.use.potion.invisibility: true
   # ------------------------
   iSafe.forcedrop.*:

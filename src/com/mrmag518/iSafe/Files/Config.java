@@ -85,8 +85,6 @@ public class Config {
         config.addDefault("AntiCheat/Security.Spam.UseBeastMode", false);
         config.addDefault("AntiCheat/Security.Invisibility.DisablePotionUsage", false);
         config.addDefault("AntiCheat/Security.Invisibility.DisablePotionDispensing", false);
-        
-        // Test
         config.addDefault("AntiCheat/Security.IPManagement.Enabled", false);
         config.addDefault("AntiCheat/Security.IPManagement.LockIpToFirstJoin", false);
         config.addDefault("AntiCheat/Security.IPManagement.AlternateAccounts.EnableChecking", false);
@@ -101,6 +99,7 @@ public class Config {
         config.addDefault("Explosions.DisableFireballExplosions", false);
         config.addDefault("Explosions.DisableEnderCrystalExplosions", false);
         config.addDefault("Explosions.DisableWitherBossExplosions", false);
+        config.addDefault("Explosions.PreventFireworksUsage", false);
         config.addDefault("Explosions.DebugExplosions", false);
         
         config.addDefault("Flow.DisableWaterFlow", false);

@@ -22,21 +22,13 @@ package com.mrmag518.iSafe.Events.EntityEvents;
 import com.mrmag518.iSafe.*;
 import com.mrmag518.iSafe.Files.Config;
 import com.mrmag518.iSafe.Files.Messages;
-import com.mrmag518.iSafe.Files.iSafeConfig;
 import com.mrmag518.iSafe.Util.Log;
 import com.mrmag518.iSafe.Util.PermHandler;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -79,6 +71,27 @@ public class PlayerListener implements Listener  {
             if (Config.getConfig().getList("Buckets.Water.CheckedWorlds").contains(worldname)) {
                 if(!PermHandler.hasPermission(p, "iSafe.use.waterbuckets")) {
                     if(event.getBucket() == Material.WATER_BUCKET) {
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        }
+    }
+    
+    @EventHandler
+    public void handleInteract(PlayerInteractEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        
+        Action act = event.getAction();
+        
+        if(act == Action.RIGHT_CLICK_BLOCK) {
+            Player p = event.getPlayer();
+            
+            if(p.getItemInHand().getType() == Material.FIREWORK) {
+                if(Config.getConfig().getBoolean("Explosions.PreventFireworksUsage") == true) {
+                    if(!PermHandler.hasPermission(p, "iSafe.use.fireworks")) {
                         event.setCancelled(true);
                     }
                 }
