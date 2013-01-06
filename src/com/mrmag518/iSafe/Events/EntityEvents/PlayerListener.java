@@ -96,6 +96,15 @@ public class PlayerListener implements Listener  {
                     }
                 }
             }
+            
+            if(event.getClickedBlock().getTypeId() == 137) {
+                if(Config.getConfig().getBoolean("AntiCheat/Security.PermsForCommandBlocks") == true) {
+                    if(!PermHandler.hasPermission(p, "iSafe.use.commandblocks")) {
+                        event.setCancelled(true);
+                        p.getOpenInventory().close(); // Work-around for interact bug.
+                    }
+                }
+            }
         }
     }
     

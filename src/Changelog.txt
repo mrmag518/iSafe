@@ -2,6 +2,8 @@ Version 3.41
 * Added prevention for fireworks usage.
 ** New permission, iSafe.use.fireworks
 ** If you want to disable fireworks usage from dispensers too, you can do this from the blacklist file.
+* Added prevention for command blocks usage.
+** New permission, iSafe.use.commandblocks
 * 
 
 Version 3.4

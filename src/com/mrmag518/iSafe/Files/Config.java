@@ -90,6 +90,7 @@ public class Config {
         config.addDefault("AntiCheat/Security.IPManagement.AlternateAccounts.EnableChecking", false);
         config.addDefault("AntiCheat/Security.IPManagement.AlternateAccounts.MaxAccountsPerIP", 2);
         config.addDefault("AntiCheat/Security.IPManagement.AlternateAccounts.MaxIPsPerPlayer", 2);
+        config.addDefault("AntiCheat/Security.PermsForCommandBlocks", true);
         
         config.addDefault("Explosions.DisablePrimedExplosions", false);
         config.addDefault("Explosions.DisableAllExplosions", false);
