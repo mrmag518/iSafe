@@ -378,8 +378,7 @@ public class PlayerListener implements Listener  {
             return;
         }
         if(bypassPerms == true) {
-            plugin.checkingSpamPerms = true;
-            if(PermHandler.hasPermission(p, "iSafe.bypass.spamcheck")) {
+            if(PermHandler.hasPermission(p, "iSafe.bypass.spamcheck", false)) {
                 return;
             }
         }

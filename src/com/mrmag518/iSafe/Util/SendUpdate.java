@@ -20,9 +20,8 @@ public class SendUpdate implements Listener {
     //From MilkBowl's Vault. (with a few modifications)
     @EventHandler(priority = EventPriority.MONITOR)
     public void sendUpdate(PlayerJoinEvent event) {
-        plugin.checkingUpdatePerms = true;
         Player p = event.getPlayer();
-        if(PermHandler.hasPermission(p, "iSafe.admin") || p.isOp()) {
+        if(PermHandler.hasPermission(p, "iSafe.admin", false)) {
             try {
                 if (plugin.newVersion > plugin.currentVersion) {
                     p.sendMessage(ChatColor.GREEN + "A new version of iSafe is out! ("+ ChatColor.WHITE +  plugin.newVersion + ChatColor.GREEN + ")");

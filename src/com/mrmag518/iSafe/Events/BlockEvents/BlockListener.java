@@ -78,8 +78,7 @@ public class BlockListener implements Listener {
                 return;
             }
             if(level <= detectionLvl && !b.isLiquid() && !loc.getBlock().isLiquid()) {
-                plugin.checkingFullbrightPerms = true;
-                if(!(PermHandler.hasPermission(p, "iSafe.bypass.fullbright"))) {
+                if(!PermHandler.hasPermission(p, "iSafe.bypass.fullbright", false)) {
                     event.setCancelled(true);
                     p.sendMessage(Messages.colorize(Messages.getMessages().getString("FullbrightDetection")));
                 }

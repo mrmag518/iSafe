@@ -91,10 +91,6 @@ public class iSafe extends JavaPlugin {
     public static Permission perms = null;
     public static Economy economy = null;
     
-    public boolean checkingUpdatePerms = false;
-    public boolean cancelDamagePerms = false;
-    public boolean checkingSpamPerms = false;
-    public boolean checkingFullbrightPerms = false;
     private boolean isStartup = false;
     public HashMap<String, Integer> spamDB = new HashMap<>();
     

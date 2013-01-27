@@ -13,7 +13,7 @@ public class PermHandler {
     public static boolean checkingFullbrightPerms = false;
     
     public static boolean hasPermission(CommandSender sender, String permission) {
-        if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
+        if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions") == true) {
             if (iSafe.perms.has(sender, permission)) {
                 return true;
             } 
@@ -29,7 +29,7 @@ public class PermHandler {
     }
 
     public static boolean hasBlacklistPermission(Player p, String permission) {
-        if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
+        if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions") == true) {
             if (iSafe.perms.has(p, permission)) {
                 return true;
             }
@@ -43,40 +43,38 @@ public class PermHandler {
     }
 
     public static boolean hasPermission(Player p, String permission) {
-        if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
-            if (iSafe.perms.has(p, permission)) {
+        if(iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions") == true) {
+            if(iSafe.perms.has(p, permission)) {
                 return true;
             } 
-            if(shallOutputNoPerm() == false) {
-                // ignore.
-            } else {
-                Messages.sendNoPermissionNotify(p);
-            }
+            Messages.sendNoPermissionNotify(p);
             return false;
         } else {
-            if (p.hasPermission(permission)) {
+            if(p.hasPermission(permission)) {
                 return true;
             }
-            if(shallOutputNoPerm() == false) {
-                // ignore.
-            } else {
-                Messages.sendNoPermissionNotify(p);
-            }
+            Messages.sendNoPermissionNotify(p);
             return false;
         }
     }
     
-    private static boolean shallOutputNoPerm() {
-        if(checkingUpdatePerms == true
-            || checkingSpamPerms == true
-            || checkingFullbrightPerms == true) {
-            
-            checkingUpdatePerms = false;
-            checkingSpamPerms = false;
-            checkingFullbrightPerms = false;
-            
+    public static boolean hasPermission(Player p, String permission, boolean output) {
+        if(iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions") == true) {
+            if(iSafe.perms.has(p, permission)) {
+                return true;
+            }
+            if(output == true) {
+                Messages.sendNoPermissionNotify(p);
+            } 
+            return false;
+        } else {
+            if(p.hasPermission(permission)) {
+                return true;
+            }
+            if(output == true) {
+                Messages.sendNoPermissionNotify(p);
+            }
             return false;
         }
-        return true;
     }
 }
