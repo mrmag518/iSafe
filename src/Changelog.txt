@@ -5,6 +5,8 @@ Version 3.41
 * Added prevention for command blocks usage.
 ** New permission, iSafe.use.commandblocks
 * Fixed no permission messages being output when not supposed to.
+* Changed the whole updater.
+** This fixes a potentional server crash.
 * 
 
 Version 3.4

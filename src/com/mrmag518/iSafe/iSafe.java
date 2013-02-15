@@ -69,7 +69,7 @@ public class iSafe extends JavaPlugin {
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     private final String fileversion = "iSafe v3.41";
     public static final Double ConfigVersion = 3.41;
-    public final String MCVersion = "1.4.6";
+    public final String MCVersion = "1.4.7";
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     private PlayerListener playerListener = null;
     private BlockListener blockListener = null;
@@ -84,14 +84,12 @@ public class iSafe extends JavaPlugin {
     private SendUpdate sendUpdate = null;
     private Blacklists blacklistClass = null;
     private IPManagement IPM = null;
-    
-    public double currentVersion;
-    public double newVersion;
-    
+    public double currentVersion = 0.0;
+    public String versionFound = "";
     public static Permission perms = null;
     public static Economy economy = null;
-    
     private boolean isStartup = false;
+    public boolean updateFound = false;
     public HashMap<String, Integer> spamDB = new HashMap<>();
     
     @Override
@@ -114,37 +112,36 @@ public class iSafe extends JavaPlugin {
         
         PluginDescriptionFile pdffile = getDescription();
         if (iSafeConfig.getISafeConfig().getBoolean("CheckForUpdates") == true) {
-            //Update checker - From MilkBowl.
-            getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
-
-                @Override
-                public void run() {
-                    try {
-                        Log.debug("Running update check ..");
-                        newVersion = updateCheck(currentVersion);
-
-                        if (newVersion > currentVersion) {
-                            Log.debug("A new version was found!");
-                            Log.info(" ");
-                            Log.info("#######  iSafe UpdateChecker  #######");
-                            Log.info("A new update for iSafe was found! " + newVersion);
-                            Log.info("You are currently running version: " + currentVersion);
-                            Log.info("You can find this new version at BukkitDev.");
-                            Log.info("http://dev.bukkit.org/server-mods/blockthattnt/");
-                            Log.info("#####################################");
-                            Log.info(" ");
-                        } else {
-                            Log.debug("No new version was found.");
-                        }
-                    } catch (Exception ignored) {
-                        //Ignored
-                    }
-                }
-            }, 0, 36000);
+            Log.verbose("Checking for updates ..");
+            Updater updater = new Updater(this, "blockthattnt", this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
+            Updater.UpdateResult result = updater.getResult();
+            switch(result) {
+                case SUCCESS:
+                    break;
+                case NO_UPDATE:
+                    Log.verbose("No update was found.");
+                    break;
+                case FAIL_DOWNLOAD:
+                    break;
+                case FAIL_DBO:
+                    Log.warning("Failed to contact dev.bukkkit.org!");
+                    break;
+                case FAIL_NOVERSION:
+                    break;
+                case FAIL_BADSLUG:
+                    break;
+                case UPDATE_AVAILABLE:
+                    updateFound = true;
+                    Log.info("########## iSafe update ##########");
+                    Log.info("A new version of iSafe was found!");
+                    Log.info("New version: " + updater.getLatestVersionString());
+                    Log.info("Current version running: " + pdffile.getFullName());
+                    Log.info("It's highly recommended to update, as there may be important fixes or improvements to the plugin!");
+                    Log.info("#####################################");
+            }
         } else {
             Log.debug("CheckForUpdates is false in the iSafeConfig.yml, will not check for iSafe updates!");
         }
-        
         getCommand("iSafe").setExecutor(new Commands(this));
         
         checkMatch();
