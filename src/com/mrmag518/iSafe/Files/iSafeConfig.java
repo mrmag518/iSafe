@@ -34,7 +34,7 @@ public class iSafeConfig {
             iSafeConfig.set("ConfigVersion", Double.valueOf(iSafe.ConfigVersion));
         }
 
-        iSafeConfig.addDefault("VerboseLogging", false);
+        iSafeConfig.addDefault("VerboseLogging", true);
         iSafeConfig.addDefault("DebugMode", false);
         iSafeConfig.addDefault("CheckForUpdates", true);
         iSafeConfig.addDefault("UseVaultForPermissions", false);

@@ -17,6 +17,7 @@
  */
 package com.mrmag518.iSafe;
 
+import com.mrmag518.iSafe.EventManager.IPManagement;
 import com.mrmag518.iSafe.Util.SendUpdate;
 import com.mrmag518.iSafe.Util.UserFileCreator;
 import com.mrmag518.iSafe.Util.Data;
@@ -32,10 +33,7 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.net.URL;
 import java.util.HashMap;
-
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
@@ -47,10 +45,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class iSafe extends JavaPlugin {
     
@@ -61,7 +55,7 @@ public class iSafe extends JavaPlugin {
      * Commands to toggle the enable state of specific worlds in the blacklist.
      * Add group thing to blacklists.
      * Potion management.
-     * Move all Events classes to the a new EventManagers package.
+     * Move all Events classes to the a new EventManager package.
      * Reorganize the config files?
      * Extend IPManagement and UserFiles features & support.
      */
@@ -146,7 +140,7 @@ public class iSafe extends JavaPlugin {
         
         checkMatch();
         
-        if(iSafeConfig.getISafeConfig().getBoolean("TrackUsageStatistics") == true) {
+        if(iSafeConfig.getISafeConfig().getBoolean("TrackUsageStatistics")) {
             try {
                 Log.debug("Starting plugin metrics ..");
                 MetricsLite metrics = new MetricsLite(this);
@@ -167,7 +161,7 @@ public class iSafe extends JavaPlugin {
     private void startSpamTask() {
         Log.debug("Starting spam task ..");
         Log.debug("Running every 20th game tick. (1sec)");
-        Log.debug("Note: If the server has lag, the time for each spam loop may go out of sync.");
+        Log.debug("Note: If the server has TPS lag, the time for each spam loop may go out of sync.");
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
             public void run() {
@@ -195,14 +189,14 @@ public class iSafe extends JavaPlugin {
         dropListener = new DropListener(this);
         IPM = new IPManagement(this);
         
-        if (iSafeConfig.getISafeConfig().getBoolean("CreateUserFiles") == true) {
+        if (iSafeConfig.getISafeConfig().getBoolean("CreateUserFiles")) {
             UFC = new UserFileCreator(this);
         } else {
             UFC = null;
             Log.debug("CreateUserFiles in the iSafeConfig.yml was disabled, therefor not register the UserFileCreator class.");
         }
         
-        if (iSafeConfig.getISafeConfig().getBoolean("CheckForUpdates") == true) {
+        if (iSafeConfig.getISafeConfig().getBoolean("CheckForUpdates")) {
             sendUpdate = new SendUpdate(this);
         } else {
             sendUpdate = null;
@@ -256,44 +250,29 @@ public class iSafe extends JavaPlugin {
         IPManagement.checkIPLogger();
         
         if (isStartup == true) {
+            /**
+            * Any file being dependent on recieving the list of worlds on startup needs to load after a small delay.
+            */
             getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
                 @Override
                 public void run() {
-                    
-                    /*try {
-                        // Test
-                        manageWorlds();
-                    } catch (IOException ex) {
-                        Logger.getLogger(iSafe.class.getName()).log(Level.SEVERE, "Could not run the manageWorlds() method.", ex);
-                    }*/
-                    
                     CreatureManager.reload();
                     CreatureManager.load();
                     CreatureManager.reload();
 
-                    BlacklistsF.reload();
-                    BlacklistsF.load();
-                    BlacklistsF.reload();
+                    Blacklist.manageBlacklistDir();
+                    Blacklist.loadBlacklists(); // WHAT DE FU IS WRONG=??????????????????????????????????????????????????????
 
                     setupVault();
                 }
             }, 40);
         } else {
-            
-            /*try {
-                // Test
-                manageWorlds();
-            } catch (IOException ex) {
-                Logger.getLogger(iSafe.class.getName()).log(Level.SEVERE, "Could not run the manageWorlds() method.", ex);
-            }*/
-            
             CreatureManager.reload();
             CreatureManager.load();
             CreatureManager.reload();
             
-            BlacklistsF.reload();
-            BlacklistsF.load();
-            BlacklistsF.reload();
+            Blacklist.manageBlacklistDir();
+            Blacklist.loadBlacklists();
             
             setupVault();
         }
@@ -343,47 +322,6 @@ public class iSafe extends JavaPlugin {
         
         Log.info("Done!");
     }
-    
-    /*private void manageWorlds() throws IOException {
-        for(World world : getServer().getWorlds()) {
-            String worldname = world.getName();
-            
-            if(worldname == null) {
-                Log.debug("Could not load worldname: " + worldname + ", because it is null.");
-                return;
-            }
-            
-            File worldDir = new File("plugins/iSafe/worlds/" + worldname);
-            
-            if(!worldDir.exists()) {
-                worldDir.mkdirs();
-            }
-        }
-        
-        for(World world : getServer().getWorlds()) {
-            String worldname = world.getName();
-            
-            if(worldname == null) {
-                Log.debug("Could not load worldname: " + worldname + ", because it is null.");
-                return;
-            }
-            
-            File worldDir = new File("plugins/iSafe/worlds/" + worldname);
-            File configFile = new File(worldDir + "/config.yml");
-            File blacklistsFile = new File(worldDir + "/blacklists.yml");
-            File CMFile = new File(worldDir + "/creatureManager.yml");
-            
-            if(!configFile.exists()) {
-                configFile.createNewFile();
-            }
-            if(!blacklistsFile.exists()) {
-                blacklistsFile.createNewFile();
-            }
-            if(!CMFile.exists()) {
-                CMFile.createNewFile();
-            }
-        }
-    }*/
 
     private void setupVault() {
         if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions", true)) {
@@ -430,26 +368,5 @@ public class iSafe extends JavaPlugin {
             Log.warning("Please deliver this infomation to " + pdffile.getAuthors() + " at BukkitDev.");
             Log.warning("-----  --------------------  -----");
         }
-    }
-
-    //Update checker (from MilkBowl's Vault, all credit to him)
-    public double updateCheck(double currentVersion) throws Exception {
-        String pluginUrlString = "http://dev.bukkit.org/server-mods/blockthattnt/files.rss";
-        try {
-            URL url = new URL(pluginUrlString);
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url.openConnection().getInputStream());
-            doc.getDocumentElement().normalize();
-            NodeList nodes = doc.getElementsByTagName("item");
-            Node firstNode = nodes.item(0);
-            if (firstNode.getNodeType() == 1) {
-                Element firstElement = (Element) firstNode;
-                NodeList firstElementTagName = firstElement.getElementsByTagName("title");
-                Element firstNameElement = (Element) firstElementTagName.item(0);
-                NodeList firstNodes = firstNameElement.getChildNodes();
-                return Double.valueOf(firstNodes.item(0).getNodeValue().replace("iSafe", "").replaceFirst(".", "").replace("v", "").trim());
-            }
-        } catch (Exception localException) {
-        }
-        return currentVersion;
     }
 }

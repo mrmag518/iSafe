@@ -18,6 +18,8 @@
 
 package com.mrmag518.iSafe.Util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -39,16 +41,9 @@ public class Data {
     public static String[] WaterBucketWorldList = { "world", "world_nether" };
     
     public static String getDate() {
-        String date;
-        Calendar calendar = Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH) + 1;
-        date = Integer.toString(month);
-        date += "/";
-        date += calendar.get(Calendar.DAY_OF_MONTH) + "/";
-        date += calendar.get(Calendar.YEAR) + " ";
-        date += calendar.get(Calendar.HOUR_OF_DAY) + ":";
-        date += calendar.get(Calendar.MINUTE) + ":";
-        date += calendar.get(Calendar.SECOND) + "";
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
+        String date = dateFormat.format(cal.getTime());
         return date;
     }
     

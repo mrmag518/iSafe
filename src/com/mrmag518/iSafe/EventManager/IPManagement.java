@@ -1,4 +1,4 @@
-package com.mrmag518.iSafe.Events.EntityEvents;
+package com.mrmag518.iSafe.EventManager;
 
 import com.mrmag518.iSafe.Files.Config;
 import com.mrmag518.iSafe.Files.Messages;
@@ -37,16 +37,16 @@ public class IPManagement implements Listener {
             }
         }
         
-        IPLog.options().header("If you got IPManagement enabled, IPs will be logged here. "
-                + "\nThis is mostly just an utility file for iSafe."
+        IPLog.options().header("If you got IPManagement enabled, IP information will be logged here. "
+                + "\nThis is mostly just an utility tool file for iSafe."
                 + "\n"
                 + "\nThis file has two categories. NamesLinkedToIPs and IPsLinkedToNames. "
-                + "\nAs you probably can see, there are exactt opposite of each other."
-                + "\nThis is because NamesLinkedToIPs will log IPs, and link players to them."
-                + "\nWhile IPsLinkedToNames will log players, and link IPs to them."
+                + "\nAs you probably can see, there are exact opposite of each other."
+                + "\nThis is because NamesLinkedToIPs will log IPs, and link player names to them."
+                + "\nWhile IPsLinkedToNames will log player names, and link IPs to them."
                 + "\nYou may wonder why on earth it's like this. Well as stated above, this is mostly an utility file, meaning iSafe uses this as a database. "
-                + "\nAnd getting how many IPs one player has used, by going with the IPs first is not a good idea. "
-                + "Cause else iSafe would need to check through every single IP logged and check whether the specific player is linked with it."
+                + "\nAnd getting how many IPs one player has used, by going with the IPs first is not the greatest idea. "
+                + "Because else iSafe would need to check through every single IP logged and check whether the specific player is linked with it."
                 + "\n"
                 + "\nSince YAML automatically makes sub-categories out of periods, the periods in IPs for NamesLinkedToIPs are replaced with hyphens. "
                 + "\nAll names needs to end with a comma. iSafe does this for you thought."
@@ -100,7 +100,11 @@ public class IPManagement implements Listener {
         
         String prevNames = IPLog.getString("NamesLinkedToIPs." + getIpInYAMLFormat(ip));
         
-        IPLog.set(getIpInYAMLFormat(ip), prevNames + victim + ",");
+        if(prevNames == null || prevNames.equals("")) {
+            IPLog.set(getIpInYAMLFormat(ip), victim + ",");
+        } else {
+            IPLog.set(getIpInYAMLFormat(ip), prevNames + victim + ",");
+        }
         
         try {
             IPLog.save(IPLogFile);
@@ -118,7 +122,11 @@ public class IPManagement implements Listener {
         
         String prevIPs = IPLog.getString("IPsLinkedToNames." + victim);
         
-        IPLog.set("IPsLinkedToNames." + victim, prevIPs + ip + ",");
+        if(prevIPs == null || prevIPs.equals("")) {
+             IPLog.set("IPsLinkedToNames." + victim, ip + ",");
+        } else {
+            IPLog.set("IPsLinkedToNames." + victim, prevIPs + ip + ",");
+        }
         
         try {
             IPLog.save(IPLogFile);

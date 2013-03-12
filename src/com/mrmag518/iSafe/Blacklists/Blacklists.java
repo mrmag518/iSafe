@@ -67,16 +67,23 @@ public class Blacklists implements Listener {
         if(value.equalsIgnoreCase("") || value.equalsIgnoreCase(" ")) {
             return;
         } else {
-            /*if(!value.endsWith(",")) {
+            if(!value.endsWith(",")) {
                 BlacklistsF.getBlacklists().set(path, value + ",");
                 BlacklistsF.save();
                 Log.debug("Blacklist path '" + path + "' did not end with a comma. Added a comma for you.");
-            }*/
-            if(value.contains(":")) {
-                
             }
         }
     }
+    
+    /*private boolean isBlacklisted(String blacklist, Block block) {
+        int id = block.getTypeId();
+        byte data = block.getData();
+        
+        if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) {
+            return true;
+        }
+        return false;
+    }*/
     
     @EventHandler
     public void BreakBlacklist(BlockBreakEvent event) {
