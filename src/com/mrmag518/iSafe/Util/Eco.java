@@ -1,22 +1,24 @@
 package com.mrmag518.iSafe.Util;
 
-import com.mrmag518.iSafe.Files.BlacklistsF;
+import com.mrmag518.iSafe.Files.Blacklist;
 import com.mrmag518.iSafe.Files.Messages;
 import com.mrmag518.iSafe.iSafe;
+
+import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class Eco {
-    public static void takeMoney(String player, String world, String blacklist, int amount) {
+    public static void withdraw(String player, World world, double amount) {
         if(amount < 1) {
-            Log.severe("The blacklist " + blacklist + "'s amount of money to withdraw, is below 1.");
             return;
         }
-        if(iSafe.economy.getBalance(player) < amount) {
-            if(BlacklistsF.getBlacklists().getBoolean(blacklist + "." + world + ".Economy.AllowNegativeResult") == true) {
+        double playerBal = iSafe.economy.getBalance(player);
+        FileConfiguration blacklist = Blacklist.getBlacklist(world.getName());
+        
+        if(amount > playerBal) {
+            if(blacklist.getBoolean("Events.Place.Economy.AllowNegativeCashPile")) {
                 iSafe.economy.withdrawPlayer(player, amount);
-            } else {
-                Log.severe("Could not withdraw " + amount + " money from " + player + " in world " + world + ", because the player's balance would go negative "
-                        + ". You can enable support for negative results in the blacklists. This error was related to the blacklist: " + blacklist);
             }
         } else {
             iSafe.economy.withdrawPlayer(player, amount);

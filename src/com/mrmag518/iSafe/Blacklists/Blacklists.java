@@ -18,47 +18,142 @@
 
 package com.mrmag518.iSafe.Blacklists;
 
-import com.mrmag518.iSafe.Files.BlacklistsF;
-import com.mrmag518.iSafe.Files.CreatureManager;
+import com.mrmag518.iSafe.Files.Blacklist;
 import com.mrmag518.iSafe.Files.Messages;
 import com.mrmag518.iSafe.Util.Eco;
 import com.mrmag518.iSafe.Util.Log;
 import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
-
-import org.bukkit.Bukkit;
+import java.util.List;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.inventory.Recipe;
 
 public class Blacklists implements Listener {
     public static iSafe plugin;
-    public Blacklists(iSafe instance)
-    {
+    public Blacklists(iSafe instance) {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    private void checkBlacklist(String path) {
+    @EventHandler
+    public void handlePlace(BlockPlaceEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        World world = event.getBlock().getWorld();
+        FileConfiguration blacklist = Blacklist.getBlacklist(world.getName());
+        
+        if(blacklist.getBoolean("Events.Place.Enabled") != true) {
+            return;
+        }
+        Block b = event.getBlock();
+        int block_id = b.getTypeId();
+        byte block_data = b.getData();
+        boolean shallContinue = false;
+        Player p = event.getPlayer();
+        List<String> blacklisted = blacklist.getStringList("Events.Place.Blacklist");
+        
+        if(blacklisted.isEmpty() || blacklisted == null) {
+            return;
+        }
+        
+        if(p.getGameMode() == GameMode.SURVIVAL) {
+            if(blacklist.getBoolean("Events.Place.Gamemode.ActiveFor.Survival") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.CREATIVE) {
+            if(blacklist.getBoolean("Events.Place.Gamemode.ActiveFor.Creative") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.ADVENTURE) {
+            if(blacklist.getBoolean("Events.Place.Gamemode.ActiveFor.Adventure") != true) {
+                return;
+            }
+        }
+        
+        for (int i = 0; i < blacklisted.size(); i++) {
+            String line = blacklisted.get(i);
+            
+            if(line == null) {
+                continue;
+            }
+            int blacklisted_id = 0;
+            byte blacklisted_data = 0;
+            
+            if(line.contains(":")) {
+                String[] splitted = line.split(":");
+                blacklisted_id = Integer.parseInt(splitted[0]);
+                blacklisted_data = Byte.parseByte(splitted[1]);
+            } else {
+                blacklisted_id = Integer.parseInt(line);
+            }
+            
+            if(blacklisted_id < 1 || blacklisted_data < 0) {
+                continue;
+            }
+            
+            if(block_id == blacklisted_id && block_data == blacklisted_data) {
+                shallContinue = true;
+                break;
+            }
+        }
+        
+        if(shallContinue) {
+            if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist." + world.getName() + ".place.bypass")) {
+                if(block_data < 1) {
+                    // temp comment: iSafe.blacklist.world_nether.place.bypass.10
+                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist." + world.getName() + ".place.bypass." + block_id)) {
+                        event.setCancelled(true);
+                    } else {
+                        return;
+                    }
+                } else {
+                    // temp comment: iSafe.blacklist.world_nether.place.bypass.35:3
+                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist." + world.getName() + ".place.bypass." + block_id + ":" + block_data)) {
+                        event.setCancelled(true);
+                    } else {
+                        return;
+                    }
+                }
+            } else {
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Place.Economy.Enabled")) {
+                int withdrawAmount = blacklist.getInt("Events.Place.Economy.WithdrawAmount");
+                
+                Eco.withdraw(p.getName(), world, withdrawAmount);
+                
+                if(blacklist.getBoolean("Events.Place.Economy.NotifyPlayer")) {
+                    Eco.sendEcoNotify(p, "Place", withdrawAmount);
+                }
+            }
+            
+            if(blacklist.getBoolean("Events.Place.Penalities.KickPlayer")) {
+                p.kickPlayer(Messages.scanVariables(Messages.getMessages().getString("Blacklists.Place.KickMessage"), p.getName(), null, 
+                        b.getType().name().toLowerCase(), null, world.getName(), null, null));
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Place.Report.ToConsole")) {
+                Log.info(p.getName() + " attempted to place " + b.getType().name().toLowerCase() + " in world " + world.getName());
+            }
+            
+            if(blacklist.getBoolean("Events.Place.Report.ToPlayer")) {
+                p.sendMessage(Messages.scanVariables(Messages.getMessages().getString("Blacklists.Place.DisallowedMessage"), p.getName(), null
+                        , b.getType().name().toLowerCase(), null, world.getName(), null, null));
+            }
+        }
+    }
+    
+    /*private void checkBlacklist(String path) {
         if(path == null) {
             return;
         }
@@ -85,7 +180,7 @@ public class Blacklists implements Listener {
         return false;
     }*/
     
-    @EventHandler
+    /*@EventHandler
     public void BreakBlacklist(BlockBreakEvent event) {
         if (event.isCancelled()){
             return;
@@ -866,5 +961,5 @@ public class Blacklists implements Listener {
                 }
             }
         }
-    }
+    }*/
 }

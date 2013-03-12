@@ -13,7 +13,7 @@ public class PermHandler {
     public static boolean checkingFullbrightPerms = false;
     
     public static boolean hasPermission(CommandSender sender, String permission) {
-        if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions") == true) {
+        if(iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions") == true) {
             if (iSafe.perms.has(sender, permission)) {
                 return true;
             } 
@@ -29,13 +29,13 @@ public class PermHandler {
     }
 
     public static boolean hasBlacklistPermission(Player p, String permission) {
-        if (iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions") == true) {
-            if (iSafe.perms.has(p, permission)) {
+        if(iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions") == true) {
+            if(iSafe.perms.has(p, permission)) {
                 return true;
             }
             return false;
         } else {
-            if (p.hasPermission(permission)) {
+            if(p.hasPermission(permission)) {
                 return true;
             }
             return false;

@@ -3,6 +3,13 @@ Version 3.5
 * Fixed some typos and rewrote some sentences in file headers.
 * Updated the updater.
 * Removed some left-over pieces from the old updater.
+* Fixed kick messages.
+* Total revamp of blacklist system!
+** Rewrote everything from scratch.
+** There will now be made a folder called "Blacklists" in the iSafe direction. Inside this folder, additiong folders will be created, having the names of your worlds. Inside these folders a file called "Blacklist.yml" will be made, and inside this file you can manage blacklisting.
+** Added full support for item data values. (Such as 35:15 for black woll only, and not all wool colors)
+** Lists are now organized in ArrayLists.
+** The new system should be more efficient.
 * 
 
 Version 3.41

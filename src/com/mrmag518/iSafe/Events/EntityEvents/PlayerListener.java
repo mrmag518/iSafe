@@ -281,8 +281,7 @@ public class PlayerListener implements Listener  {
         Player p = event.getPlayer();
         
         if(Config.getConfig().getBoolean("Chat.EnableKickMessages") == true){
-            Messages.sendKickMessage(p);
-            event.setLeaveMessage(null);
+            event.setLeaveMessage(Messages.scanVariables(Messages.getMessages().getString("KickMessage"), p.getName(), null, null, null, p.getWorld().getName(), null, null));
         }
     }
     
@@ -307,7 +306,8 @@ public class PlayerListener implements Listener  {
         if(Config.getConfig().getBoolean("AntiCheat/Sucurity.KickJoinerIfSameNickIsOnline") == true){
             for(Player onlinePl : Bukkit.getServer().getOnlinePlayers()) {
                 if(joiner.getName().equalsIgnoreCase(onlinePl.getName())) {
-                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Messages.sameNickPlaying(joiner));
+                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Messages.scanVariables(Messages.getMessages().getString("SameNickAlreadyPlaying"), 
+                            joiner.getName(), null, null, null, joiner.getWorld().getName(), null, null));
                 }
             }
         }
@@ -319,7 +319,7 @@ public class PlayerListener implements Listener  {
         
         if(Config.getConfig().getBoolean("Miscellaneous.OnlyLetOPsJoin") == true) {
             if(!p.isOp()) {
-                p.kickPlayer(Messages.denyNonOpsJoin());
+                p.kickPlayer(Messages.scanVariables(Messages.getMessages().getString("OnlyOpsCanJoin"), p.getName(), null, null, null, p.getWorld().getName(), null, null));
             }
         }
     }
@@ -333,7 +333,7 @@ public class PlayerListener implements Listener  {
         Player p = event.getPlayer();
         
         if(Config.getConfig().getBoolean("Chat.LogCommands") == true) {
-            Log.info(Messages.commandLogger(p, event));
+            Log.info(Messages.scanVariables(Messages.getMessages().getString("CommandLogger"), p.getName(), event.getMessage(), null, null, p.getWorld().getName(), null, null));
         }
     }
 

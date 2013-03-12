@@ -10,15 +10,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Messages {
@@ -123,7 +118,7 @@ public class Messages {
             String configString, String playerName,
             String cmd, String blockName,
             String item, String world,
-            String word, String recipe) 
+            String word, String recipe)  
     {
         String result = configString;
         
@@ -183,7 +178,7 @@ public class Messages {
     }
     
 
-    public static void sendKickMessage(Player p) {
+    /*public static void sendKickMessage(Player p) {
         String kickMsg = getMessages().getString("KickMessage");
         Server s = p.getServer();
         s.broadcastMessage(scanVariables(kickMsg, p.getName(),
@@ -334,5 +329,5 @@ public class Messages {
                 cmd, null,
                 null, world,
                 null, null);
-    }
+    }*/
 }

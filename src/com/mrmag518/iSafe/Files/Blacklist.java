@@ -4,6 +4,7 @@ import com.mrmag518.iSafe.Util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,6 +14,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Blacklist {
+    private static String[] default_place = {"10", "11", "46", "97:2"};
+    
     public static void manageBlacklistDir() {
         for(World world : Bukkit.getWorlds()) {
             String worldname = world.getName();
@@ -48,7 +51,6 @@ public class Blacklist {
         for(World world : Bukkit.getWorlds()) {
             String worldname = world.getName();
             FileConfiguration blacklist = getBlacklist(worldname);
-            File blacklistFile = getBlacklistFile(worldname);
             
             blacklist.options().header("test");
             
@@ -62,9 +64,10 @@ public class Blacklist {
             blacklist.addDefault("Events.Place.Report.ToConsole", false);
             blacklist.addDefault("Events.Place.Report.ToPlayer", true);
             blacklist.addDefault("Events.Place.Economy.Enabled", false);
-            blacklist.addDefault("Events.Place.Economy.WithdrawAmount", false);
+            blacklist.addDefault("Events.Place.Economy.WithdrawAmount", 10.0);
             blacklist.addDefault("Events.Place.Economy.AllowNegativeCashPile", false);
             blacklist.addDefault("Events.Place.Economy.NotifyPlayer", false);
+            blacklist.addDefault("Events.Place.Blacklist", Arrays.asList(default_place));
             
             blacklist.addDefault("Events.Break.Enabled", false);
             blacklist.addDefault("Events.Drop.Enabled", false);
