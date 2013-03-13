@@ -56,29 +56,29 @@ public class Messages {
         messages.addDefault("Blacklists.Break.DisallowedMessage", "&cYou do not have access to break &7%itemName% &cin world &7%world%");
         messages.addDefault("Blacklists.Break.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to break an illegal block.");
         
-        messages.addDefault("Blacklists.Command.KickMessage", "&cKicked for attempting to do command &f%string%");
-        messages.addDefault("Blacklists.Command.DisallowedMessage", "&cThe command %string% is disabled in world %world%!");
-        messages.addDefault("Blacklists.Command.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you tried to do an illegal command.");
-        
-        messages.addDefault("Blacklists.Crafting.KickMessage", "&cKicked for attempting to craft &f%itemName%");
-        messages.addDefault("Blacklists.Crafting.DisallowedMessage", "&cYou do not have access to craft &7%itemName% &cin world %world%");
-        messages.addDefault("Blacklists.Crafting.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you tried to craft an illegal recipe.");
-        
         messages.addDefault("Blacklists.Drop.KickMessage", "&cKicked for attempting to drop &f%itemName%");
         messages.addDefault("Blacklists.Drop.DisallowedMessage", "&cYou do not have access to drop &7%itemName% in world %world%");
         messages.addDefault("Blacklists.Drop.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to drop an illegal block.");
+        
+        messages.addDefault("Blacklists.Command.KickMessage", "&cKicked for attempting to do command &f%string%");
+        messages.addDefault("Blacklists.Command.DisallowedMessage", "&cThe command %string% is disabled in world %world%!");
+        messages.addDefault("Blacklists.Command.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you tried to do an illegal command.");
         
         messages.addDefault("Blacklists.Pickup.KickMessage", "&cKicked for attempting to pickup &f%itemName%");
         messages.addDefault("Blacklists.Pickup.DisallowedMessage", "&cYou do not have access to pickup &7%itemName% &cin world &7%world%");
         messages.addDefault("Blacklists.Pickup.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to pickup an illegal block.");
         
+        messages.addDefault("Blacklists.Chat.KickMessage", "&cKicked for attempting to send a message contaning &7%string%");
+        messages.addDefault("Blacklists.Chat.DisallowedMessage", "&c%string% is censored!");
+        messages.addDefault("Blacklists.Chat.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to say an illegal word.");
+        
         messages.addDefault("Blacklists.Interact.KickMessage", "&cKicked for attempting to interact with &f%itemName%");
         messages.addDefault("Blacklists.Interact.DisallowedMessage", "&cYou do not have access to interact with &7%itemName% &cin world &7%world%");
         messages.addDefault("Blacklists.Interact.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you interacted with an illegal block.");
         
-        messages.addDefault("Blacklists.Censor.KickMessage", "&cKicked for attempting to send a message contaning &7%string%");
-        messages.addDefault("Blacklists.Censor.DisallowedMessage", "&c%string% is censored!");
-        messages.addDefault("Blacklists.Censor.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to say an illegal word.");
+        messages.addDefault("Blacklists.Crafting.KickMessage", "&cKicked for attempting to craft &f%itemName%");
+        messages.addDefault("Blacklists.Crafting.DisallowedMessage", "&cYou do not have access to craft &7%itemName% &cin world %world%");
+        messages.addDefault("Blacklists.Crafting.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you tried to craft an illegal recipe.");
         
         getMessages().options().copyDefaults(true);
         save();
@@ -118,25 +118,36 @@ public class Messages {
     
     public static String scan(String configString, Player p, String string, String itemName, World world) {
         String result = configString;
-        String playerName = p.getName();
-        itemName = itemName.toLowerCase();
-        String worldName = world.getName();
+        String worldName = null;
+        String playerName = null;
+        
+        if(world != null) {
+            worldName = world.getName();
+        }
+        
+        if(p != null) {
+            playerName = p.getName();
+        }
         
         if (playerName != null) {
             if (configString.contains("%playername%")) {
                 result = result.replaceAll("%playername%", playerName);
             }
         }
+        
         if (string != null) {
             if (configString.contains("%string%")) {
                 result = result.replace("%string%", string);
             }
         }
+        
         if (itemName != null) {
+            itemName = itemName.toLowerCase();
             if (configString.contains("%itemName%")) {
                 result = result.replaceAll("%itemName%", itemName);
             }
         }
+        
         if (world != null) {
             if (configString.contains("%world%")) {
                 result = result.replaceAll("%world%", worldName);

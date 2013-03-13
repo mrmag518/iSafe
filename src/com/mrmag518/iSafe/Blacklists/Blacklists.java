@@ -36,6 +36,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -394,7 +395,6 @@ public class Blacklists implements Listener {
         if(event.isCancelled()) {
             return;
         }
-        
         World world = event.getItem().getWorld();
         FileConfiguration blacklist = Blacklist.getBlacklist(world.getName());
         
@@ -474,7 +474,7 @@ public class Blacklists implements Listener {
             
             if(currDelay != 0) {
                 return;
-            } else if(currDelay == 0) {
+            } else {
                 currDelay = 2;
             }
             
@@ -499,6 +499,89 @@ public class Blacklists implements Listener {
             
             if(blacklist.getBoolean("Events.Pickup.Report.ToPlayer")) {
                 p.sendMessage(Messages.scan(Messages.getMessages().getString("Blacklists.Pickup.DisallowedMessage"), p, null, is.getType().name(), world));
+            }
+        }
+    }
+    
+    @EventHandler
+    public void handleCommand(PlayerCommandPreprocessEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        World world = event.getPlayer().getWorld();
+        FileConfiguration blacklist = Blacklist.getBlacklist(world.getName());
+        
+        if(blacklist.getBoolean("Events.Command.Enabled") != true) {
+            return;
+        }
+        String cmd = event.getMessage().toLowerCase();
+        boolean shallContinue = false;
+        Player p = event.getPlayer();
+        List<String> blacklisted = blacklist.getStringList("Events.Command.Blacklist");
+        
+        if(blacklisted.isEmpty() || blacklisted == null) {
+            return;
+        }
+        
+        if(p.getGameMode() == GameMode.SURVIVAL) {
+            if(blacklist.getBoolean("Events.Command.Gamemode.ActiveFor.Survival") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.CREATIVE) {
+            if(blacklist.getBoolean("Events.Command.Gamemode.ActiveFor.Creative") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.ADVENTURE) {
+            if(blacklist.getBoolean("Events.Command.Gamemode.ActiveFor.Adventure") != true) {
+                return;
+            }
+        }
+        
+        for (int i = 0; i < blacklisted.size(); i++) {
+            String line = blacklisted.get(i);
+            
+            if(line == null) {
+                continue;
+            }
+            
+            if(cmd.startsWith(line)) {
+                shallContinue = true;
+                break;
+            }
+        }
+        
+        if(shallContinue) {
+            if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.command.bypass.*")) {
+                if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.command.bypass." + cmd)) {
+                    event.setCancelled(true);
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Command.Economy.Enabled")) {
+                int withdrawAmount = blacklist.getInt("Events.Command.Economy.WithdrawAmount");
+                
+                Eco.withdraw(p.getName(), world, withdrawAmount);
+                
+                if(blacklist.getBoolean("Events.Command.Economy.NotifyPlayer")) {
+                    Eco.sendEcoNotify(p, "Command", withdrawAmount);
+                }
+            }
+            
+            if(blacklist.getBoolean("Events.Command.Penalities.KickPlayer")) {
+                p.kickPlayer(Messages.scan(Messages.getMessages().getString("Blacklists.Command.KickMessage"), p, cmd, null, world));
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Command.Report.ToConsole")) {
+                Log.info(p.getName() + " attempted to do the command " + cmd + " in world " + world.getName());
+            }
+            
+            if(blacklist.getBoolean("Events.Command.Report.ToPlayer")) {
+                p.sendMessage(Messages.scan(Messages.getMessages().getString("Blacklists.Command.DisallowedMessage"), p, cmd, null, world));
             }
         }
     }

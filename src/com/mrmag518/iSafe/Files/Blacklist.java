@@ -17,6 +17,8 @@ public class Blacklist {
     private static String[] default_place = {"10", "11", "46", "97:2"};
     private static String[] default_break = {"7", "19", "51", "52:0"};
     private static String[] default_drop = {"7", "397:3", "384"};
+    private static String[] default_pickup = {"7", "46", "384"};
+    private static String[] default_command = {"/nuke", "/strike"};
     
     public static void manageBlacklistDir() {
         for(World world : Bukkit.getWorlds()) {
@@ -108,9 +110,21 @@ public class Blacklist {
             blacklist.addDefault("Events.Pickup.Economy.WithdrawAmount", 10.0);
             blacklist.addDefault("Events.Pickup.Economy.AllowNegativeCashPile", false);
             blacklist.addDefault("Events.Pickup.Economy.NotifyPlayer", false);
-            blacklist.addDefault("Events.Pickup.Blacklist", Arrays.asList(default_drop));
+            blacklist.addDefault("Events.Pickup.Blacklist", Arrays.asList(default_pickup));
             
             blacklist.addDefault("Events.Command.Enabled", false);
+            blacklist.addDefault("Events.Command.Penalities.KickPlayer", false);
+            blacklist.addDefault("Events.Command.Gamemode.ActiveFor.Survival", true);
+            blacklist.addDefault("Events.Command.Gamemode.ActiveFor.Creative", true);
+            blacklist.addDefault("Events.Command.Gamemode.ActiveFor.Adventure", true);
+            blacklist.addDefault("Events.Command.Report.ToConsole", false);
+            blacklist.addDefault("Events.Command.Report.ToPlayer", true);
+            blacklist.addDefault("Events.Command.Economy.Enabled", false);
+            blacklist.addDefault("Events.Command.Economy.WithdrawAmount", 10.0);
+            blacklist.addDefault("Events.Command.Economy.AllowNegativeCashPile", false);
+            blacklist.addDefault("Events.Command.Economy.NotifyPlayer", false);
+            blacklist.addDefault("Events.Command.Blacklist", Arrays.asList(default_command));
+            
             blacklist.addDefault("Events.Chat.Enabled", false);
             blacklist.addDefault("Events.Interact.Enabled", false);
             blacklist.addDefault("Events.Crafting.Enabled", false);
