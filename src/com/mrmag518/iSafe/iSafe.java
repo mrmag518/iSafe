@@ -152,6 +152,8 @@ public class iSafe extends JavaPlugin {
         
         //iSafeExtension.hook();
         
+        Blacklists.startDelayTimer();
+        
         Log.verbose("v" + pdffile.getVersion() + " enabled.");
         
         Log.debug("iSafe startup finished.");

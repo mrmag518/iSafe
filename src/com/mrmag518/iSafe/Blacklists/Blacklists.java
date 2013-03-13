@@ -25,6 +25,7 @@ import com.mrmag518.iSafe.Util.Log;
 import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
 import java.util.List;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -33,13 +34,34 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class Blacklists implements Listener {
     public static iSafe plugin;
     public Blacklists(iSafe instance) {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+    public static int delay = 40;
+    public static int currDelay = 2;
+    
+    /**
+     * Used in certain conditions where an event is trigged many times in a short period.
+     * Example: PlayerPickupItemEvent.
+     */
+    public static void startDelayTimer() {
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                if(currDelay > 0) {
+                    currDelay--;
+                }
+            }
+        }, 0, delay);
     }
     
     @EventHandler
@@ -106,17 +128,17 @@ public class Blacklists implements Listener {
         }
         
         if(shallContinue) {
-            if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist." + world.getName() + ".place.bypass")) {
+            if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.place.bypass.*")) {
                 if(block_data < 1) {
                     // temp comment: iSafe.blacklist.world_nether.place.bypass.10
-                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist." + world.getName() + ".place.bypass." + block_id)) {
+                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.place.bypass." + block_id)) {
                         event.setCancelled(true);
                     } else {
                         return;
                     }
                 } else {
                     // temp comment: iSafe.blacklist.world_nether.place.bypass.35:3
-                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist." + world.getName() + ".place.bypass." + block_id + ":" + block_data)) {
+                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.place.bypass." + block_id + ":" + block_data)) {
                         event.setCancelled(true);
                     } else {
                         return;
@@ -137,8 +159,7 @@ public class Blacklists implements Listener {
             }
             
             if(blacklist.getBoolean("Events.Place.Penalities.KickPlayer")) {
-                p.kickPlayer(Messages.scanVariables(Messages.getMessages().getString("Blacklists.Place.KickMessage"), p.getName(), null, 
-                        b.getType().name().toLowerCase(), null, world.getName(), null, null));
+                p.kickPlayer(Messages.scan(Messages.getMessages().getString("Blacklists.Place.KickMessage"), p, null, b.getType().name(), world));
                 return;
             }
             
@@ -147,8 +168,337 @@ public class Blacklists implements Listener {
             }
             
             if(blacklist.getBoolean("Events.Place.Report.ToPlayer")) {
-                p.sendMessage(Messages.scanVariables(Messages.getMessages().getString("Blacklists.Place.DisallowedMessage"), p.getName(), null
-                        , b.getType().name().toLowerCase(), null, world.getName(), null, null));
+                p.sendMessage(Messages.scan(Messages.getMessages().getString("Blacklists.Place.DisallowedMessage"), p, null, b.getType().name(), world));
+            }
+        }
+    }
+    
+    @EventHandler
+    public void handleBreak(BlockBreakEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        World world = event.getBlock().getWorld();
+        FileConfiguration blacklist = Blacklist.getBlacklist(world.getName());
+        
+        if(blacklist.getBoolean("Events.Break.Enabled") != true) {
+            return;
+        }
+        Block b = event.getBlock();
+        int block_id = b.getTypeId();
+        byte block_data = b.getData();
+        boolean shallContinue = false;
+        Player p = event.getPlayer();
+        List<String> blacklisted = blacklist.getStringList("Events.Break.Blacklist");
+        
+        if(blacklisted.isEmpty() || blacklisted == null) {
+            return;
+        }
+        
+        if(p.getGameMode() == GameMode.SURVIVAL) {
+            if(blacklist.getBoolean("Events.Break.Gamemode.ActiveFor.Survival") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.CREATIVE) {
+            if(blacklist.getBoolean("Events.Break.Gamemode.ActiveFor.Creative") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.ADVENTURE) {
+            if(blacklist.getBoolean("Events.Break.Gamemode.ActiveFor.Adventure") != true) {
+                return;
+            }
+        }
+        
+        for (int i = 0; i < blacklisted.size(); i++) {
+            String line = blacklisted.get(i);
+            
+            if(line == null) {
+                continue;
+            }
+            int blacklisted_id = 0;
+            byte blacklisted_data = 0;
+            
+            if(line.contains(":")) {
+                String[] splitted = line.split(":");
+                blacklisted_id = Integer.parseInt(splitted[0]);
+                blacklisted_data = Byte.parseByte(splitted[1]);
+            } else {
+                blacklisted_id = Integer.parseInt(line);
+            }
+            
+            if(blacklisted_id < 1 || blacklisted_data < 0) {
+                continue;
+            }
+            
+            if(block_id == blacklisted_id && block_data == blacklisted_data) {
+                shallContinue = true;
+                break;
+            }
+        }
+        
+        if(shallContinue) {
+            if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.break.bypass.*")) {
+                if(block_data < 1) {
+                    // temp comment: iSafe.blacklist.world_nether.place.bypass.10
+                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.break.bypass." + block_id)) {
+                        event.setCancelled(true);
+                    } else {
+                        return;
+                    }
+                } else {
+                    // temp comment: iSafe.blacklist.world_nether.place.bypass.35:3
+                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.break.bypass." + block_id + ":" + block_data)) {
+                        event.setCancelled(true);
+                    } else {
+                        return;
+                    }
+                }
+            } else {
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Break.Economy.Enabled")) {
+                int withdrawAmount = blacklist.getInt("Events.Break.Economy.WithdrawAmount");
+                
+                Eco.withdraw(p.getName(), world, withdrawAmount);
+                
+                if(blacklist.getBoolean("Events.Break.Economy.NotifyPlayer")) {
+                    Eco.sendEcoNotify(p, "Break", withdrawAmount);
+                }
+            }
+            
+            if(blacklist.getBoolean("Events.Break.Penalities.KickPlayer")) {
+                p.kickPlayer(Messages.scan(Messages.getMessages().getString("Blacklists.Break.KickMessage"), p, null, b.getType().name(), world));
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Break.Report.ToConsole")) {
+                Log.info(p.getName() + " attempted to break " + b.getType().name().toLowerCase() + " in world " + world.getName());
+            }
+            
+            if(blacklist.getBoolean("Events.Break.Report.ToPlayer")) {
+                p.sendMessage(Messages.scan(Messages.getMessages().getString("Blacklists.Break.DisallowedMessage"), p, null, b.getType().name(), world));
+            }
+        }
+    }
+    
+    @EventHandler
+    public void handleDrop(PlayerDropItemEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        World world = event.getItemDrop().getWorld();
+        FileConfiguration blacklist = Blacklist.getBlacklist(world.getName());
+        
+        if(blacklist.getBoolean("Events.Drop.Enabled") != true) {
+            return;
+        }
+        ItemStack is = event.getItemDrop().getItemStack();
+        int item_id = is.getTypeId();
+        byte item_data = is.getData().getData();
+        boolean shallContinue = false;
+        Player p = event.getPlayer();
+        List<String> blacklisted = blacklist.getStringList("Events.Drop.Blacklist");
+        
+        if(blacklisted.isEmpty() || blacklisted == null) {
+            return;
+        }
+        
+        if(p.getGameMode() == GameMode.SURVIVAL) {
+            if(blacklist.getBoolean("Events.Drop.Gamemode.ActiveFor.Survival") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.CREATIVE) {
+            if(blacklist.getBoolean("Events.Drop.Gamemode.ActiveFor.Creative") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.ADVENTURE) {
+            if(blacklist.getBoolean("Events.Drop.Gamemode.ActiveFor.Adventure") != true) {
+                return;
+            }
+        }
+        
+        for (int i = 0; i < blacklisted.size(); i++) {
+            String line = blacklisted.get(i);
+            
+            if(line == null) {
+                continue;
+            }
+            int blacklisted_id = 0;
+            byte blacklisted_data = 0;
+            
+            if(line.contains(":")) {
+                String[] splitted = line.split(":");
+                blacklisted_id = Integer.parseInt(splitted[0]);
+                blacklisted_data = Byte.parseByte(splitted[1]);
+            } else {
+                blacklisted_id = Integer.parseInt(line);
+            }
+            
+            if(blacklisted_id < 1 || blacklisted_data < 0) {
+                continue;
+            }
+            
+            if(item_id == blacklisted_id && item_data == blacklisted_data) {
+                shallContinue = true;
+                break;
+            }
+        }
+        
+        if(shallContinue) {
+            if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.drop.bypass.*")) {
+                if(item_data < 1) {
+                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.drop.bypass." + item_id)) {
+                        event.setCancelled(true);
+                    } else {
+                        return;
+                    }
+                } else {
+                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.drop.bypass." + item_id + ":" + item_data)) {
+                        event.setCancelled(true);
+                    } else {
+                        return;
+                    }
+                }
+            } else {
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Drop.Economy.Enabled")) {
+                int withdrawAmount = blacklist.getInt("Events.Drop.Economy.WithdrawAmount");
+                
+                Eco.withdraw(p.getName(), world, withdrawAmount);
+                
+                if(blacklist.getBoolean("Events.Drop.Economy.NotifyPlayer")) {
+                    Eco.sendEcoNotify(p, "Drop", withdrawAmount);
+                }
+            }
+            
+            if(blacklist.getBoolean("Events.Drop.Penalities.KickPlayer")) {
+                p.kickPlayer(Messages.scan(Messages.getMessages().getString("Blacklists.Drop.KickMessage"), p, null, is.getType().name(), world));
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Drop.Report.ToConsole")) {
+                Log.info(p.getName() + " attempted to drop " + is.getType().name().toLowerCase() + " in world " + world.getName());
+            }
+            
+            if(blacklist.getBoolean("Events.Drop.Report.ToPlayer")) {
+                p.sendMessage(Messages.scan(Messages.getMessages().getString("Blacklists.Drop.DisallowedMessage"), p, null, is.getType().name(), world));
+            }
+        }
+    }
+    
+    @EventHandler
+    public void handlePickup(PlayerPickupItemEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        
+        World world = event.getItem().getWorld();
+        FileConfiguration blacklist = Blacklist.getBlacklist(world.getName());
+        
+        if(blacklist.getBoolean("Events.Pickup.Enabled") != true) {
+            return;
+        }
+        ItemStack is = event.getItem().getItemStack();
+        int item_id = is.getTypeId();
+        byte item_data = is.getData().getData();
+        boolean shallContinue = false;
+        Player p = event.getPlayer();
+        List<String> blacklisted = blacklist.getStringList("Events.Pickup.Blacklist");
+        
+        if(blacklisted.isEmpty() || blacklisted == null) {
+            return;
+        }
+        
+        if(p.getGameMode() == GameMode.SURVIVAL) {
+            if(blacklist.getBoolean("Events.Pickup.Gamemode.ActiveFor.Survival") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.CREATIVE) {
+            if(blacklist.getBoolean("Events.Pickup.Gamemode.ActiveFor.Creative") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.ADVENTURE) {
+            if(blacklist.getBoolean("Events.Pickup.Gamemode.ActiveFor.Adventure") != true) {
+                return;
+            }
+        }
+        
+        for (int i = 0; i < blacklisted.size(); i++) {
+            String line = blacklisted.get(i);
+            
+            if(line == null) {
+                continue;
+            }
+            int blacklisted_id = 0;
+            byte blacklisted_data = 0;
+            
+            if(line.contains(":")) {
+                String[] splitted = line.split(":");
+                blacklisted_id = Integer.parseInt(splitted[0]);
+                blacklisted_data = Byte.parseByte(splitted[1]);
+            } else {
+                blacklisted_id = Integer.parseInt(line);
+            }
+            
+            if(blacklisted_id < 1 || blacklisted_data < 0) {
+                continue;
+            }
+            
+            if(item_id == blacklisted_id && item_data == blacklisted_data) {
+                shallContinue = true;
+                break;
+            }
+        }
+        
+        if(shallContinue) {
+            if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.pickup.bypass.*")) {
+                if(item_data < 1) {
+                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.pickup.bypass." + item_id)) {
+                        event.setCancelled(true);
+                    } else {
+                        return;
+                    }
+                } else {
+                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.pickup.bypass." + item_id + ":" + item_data)) {
+                        event.setCancelled(true);
+                    } else {
+                        return;
+                    }
+                }
+            } else {
+                return;
+            }
+            
+            if(currDelay != 0) {
+                return;
+            } else if(currDelay == 0) {
+                currDelay = 2;
+            }
+            
+            if(blacklist.getBoolean("Events.Pickup.Economy.Enabled")) {
+                int withdrawAmount = blacklist.getInt("Events.Pickup.Economy.WithdrawAmount");
+                
+                Eco.withdraw(p.getName(), world, withdrawAmount);
+                
+                if(blacklist.getBoolean("Events.Pickup.Economy.NotifyPlayer")) {
+                    Eco.sendEcoNotify(p, "Pickup", withdrawAmount);
+                }
+            }
+            
+            if(blacklist.getBoolean("Events.Pickup.Penalities.KickPlayer")) {
+                p.kickPlayer(Messages.scan(Messages.getMessages().getString("Blacklists.Pickup.KickMessage"), p, null, is.getType().name(), world));
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Pickup.Report.ToConsole")) {
+                Log.info(p.getName() + " attempted to pcikup " + is.getType().name().toLowerCase() + " in world " + world.getName());
+            }
+            
+            if(blacklist.getBoolean("Events.Pickup.Report.ToPlayer")) {
+                p.sendMessage(Messages.scan(Messages.getMessages().getString("Blacklists.Pickup.DisallowedMessage"), p, null, is.getType().name(), world));
             }
         }
     }

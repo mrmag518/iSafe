@@ -10,6 +10,11 @@ Version 3.5
 ** Added full support for item data values. (Such as 35:15 for black woll only, and not all wool colors)
 ** Lists are now organized in ArrayLists.
 ** The new system should be more efficient.
+** Permissions changed.
+* Added per-block permissions for blacklists!
+** Example: 'iSafe.blacklist.place.bypass.1' would make you bypass stone if blacklisted, but not anything else in the blacklist.
+* Improved the variable scanner, and changed variables.
+* Added messages and alerting for pickup blacklist.
 * 
 
 Version 3.41

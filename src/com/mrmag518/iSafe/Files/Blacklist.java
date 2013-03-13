@@ -15,6 +15,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class Blacklist {
     private static String[] default_place = {"10", "11", "46", "97:2"};
+    private static String[] default_break = {"7", "19", "51", "52:0"};
+    private static String[] default_drop = {"7", "397:3", "384"};
     
     public static void manageBlacklistDir() {
         for(World world : Bukkit.getWorlds()) {
@@ -70,8 +72,44 @@ public class Blacklist {
             blacklist.addDefault("Events.Place.Blacklist", Arrays.asList(default_place));
             
             blacklist.addDefault("Events.Break.Enabled", false);
+            blacklist.addDefault("Events.Break.Penalities.KickPlayer", false);
+            blacklist.addDefault("Events.Break.Gamemode.ActiveFor.Survival", true);
+            blacklist.addDefault("Events.Break.Gamemode.ActiveFor.Creative", true);
+            blacklist.addDefault("Events.Break.Gamemode.ActiveFor.Adventure", true);
+            blacklist.addDefault("Events.Break.Report.ToConsole", false);
+            blacklist.addDefault("Events.Break.Report.ToPlayer", true);
+            blacklist.addDefault("Events.Break.Economy.Enabled", false);
+            blacklist.addDefault("Events.Break.Economy.WithdrawAmount", 10.0);
+            blacklist.addDefault("Events.Break.Economy.AllowNegativeCashPile", false);
+            blacklist.addDefault("Events.Break.Economy.NotifyPlayer", false);
+            blacklist.addDefault("Events.Break.Blacklist", Arrays.asList(default_break));
+            
             blacklist.addDefault("Events.Drop.Enabled", false);
+            blacklist.addDefault("Events.Drop.Penalities.KickPlayer", false);
+            blacklist.addDefault("Events.Drop.Gamemode.ActiveFor.Survival", true);
+            blacklist.addDefault("Events.Drop.Gamemode.ActiveFor.Creative", true);
+            blacklist.addDefault("Events.Drop.Gamemode.ActiveFor.Adventure", true);
+            blacklist.addDefault("Events.Drop.Report.ToConsole", false);
+            blacklist.addDefault("Events.Drop.Report.ToPlayer", true);
+            blacklist.addDefault("Events.Drop.Economy.Enabled", false);
+            blacklist.addDefault("Events.Drop.Economy.WithdrawAmount", 10.0);
+            blacklist.addDefault("Events.Drop.Economy.AllowNegativeCashPile", false);
+            blacklist.addDefault("Events.Drop.Economy.NotifyPlayer", false);
+            blacklist.addDefault("Events.Drop.Blacklist", Arrays.asList(default_drop));
+            
             blacklist.addDefault("Events.Pickup.Enabled", false);
+            blacklist.addDefault("Events.Pickup.Penalities.KickPlayer", false);
+            blacklist.addDefault("Events.Pickup.Gamemode.ActiveFor.Survival", true);
+            blacklist.addDefault("Events.Pickup.Gamemode.ActiveFor.Creative", true);
+            blacklist.addDefault("Events.Pickup.Gamemode.ActiveFor.Adventure", true);
+            blacklist.addDefault("Events.Pickup.Report.ToConsole", false);
+            blacklist.addDefault("Events.Pickup.Report.ToPlayer", true);
+            blacklist.addDefault("Events.Pickup.Economy.Enabled", false);
+            blacklist.addDefault("Events.Pickup.Economy.WithdrawAmount", 10.0);
+            blacklist.addDefault("Events.Pickup.Economy.AllowNegativeCashPile", false);
+            blacklist.addDefault("Events.Pickup.Economy.NotifyPlayer", false);
+            blacklist.addDefault("Events.Pickup.Blacklist", Arrays.asList(default_drop));
+            
             blacklist.addDefault("Events.Command.Enabled", false);
             blacklist.addDefault("Events.Chat.Enabled", false);
             blacklist.addDefault("Events.Interact.Enabled", false);

@@ -17,6 +17,7 @@ permissions:
   iSafe.admin:
     default: op
     children:
+      iSafe.blacklist.*: true
       iSafe.bypass.*: true
       iSafe.canceltarget.*: true
       iSafe.use.*: true
@@ -32,12 +33,12 @@ permissions:
       iSafe.bypass.fish: true
       iSafe.bypass.spamcheck: true
       iSafe.bypass.enchant: true
-      iSafe.bypass.blacklist.interact: true
-      iSafe.bypass.blacklist.pickup: true
-      iSafe.bypass.blacklist.break: true
-      iSafe.bypass.blacklist.place: true
-      iSafe.bypass.blacklist.drop: true
-      iSafe.bypass.blacklist.crafting: true
+      # iSafe.bypass.blacklist.interact: true
+      # iSafe.bypass.blacklist.pickup: true
+      # iSafe.bypass.blacklist.break: true
+      # iSafe.bypass.blacklist.place: true
+      # iSafe.bypass.blacklist.drop: true
+      # iSafe.bypass.blacklist.crafting: true
       iSafe.bypass.teleport: true
       iSafe.bypass.teleport.command: true
       iSafe.bypass.teleport.enderpearl: true
@@ -85,6 +86,13 @@ permissions:
       iSafe.command.reload: true
       iSafe.command.info: true
       iSafe.command.serverinfo: true
+  iSafe.blacklist.*:
+    default: op
+    children:
+      iSafe.blacklist.place.bypass.*: true
+      iSafe.blacklist.break.bypass.*: true
+      iSafe.blacklist.drop.bypass.*: true
+      iSafe.blacklist.pickup.bypass.*: true
   # ------------------------
   iSafe.bypass.hunger:
     default: true

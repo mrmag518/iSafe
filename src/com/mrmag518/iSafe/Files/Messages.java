@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,15 +23,12 @@ public class Messages {
     
     private static final Logger log = Logger.getLogger("Minecraft");
     
-    // Finally found a method that doesn't return in a NPE!
     private static final iSafe plugin = (iSafe) Bukkit.getPluginManager().getPlugin("iSafe");
     private static File datafolder = plugin.getDataFolder();
     
     public static void load() {
         messages = getMessages();
         messages.options().header(Data.setMessageHeader());
-
-        // Note to self; Do not create un-needed variables if not needed. Duh.
 
         messages.addDefault("ConfigVersion", Double.valueOf(iSafe.ConfigVersion));
         if (messages.getDouble("ConfigVersion") != Double.valueOf(iSafe.ConfigVersion)) {
@@ -50,32 +48,36 @@ public class Messages {
         messages.addDefault("ToManyAccountsOnThisIPkickMsg", "&cReached max accounts for this IP address! (Max: %max%)");
         messages.addDefault("ToManyIPsOnThisAccKickMsg", "&cReached max IPs for this player name! (Max: %max%)");
         
-        messages.addDefault("Blacklists.Break.KickMessage", "&cKicked for attempting to break &f%block%");
-        messages.addDefault("Blacklists.Break.DisallowedMessage", "&cYou do not have access to break &7%block% &cin world &7%world%");
-        messages.addDefault("Blacklists.Break.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to break an illegal block.");
-        
-        messages.addDefault("Blacklists.Place.KickMessage" , "&cKicked for attempting to place &f%block%");
-        messages.addDefault("Blacklists.Place.DisallowedMessage", "&cYou do not have access to place &7%block% &cin world &7%world%");
+        messages.addDefault("Blacklists.Place.KickMessage" , "&cKicked for attempting to place &f%itemName%");
+        messages.addDefault("Blacklists.Place.DisallowedMessage", "&cYou do not have access to place &7%itemName% &cin world &7%world%");
         messages.addDefault("Blacklists.Place.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to place an illegal block.");
         
-        messages.addDefault("Blacklists.Command.KickMessage", "&cKicked for attempting to do command &f%command%");
-        messages.addDefault("Blacklists.Command.DisallowedMessage", "&cThe command %command% is disabled in world %world%!");
+        messages.addDefault("Blacklists.Break.KickMessage", "&cKicked for attempting to break &f%itemName%");
+        messages.addDefault("Blacklists.Break.DisallowedMessage", "&cYou do not have access to break &7%itemName% &cin world &7%world%");
+        messages.addDefault("Blacklists.Break.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to break an illegal block.");
+        
+        messages.addDefault("Blacklists.Command.KickMessage", "&cKicked for attempting to do command &f%string%");
+        messages.addDefault("Blacklists.Command.DisallowedMessage", "&cThe command %string% is disabled in world %world%!");
         messages.addDefault("Blacklists.Command.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you tried to do an illegal command.");
         
-        messages.addDefault("Blacklists.Crafting.KickMessage", "&cKicked for attempting to craft &f%recipe%");
-        messages.addDefault("Blacklists.Crafting.DisallowedMessage", "&cYou do not have access to craft &7%recipe% &cin world %world%");
+        messages.addDefault("Blacklists.Crafting.KickMessage", "&cKicked for attempting to craft &f%itemName%");
+        messages.addDefault("Blacklists.Crafting.DisallowedMessage", "&cYou do not have access to craft &7%itemName% &cin world %world%");
         messages.addDefault("Blacklists.Crafting.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you tried to craft an illegal recipe.");
         
-        messages.addDefault("Blacklists.Drop.KickMessage", "&cKicked for attempting to drop &f%item%");
-        messages.addDefault("Blacklists.Drop.DisallowedMessage", "&cYou do not have access to drop &7%item% in world %world%");
+        messages.addDefault("Blacklists.Drop.KickMessage", "&cKicked for attempting to drop &f%itemName%");
+        messages.addDefault("Blacklists.Drop.DisallowedMessage", "&cYou do not have access to drop &7%itemName% in world %world%");
         messages.addDefault("Blacklists.Drop.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to drop an illegal block.");
         
-        messages.addDefault("Blacklists.Interact.KickMessage", "&cKicked for attempting to interact with &f%block%");
-        messages.addDefault("Blacklists.Interact.DisallowedMessage", "&cYou do not have access to interact with &7%block% &cin world &7%world%");
+        messages.addDefault("Blacklists.Pickup.KickMessage", "&cKicked for attempting to pickup &f%itemName%");
+        messages.addDefault("Blacklists.Pickup.DisallowedMessage", "&cYou do not have access to pickup &7%itemName% &cin world &7%world%");
+        messages.addDefault("Blacklists.Pickup.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to pickup an illegal block.");
+        
+        messages.addDefault("Blacklists.Interact.KickMessage", "&cKicked for attempting to interact with &f%itemName%");
+        messages.addDefault("Blacklists.Interact.DisallowedMessage", "&cYou do not have access to interact with &7%itemName% &cin world &7%world%");
         messages.addDefault("Blacklists.Interact.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you interacted with an illegal block.");
         
-        messages.addDefault("Blacklists.Censor.KickMessage", "&cKicked for attempting to send a message contaning &7%word%");
-        messages.addDefault("Blacklists.Censor.DisallowedMessage", "&c%word% is censored!");
+        messages.addDefault("Blacklists.Censor.KickMessage", "&cKicked for attempting to send a message contaning &7%string%");
+        messages.addDefault("Blacklists.Censor.DisallowedMessage", "&c%string% is censored!");
         messages.addDefault("Blacklists.Censor.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to say an illegal word.");
         
         getMessages().options().copyDefaults(true);
@@ -114,47 +116,30 @@ public class Messages {
         }
     }
     
-    public static String scanVariables(
-            String configString, String playerName,
-            String cmd, String blockName,
-            String item, String world,
-            String word, String recipe)  
-    {
+    public static String scan(String configString, Player p, String string, String itemName, World world) {
         String result = configString;
+        String playerName = p.getName();
+        itemName = itemName.toLowerCase();
+        String worldName = world.getName();
         
         if (playerName != null) {
             if (configString.contains("%playername%")) {
                 result = result.replaceAll("%playername%", playerName);
             }
         }
-        if (cmd != null) {
-            if (configString.contains("%command%")) {
-                result = result.replace("%command%", cmd);
+        if (string != null) {
+            if (configString.contains("%string%")) {
+                result = result.replace("%string%", string);
             }
         }
-        if (blockName != null) {
-            if (configString.contains("%block%")) {
-                result = result.replaceAll("%block%", blockName);
-            }
-        }
-        if (item != null) {
-            if (configString.contains("%item%")) {
-                result = result.replaceAll("%item%", item);
+        if (itemName != null) {
+            if (configString.contains("%itemName%")) {
+                result = result.replaceAll("%itemName%", itemName);
             }
         }
         if (world != null) {
             if (configString.contains("%world%")) {
-                result = result.replaceAll("%world%", world);
-            }
-        }
-        if (word != null) {
-            if (configString.contains("%word%")) {
-                result = result.replaceAll("%word%", word);
-            }
-        }
-        if (recipe != null) {
-            if (configString.contains("%recipe%")) {
-                result = result.replaceAll("%recipe%", recipe);
+                result = result.replaceAll("%world%", worldName);
             }
         }
         
