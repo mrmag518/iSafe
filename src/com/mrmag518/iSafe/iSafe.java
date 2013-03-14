@@ -56,7 +56,6 @@ public class iSafe extends JavaPlugin {
      * Add group thing to blacklists.
      * Potion management.
      * Move all Events classes to the a new EventManager package.
-     * Reorganize the config files?
      * Extend IPManagement and UserFiles features & support.
      */
     
@@ -190,6 +189,7 @@ public class iSafe extends JavaPlugin {
         enchantmentListener = new EnchantmentListener(this);
         dropListener = new DropListener(this);
         IPM = new IPManagement(this);
+        blacklistClass = new Blacklists(this);
         
         if (iSafeConfig.getISafeConfig().getBoolean("CreateUserFiles")) {
             UFC = new UserFileCreator(this);
@@ -205,13 +205,11 @@ public class iSafe extends JavaPlugin {
             Log.debug("CheckForUpdates in the iSafeConfig.yml was disabled, therefor not registering the sendUpdate class.");
         }
         
-        blacklistClass = new Blacklists(this);
-        
         Log.debug("Registered event classes.");
     }
 
     public void fileLoadManagement() {
-        if (!getDataFolder().exists()) {
+        if(!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
         
@@ -227,10 +225,10 @@ public class iSafe extends JavaPlugin {
         Config.load();
         Config.reload();
         
-        File UserFiles = new File("plugins/iSafe/UserFiles/Users");
-        UserFiles.mkdirs();
+        File usersDir = new File("plugins/iSafe/UserFiles/Users");
+        usersDir.mkdirs();
         
-        File exaFile = new File(UserFiles + File.separator + "_example.yml");
+        File exaFile = new File(usersDir + File.separator + "_example.yml");
         if(!exaFile.exists()) {
             try {
                 FileConfiguration exampFile = YamlConfiguration.loadConfiguration(exaFile);
@@ -251,7 +249,7 @@ public class iSafe extends JavaPlugin {
         
         IPManagement.checkIPLogger();
         
-        if (isStartup == true) {
+        if (isStartup) {
             /**
             * Any file being dependent on recieving the list of worlds on startup needs to load after a small delay.
             */
@@ -282,8 +280,8 @@ public class iSafe extends JavaPlugin {
         boolean beastMode = getConfig().getBoolean("AntiCheat/Security.Spam.UseBeastMode");
         boolean normalMode = getConfig().getBoolean("AntiCheat/Security.Spam.UseNormalMode");
         
-        if (beastMode == true) {
-            if (normalMode == true) {
+        if(beastMode) {
+            if(normalMode != false) {
                 getConfig().set("AntiCheat/Security.Spam.UseNormalMode", false);
                 Config.save();
             }

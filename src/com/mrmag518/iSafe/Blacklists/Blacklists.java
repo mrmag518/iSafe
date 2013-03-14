@@ -36,6 +36,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -538,7 +539,7 @@ public class Blacklists implements Listener {
         }
         
         for (int i = 0; i < blacklisted.size(); i++) {
-            String line = blacklisted.get(i);
+            String line = blacklisted.get(i).toLowerCase();
             
             if(line == null) {
                 continue;
@@ -585,6 +586,154 @@ public class Blacklists implements Listener {
             }
         }
     }
+    
+    @EventHandler
+    public void handleChat(AsyncPlayerChatEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        World world = event.getPlayer().getWorld();
+        FileConfiguration blacklist = Blacklist.getBlacklist(world.getName());
+        
+        if(blacklist.getBoolean("Events.Chat.Enabled") != true) {
+            return;
+        }
+        String sentence = event.getMessage().toLowerCase();
+        boolean shallContinue = false;
+        Player p = event.getPlayer();
+        List<String> blacklisted = blacklist.getStringList("Events.Chat.Blacklist");
+        List<String> whitelisted = blacklist.getStringList("Events.Chat.Whitelist");
+        
+        if(blacklisted.isEmpty() || blacklisted == null) {
+            return;
+        }
+        
+        if(p.getGameMode() == GameMode.SURVIVAL) {
+            if(blacklist.getBoolean("Events.Chat.Gamemode.ActiveFor.Survival") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.CREATIVE) {
+            if(blacklist.getBoolean("Events.Chat.Gamemode.ActiveFor.Creative") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.ADVENTURE) {
+            if(blacklist.getBoolean("Events.Chat.Gamemode.ActiveFor.Adventure") != true) {
+                return;
+            }
+        }
+        
+        for (int i = 0; i < whitelisted.size(); i++) {
+            String line = whitelisted.get(i).toLowerCase();
+            
+            if(line == null) {
+                continue;
+            }
+            
+            if(sentence.contains(line)) {
+                return;
+            }
+        }
+        String bWord = "";
+        
+        for (int i = 0; i < blacklisted.size(); i++) {
+            String line = blacklisted.get(i).toLowerCase();
+            
+            if(line == null) {
+                continue;
+            }
+            String temp = sentence;
+            
+            if(blacklist.getBoolean("Events.Chat.CheckSettings.RemoveSpaces")) {
+                if(sentence.contains(" ")) {
+                    temp = sentence.replaceAll(" ", "");
+                }
+            }
+            
+            if(blacklist.getBoolean("Events.Chat.CheckSettings.RemovePeriods")) {
+                if(sentence.contains(".")) {
+                    temp = sentence.replaceAll("\\.", "");
+                }
+            }
+            
+            if(blacklist.getBoolean("Events.Chat.CheckSettings.RemoveExclamations")) {
+                if(sentence.contains("!")) {
+                    temp = sentence.replaceAll("!", "");
+                }
+            }
+            
+            if(blacklist.getBoolean("Events.Chat.CheckSettings.RemoveQuestonMarks")) {
+                if(sentence.contains("?")) {
+                    temp = sentence.replaceAll("\\?", "");
+                }
+            }
+            
+            if(blacklist.getBoolean("Events.Chat.CheckSettings.SeeNumbersAsLetters")) {
+                if(sentence.contains("0")) {
+                    temp = sentence.replaceAll("0", "o");
+                }
+                if(sentence.contains("1")) {
+                    temp = sentence.replaceAll("1", "i");
+                }
+                if(sentence.contains("3")) {
+                    temp = sentence.replaceAll("3", "e");
+                }
+                if(sentence.contains("4")) {
+                    temp = sentence.replaceAll("4", "a");
+                }
+                if(sentence.contains("5")) {
+                    temp = sentence.replaceAll("5", "s");
+                }
+                if(sentence.contains("6")) {
+                    temp = sentence.replaceAll("6", "b");
+                }
+                if(sentence.contains("7")) {
+                    temp = sentence.replaceAll("7", "t");
+                }
+            }
+            
+            if(temp.contains(line)) {
+                shallContinue = true;
+                bWord = line;
+                break;
+            }
+        }
+        
+        if(shallContinue) {
+            if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.chat.bypass.*")) {
+                if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.chat.bypass." + sentence)) {
+                    event.setCancelled(true);
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Chat.Economy.Enabled")) {
+                int withdrawAmount = blacklist.getInt("Events.Chat.Economy.WithdrawAmount");
+                
+                Eco.withdraw(p.getName(), world, withdrawAmount);
+                
+                if(blacklist.getBoolean("Events.Chat.Economy.NotifyPlayer")) {
+                    Eco.sendEcoNotify(p, "Chat", withdrawAmount);
+                }
+            }
+            
+            if(blacklist.getBoolean("Events.Chat.Penalities.KickPlayer")) {
+                p.kickPlayer(Messages.scan(Messages.getMessages().getString("Blacklists.Chat.KickMessage"), p, bWord, null, world));
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Chat.Report.ToConsole")) {
+                Log.info(p.getName() + " attempted to chat the word " + bWord + " in world " + world.getName());
+            }
+            
+            if(blacklist.getBoolean("Events.Chat.Report.ToPlayer")) {
+                p.sendMessage(Messages.scan(Messages.getMessages().getString("Blacklists.Chat.DisallowedMessage"), p, bWord, null, world));
+            }
+        }
+    }
+    
     
     /*private void checkBlacklist(String path) {
         if(path == null) {

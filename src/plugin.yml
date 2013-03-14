@@ -93,6 +93,8 @@ permissions:
       iSafe.blacklist.break.bypass.*: true
       iSafe.blacklist.drop.bypass.*: true
       iSafe.blacklist.pickup.bypass.*: true
+      iSafe.blacklist.command.bypass.*: true
+      iSafe.blacklist.chat.bypass.*: true
   # ------------------------
   iSafe.bypass.hunger:
     default: true

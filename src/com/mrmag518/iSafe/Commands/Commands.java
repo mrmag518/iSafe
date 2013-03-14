@@ -31,15 +31,15 @@ public class Commands implements CommandExecutor {
                 } else if (args.length >= 1) {
                     if(args[0].equalsIgnoreCase("reload")) {
                         if(PermHandler.hasPermission(sender, "iSafe.command.reload")) {
-                            return reload(sender);
+                            reload(sender);
                         }
                     } else if(args[0].equalsIgnoreCase("info")) {
                         if(PermHandler.hasPermission(sender, "iSafe.command.info")) {
-                            return info(sender);
+                            displayInfo(sender);
                         }
                     } else if(args[0].equalsIgnoreCase("serverinfo")) {
                         if(PermHandler.hasPermission(sender, "iSafe.command.serverinfo")) {
-                            return serverinfo(sender);
+                            displayServerinfo(sender);
                         }
                     }
                 }
@@ -52,35 +52,35 @@ public class Commands implements CommandExecutor {
                 } else {
                     if (args.length >= 1) {
                         if(args[0].equalsIgnoreCase("reload")) {
-                            return reload(sender);
+                            reload(sender);
                         } else if(args[0].equalsIgnoreCase("info")) {
-                            return info(sender);
+                            displayInfo(sender);
                         } else if(args[0].equalsIgnoreCase("serverinfo")) {
-                            return serverinfo(sender);
+                            displayServerinfo(sender);
                         }
                     }
                 }
             }
+            return true;
         }
         return false;
     }
     
-    private boolean reload(CommandSender sender) {
+    private void reload(CommandSender sender) {
         String v = plugin.getDescription().getVersion();
         sender.sendMessage(G + "Reloading all iSafe " + v + " files ..");
         
-        try{
+        try {
             plugin.fileLoadManagement();
-        }catch(Exception e) {
+        } catch(Exception e) {
             sender.sendMessage(ChatColor.RED + "An issue ocurred while reloading iSafe!");
             e.printStackTrace();
         }
         
         sender.sendMessage(G + "Reloaded all iSafe " + v + " files.");
-        return true;
     }
     
-    private boolean info(CommandSender sender) {
+    private void displayInfo(CommandSender sender) {
         ChatColor AQ = ChatColor.AQUA;
         ChatColor W = ChatColor.WHITE;
         PluginDescriptionFile pdf = plugin.getDescription();
@@ -90,19 +90,17 @@ public class Commands implements CommandExecutor {
         sender.sendMessage(AQ + "Version: " + W + pdf.getFullName());
         sender.sendMessage(AQ + "Minecraft version: " + W + plugin.MCVersion);
         sender.sendMessage(AQ + "BukkitDev link: " + W + "http://dev.bukkit.org/server-mods/blockthattnt/");
-        return true;
     }
     
-    private boolean serverinfo(CommandSender sender) {
+    private void displayServerinfo(CommandSender sender) {
         ChatColor AQ = ChatColor.AQUA;
         ChatColor W = ChatColor.WHITE;
-        sender.sendMessage(AQ + "Bukkit version: "+ W + plugin.getServer().getBukkitVersion().toString());
-        sender.sendMessage(AQ + "Server Address: "+ W + plugin.getServer().getIp().toString());
-        sender.sendMessage(AQ + "Server name: "+ W + plugin.getServer().getName().toString());
-        sender.sendMessage(AQ + "Default GameMode: "+ W + plugin.getServer().getDefaultGameMode().toString());
+        sender.sendMessage(AQ + "Bukkit version: "+ W + plugin.getServer().getBukkitVersion());
+        sender.sendMessage(AQ + "Server address: "+ W + plugin.getServer().getIp());
+        sender.sendMessage(AQ + "Server name: "+ W + plugin.getServer().getName());
+        sender.sendMessage(AQ + "Default gamemode: "+ W + plugin.getServer().getDefaultGameMode().name().toLowerCase());
         sender.sendMessage(AQ + "Server port: "+ W + plugin.getServer().getPort());
         sender.sendMessage(AQ + "Spawn radius: "+ W + plugin.getServer().getSpawnRadius());
-        sender.sendMessage(AQ + "Number of worlds: "+ W + plugin.getServer().getWorlds().size());
-        return true;
+        sender.sendMessage(AQ + "Loaded worlds: "+ W + plugin.getServer().getWorlds().size());
     }
 }

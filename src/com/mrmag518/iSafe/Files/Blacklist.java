@@ -19,6 +19,8 @@ public class Blacklist {
     private static String[] default_drop = {"7", "397:3", "384"};
     private static String[] default_pickup = {"7", "46", "384"};
     private static String[] default_command = {"/nuke", "/strike"};
+    private static String[] default_chat = {"word", "word2", "etc"};
+    private static String[] default_chat_whitelist = {"wordd", "word22", "etcc"};
     
     public static void manageBlacklistDir() {
         for(World world : Bukkit.getWorlds()) {
@@ -126,6 +128,24 @@ public class Blacklist {
             blacklist.addDefault("Events.Command.Blacklist", Arrays.asList(default_command));
             
             blacklist.addDefault("Events.Chat.Enabled", false);
+            blacklist.addDefault("Events.Chat.Penalities.KickPlayer", false);
+            blacklist.addDefault("Events.Chat.Gamemode.ActiveFor.Survival", true);
+            blacklist.addDefault("Events.Chat.Gamemode.ActiveFor.Creative", true);
+            blacklist.addDefault("Events.Chat.Gamemode.ActiveFor.Adventure", true);
+            blacklist.addDefault("Events.Chat.Report.ToConsole", false);
+            blacklist.addDefault("Events.Chat.Report.ToPlayer", true);
+            blacklist.addDefault("Events.Chat.Economy.Enabled", false);
+            blacklist.addDefault("Events.Chat.Economy.WithdrawAmount", 10.0);
+            blacklist.addDefault("Events.Chat.Economy.AllowNegativeCashPile", false);
+            blacklist.addDefault("Events.Chat.Economy.NotifyPlayer", false);
+            blacklist.addDefault("Events.Chat.CheckSettings.RemoveSpaces", false);
+            blacklist.addDefault("Events.Chat.CheckSettings.RemovePeriods", false);
+            blacklist.addDefault("Events.Chat.CheckSettings.RemoveExclamations", false);
+            blacklist.addDefault("Events.Chat.CheckSettings.RemoveQuestonMarks", false);
+            blacklist.addDefault("Events.Chat.CheckSettings.SeeNumbersAsLetters", false);
+            blacklist.addDefault("Events.Chat.Blacklist", Arrays.asList(default_chat));
+            blacklist.addDefault("Events.Chat.Whitelist", Arrays.asList(default_chat_whitelist));
+            
             blacklist.addDefault("Events.Interact.Enabled", false);
             blacklist.addDefault("Events.Crafting.Enabled", false);
             blacklist.addDefault("Events.PistonExtend.Enabled", false);
