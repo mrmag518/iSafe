@@ -21,6 +21,8 @@ public class Blacklist {
     private static String[] default_command = {"/nuke", "/strike"};
     private static String[] default_chat = {"word", "word2", "etc"};
     private static String[] default_chat_whitelist = {"wordd", "word22", "etcc"};
+    private static String[] default_interact_block = {"77", "116", "137"};
+    private static String[] default_interact_item = {"380", "383:50", "384"};
     
     public static void manageBlacklistDir() {
         for(World world : Bukkit.getWorlds()) {
@@ -147,6 +149,19 @@ public class Blacklist {
             blacklist.addDefault("Events.Chat.Whitelist", Arrays.asList(default_chat_whitelist));
             
             blacklist.addDefault("Events.Interact.Enabled", false);
+            blacklist.addDefault("Events.Interact.Penalities.KickPlayer", false);
+            blacklist.addDefault("Events.Interact.Gamemode.ActiveFor.Survival", true);
+            blacklist.addDefault("Events.Interact.Gamemode.ActiveFor.Creative", true);
+            blacklist.addDefault("Events.Interact.Gamemode.ActiveFor.Adventure", true);
+            blacklist.addDefault("Events.Interact.Report.ToConsole", false);
+            blacklist.addDefault("Events.Interact.Report.ToPlayer", true);
+            blacklist.addDefault("Events.Interact.Economy.Enabled", false);
+            blacklist.addDefault("Events.Interact.Economy.WithdrawAmount", 10.0);
+            blacklist.addDefault("Events.Interact.Economy.AllowNegativeCashPile", false);
+            blacklist.addDefault("Events.Interact.Economy.NotifyPlayer", false);
+            blacklist.addDefault("Events.Interact.BlockBlacklist", Arrays.asList(default_interact_block));
+            blacklist.addDefault("Events.Interact.ItemBlacklist", Arrays.asList(default_interact_item));
+            
             blacklist.addDefault("Events.Crafting.Enabled", false);
             blacklist.addDefault("Events.PistonExtend.Enabled", false);
             
