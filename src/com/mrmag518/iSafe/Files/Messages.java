@@ -69,7 +69,7 @@ public class Messages {
         messages.addDefault("Blacklists.Pickup.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to pickup an illegal block.");
         
         messages.addDefault("Blacklists.Chat.KickMessage", "&cKicked for attempting to send a message contaning &7%string%");
-        messages.addDefault("Blacklists.Chat.DisallowedMessage", "&c%string% is censored!");
+        messages.addDefault("Blacklists.Chat.DisallowedMessage", "&cThe word &7%string% &cis censored!");
         messages.addDefault("Blacklists.Chat.EcoMessage", "&e%amount% &c$ were taken away from your currency, because you tried to say an illegal word.");
         
         messages.addDefault("Blacklists.Interact.KickMessage", "&cKicked for attempting to interact with &f%itemName%");
@@ -77,7 +77,7 @@ public class Messages {
         messages.addDefault("Blacklists.Interact.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you interacted with an illegal block.");
         
         messages.addDefault("Blacklists.Crafting.KickMessage", "&cKicked for attempting to craft &f%itemName%");
-        messages.addDefault("Blacklists.Crafting.DisallowedMessage", "&cYou do not have access to craft &7%itemName% &cin world %world%");
+        messages.addDefault("Blacklists.Crafting.DisallowedMessage", "&cYou do not have access to craft &7%itemName% &cin world &7%world%");
         messages.addDefault("Blacklists.Crafting.EcoMessage", "&e%amount% &$ cwere taken away from your currency, because you tried to craft an illegal recipe.");
         
         getMessages().options().copyDefaults(true);

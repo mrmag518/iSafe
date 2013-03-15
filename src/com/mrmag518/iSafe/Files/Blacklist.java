@@ -23,6 +23,8 @@ public class Blacklist {
     private static String[] default_chat_whitelist = {"wordd", "word22", "etcc"};
     private static String[] default_interact_block = {"77", "116", "137"};
     private static String[] default_interact_item = {"380", "383:50", "384"};
+    private static String[] default_crafting = {"46", "322:1"};
+    private static String[] default_pistonextend = {"46", "7"};
     
     public static void manageBlacklistDir() {
         for(World world : Bukkit.getWorlds()) {
@@ -163,7 +165,21 @@ public class Blacklist {
             blacklist.addDefault("Events.Interact.ItemBlacklist", Arrays.asList(default_interact_item));
             
             blacklist.addDefault("Events.Crafting.Enabled", false);
+            blacklist.addDefault("Events.Crafting.Penalities.KickPlayer", false);
+            blacklist.addDefault("Events.Crafting.Gamemode.ActiveFor.Survival", true);
+            blacklist.addDefault("Events.Crafting.Gamemode.ActiveFor.Creative", true);
+            blacklist.addDefault("Events.Crafting.Gamemode.ActiveFor.Adventure", true);
+            blacklist.addDefault("Events.Crafting.Report.ToConsole", false);
+            blacklist.addDefault("Events.Crafting.Report.ToPlayer", true);
+            blacklist.addDefault("Events.Crafting.Economy.Enabled", false);
+            blacklist.addDefault("Events.Crafting.Economy.WithdrawAmount", 10.0);
+            blacklist.addDefault("Events.Crafting.Economy.AllowNegativeCashPile", false);
+            blacklist.addDefault("Events.Crafting.Economy.NotifyPlayer", false);
+            blacklist.addDefault("Events.Crafting.Blacklist", Arrays.asList(default_crafting));
+            
             blacklist.addDefault("Events.PistonExtend.Enabled", false);
+            blacklist.addDefault("Events.PistonExtend.Report.ToConsole", false);
+            blacklist.addDefault("Events.PistonExtend.Blacklist", Arrays.asList(default_pistonextend));
             
             blacklist.options().copyDefaults(true);
             saveBlacklist(blacklist, worldname);
