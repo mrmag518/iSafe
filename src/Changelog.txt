@@ -15,6 +15,7 @@ Version 3.5
 ** Example: 'iSafe.blacklist.place.bypass.1' would make you bypass stone if blacklisted, but not anything else in the blacklist.
 * Improved the variable scanner, and changed variables.
 * Added messages and alerting for pickup blacklist.
+* Fixed MobSpawn blacklists not working at all.
 * 
 
 

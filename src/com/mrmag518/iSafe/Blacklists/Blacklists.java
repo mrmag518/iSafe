@@ -19,6 +19,7 @@
 package com.mrmag518.iSafe.Blacklists;
 
 import com.mrmag518.iSafe.Files.Blacklist;
+import com.mrmag518.iSafe.Files.CreatureManager;
 import com.mrmag518.iSafe.Files.Messages;
 import com.mrmag518.iSafe.Util.Eco;
 import com.mrmag518.iSafe.Util.Log;
@@ -32,13 +33,17 @@ import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -1156,46 +1161,79 @@ public class Blacklists implements Listener {
             }
         }
     }
-    /*
+    
     @EventHandler
-    public void DispenseBlacklist(BlockDispenseEvent event) {
-        if (event.isCancelled()){
+    public void handlePistonExtend(BlockDispenseEvent event) {
+        if(event.isCancelled()){
             return;
         }
-        Block b = event.getBlock();
-        int id = event.getItem().getTypeId();
-        String name = event.getItem().getType().name().toLowerCase();
+        World world = event.getBlock().getWorld();
+        FileConfiguration blacklist = Blacklist.getBlacklist(world.getName());
         
-        for(World world : Bukkit.getServer().getWorlds()) {
-            String worldname = world.getName();
-            String bWorld = b.getWorld().getName();
-            String blacklist = "Dispense." + bWorld + ".Blacklist";
-            String state = "Dispense." + bWorld + ".Enabled";
+        if(blacklist.getBoolean("Events.Dispense.Enabled") != true) {
+            return;
+        }
+        ItemStack is = event.getItem();
+        int item_id = is.getTypeId();
+        byte item_data = is.getData().getData();
+        boolean shallContinue = false;
+        List<String> blacklisted = blacklist.getStringList("Events.Dispense.Blacklist");
+        
+        if(blacklisted.isEmpty() || blacklisted == null) {
+            return;
+        }
+        
+        for (int i = 0; i < blacklisted.size(); i++) {
+            String line = blacklisted.get(i);
             
-            checkBlacklist(blacklist);
+            if(line == null) {
+                continue;
+            }
+            int blacklisted_id = 0;
+            byte blacklisted_data = 0;
             
-            if(bWorld.equalsIgnoreCase(worldname)) 
-            {
-                if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
-                {
-                    if(BlacklistsF.getBlacklists().getString(blacklist).contains(id + ",")) //|| BlacklistsF.getBlacklists().getString(blacklist).contains(id + ":" + b.getData() + ","))
-                    {
-                        event.setCancelled(true);
-                        if(BlacklistsF.getBlacklists().getBoolean("Dispense." + bWorld + ".Alert/log-to.Console") == true) {
-                            Log.info("[iSafe] " + " The block '" + name + "' was prevented from being dispensed" + " in the world '" + bWorld + "'.");
-                        }
-                    }
+            if(line.contains(":")) {
+                String[] splitted = line.split(":");
+                blacklisted_id = Integer.parseInt(splitted[0]);
+                blacklisted_data = Byte.parseByte(splitted[1]);
+            } else {
+                blacklisted_id = Integer.parseInt(line);
+            }
+            
+            if(blacklisted_id < 1 || blacklisted_data < 0) {
+                continue;
+            }
+            
+            if(blacklisted_data > 0) {
+                if(item_id == blacklisted_id && item_data == blacklisted_data) {
+                    shallContinue = true;
+                    break;
+                }
+            } else {
+                if(item_id == blacklisted_id) {
+                    shallContinue = true;
+                    break;
                 }
             }
         }
+        
+        if(shallContinue) {
+            event.setCancelled(true);
+            
+            if(blacklist.getBoolean("Events.Dispense.Report.ToConsole")) {
+                Log.info("A dispenser tried to dispense a blacklisted item in world " + world.getName());
+            }
+        }
     }
+    
+    
     @EventHandler
     public void mobspawnBlacklist(CreatureSpawnEvent event) {
         if (event.isCancelled()){
             return;
         }
         LivingEntity le = event.getEntity();
-        int id = le.getEntityId();
+        short id = le.getType().getTypeId();
         String name = le.getType().getName().toLowerCase();
         
         for(World world : Bukkit.getServer().getWorlds()) {
@@ -1206,18 +1244,17 @@ public class Blacklists implements Listener {
             
             if(eWorld.equalsIgnoreCase(worldname)) 
             {
-                if(BlacklistsF.getBlacklists().getBoolean(state) == true) 
+                if(CreatureManager.getCreatureManager().getBoolean(state) == true) 
                 {
                     if(event.getSpawnReason() == SpawnReason.NATURAL)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".Natural.Blacklist";
-                        checkBlacklist(blacklist);
                         if(CreatureManager.getCreatureManager().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
                             if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Natural.Debug.ToConsole") == true){
-                                Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Natural; In the world: " + eWorld);
+                                Log.info("A(n) " + name + " was cancelled its spawn, for the spawn reason: Natural; In the world: " + eWorld);
                             }
                         }
                     }
@@ -1225,13 +1262,12 @@ public class Blacklists implements Listener {
                     if(event.getSpawnReason() == SpawnReason.SPAWNER)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".Spawner.Blacklist";
-                        checkBlacklist(blacklist);
                         if(CreatureManager.getCreatureManager().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
                             if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Spawner.Debug.ToConsole") == true){
-                                Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Spawner; In the world: " + eWorld);
+                                Log.info("A(n) " + name + " was cancelled its spawn, for the spawn reason: Spawner; In the world: " + eWorld);
                             }
                         }
                     }
@@ -1239,13 +1275,12 @@ public class Blacklists implements Listener {
                     if(event.getSpawnReason() == SpawnReason.CUSTOM)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".Custom.Blacklist";
-                        checkBlacklist(blacklist);
                         if(CreatureManager.getCreatureManager().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
                             if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Custom.Debug.ToConsole") == true){
-                                Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Custom; In the world: " + eWorld);
+                                Log.info("A(n) " + name + " was cancelled its spawn, for the spawn reason: Custom; In the world: " + eWorld);
                             }
                         }
                     }
@@ -1253,13 +1288,12 @@ public class Blacklists implements Listener {
                     if(event.getSpawnReason() == SpawnReason.SPAWNER_EGG)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".SpawnerEgg.Blacklist";
-                        checkBlacklist(blacklist);
                         if(CreatureManager.getCreatureManager().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
                             if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".SpawnerEgg.Debug.ToConsole") == true){
-                                Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: SpawnerEgg; In the world: " + eWorld);
+                                Log.info("A(n) " + name + " was cancelled its spawn, for the spawn reason: SpawnerEgg; In the world: " + eWorld);
                             }
                         }
                     }
@@ -1267,13 +1301,12 @@ public class Blacklists implements Listener {
                     if(event.getSpawnReason() == SpawnReason.CHUNK_GEN)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".ChunkGen.Blacklist";
-                        checkBlacklist(blacklist);
                         if(CreatureManager.getCreatureManager().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
                             if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".ChunkGen.Debug.ToConsole") == true){
-                                Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: ChunkGen; In the world: " + eWorld);
+                                Log.info("A(n) " + name + " was cancelled its spawn, for the spawn reason: ChunkGen; In the world: " + eWorld);
                             }
                         }
                     }
@@ -1281,19 +1314,18 @@ public class Blacklists implements Listener {
                     if(event.getSpawnReason() == SpawnReason.BREEDING)
                     {
                         String blacklist = "MobSpawn." + eWorld + ".Breeding.Blacklist";
-                        checkBlacklist(blacklist);
                         if(CreatureManager.getCreatureManager().getString(blacklist).contains(id + ",")) 
                         {
                             event.setCancelled(true);
                             event.getEntity().remove();
                             
                             if (CreatureManager.getCreatureManager().getBoolean("MobSpawn." + eWorld + ".Breeding.Debug.ToConsole") == true){
-                                Log.info("[iSafe]" + " A(n) " + name + " was cancelled its spawn, for the spawn reason: Breeding; In the world: " + eWorld);
+                                Log.info("A(n) " + name + " was cancelled its spawn, for the spawn reason: Breeding; In the world: " + eWorld);
                             }
                         }
                     }
                 }
             }
         }
-    }*/
+    }
 }

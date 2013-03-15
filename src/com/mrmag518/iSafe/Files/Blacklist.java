@@ -181,6 +181,10 @@ public class Blacklist {
             blacklist.addDefault("Events.PistonExtend.Report.ToConsole", false);
             blacklist.addDefault("Events.PistonExtend.Blacklist", Arrays.asList(default_pistonextend));
             
+            blacklist.addDefault("Events.Dispense.Enabled", false);
+            blacklist.addDefault("Events.Dispense.Report.ToConsole", false);
+            blacklist.addDefault("Events.Dispense.Blacklist", Arrays.asList(default_pistonextend));
+            
             blacklist.options().copyDefaults(true);
             saveBlacklist(blacklist, worldname);
         }
