@@ -1,7 +1,25 @@
+/*
+ * iSafe
+ * Copyright (C) 2011-2012 mrmag518 <magnusaub@yahoo.no>
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.mrmag518.iSafe.Commands;
 
 import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -41,6 +59,10 @@ public class Commands implements CommandExecutor {
                         if(PermHandler.hasPermission(sender, "iSafe.command.serverinfo")) {
                             displayServerinfo(sender);
                         }
+                    } else if(args[0].equalsIgnoreCase("updatecheck")) {
+                        if(PermHandler.hasPermission(sender, "iSafe.command.updatecheck")) {
+                            updateCheck(sender);
+                        }
                     }
                 }
             } else {
@@ -57,6 +79,8 @@ public class Commands implements CommandExecutor {
                             displayInfo(sender);
                         } else if(args[0].equalsIgnoreCase("serverinfo")) {
                             displayServerinfo(sender);
+                        } else if(args[0].equalsIgnoreCase("updatecheck")) {
+                            updateCheck(sender);
                         }
                     }
                 }
@@ -64,6 +88,20 @@ public class Commands implements CommandExecutor {
             return true;
         }
         return false;
+    }
+    
+    private void updateCheck(CommandSender sender) {
+        if(plugin.updateFound) {
+            sender.sendMessage(ChatColor.RED + "-----------------------------------------------------");
+            sender.sendMessage(ChatColor.GREEN + "There's a new version of iSafe available!");
+            sender.sendMessage(ChatColor.GREEN + "Version running: " + ChatColor.WHITE + plugin.currentVersion);
+            sender.sendMessage(ChatColor.GREEN + "Version found: " + ChatColor.WHITE + plugin.versionFound);
+            sender.sendMessage(ChatColor.RED + "-----------------------------------------------------");
+        } else {
+            sender.sendMessage(ChatColor.RED + "-----------------------------------------------------");
+            sender.sendMessage(ChatColor.GREEN + "No new version of iSafe was found.");
+            sender.sendMessage(ChatColor.RED + "-----------------------------------------------------");
+        }
     }
     
     private void reload(CommandSender sender) {

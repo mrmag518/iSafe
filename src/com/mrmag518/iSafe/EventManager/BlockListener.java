@@ -1,5 +1,3 @@
-package com.mrmag518.iSafe.Events.BlockEvents;
-
 /*
  * iSafe
  * Copyright (C) 2011-2012 mrmag518 <magnusaub@yahoo.no>
@@ -17,11 +15,12 @@ package com.mrmag518.iSafe.Events.BlockEvents;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package com.mrmag518.iSafe.EventManager;
 
 import com.mrmag518.iSafe.*;
 import com.mrmag518.iSafe.Files.Messages;
-import com.mrmag518.iSafe.Util.Log;
 import com.mrmag518.iSafe.Util.PermHandler;
+
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,9 +31,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionEffectType;
 
 
 public class BlockListener implements Listener {
@@ -74,9 +70,11 @@ public class BlockListener implements Listener {
             if(p.getWorld().getTime() > 17999 && checkNight == false) {
                 return;
             }
+            
             if(p.getGameMode().equals(GameMode.CREATIVE) && checkGMC == false) {
                 return;
             }
+            
             if(level <= detectionLvl && !b.isLiquid() && !loc.getBlock().isLiquid()) {
                 if(!PermHandler.hasPermission(p, "iSafe.bypass.fullbright", false)) {
                     event.setCancelled(true);
@@ -100,7 +98,7 @@ public class BlockListener implements Listener {
         } else if (cause == IgniteCause.FLINT_AND_STEEL) {
             if(plugin.getConfig().getBoolean("Fire.PreventFlintAndSteelUsage", true)) {
                 Player p = event.getPlayer();
-                if(!(PermHandler.hasPermission(p, "iSafe.use.flintandsteel"))) {
+                if(!PermHandler.hasPermission(p, "iSafe.use.flintandsteel")) {
                     event.setCancelled(true);
                 }
             }
@@ -121,30 +119,25 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFromTo(BlockFromToEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()) {
             return;
         }
         Block block = event.getBlock();
         
-        if(plugin.getConfig().getBoolean("Flow.DisableWaterFlow", true))
-        {
-            if (block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) 
-            {
+        if(plugin.getConfig().getBoolean("Flow.DisableWaterFlow")) {
+            if(block.getType() == Material.WATER || block.getType() == Material.STATIONARY_WATER) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("Flow.DisableLavaFlow", true))
-        {
-            if (block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
-                
+        
+        if(plugin.getConfig().getBoolean("Flow.DisableLavaFlow")) {
+            if(block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("Flow.DisableAirFlow", true))
-        {
-            if (block.getType() == Material.AIR) 
-            {
+        
+        if(plugin.getConfig().getBoolean("Flow.DisableAirFlow")) {
+            if(block.getType() == Material.AIR) {
                 event.setCancelled(true);
             }
         }
@@ -156,7 +149,7 @@ public class BlockListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Pistons.DisablePistonExtend", true)){
+        if(plugin.getConfig().getBoolean("Pistons.DisablePistonExtend")){
             event.setCancelled(true);
         }
     }
@@ -167,7 +160,7 @@ public class BlockListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Pistons.DisablePistonRetract", true)){
+        if(plugin.getConfig().getBoolean("Pistons.DisablePistonRetract")){
             event.setCancelled(true);
         }
     }
@@ -178,7 +171,7 @@ public class BlockListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Fire.PreventBlockBurn", true)){
+        if(plugin.getConfig().getBoolean("Fire.PreventBlockBurn")){
             event.setCancelled(true);
         }
     }
@@ -189,7 +182,7 @@ public class BlockListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Miscellaneous.DisableLeavesDecay", true)){
+        if(plugin.getConfig().getBoolean("Miscellaneous.DisableLeavesDecay")){
             event.setCancelled(true);
         }
     }
@@ -201,12 +194,12 @@ public class BlockListener implements Listener {
         }
         Block b = event.getBlock();
         
-        if(plugin.getConfig().getBoolean("BlockPhysics.DisableSandPhysics", true)){
+        if(plugin.getConfig().getBoolean("BlockPhysics.DisableSandPhysics")){
             if (b.getType() == Material.SAND) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("BlockPhysics.DisableGravelPhysics", true)){
+        if(plugin.getConfig().getBoolean("BlockPhysics.DisableGravelPhysics")){
             if (b.getType() == Material.GRAVEL) {
                 event.setCancelled(true);
             }
@@ -220,12 +213,12 @@ public class BlockListener implements Listener {
         }
         Block block = event.getBlock();
         
-        if(plugin.getConfig().getBoolean("BlockFade.DisableIceMelting", true)){
+        if(plugin.getConfig().getBoolean("BlockFade.DisableIceMelting")){
             if (block.getTypeId() == 79) {
                 event.setCancelled(true);
             }
         }
-        if(plugin.getConfig().getBoolean("BlockFade.DisableSnowMelting", true)){
+        if(plugin.getConfig().getBoolean("BlockFade.DisableSnowMelting")){
             if (block.getTypeId() == 80) {
                 event.setCancelled(true);
             }
@@ -234,7 +227,7 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockCanBuild(BlockCanBuildEvent event) {
-        if(plugin.getConfig().getBoolean("Miscellaneous.ForceBlocksToBeBuildable", true)){
+        if(plugin.getConfig().getBoolean("Miscellaneous.ForceBlocksToBeBuildable")){
             if (!event.isBuildable()) {
                 event.setBuildable(true);
             }
@@ -247,37 +240,13 @@ public class BlockListener implements Listener {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Miscellaneous.DisableBlockSpreading", true)){
+        if(plugin.getConfig().getBoolean("Miscellaneous.DisableBlockSpreading")){
             event.setCancelled(true);
         }
         
         if(event.getSource().getType() == Material.FIRE) {
-            if(plugin.getConfig().getBoolean("Fire.DisableFireSpread", true)) {
+            if(plugin.getConfig().getBoolean("Fire.DisableFireSpread")) {
                 event.setCancelled(true);
-            }
-        }
-    }
-    
-    @EventHandler
-    public void invisibilityManager(BlockDispenseEvent event) {
-        if(event.isCancelled()) {
-            return;
-        }
-        
-        if(plugin.getConfig().getBoolean("AntiCheat/Security.Invisibility.DisablePotionDispensing") != true) {
-            return;
-        }
-        
-        ItemStack stack = event.getItem();
-        Material type = stack.getType();
-        
-        if(type == Material.POTION) {
-            Potion potion = Potion.fromItemStack(stack);
-            PotionEffectType effect = potion.getType().getEffectType();
-
-            if(effect == PotionEffectType.INVISIBILITY) {
-                event.setCancelled(true);
-                Log.debug("An invisibility potion were prevented from dispensing!");
             }
         }
     }

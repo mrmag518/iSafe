@@ -1,5 +1,3 @@
-package com.mrmag518.iSafe.Events.EntityEvents;
-
 /*
  * iSafe
  * Copyright (C) 2011-2012 mrmag518 <magnusaub@yahoo.no>
@@ -17,24 +15,62 @@ package com.mrmag518.iSafe.Events.EntityEvents;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package com.mrmag518.iSafe.EventManager;
 
-import com.mrmag518.iSafe.*;
 import com.mrmag518.iSafe.Files.Config;
 
 import com.mrmag518.iSafe.Files.CreatureManager;
 import com.mrmag518.iSafe.Util.Log;
 import com.mrmag518.iSafe.Util.PermHandler;
-import org.bukkit.entity.*;
-import org.bukkit.event.entity.*;
-import org.bukkit.*;
+import com.mrmag518.iSafe.iSafe;
+import org.bukkit.DyeColor;
+import org.bukkit.Location;
+import org.bukkit.World;
+
 import org.bukkit.block.Block;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.EnderCrystal;
+import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Giant;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Wither;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreeperPowerEvent;
 import org.bukkit.event.entity.CreeperPowerEvent.PowerCause;
-import org.bukkit.event.entity.EntityDamageEvent.*;
+import org.bukkit.event.entity.EntityBreakDoorEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityCombustEvent;
+import org.bukkit.event.entity.EntityCreatePortalEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
-import org.bukkit.event.entity.EntityTargetEvent.*;
+import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
+import org.bukkit.event.entity.ExpBottleEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.entity.PigZapEvent;
+import org.bukkit.event.entity.SheepDyeWoolEvent;
+import org.bukkit.event.entity.SlimeSplitEvent;
 
 
 public class EntityListener implements Listener {
@@ -198,6 +234,9 @@ public class EntityListener implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
+        if (event.isCancelled()){
+            return;
+        }
         Entity entity = event.getEntity();
         World world = entity.getWorld();
         
@@ -227,15 +266,13 @@ public class EntityListener implements Listener {
         }
         
         if(Config.getConfig().getBoolean("Damage.DisableVillagerDamage") == true){
-            if(entity instanceof Villager) 
-            {
+            if(entity instanceof Villager) {
                 event.setCancelled(true);
             }
         }
         
         if(Config.getConfig().getBoolean("Damage.DisablePlayerDamage") == true){
-            if(entity instanceof Player) 
-            {
+            if(entity instanceof Player) {
                 event.setCancelled(true);
             }
         }
@@ -264,7 +301,7 @@ public class EntityListener implements Listener {
         }
         if(CreatureManager.getCreatureManager().getBoolean("Creatures.Damage.DisableFireDamage") == true){
             if(event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK)) {
-                if (entity instanceof Creature || entity instanceof Animals) {
+                if(entity instanceof Creature) {
                     event.setCancelled(true);
                 }
             }

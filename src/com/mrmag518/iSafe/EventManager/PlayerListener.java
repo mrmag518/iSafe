@@ -1,5 +1,3 @@
-package com.mrmag518.iSafe.Events.EntityEvents;
-
 /*
  * iSafe
  * Copyright (C) 2011-2012 mrmag518 <magnusaub@yahoo.no>
@@ -17,13 +15,13 @@ package com.mrmag518.iSafe.Events.EntityEvents;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package com.mrmag518.iSafe.EventManager;
 
-
-import com.mrmag518.iSafe.*;
 import com.mrmag518.iSafe.Files.Config;
 import com.mrmag518.iSafe.Files.Messages;
 import com.mrmag518.iSafe.Util.Log;
 import com.mrmag518.iSafe.Util.PermHandler;
+import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -36,9 +34,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionEffectType;
 
 public class PlayerListener implements Listener  {
     public static iSafe plugin;
@@ -83,7 +78,6 @@ public class PlayerListener implements Listener  {
         if(event.isCancelled()) {
             return;
         }
-        
         Action act = event.getAction();
         
         if(act == Action.RIGHT_CLICK_BLOCK) {
@@ -102,48 +96,6 @@ public class PlayerListener implements Listener  {
                     if(!PermHandler.hasPermission(p, "iSafe.use.commandblocks")) {
                         event.setCancelled(true);
                         p.getOpenInventory().close(); // Work-around for interact bug.
-                    }
-                }
-            }
-        }
-    }
-    
-    @EventHandler
-    public void invisibilityManager(PlayerInteractEvent event) {
-        if(event.isCancelled()) {
-            return;
-        }
-        
-        if(Config.getConfig().getBoolean("AntiCheat/Security.Invisibility.DisablePotionUsage") != true) {
-            return;
-        }
-        
-        Action action = event.getAction();
-        
-        if(action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-            Player p = event.getPlayer();
-            
-            if(p.getItemInHand().getTypeId() == 373) {
-                int data = p.getItemInHand().getDurability();
-                if(data == 8193 || data == 8206 || data == 16318 || data == 16382) {
-                    if(!PermHandler.hasPermission(p, "iSafe.bypass.potion.invisibility")) {
-                        event.setCancelled(true);
-                        p.setItemInHand(new ItemStack(Material.GLASS_BOTTLE));
-                    }
-                }
-            }
-            
-            ItemStack hand = p.getItemInHand();
-            Material type = hand.getType();
-            
-            if(type == Material.POTION) {
-                Potion potion = Potion.fromItemStack(hand);
-                PotionEffectType effect = potion.getType().getEffectType();
-                
-                if(effect == PotionEffectType.INVISIBILITY) {
-                    if(!PermHandler.hasPermission(p, "iSafe.bypass.potion.invisibility")) {
-                        event.setCancelled(true);
-                        p.setItemInHand(new ItemStack(Material.GLASS_BOTTLE));
                     }
                 }
             }

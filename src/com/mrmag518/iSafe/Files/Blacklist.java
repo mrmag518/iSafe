@@ -25,6 +25,7 @@ public class Blacklist {
     private static String[] default_interact_item = {"380", "383:50", "384"};
     private static String[] default_crafting = {"46", "322:1"};
     private static String[] default_pistonextend = {"46", "7"};
+    private static String[] default_dispense = {"262", "327"};
     
     public static void manageBlacklistDir() {
         for(World world : Bukkit.getWorlds()) {
@@ -183,7 +184,7 @@ public class Blacklist {
             
             blacklist.addDefault("Events.Dispense.Enabled", false);
             blacklist.addDefault("Events.Dispense.Report.ToConsole", false);
-            blacklist.addDefault("Events.Dispense.Blacklist", Arrays.asList(default_pistonextend));
+            blacklist.addDefault("Events.Dispense.Blacklist", Arrays.asList(default_dispense));
             
             blacklist.options().copyDefaults(true);
             saveBlacklist(blacklist, worldname);
@@ -212,15 +213,4 @@ public class Blacklist {
             Logger.getLogger(Blacklist.class.getName()).log(Level.SEVERE, "Error saving blacklist file " + getBlacklistFile(worldname), ex);
         }
     }
-    
-    /*public static void saveBlacklist(String worldname) {
-        File blacklistFile = getBlacklistFile(worldname);
-        FileConfiguration blacklist = getBlacklist(worldname);
-        
-        try {
-            blacklist.save(blacklistFile);
-        } catch (IOException ex) {
-            Logger.getLogger(Blacklist.class.getName()).log(Level.SEVERE, "Error saving blacklist file " + blacklistFile, ex);
-        }
-    }*/
 }

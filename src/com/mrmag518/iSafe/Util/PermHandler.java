@@ -3,15 +3,11 @@ package com.mrmag518.iSafe.Util;
 import com.mrmag518.iSafe.Files.Messages;
 import com.mrmag518.iSafe.Files.iSafeConfig;
 import com.mrmag518.iSafe.iSafe;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class PermHandler {
-    public static boolean checkingUpdatePerms = false;
-    public static boolean cancelDamagePerms = false;
-    public static boolean checkingSpamPerms = false;
-    public static boolean checkingFullbrightPerms = false;
-    
     public static boolean hasPermission(CommandSender sender, String permission) {
         if(iSafeConfig.getISafeConfig().getBoolean("UseVaultForPermissions") == true) {
             if (iSafe.perms.has(sender, permission)) {

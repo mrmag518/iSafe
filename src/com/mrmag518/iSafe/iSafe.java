@@ -17,13 +17,18 @@
  */
 package com.mrmag518.iSafe;
 
+import com.mrmag518.iSafe.EventManager.WorldListener;
+import com.mrmag518.iSafe.EventManager.WeatherListener;
+import com.mrmag518.iSafe.EventManager.PlayerListener;
+import com.mrmag518.iSafe.EventManager.InventoryListener;
+import com.mrmag518.iSafe.EventManager.EntityListener;
+import com.mrmag518.iSafe.EventManager.EnchantmentListener;
+import com.mrmag518.iSafe.EventManager.DropListener;
+import com.mrmag518.iSafe.EventManager.BlockListener;
 import com.mrmag518.iSafe.EventManager.IPManagement;
 import com.mrmag518.iSafe.Util.SendUpdate;
 import com.mrmag518.iSafe.Util.UserFileCreator;
 import com.mrmag518.iSafe.Util.Data;
-import com.mrmag518.iSafe.Events.BlockEvents.*;
-import com.mrmag518.iSafe.Events.EntityEvents.*;
-import com.mrmag518.iSafe.Events.WorldEvents.*;
 import com.mrmag518.iSafe.Blacklists.Blacklists;
 import com.mrmag518.iSafe.Commands.Commands;
 import com.mrmag518.iSafe.Files.*;
@@ -50,13 +55,16 @@ public class iSafe extends JavaPlugin {
     
     /**
      * Note to self:
+     * 
+     * Mix event managers into each other.
+     * 
      * Start working on gamemode 'protection'.
      * More bug hunting...
      * Commands to toggle the enable state of specific worlds in the blacklist.
      * Add group thing to blacklists.
      * Potion management.
      * Move all Events classes to the a new EventManager package.
-     * Extend IPManagement and UserFiles features & support.
+     * Extend IPManager and UserFiles features & support.
      */
     
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -69,7 +77,6 @@ public class iSafe extends JavaPlugin {
     private EntityListener entityListener = null;
     private WeatherListener weatherListener = null;
     private InventoryListener inventoryListener = null;
-    private VehicleListener vehicleListener = null;
     private WorldListener worldListener = null;
     private EnchantmentListener enchantmentListener = null;
     private DropListener dropListener = null;
@@ -183,7 +190,6 @@ public class iSafe extends JavaPlugin {
         blockListener = new BlockListener(this);
         entityListener = new EntityListener(this);
         worldListener = new WorldListener(this);
-        vehicleListener = new VehicleListener(this);
         weatherListener = new WeatherListener(this);
         inventoryListener = new InventoryListener(this);
         enchantmentListener = new EnchantmentListener(this);

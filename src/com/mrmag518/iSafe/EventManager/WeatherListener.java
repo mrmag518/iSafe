@@ -1,5 +1,3 @@
-package com.mrmag518.iSafe.Events.WorldEvents;
-
 /*
  * iSafe
  * Copyright (C) 2011-2012 mrmag518 <magnusaub@yahoo.no>
@@ -17,10 +15,9 @@ package com.mrmag518.iSafe.Events.WorldEvents;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package com.mrmag518.iSafe.EventManager;
 
-
-
-import com.mrmag518.iSafe.*;
+import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,48 +28,41 @@ import org.bukkit.event.weather.WeatherChangeEvent;
 
 public class WeatherListener implements Listener {
     public static iSafe plugin;
-    public WeatherListener(iSafe instance)
-    {
+    public WeatherListener(iSafe instance) {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
         
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onLightningStrike(LightningStrikeEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()) {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Weather.DisableLightningStrike", true))
-        {
+        if(plugin.getConfig().getBoolean("Weather.DisableLightningStrike")) {
            event.setCancelled(true);
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onThunderChange(ThunderChangeEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()) {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Weather.DisableThunder", true))
-        {
+        if(plugin.getConfig().getBoolean("Weather.DisableThunder")) {
             event.toThunderState();
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     public void onWeatherChange(WeatherChangeEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()) {
             return;
         }
         
-        if(plugin.getConfig().getBoolean("Weather.DisableStorm", true))
-        {
+        if(plugin.getConfig().getBoolean("Weather.DisableStorm")) {
             event.toWeatherState();
             event.setCancelled(true);
         }

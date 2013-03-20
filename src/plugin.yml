@@ -86,6 +86,7 @@ permissions:
       iSafe.command.reload: true
       iSafe.command.info: true
       iSafe.command.serverinfo: true
+      iSafe.command.updatecheck: true
   iSafe.blacklist.*:
     default: op
     children:

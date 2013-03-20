@@ -1,5 +1,3 @@
-package com.mrmag518.iSafe.Events.BlockEvents;
-
 /*
  * iSafe
  * Copyright (C) 2011-2012 mrmag518 <magnusaub@yahoo.no>
@@ -17,8 +15,7 @@ package com.mrmag518.iSafe.Events.BlockEvents;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-
+package com.mrmag518.iSafe.EventManager;
 
 import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
@@ -33,16 +30,14 @@ import org.bukkit.inventory.ItemStack;
 
 public class DropListener implements Listener {
     public static iSafe plugin;
-    public DropListener(iSafe instance)
-    {
+    public DropListener(iSafe instance) {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
     @EventHandler
     public void onBlockPlace(BlockBreakEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()) {
             return;
         }
         

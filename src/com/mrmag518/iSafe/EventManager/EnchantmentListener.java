@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-package com.mrmag518.iSafe.Events.EntityEvents;
+package com.mrmag518.iSafe.EventManager;
 
 import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
@@ -31,8 +30,7 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 
 public class EnchantmentListener implements Listener {
     public static iSafe plugin;
-    public EnchantmentListener(iSafe instance)
-    {
+    public EnchantmentListener(iSafe instance) {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -41,8 +39,7 @@ public class EnchantmentListener implements Listener {
     public void EnchantmentManager(EnchantItemEvent event) {
         Player p = event.getEnchanter();
         
-        if(plugin.getConfig().getBoolean("Enchantment.PreventEnchantment", true))
-        {
+        if(plugin.getConfig().getBoolean("Enchantment.PreventEnchantment", true)) {
             if(!PermHandler.hasPermission(p, "iSafe.bypass.enchant")) {
                 event.setCancelled(true);
                 p.sendMessage(ChatColor.RED + "You do not have access to enchant items.");

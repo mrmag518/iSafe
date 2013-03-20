@@ -1,5 +1,3 @@
-package com.mrmag518.iSafe.Events.EntityEvents;
-
 /*
  * iSafe
  * Copyright (C) 2011-2012 mrmag518 <magnusaub@yahoo.no>
@@ -17,11 +15,10 @@ package com.mrmag518.iSafe.Events.EntityEvents;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+package com.mrmag518.iSafe.EventManager;
 
-
-
-import com.mrmag518.iSafe.*;
 import com.mrmag518.iSafe.Files.Config;
+import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,16 +27,14 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 
 public class InventoryListener implements Listener {
     public static iSafe plugin;
-    public InventoryListener(iSafe instance)
-    {
+    public InventoryListener(iSafe instance) {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
     @EventHandler
     public void onFurnaceBurn(FurnaceBurnEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()) {
             return;
         }
         
@@ -51,8 +46,7 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void onFurnaceSmelt(FurnaceSmeltEvent event) {
-        if (event.isCancelled())
-        {
+        if (event.isCancelled()) {
             return;
         }
         

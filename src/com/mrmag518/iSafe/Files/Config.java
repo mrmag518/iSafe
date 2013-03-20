@@ -83,8 +83,6 @@ public class Config {
         config.addDefault("AntiCheat/Security.Spam.EnableBypassPermissions", true);
         config.addDefault("AntiCheat/Security.Spam.UseNormalMode", true);
         config.addDefault("AntiCheat/Security.Spam.UseBeastMode", false);
-        config.addDefault("AntiCheat/Security.Invisibility.DisablePotionUsage", false);
-        config.addDefault("AntiCheat/Security.Invisibility.DisablePotionDispensing", false);
         config.addDefault("AntiCheat/Security.IPManagement.Enabled", false);
         config.addDefault("AntiCheat/Security.IPManagement.LockIpToFirstJoin", false);
         config.addDefault("AntiCheat/Security.IPManagement.AlternateAccounts.EnableChecking", false);
