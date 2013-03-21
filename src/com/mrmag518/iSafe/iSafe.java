@@ -68,9 +68,9 @@ public class iSafe extends JavaPlugin {
      */
     
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    private final String fileversion = "iSafe v3.41";
-    public static final Double ConfigVersion = 3.41;
-    public final String MCVersion = "1.4.7";
+    private final String fileversion = "iSafe v3.5";
+    public static final Double ConfigVersion = 3.5;
+    public final String MCVersion = "1.5.1";
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     private PlayerListener playerListener = null;
     private BlockListener blockListener = null;

@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.mrmag518.iSafe.Blacklists;
 
 import com.mrmag518.iSafe.Files.Blacklist;
@@ -49,6 +48,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -1088,6 +1088,106 @@ public class Blacklists implements Listener {
             
             if(blacklist.getBoolean("Events.Crafting.Report.ToPlayer")) {
                 p.sendMessage(Messages.scan(Messages.getMessages().getString("Blacklists.Crafting.DisallowedMessage"), p, null, is.getType().name(), world));
+            }
+        }
+    }
+    
+    @EventHandler
+    public void handleConsume(PlayerItemConsumeEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        World world = event.getPlayer().getWorld();
+        FileConfiguration blacklist = Blacklist.getBlacklist(world.getName());
+        
+        if(blacklist.getBoolean("Events.Consume.Enabled") != true) {
+            return;
+        }
+        ItemStack is = event.getItem();
+        int item_id = is.getTypeId();
+        byte item_data = is.getData().getData();
+        boolean shallContinue = false;
+        Player p = event.getPlayer();
+        List<String> blacklisted = blacklist.getStringList("Events.Consume.Blacklist");
+        
+        if(blacklisted.isEmpty() || blacklisted == null) {
+            return;
+        }
+        
+        for (int i = 0; i < blacklisted.size(); i++) {
+            String line = blacklisted.get(i);
+            
+            if(line == null) {
+                continue;
+            }
+            int blacklisted_id = 0;
+            byte blacklisted_data = 0;
+            
+            if(line.contains(":")) {
+                String[] splitted = line.split(":");
+                blacklisted_id = Integer.parseInt(splitted[0]);
+                blacklisted_data = Byte.parseByte(splitted[1]);
+            } else {
+                blacklisted_id = Integer.parseInt(line);
+            }
+            
+            if(blacklisted_id < 1 || blacklisted_data < 0) {
+                continue;
+            }
+            
+            if(blacklisted_data > 0) {
+                if(item_id == blacklisted_id && item_data == blacklisted_data) {
+                    shallContinue = true;
+                    break;
+                }
+            } else {
+                if(item_id == blacklisted_id) {
+                    shallContinue = true;
+                    break;
+                }
+            }
+        }
+        
+        if(shallContinue) {
+            if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.consume.bypass.*")) {
+                if(item_data < 1) {
+                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.consume.bypass." + item_id)) {
+                        event.setCancelled(true);
+                    } else {
+                        return;
+                    }
+                } else {
+                    if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.consume.bypass." + item_id + ":" + item_data)) {
+                        event.setCancelled(true);
+                    } else {
+                        return;
+                    }
+                }
+            } else {
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Consume.Economy.Enabled")) {
+                int withdrawAmount = blacklist.getInt("Events.Consume.Economy.WithdrawAmount");
+                
+                Eco.withdraw(p.getName(), world, withdrawAmount);
+                
+                if(blacklist.getBoolean("Events.Consume.Economy.NotifyPlayer")) {
+                    Eco.sendEcoNotify(p, "Consume", withdrawAmount);
+                }
+            }
+            
+            if(blacklist.getBoolean("Events.Consume.Penalities.KickPlayer")) {
+                p.kickPlayer(Messages.scan(Messages.getMessages().getString("Blacklists.Consume.KickMessage"), p, null, is.getType().name(), world));
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.Consume.Report.ToConsole")) {
+                Log.info(p.getName() + " attempted to consume item " + is.getType().name().toLowerCase() + " in world " + world.getName());
+            }
+            
+            if(blacklist.getBoolean("Events.Consume.Report.ToPlayer")) {
+                p.sendMessage(Messages.scan(Messages.getMessages().getString("Blacklists.Consume.DisallowedMessage"), p, null, is.getType().name(), world));
             }
         }
     }
