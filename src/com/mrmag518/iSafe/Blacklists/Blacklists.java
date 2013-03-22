@@ -41,6 +41,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.inventory.CraftItemEvent;
@@ -622,6 +623,154 @@ public class Blacklists implements Listener {
             }
         }
     }
+    
+    /*@EventHandler
+    public void handleSign(SignChangeEvent event) {
+        if(event.isCancelled()) {
+            return;
+        }
+        World world = event.getPlayer().getWorld();
+        FileConfiguration blacklist = Blacklist.getBlacklist(world.getName());
+        
+        if(blacklist.getBoolean("Events.SignChange.Enabled") != true) {
+            return;
+        }
+        boolean shallContinue = false;
+        Player p = event.getPlayer();
+        List<String> blacklisted = blacklist.getStringList("Events.SignChange.Blacklist");
+        List<String> whitelisted = blacklist.getStringList("Events.SignChange.Whitelist");
+        
+        if(p.getGameMode() == GameMode.SURVIVAL) {
+            if(blacklist.getBoolean("Events.SignChange.Gamemode.ActiveFor.Survival") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.CREATIVE) {
+            if(blacklist.getBoolean("Events.SignChange.Gamemode.ActiveFor.Creative") != true) {
+                return;
+            }
+        } else if(p.getGameMode() == GameMode.ADVENTURE) {
+            if(blacklist.getBoolean("Events.SignChange.Gamemode.ActiveFor.Adventure") != true) {
+                return;
+            }
+        }
+        String bWord = "";
+        
+        for(String stringLine : event.getLines()) {
+            if(stringLine == null) {
+                continue;
+            }
+            
+            for (int i = 0; i < whitelisted.size(); i++) {
+                String line = whitelisted.get(i).toLowerCase();
+                
+                if(line == null) {
+                    continue;
+                }
+                
+                if(stringLine.contains(line)) {
+                    return;
+                }
+            }
+            
+            for (int i = 0; i < blacklisted.size(); i++) {
+                String line = blacklisted.get(i).toLowerCase();
+
+                if(line == null) {
+                    continue;
+                }
+                String temp = stringLine;
+
+                if(blacklist.getBoolean("Events.SignChange.CheckSettings.RemoveSpaces")) {
+                    if(stringLine.contains(" ")) {
+                        temp = stringLine.replaceAll(" ", "");
+                    }
+                }
+
+                if(blacklist.getBoolean("Events.SignChange.CheckSettings.RemovePeriods")) {
+                    if(stringLine.contains(".")) {
+                        temp = stringLine.replaceAll("\\.", "");
+                    }
+                }
+
+                if(blacklist.getBoolean("Events.SignChange.CheckSettings.RemoveExclamations")) {
+                    if(stringLine.contains("!")) {
+                        temp = stringLine.replaceAll("!", "");
+                    }
+                }
+
+                if(blacklist.getBoolean("Events.SignChange.CheckSettings.RemoveQuestonMarks")) {
+                    if(stringLine.contains("?")) {
+                        temp = stringLine.replaceAll("\\?", "");
+                    }
+                }
+
+                if(blacklist.getBoolean("Events.SignChange.CheckSettings.SeeNumbersAsLetters")) {
+                    if(stringLine.contains("0")) {
+                        temp = stringLine.replaceAll("0", "o");
+                    }
+                    if(stringLine.contains("1")) {
+                        temp = stringLine.replaceAll("1", "i");
+                    }
+                    if(stringLine.contains("3")) {
+                        temp = stringLine.replaceAll("3", "e");
+                    }
+                    if(stringLine.contains("4")) {
+                        temp = stringLine.replaceAll("4", "a");
+                    }
+                    if(stringLine.contains("5")) {
+                        temp = stringLine.replaceAll("5", "s");
+                    }
+                    if(stringLine.contains("6")) {
+                        temp = stringLine.replaceAll("6", "b");
+                    }
+                    if(stringLine.contains("7")) {
+                        temp = stringLine.replaceAll("7", "t");
+                    }
+                }
+
+                if(temp.contains(line)) {
+                    shallContinue = true;
+                    bWord = line;
+                    break;
+                }
+            }
+        }
+        
+        if(shallContinue) {
+            if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.signchange.bypass.*")) {
+                if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.signchange.bypass." + bWord)) {
+                    event.setCancelled(true);
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.SignChange.Economy.Enabled")) {
+                int withdrawAmount = blacklist.getInt("Events.SignChange.Economy.WithdrawAmount");
+                
+                Eco.withdraw(p.getName(), world, withdrawAmount);
+                
+                if(blacklist.getBoolean("Events.SignChange.Economy.NotifyPlayer")) {
+                    Eco.sendEcoNotify(p, "SignChange", withdrawAmount);
+                }
+            }
+            
+            if(blacklist.getBoolean("Events.SignChange.Penalities.KickPlayer")) {
+                p.kickPlayer(Messages.scan(Messages.getMessages().getString("Blacklists.SignChange.KickMessage"), p, bWord, null, world));
+                return;
+            }
+            
+            if(blacklist.getBoolean("Events.SignChange.Report.ToConsole")) {
+                Log.info(p.getName() + " attempted to modify a sign to contain the word " + bWord + " in world " + world.getName());
+            }
+            
+            if(blacklist.getBoolean("Events.SignChange.Report.ToPlayer")) {
+                p.sendMessage(Messages.scan(Messages.getMessages().getString("Blacklists.SignChange.DisallowedMessage"), p, bWord, null, world));
+            }
+        }
+    }*/
     
     @EventHandler
     public void handleChat(AsyncPlayerChatEvent event) {
@@ -1263,7 +1412,7 @@ public class Blacklists implements Listener {
     }
     
     @EventHandler
-    public void handlePistonExtend(BlockDispenseEvent event) {
+    public void handleDispense(BlockDispenseEvent event) {
         if(event.isCancelled()){
             return;
         }

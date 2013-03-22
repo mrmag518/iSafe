@@ -97,6 +97,7 @@ permissions:
       iSafe.blacklist.command.bypass.*: true
       iSafe.blacklist.chat.bypass.*: true
       iSafe.blacklist.consume.bypass.*: true
+      iSafe.blacklist.signchange.bypass.*: true
   # ------------------------
   iSafe.bypass.hunger:
     default: true

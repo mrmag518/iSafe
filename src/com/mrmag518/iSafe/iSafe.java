@@ -132,9 +132,10 @@ public class iSafe extends JavaPlugin {
                     break;
                 case UPDATE_AVAILABLE:
                     updateFound = true;
+                    versionFound = updater.getLatestVersionString();
                     Log.info("########## iSafe update ##########");
                     Log.info("A new version of iSafe was found!");
-                    Log.info("New version: " + updater.getLatestVersionString());
+                    Log.info("New version: " + versionFound);
                     Log.info("Current version running: " + pdffile.getFullName());
                     Log.info("It's highly recommended to update, as there may be important fixes or improvements to the plugin!");
                     Log.info("#####################################");

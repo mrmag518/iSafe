@@ -26,6 +26,7 @@ public class Blacklist {
     private static String[] default_crafting = {"46", "322:1"};
     private static String[] default_pistonextend = {"46", "7"};
     private static String[] default_dispense = {"262", "327"};
+    private static String[] default_consume = {"373:8193", "373:8196", "322"};
     
     public static void manageBlacklistDir() {
         for(World world : Bukkit.getWorlds()) {
@@ -151,6 +152,25 @@ public class Blacklist {
             blacklist.addDefault("Events.Chat.Blacklist", Arrays.asList(default_chat));
             blacklist.addDefault("Events.Chat.Whitelist", Arrays.asList(default_chat_whitelist));
             
+            /*blacklist.addDefault("Events.SignChange.Enabled", false);
+            blacklist.addDefault("Events.SignChange.Penalities.KickPlayer", false);
+            blacklist.addDefault("Events.SignChange.Gamemode.ActiveFor.Survival", true);
+            blacklist.addDefault("Events.SignChange.Gamemode.ActiveFor.Creative", true);
+            blacklist.addDefault("Events.SignChange.Gamemode.ActiveFor.Adventure", true);
+            blacklist.addDefault("Events.SignChange.Report.ToConsole", false);
+            blacklist.addDefault("Events.SignChange.Report.ToPlayer", true);
+            blacklist.addDefault("Events.SignChange.Economy.Enabled", false);
+            blacklist.addDefault("Events.SignChange.Economy.WithdrawAmount", 10.0);
+            blacklist.addDefault("Events.SignChange.Economy.AllowNegativeCashPile", false);
+            blacklist.addDefault("Events.SignChange.Economy.NotifyPlayer", false);
+            blacklist.addDefault("Events.SignChange.CheckSettings.RemoveSpaces", false);
+            blacklist.addDefault("Events.SignChange.CheckSettings.RemovePeriods", false);
+            blacklist.addDefault("Events.SignChange.CheckSettings.RemoveExclamations", false);
+            blacklist.addDefault("Events.SignChange.CheckSettings.RemoveQuestonMarks", false);
+            blacklist.addDefault("Events.SignChange.CheckSettings.SeeNumbersAsLetters", false);
+            blacklist.addDefault("Events.SignChange.Blacklist", Arrays.asList(default_chat));
+            blacklist.addDefault("Events.SignChange.Whitelist", Arrays.asList(default_chat_whitelist));*/
+            
             blacklist.addDefault("Events.Interact.Enabled", false);
             blacklist.addDefault("Events.Interact.Penalities.KickPlayer", false);
             blacklist.addDefault("Events.Interact.Gamemode.ActiveFor.Survival", true);
@@ -177,6 +197,19 @@ public class Blacklist {
             blacklist.addDefault("Events.Crafting.Economy.AllowNegativeCashPile", false);
             blacklist.addDefault("Events.Crafting.Economy.NotifyPlayer", false);
             blacklist.addDefault("Events.Crafting.Blacklist", Arrays.asList(default_crafting));
+            
+            blacklist.addDefault("Events.Consume.Enabled", false);
+            blacklist.addDefault("Events.Consume.Penalities.KickPlayer", false);
+            blacklist.addDefault("Events.Consume.Gamemode.ActiveFor.Survival", true);
+            blacklist.addDefault("Events.Consume.Gamemode.ActiveFor.Creative", true);
+            blacklist.addDefault("Events.Consume.Gamemode.ActiveFor.Adventure", true);
+            blacklist.addDefault("Events.Consume.Report.ToConsole", false);
+            blacklist.addDefault("Events.Consume.Report.ToPlayer", true);
+            blacklist.addDefault("Events.Consume.Economy.Enabled", false);
+            blacklist.addDefault("Events.Consume.Economy.WithdrawAmount", 10.0);
+            blacklist.addDefault("Events.Consume.Economy.AllowNegativeCashPile", false);
+            blacklist.addDefault("Events.Consume.Economy.NotifyPlayer", false);
+            blacklist.addDefault("Events.Consume.Blacklist", Arrays.asList(default_consume));
             
             blacklist.addDefault("Events.PistonExtend.Enabled", false);
             blacklist.addDefault("Events.PistonExtend.Report.ToConsole", false);

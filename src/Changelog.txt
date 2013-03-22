@@ -20,6 +20,9 @@ Version 3.5
 * Removed specific invisibility potion prevention options, as they can be done using the blacklists.
 * Added a consume blacklist.
 ** The consume event is called whenever a player eats, drinks potions and so forth.
+* Added a signchange blacklist.
+** Called whenever a sign changes, for an example when a player creates a sign.
+* Fixed new versions of iSafe not being disabled correctly in the join notify.
 * 
 
 
