@@ -17,10 +17,13 @@
  */
 package com.mrmag518.iSafe.Commands;
 
+import com.mrmag518.iSafe.EventManager.IPManagement;
 import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
+import org.bukkit.Bukkit;
 
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,8 +32,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 
 public class Commands implements CommandExecutor {
     public static iSafe plugin;
-    public Commands(iSafe instance)
-    {
+    public Commands(iSafe instance) {
         plugin = instance;
     }
     public ChatColor A = ChatColor.AQUA;
@@ -46,6 +48,7 @@ public class Commands implements CommandExecutor {
                     sender.sendMessage(G + "/iSafe reload" + GR + " Reloads all the iSafe configuration files.");
                     sender.sendMessage(G + "/iSafe info " + GR + " Returns information about iSafe.");
                     sender.sendMessage(G + "/iSafe serverinfo " + GR + " Returns information about the server.");
+                    sender.sendMessage(G + "/iSafe updatecheck " + GR + " Check if there's a new version of iSafe available.");
                 } else if (args.length >= 1) {
                     if(args[0].equalsIgnoreCase("reload")) {
                         if(PermHandler.hasPermission(sender, "iSafe.command.reload")) {
@@ -63,6 +66,11 @@ public class Commands implements CommandExecutor {
                         if(PermHandler.hasPermission(sender, "iSafe.command.updatecheck")) {
                             updateCheck(sender);
                         }
+                    } else if(args[0].equalsIgnoreCase("ip") || args[0].equalsIgnoreCase("ipmanagement")) {
+                        if(PermHandler.hasPermission(sender, "iSafe.command.ipmanagement")) {
+                            //handleIPM(sender, args);
+                            sender.sendMessage("WIP");
+                        }
                     }
                 }
             } else {
@@ -71,6 +79,7 @@ public class Commands implements CommandExecutor {
                     sender.sendMessage(G + "/iSafe reload" + GR + " Reload all the iSafe configuration files.");
                     sender.sendMessage(G + "/iSafe info " + GR + " Returns information about iSafe.");
                     sender.sendMessage(G + "/iSafe serverinfo " + GR + " Returns information about the server.");
+                    sender.sendMessage(G + "/iSafe updatecheck " + GR + " Check if there's a new version of iSafe available.");
                 } else {
                     if (args.length >= 1) {
                         if(args[0].equalsIgnoreCase("reload")) {
@@ -89,6 +98,59 @@ public class Commands implements CommandExecutor {
         }
         return false;
     }
+    
+    /*private void handleIPM(CommandSender sender, String[] args) {
+        if(args[1].equalsIgnoreCase("linkname") || args[1].equalsIgnoreCase("addname")) {
+            if(args[2] != null) {
+                String victim = args[2];
+                if(args[3] != null) {
+                    String ip = args[3];
+                    boolean isName = false;
+                    
+                    if(!ip.contains(".")) {
+                        isName = true;
+                    } else {
+                        String s = ip;
+                        s = s.replaceAll("\\.", "");
+                        
+                        try {
+                            int i = Integer.parseInt(s);
+                        } catch(NumberFormatException e) {
+                            isName = true;
+                        }
+                    }
+                    
+                    if(!isName) {
+                        if(IPManagement.isIPLogged(ip)) {
+                            IPManagement.addNameToIP(victim, ip);
+                        } else {
+                            IPManagement.logIP_WithNameAdded(ip, victim);
+                        }
+                        sender.sendMessage(ChatColor.GREEN + "The player " + ChatColor.YELLOW + victim + ChatColor.GREEN + " was linked with the IP " + ChatColor.YELLOW + ip);
+                    } else {
+                        String tempIP = IPManagement.getIPAddress(ip);
+                        
+                        if(tempIP.equals("null")) {
+                            sender.sendMessage(ChatColor.GRAY + ip + ChatColor.RED + "'s IP was not found in the userFiles!");
+                            return;
+                        }
+                        
+                        if(IPManagement.isIPLogged(ip)) {
+                            IPManagement.addNameToIP(victim, tempIP);
+                        } else {
+                            IPManagement.logIP_WithNameAdded(tempIP, victim);
+                        }
+                        sender.sendMessage(ChatColor.GREEN + "The player " + ChatColor.YELLOW + victim + ChatColor.GREEN + " was linked with " 
+                                + ChatColor.YELLOW + ip + ChatColor.GREEN + "'s IP. (" + tempIP + ")");
+                    }
+                } else {
+                    sender.sendMessage(ChatColor.RED + "You need to supply an ip/name to link with.");
+                }
+            } else {
+                sender.sendMessage(ChatColor.RED + "You need to supply a name.");
+            }
+        }
+    }*/
     
     private void updateCheck(CommandSender sender) {
         if(plugin.updateFound) {

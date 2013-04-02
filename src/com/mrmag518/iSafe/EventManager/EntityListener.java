@@ -75,8 +75,7 @@ import org.bukkit.event.entity.SlimeSplitEvent;
 
 public class EntityListener implements Listener {
     public static iSafe plugin;
-    public EntityListener(iSafe instance)
-    {
+    public EntityListener(iSafe instance) {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -118,7 +117,6 @@ public class EntityListener implements Listener {
         if (event.isCancelled()){
             return;
         }
-        
         Entity ent = event.getEntity();
         int x = event.getLocation().getBlockX();
         int y = event.getLocation().getBlockY();

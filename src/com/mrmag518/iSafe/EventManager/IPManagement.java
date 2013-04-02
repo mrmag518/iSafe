@@ -59,7 +59,7 @@ public class IPManagement implements Listener {
         }
     }
     
-    private void logIP_WithNameAdded(String ip, String victim) {
+    public static void logIP_WithNameAdded(String ip, String victim) {
         if(ip == null || victim == null) {
             return;
         }
@@ -75,7 +75,7 @@ public class IPManagement implements Listener {
         }
     }
     
-    private void logName_WithIPAdded(String victim, String ip) {
+    public static void logName_WithIPAdded(String victim, String ip) {
         if(ip == null || victim == null) {
             return;
         }
@@ -91,7 +91,7 @@ public class IPManagement implements Listener {
         }
     }
     
-    private void addNameToIP(String victim, String ip) {
+    public static void addNameToIP(String victim, String ip) {
         if(ip == null || victim == null) {
             return;
         }
@@ -101,9 +101,9 @@ public class IPManagement implements Listener {
         String prevNames = IPLog.getString("NamesLinkedToIPs." + getIpInYAMLFormat(ip));
         
         if(prevNames == null || prevNames.equals("")) {
-            IPLog.set(getIpInYAMLFormat(ip), victim + ",");
+            IPLog.set("NamesLinkedToIPs." + getIpInYAMLFormat(ip), victim + ",");
         } else {
-            IPLog.set(getIpInYAMLFormat(ip), prevNames + victim + ",");
+            IPLog.set("NamesLinkedToIPs." + getIpInYAMLFormat(ip), prevNames + victim + ",");
         }
         
         try {
@@ -113,7 +113,7 @@ public class IPManagement implements Listener {
         }
     }
     
-    private void addIPToName(String ip, String victim) {
+    public static void addIPToName(String ip, String victim) {
         if(ip == null || victim == null) {
             return;
         }
@@ -135,7 +135,7 @@ public class IPManagement implements Listener {
         }
     }
     
-    private boolean isIPLogged(String ip) {
+    public static boolean isIPLogged(String ip) {
         File IPLogFile = new File("plugins/iSafe/UserFiles/IPLog.yml");
         FileConfiguration IPLog = YamlConfiguration.loadConfiguration(IPLogFile);
         
@@ -145,7 +145,7 @@ public class IPManagement implements Listener {
         return false;
     }
     
-    private boolean isNameLogged(String name) {
+    public static boolean isNameLogged(String name) {
         File IPLogFile = new File("plugins/iSafe/UserFiles/IPLog.yml");
         FileConfiguration IPLog = YamlConfiguration.loadConfiguration(IPLogFile);
         
@@ -155,13 +155,24 @@ public class IPManagement implements Listener {
         return false;
     }
     
-    private String getIpInYAMLFormat(String ip) {
+    public static String getIpInYAMLFormat(String ip) {
         if(!ip.contains(".")) {
             Log.debug("Invalid IP! (" + ip + ")");
             return null;
         }
         String formatted = ip.replaceAll("\\.", "-");
         return formatted;
+    }
+    
+    public static String getIPAddress(String victim) {
+        String ip = "null";
+        
+        File userFile = new File("plugins/iSafe/UserFiles/Users/" + victim + ".yml");
+        if(userFile.exists()) {
+            FileConfiguration uFile = YamlConfiguration.loadConfiguration(userFile);
+            ip = uFile.getString("IPAddress");
+        }
+        return ip;
     }
     
     /*public String getIpFromYAMLFormat(String ip) {

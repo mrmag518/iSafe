@@ -18,8 +18,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class UserFileCreator implements Listener {
     public static iSafe plugin;
-    public UserFileCreator(iSafe instance)
-    {
+    public UserFileCreator(iSafe instance) {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

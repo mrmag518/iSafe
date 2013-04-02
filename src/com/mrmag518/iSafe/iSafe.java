@@ -60,7 +60,6 @@ public class iSafe extends JavaPlugin {
      * 
      * Start working on gamemode 'protection'.
      * More bug hunting...
-     * Commands to toggle the enable state of specific worlds in the blacklist.
      * Add group thing to blacklists.
      * Potion management.
      * Move all Events classes to the a new EventManager package.
@@ -156,7 +155,6 @@ public class iSafe extends JavaPlugin {
                 // Failed to submit the stats :-(
             }
         }
-        
         //iSafeExtension.hook();
         
         Blacklists.startDelayTimer();
@@ -283,7 +281,6 @@ public class iSafe extends JavaPlugin {
             
             setupVault();
         }
-        
         boolean beastMode = getConfig().getBoolean("AntiCheat/Security.Spam.UseBeastMode");
         boolean normalMode = getConfig().getBoolean("AntiCheat/Security.Spam.UseNormalMode");
         
