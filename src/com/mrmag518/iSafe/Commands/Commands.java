@@ -17,13 +17,10 @@
  */
 package com.mrmag518.iSafe.Commands;
 
-import com.mrmag518.iSafe.EventManager.IPManagement;
 import com.mrmag518.iSafe.Util.PermHandler;
 import com.mrmag518.iSafe.iSafe;
-import org.bukkit.Bukkit;
 
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -135,7 +132,7 @@ public class Commands implements CommandExecutor {
                             return;
                         }
                         
-                        if(IPManagement.isIPLogged(ip)) {
+                        if(IPManagement.isIPLogged(tempIP)) {
                             IPManagement.addNameToIP(victim, tempIP);
                         } else {
                             IPManagement.logIP_WithNameAdded(tempIP, victim);
