@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -23,7 +24,7 @@ public class UserFileCreator implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
     
-    @EventHandler
+    @EventHandler(priority=EventPriority.MONITOR)
     public void CreateUserFile(PlayerJoinEvent event) {
         Player p = event.getPlayer();
         File userFile = new File("plugins/iSafe/UserFiles/Users/" + p.getName() + ".yml");
@@ -55,12 +56,12 @@ public class UserFileCreator implements Listener {
         }
     }
     
-    @EventHandler
+    @EventHandler(priority=EventPriority.MONITOR)
     public void updateNodesOnKick(PlayerKickEvent event) {
         updateNodes(event.getPlayer());
     }
     
-    @EventHandler
+    @EventHandler(priority=EventPriority.MONITOR)
     public void updateNodesOnQuit(PlayerQuitEvent event) {
         updateNodes(event.getPlayer());
     }

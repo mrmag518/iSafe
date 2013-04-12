@@ -33,12 +33,6 @@ permissions:
       iSafe.bypass.fish: true
       iSafe.bypass.spamcheck: true
       iSafe.bypass.enchant: true
-      # iSafe.bypass.blacklist.interact: true
-      # iSafe.bypass.blacklist.pickup: true
-      # iSafe.bypass.blacklist.break: true
-      # iSafe.bypass.blacklist.place: true
-      # iSafe.bypass.blacklist.drop: true
-      # iSafe.bypass.blacklist.crafting: true
       iSafe.bypass.teleport: true
       iSafe.bypass.teleport.command: true
       iSafe.bypass.teleport.enderpearl: true
@@ -87,6 +81,7 @@ permissions:
       iSafe.command.info: true
       iSafe.command.serverinfo: true
       iSafe.command.updatecheck: true
+      iSafe.command.ipmanagement: true
   iSafe.blacklist.*:
     default: op
     children:
@@ -97,7 +92,6 @@ permissions:
       iSafe.blacklist.command.bypass.*: true
       iSafe.blacklist.chat.bypass.*: true
       iSafe.blacklist.consume.bypass.*: true
-      iSafe.blacklist.signchange.bypass.*: true
   # ------------------------
   iSafe.bypass.hunger:
     default: true

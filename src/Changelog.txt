@@ -6,9 +6,9 @@ Version 3.5
 * Fixed kick messages.
 * Total revamp of blacklist system!
 ** Rewrote everything from scratch.
-** There will now be made a folder called "Blacklists" in the iSafe direction. Inside this folder, additiong folders will be created, having the names of your worlds. Inside these folders a file called "Blacklist.yml" will be made, and inside this file you can manage blacklisting.
+** There will now be made a folder called "Blacklists" in the iSafe directory. Inside this folder, additional folders will be created, having the names of your worlds. Inside these folders a file called "Blacklist.yml" will be made, and inside this file you can manage blacklisting.
 ** Added full support for item data values. (Such as 35:15 for black woll only, and not all wool colors)
-** Lists are now organized in ArrayLists.
+** Blacklisting is now organized in ArrayLists, and not with the previous comma seperation system.
 ** The new system should be more efficient.
 ** Permissions changed.
 * Added per-block/per-command/etc permissions for blacklists!
@@ -22,7 +22,6 @@ Version 3.5
 ** The consume event is called whenever a player eats, drinks potions and so forth.
 * Fixed new versions of iSafe not being disabled correctly in the join notify.
 * Fixed a formatting issue in IPLog.yml
-* 
 
 
 

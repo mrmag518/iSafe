@@ -31,6 +31,7 @@ import com.mrmag518.iSafe.Util.UserFileCreator;
 import com.mrmag518.iSafe.Util.Data;
 import com.mrmag518.iSafe.Blacklists.Blacklists;
 import com.mrmag518.iSafe.Commands.Commands;
+import com.mrmag518.iSafe.EventManager.GMManager;
 import com.mrmag518.iSafe.Files.*;
 import com.mrmag518.iSafe.Util.Log;
 
@@ -55,14 +56,12 @@ public class iSafe extends JavaPlugin {
     
     /**
      * Note to self:
-     * 
-     * Mix event managers into each other.
-     * 
+
      * Start working on gamemode 'protection'.
      * More bug hunting...
      * Add group thing to blacklists.
      * Potion management.
-     * Move all Events classes to the a new EventManager package.
+     * Clean-up in listener classes. (Combine some classes together, such as the old InventoryListener)
      * Extend IPManager and UserFiles features & support.
      */
     
@@ -83,6 +82,8 @@ public class iSafe extends JavaPlugin {
     private SendUpdate sendUpdate = null;
     private Blacklists blacklistClass = null;
     private IPManagement IPM = null;
+    //private GMManager gmManager = null;
+    
     public double currentVersion = 0.0;
     public String versionFound = "";
     public static Permission perms = null;
@@ -101,15 +102,11 @@ public class iSafe extends JavaPlugin {
     public void onEnable() {
         isStartup = true;
         Log.debug("iSafe startup initialized.");
-        
-        currentVersion = Double.valueOf(getDescription().getVersion());
-        
+        PluginDescriptionFile pdffile = getDescription();
+        currentVersion = Double.valueOf(pdffile.getVersion());
         fileLoadManagement();
         Log.debug("Debug mode is enabled!");
-        
-        registerClasses();
-        
-        PluginDescriptionFile pdffile = getDescription();
+        loadListeners();
         if (iSafeConfig.getISafeConfig().getBoolean("CheckForUpdates") == true) {
             Log.verbose("Checking for updates ..");
             Updater updater = new Updater(this, "blockthattnt", this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
@@ -184,7 +181,7 @@ public class iSafe extends JavaPlugin {
         }, 0, 20);
     }
 
-    private void registerClasses() {
+    private void loadListeners() {
         playerListener = new PlayerListener(this);
         blockListener = new BlockListener(this);
         entityListener = new EntityListener(this);
@@ -199,16 +196,18 @@ public class iSafe extends JavaPlugin {
         if (iSafeConfig.getISafeConfig().getBoolean("CreateUserFiles")) {
             UFC = new UserFileCreator(this);
         } else {
-            UFC = null;
             Log.debug("CreateUserFiles in the iSafeConfig.yml was disabled, therefor not register the UserFileCreator class.");
         }
         
         if (iSafeConfig.getISafeConfig().getBoolean("CheckForUpdates")) {
             sendUpdate = new SendUpdate(this);
         } else {
-            sendUpdate = null;
             Log.debug("CheckForUpdates in the iSafeConfig.yml was disabled, therefor not registering the sendUpdate class.");
         }
+        
+        /*if(GMConfig.getConfig().getBoolean("Enabled")) {
+            gmManager = new GMManager(this);
+        }*/
         
         Log.debug("Registered event classes.");
     }
@@ -242,7 +241,7 @@ public class iSafe extends JavaPlugin {
                 exampFile.set("Displayname", "example");
                 exampFile.set("IPAddress", "127.0.0.1");
                 exampFile.set("Gamemode", "survival");
-                exampFile.set("Level", Integer.parseInt("50"));
+                exampFile.set("Level", Integer.parseInt("30"));
                 exampFile.save(exaFile);
             } catch (NumberFormatException | IOException e) {
                 Log.info("[iSafe] Error creating example user file. (_example.yml)");
@@ -290,6 +289,12 @@ public class iSafe extends JavaPlugin {
                 Config.save();
             }
             startSpamTask();
+        }
+        
+        File f = new File("plugins/iSafe/blacklists.yml");
+        if(f.exists()) {
+            Log.warning("Your iSafe folder contains an outdated blacklist file! (blacklists.yml)");
+            Log.warning("iSafe's blacklist system has been changed. Look for a folder called 'Blacklists', from there you will be able to easily play with the new blacklist system =)");
         }
     }
     

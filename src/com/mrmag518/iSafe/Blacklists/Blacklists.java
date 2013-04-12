@@ -41,7 +41,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.inventory.CraftItemEvent;
@@ -150,14 +149,12 @@ public class Blacklists implements Listener {
         if(shallContinue) {
             if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.place.bypass.*")) {
                 if(block_data < 1) {
-                    // temp comment: iSafe.blacklist.world_nether.place.bypass.10
                     if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.place.bypass." + block_id)) {
                         event.setCancelled(true);
                     } else {
                         return;
                     }
                 } else {
-                    // temp comment: iSafe.blacklist.world_nether.place.bypass.35:3
                     if(!PermHandler.hasBlacklistPermission(p, "iSafe.blacklist.place.bypass." + block_id + ":" + block_data)) {
                         event.setCancelled(true);
                     } else {
