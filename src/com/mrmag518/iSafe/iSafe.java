@@ -31,7 +31,6 @@ import com.mrmag518.iSafe.Util.UserFileCreator;
 import com.mrmag518.iSafe.Util.Data;
 import com.mrmag518.iSafe.Blacklists.Blacklists;
 import com.mrmag518.iSafe.Commands.Commands;
-import com.mrmag518.iSafe.EventManager.GMManager;
 import com.mrmag518.iSafe.Files.*;
 import com.mrmag518.iSafe.Util.Log;
 
@@ -160,9 +159,6 @@ public class iSafe extends JavaPlugin {
         
         Log.debug("iSafe startup finished.");
         isStartup = false;
-        
-        
-        Test.load();
     }
 
     private void startSpamTask() {
