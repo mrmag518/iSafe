@@ -20,11 +20,63 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Messages {
     private static FileConfiguration messages = null;
     private static File messagesFile = null;
-    
     private static final Logger log = Logger.getLogger("Minecraft");
-    
     private static final iSafe plugin = (iSafe) Bukkit.getPluginManager().getPlugin("iSafe");
     private static File datafolder = plugin.getDataFolder();
+    
+    private Player player = null;
+    private OutputType output = null;
+    private World world = null;
+    private String item_name = null;
+    private String other = null; // commands, censored words ..
+    
+    public Messages(OutputType output, Player player, World world, String itemName, String other) {
+        this.player = player;
+        this.output = output;
+        this.world = world;
+        this.item_name = itemName;
+        this.other = other;
+    }
+    
+    public enum OutputType {
+        FULLBRIGHT_DETECTION(Messages.getMessages().getString("FullbrightDetection"));
+        
+        private String output;
+        
+        private OutputType(String msg) {
+            output = msg;
+        }
+        
+        public String getRawOutput() {
+            return output;
+        }
+    }
+    
+    public void send(Player p) {
+        if(output != null) {
+            String msg = output.getRawOutput();
+            String result = msg;
+            
+            if(player != null) {
+                result = msg.replaceAll("%player%", p.getName());
+            }
+            
+            if(world != null) {
+                result = msg.replaceAll("%world%", world.getName());
+            }
+            
+            if(item_name != null && !item_name.equals("")) {
+                result = msg.replaceAll("%item%", item_name);
+            }
+            
+            if(other != null && !other.equals("")) {
+                result = msg.replaceAll("%string%", other);
+            }
+            result = colorize(result);
+            
+            p.sendMessage(result);
+        }
+    }
     
     public static void load() {
         messages = getMessages();

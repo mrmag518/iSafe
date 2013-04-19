@@ -160,6 +160,9 @@ public class iSafe extends JavaPlugin {
         
         Log.debug("iSafe startup finished.");
         isStartup = false;
+        
+        
+        Test.load();
     }
 
     private void startSpamTask() {

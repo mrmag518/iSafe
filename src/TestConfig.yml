@@ -1,0 +1,8 @@
+# This is a header.
+# The point of this file is to make a new file saving/loading, basically management support comments.
+
+# Bananas are awesome. 
+banana: false
+
+# Poo is shit
+poo: 2

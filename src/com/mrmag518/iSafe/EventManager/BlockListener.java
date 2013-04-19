@@ -17,9 +17,9 @@
  */
 package com.mrmag518.iSafe.EventManager;
 
-import com.mrmag518.iSafe.*;
 import com.mrmag518.iSafe.Files.Messages;
 import com.mrmag518.iSafe.Util.PermHandler;
+import com.mrmag518.iSafe.iSafe;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -32,11 +32,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
 
-
 public class BlockListener implements Listener {
     public static iSafe plugin;
-    public BlockListener(iSafe instance)
-    {
+    public BlockListener(iSafe instance) {
         plugin = instance;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -78,7 +76,8 @@ public class BlockListener implements Listener {
             if(level <= detectionLvl && !b.isLiquid() && !loc.getBlock().isLiquid()) {
                 if(!PermHandler.hasPermission(p, "iSafe.bypass.fullbright", false)) {
                     event.setCancelled(true);
-                    p.sendMessage(Messages.colorize(Messages.getMessages().getString("FullbrightDetection")));
+                    Messages m = new Messages(Messages.OutputType.FULLBRIGHT_DETECTION, p, p.getWorld(), p.getItemInHand().getType().name().toLowerCase(), null);
+                    m.send(p);
                 }
             }
         }
